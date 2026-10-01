@@ -66,6 +66,21 @@ Estimaciones de precipitación derivadas de satélite y estaciones. La versión 
 | Umbrales oficiales | No aplica; no definir umbrales de impacto propios. |
 | Notas metodológicas | CHIRPS v3 se basa fundamentalmente en pentadas y meses. Sus productos diarios se derivan repartiendo totales con IMERG Late V07 o ERA5, según el tipo de producto. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** lluvia acumulada en milímetros en cada celda de 0,05° (unos 5,5 km), para un periodo: pentada, mes o año. Hay productos diarios derivados.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente.
+
+**Para interpretarlo bien:**
+
+- Es un dato **estimado** a partir de satélites y estaciones, no una medición directa en cada celda.
+- Siempre se indica el periodo de acumulación: una pentada y un mes no se comparan.
+- Los productos diarios reparten los totales con otros datos (IMERG o ERA5): el valor de un día concreto es menos fiable que el de la pentada.
+- En zonas de montaña, como los Andes, las estimaciones de lluvia por satélite tienen más error.
+
+**Conceptos:** [precipitación](../conceptos.md#precipitación) · [rejilla y resolución](../conceptos.md#rejilla-y-resolución) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - Distinguir diaria satelital (`sat`) de diaria reanálisis (`rnl`) y de pentad/mensual.

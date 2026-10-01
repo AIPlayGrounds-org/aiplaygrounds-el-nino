@@ -66,6 +66,20 @@ Información sobre glaciares, lagunas de origen glaciar y peligros asociados. Pu
 | Umbrales oficiales | Las clases de riesgo deben conservar su metodología y no combinarse en índice propio. |
 | Notas metodológicas | La página del inventario describe glaciares y lagunas y ofrece memoria, mapas y visor. Repositorio y publicaciones describen monitoreo en ciertas lagunas, pero no una alerta pública homogénea nacional. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** el inventario es un mapa de glaciares y lagunas de origen glaciar, con sus características (área, altura) y, en algunos estudios, una clasificación de su peligro. No es un dato que cambie cada día.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente. Se consultó el geoportal y el inventario de 2023.
+
+**Para interpretarlo bien:**
+
+- Una laguna clasificada como peligrosa en un estudio **no** significa que haya una alerta activa hoy.
+- Las clases de peligro se muestran con la metodología del estudio que las define, sin combinarlas en un índice propio.
+- Solo algunas lagunas tienen monitoreo continuo; la mayoría solo aparece en el inventario.
+
+**Conceptos:** [aviso, alerta y emergencia](../conceptos.md#aviso-alerta-y-emergencia)
+
 ## Riesgos
 
 - Inventario cartográfico estático no equivale a alerta activa.

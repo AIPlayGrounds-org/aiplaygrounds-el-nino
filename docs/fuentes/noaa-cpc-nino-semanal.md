@@ -66,6 +66,21 @@ Serie semanal de temperatura superficial del mar (SST) y anomalía para Niño 1+
 | Umbrales oficiales | No aplica a la serie observada; no asignar categorías propias. |
 | Notas metodológicas | El archivo entrega promedios regionales, no una rejilla espacial. Se verificó su respuesta y se parsearon las cuatro parejas de valores SST/anomalía. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** cada fila es una semana, identificada por su día central (un miércoles). Para cada región Niño hay dos números: la temperatura del mar (`SST`, °C) y su anomalía (`SSTA`, °C).
+
+**Ejemplo:** `23SEP2026  25.4 4.7  28.8 3.9  29.7 3.1  29.8 1.1`: esa semana, Niño 1+2 estaba a 25,4 °C (+4,7), Niño 3 a 28,8 °C (+3,9), Niño 3.4 a 29,7 °C (+3,1) y Niño 4 a 29,8 °C (+1,1).
+
+**Para interpretarlo bien:**
+
+- Las regiones van de este a oeste: Niño 1+2 está frente al Perú y Niño 4 en el Pacífico oeste-central. En el ejemplo, la anomalía es mayor cuanto más al este.
+- Un valor semanal varía mucho más que uno trimestral. El umbral de El Niño (+0,5 °C durante cinco trimestres) se aplica al ONI, no a semanas sueltas.
+- La anomalía usa la base 1991–2020. No se compara directamente con la de OISST (1971–2000).
+- Son promedios de cada caja, no mapas.
+
+**Conceptos:** [regiones Niño](../conceptos.md#regiones-niño) · [SST](../conceptos.md#temperatura-superficial-del-mar-sst) · [anomalía](../conceptos.md#anomalía) · [periodo base](../conceptos.md#periodo-base)
+
 ## Riesgos
 
 - El formato es texto de ancho fijo; conservar validaciones ante cambios de columnas.

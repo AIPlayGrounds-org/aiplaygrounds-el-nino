@@ -66,6 +66,20 @@ Gráfica y resumen mensual de pronósticos de modelos para SST en Niño 3.4. Sir
 | Umbrales oficiales | La página describe límites ENSO ±0,5 °C para su resumen probabilístico. |
 | Notas metodológicas | Pluma de 22 modelos; el sitio avisa que algunos valores de la tabla pueden derivarse por promedio/interpolación temporal o lectura visual de mapas. No todos los modelos tienen igual habilidad. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** un gráfico con una línea por modelo (22 en la emisión de septiembre de 2026), que muestra la anomalía prevista de Niño 3.4 para los próximos nueve trimestres. Se acompaña de barras con la probabilidad de El Niño, neutral y La Niña.
+
+**Ejemplo:** la pluma publicada el 2026-09-21. IRI no distribuye los valores, solo el gráfico.
+
+**Para interpretarlo bien:**
+
+- Si las líneas están juntas, los modelos coinciden; si se abren en abanico, hay más incertidumbre.
+- No todos los modelos son igual de fiables, y no todos usan el mismo periodo base. Por eso no se calcula un promedio propio.
+- Se muestra como imagen enlazada al original, con su fecha y la atribución CC BY 4.0.
+
+**Conceptos:** [pronóstico probabilístico](../conceptos.md#pronóstico-probabilístico) · [anomalía](../conceptos.md#anomalía) · [periodo base](../conceptos.md#periodo-base) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - No se proporcionan los datos subyacentes, solo gráficos y explicaciones.

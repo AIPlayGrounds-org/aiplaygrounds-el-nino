@@ -69,6 +69,18 @@ Una o dos frases: qué mide y por qué nos sirve para WawaPacha.
 | Umbrales oficiales | Por ejemplo: El Niño si ≥ +0,5 °C durante 5 trimestres |
 | Notas metodológicas | Cambios de versión, revisiones de datos pasados, etc. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** qué representa una fila, una celda o un registro, con sus unidades.
+
+**Ejemplo:** un valor real con su fecha, explicado en palabras. Si no se ha descargado nada, dilo.
+
+**Para interpretarlo bien:**
+
+- Qué no dice el dato, con qué no se puede comparar y qué errores de lectura son fáciles de cometer.
+
+**Conceptos:** enlaces a [`conceptos.md`](../conceptos.md).
+
 ## Riesgos
 
 - Estabilidad: ¿ha cambiado la URL o el formato? ¿La web se cae?

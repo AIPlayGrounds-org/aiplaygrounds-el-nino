@@ -2,6 +2,8 @@
 
 Tabla resumen de todas las fuentes candidatas. Cada fila enlaza a su ficha cuando existe. La plantilla está en [`_plantilla.md`](_plantilla.md) y el ejemplo de ficha completa, en [`noaa-cpc-oni.md`](noaa-cpc-oni.md).
 
+Cada ficha tiene una sección **Cómo leer el dato** que explica qué significa un valor de esa fuente. Los conceptos comunes (anomalía, periodo base, regiones Niño…) están en [`../conceptos.md`](../conceptos.md).
+
 **Veredictos:** ✅ Automatizable · ✍️ Carga manual · ❌ Descartar · ⏳ Pendiente
 
 **Prioridad:** revisar primero las de la **v0.1**, que necesitan ficha completa y script de prueba. Para las demás basta con la ficha.

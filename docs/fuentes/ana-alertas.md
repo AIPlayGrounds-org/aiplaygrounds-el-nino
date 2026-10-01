@@ -66,6 +66,19 @@ Fuente candidata para avisos o alertas sobre peligros hidrológicos y desbordes.
 | Umbrales oficiales | No usar umbrales si no se encuentran publicados por la autoridad para el producto concreto. |
 | Notas metodológicas | Se inspeccionó el Observatorio SNIRH y opciones de servicios/exportación, pero no se identificó una capa/feed de alertas hidrológicas nacionales. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** todavía no se identificó un producto concreto de alertas hidrológicas de ANA, así que no hay valores que leer.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente.
+
+**Para interpretarlo bien:**
+
+- Si se encuentra, habrá que distinguir si es un aviso (antes del evento), un estado de alerta o un reporte de lo ocurrido.
+- Mientras tanto, se enlaza a los canales oficiales sin reproducir ni deducir alertas.
+
+**Conceptos:** [aviso, alerta y emergencia](../conceptos.md#aviso-alerta-y-emergencia) · [nivel y caudal](../conceptos.md#nivel-y-caudal)
+
 ## Riesgos
 
 - No se ubicó el producto concreto ni sus responsables/condiciones.

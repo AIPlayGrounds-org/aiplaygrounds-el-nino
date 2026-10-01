@@ -66,6 +66,20 @@ Serie del Índice Costero El Niño para contextualizar episodios costeros histó
 | Umbrales oficiales | Categorías de eventos pueden cambiar al aplicar nueva metodología; consultar el documento vigente. |
 | Notas metodológicas | La Nota Técnica 01-2024 indica que sustituye la definición anterior y presenta cronología 1950–2024. El IGP expone además una tabla numérica, pero su última fila y su correspondencia con la metodología descrita por SIOFEN deben confirmarse. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** como en el ICEN actual, un valor mensual de anomalía de Niño 1+2 (°C). Su uso principal es la cronología oficial de episodios costeros: cuándo empezó y terminó cada uno, y su magnitud.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente. La nota técnica de ENFEN muestra una figura de 1950 a 2024.
+
+**Para interpretarlo bien:**
+
+- Sirve para comparar los eventos de 1982–83, 1997–98 y 2017 con la situación actual.
+- Si ENFEN cambia la metodología, también puede cambiar la cronología histórica. Siempre se indica qué versión se usa.
+- Los valores antiguos tienen más incertidumbre porque había menos mediciones.
+
+**Conceptos:** [El Niño Costero](../conceptos.md#el-niño-costero) · [ONI, RONI e ICEN](../conceptos.md#índices-enso-oni-roni-e-icen) · [media móvil trimestral](../conceptos.md#media-móvil-trimestral) · [anomalía](../conceptos.md#anomalía)
+
 ## Riesgos
 
 - La tabla numérica del IGP existe, pero su recuperación automatizada no quedó probada; no transcribir desde la figura ENFEN si se puede usar la tabla.

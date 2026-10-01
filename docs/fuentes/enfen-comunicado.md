@@ -66,6 +66,21 @@ Publicaciones oficiales que informan el estado del sistema de alerta y resumen c
 | Umbrales oficiales | Usar las categorías declaradas por ENFEN en cada comunicado; no inferir umbrales. |
 | Notas metodológicas | El archivo lista comunicados numerados y la página de cada uno expone texto y PDF. La emisión 16-2026 indica el estado de alerta en el HTML. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** cada comunicado es un documento con tres partes: el **estado del sistema de alerta** (la categoría oficial vigente), un **diagnóstico** de las condiciones actuales y un **pronóstico**. WawaPacha toma el estado, la fecha de emisión y el enlace al original.
+
+**Ejemplo:** el último comunicado consultado fue el N.° 17-2026, publicado el 28-09-2026; el anterior, el N.° 16-2026, el 14-09-2026. Su contenido no se transcribe aquí.
+
+**Para interpretarlo bien:**
+
+- El estado vale hasta el siguiente comunicado. Se publican aproximadamente cada dos semanas.
+- Se copia el nombre exacto del estado que use ENFEN (por ejemplo, de vigilancia o de alerta ante El Niño Costero), sin resumirlo ni traducirlo a colores propios.
+- Un estado de alerta de ENFEN no es un aviso meteorológico ni un reporte de emergencia.
+- El pronóstico del comunicado es la opinión oficial peruana. No se promedia con el de NOAA ni con otros.
+
+**Conceptos:** [aviso, alerta y emergencia](../conceptos.md#aviso-alerta-y-emergencia) · [El Niño Costero](../conceptos.md#el-niño-costero) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - Los comunicados son documentos editoriales y pueden cambiar de estructura.

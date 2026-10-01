@@ -66,6 +66,20 @@ Estimaciones satelitales globales de precipitación, con productos tempranos de 
 | Umbrales oficiales | No aplica. |
 | Notas metodológicas | IMERG combina sensores satelitales y procesamiento para estimaciones medio-horarias. En terreno montañoso, la precipitación es menos segura según descripción GPM. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** lluvia estimada en cada celda de 0,1° (unos 11 km), como intensidad (mm/h) cada media hora o como acumulado (mm) diario o mensual.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente. Requiere registro gratuito en NASA.
+
+**Para interpretarlo bien:**
+
+- Hay tres versiones del mismo momento: **Early** (unas 4 h después), **Late** (unas 14 h) y **Final** (unos 3,5 meses, calibrada con pluviómetros). Pueden dar valores distintos y nunca se mezclan sin etiquetarlas.
+- Es un dato estimado por satélite. En terreno montañoso es menos seguro.
+- mm/h es intensidad y mm es acumulado: no se comparan entre sí.
+
+**Conceptos:** [precipitación](../conceptos.md#precipitación) · [rejilla y resolución](../conceptos.md#rejilla-y-resolución) · [tipos de dato](../conceptos.md#tipos-de-dato) · [latencia y revisiones](../conceptos.md#latencia-y-revisiones)
+
 ## Riesgos
 
 - Acceso a descargas PPS requiere registro gratuito; se respetó la instrucción de no crearlo.

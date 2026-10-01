@@ -66,6 +66,21 @@ Análisis diario de SST y anomalía en una rejilla global de 0,25°. Serviría p
 | Umbrales oficiales | No aplica; no asignar umbrales propios. |
 | Notas metodológicas | Producto Level 4: integra observaciones satelitales (AVHRR y VIIRS) e in situ, interpoladas para generar una rejilla espacialmente completa. Los datos de menos de 15 días pueden revisarse. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** un mapa por día. Cada celda de 0,25° (unos 28 km) tiene la temperatura del mar (°C) y su anomalía (°C, base 1971–2000).
+
+**Ejemplo:** el 2026-09-25, el promedio de las celdas de la caja Niño 1+2 fue 25,64 °C de temperatura y +4,93 °C de anomalía (calculado por el spike de la Fase 0).
+
+**Para interpretarlo bien:**
+
+- Es un dato **estimado**: combina satélites y mediciones in situ para rellenar todo el mapa. Cerca de la costa, una celda puede mezclar mar y tierra.
+- Los últimos 15 días son preliminares y pueden cambiar.
+- El promedio de una caja lo calculamos nosotros. No coincide con el índice semanal de CPC para la misma región porque cambian el método y el periodo base.
+- Un día suelto puede tener picos; para hablar de tendencias conviene mirar varios días.
+
+**Conceptos:** [rejilla y resolución](../conceptos.md#rejilla-y-resolución) · [SST](../conceptos.md#temperatura-superficial-del-mar-sst) · [anomalía](../conceptos.md#anomalía) · [periodo base](../conceptos.md#periodo-base) · [tipos de dato](../conceptos.md#tipos-de-dato) · [latencia y revisiones](../conceptos.md#latencia-y-revisiones)
+
 ## Riesgos
 
 - El ERDDAP de CoastWatch y el catálogo/NCSS de NCEI agotaron el tiempo en esta sesión. NOAA PSL respondió al NCSS con dos recortes NetCDF; la prueba actualizó el dictamen de acceso.

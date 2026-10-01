@@ -66,6 +66,20 @@ Observaciones de estaciones meteorológicas convencionales y automáticas. Aport
 | Umbrales oficiales | No aplica. |
 | Notas metodológicas | SENAMHI publica página de estaciones y un tutorial de descarga; también dispone un servicio de solicitud de información. No se verificó que la descarga disponible hoy cubra automáticamente una serie abierta. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** una medición en un punto concreto (la estación) para una variable: lluvia en mm, temperatura en °C, etc., con su fecha y, a veces, su hora.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente.
+
+**Para interpretarlo bien:**
+
+- Representa solo el lugar de la estación. A pocos kilómetros, sobre todo en montaña, la lluvia puede ser muy distinta.
+- Las series suelen tener huecos. Un hueco no es «cero lluvia».
+- Para comparar con una rejilla, hay que recordar que la celda promedia un área y la estación mide un punto.
+
+**Conceptos:** [precipitación](../conceptos.md#precipitación) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - El visor de estaciones no se probó para obtener una serie numérica.

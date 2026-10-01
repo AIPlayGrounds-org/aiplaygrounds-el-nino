@@ -66,6 +66,20 @@ Análisis diario de SST de nivel 4, sin huecos, con rejilla global de 0,05°. Es
 | Umbrales oficiales | No aplica. |
 | Notas metodológicas | El producto describe mapas diarios gap-free de SST fundacional; OSTIA combina satélite e in situ. No es idéntico a un producto de anomalía. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** un mapa por día, con celdas de 0,05° (unos 5,5 km) y la **temperatura fundacional** del mar en °C. No trae anomalía.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente.
+
+**Para interpretarlo bien:**
+
+- La temperatura fundacional no incluye el calentamiento diurno de la superficie, así que no es exactamente comparable con OISST.
+- Para mostrar anomalías habría que calcularlas con una climatología propia, documentada en la metodología. No se mezclaría con anomalías de otros productos.
+- Su mayor resolución permite ver mejor la costa peruana que OISST.
+
+**Conceptos:** [rejilla y resolución](../conceptos.md#rejilla-y-resolución) · [SST](../conceptos.md#temperatura-superficial-del-mar-sst) · [anomalía](../conceptos.md#anomalía) · [periodo base](../conceptos.md#periodo-base) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - El usuario indicó no crear cuentas; la cuenta de Copernicus Marine no se creó.
