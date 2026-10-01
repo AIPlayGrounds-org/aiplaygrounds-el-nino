@@ -1,0 +1,2 @@
+# Copias exactas de archivos originales para los tests: Git no debe tocarlas.
+pipeline/tests/samples/** -text
