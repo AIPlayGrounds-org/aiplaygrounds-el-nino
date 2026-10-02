@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import oniJson from '~~/data/noaa-cpc-oni.json'
+import oniJson from '#data/noaa-cpc-oni.json'
 import type { Dataset, OniRecord } from '~/types/dataset'
 
-const oni = oniJson as Dataset<OniRecord>
+const oni = oniJson as Omit<Dataset, 'records'> & { records: OniRecord[] }
 const records = oni.records
 const last = records.at(-1)
 

@@ -1,4 +1,4 @@
-// Lectura del ONI según los umbrales oficiales de NOAA (docs/conceptos.md#umbral).
+// Classify ONI anomalies with NOAA's official thresholds.
 import type { OniRecord } from '~/types/dataset'
 
 export const ENSO_THRESHOLD = 0.5
