@@ -66,6 +66,21 @@ Avisos preventivos oficiales que indican fenómenos meteorológicos severos, ár
 | Umbrales oficiales | El SENAMHI asigna los niveles del aviso; no reetiquetar. |
 | Notas metodológicas | La página oficial describe avisos como pronósticos preventivos y expone una tabla HTML, además de páginas de detalle con vigencia y áreas. Automatización plausible por HTML, no API confirmada. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** cada fila es un aviso con su fenómeno, número, estado, fecha de emisión, inicio y fin de vigencia, duración y nivel de peligro: amarillo, naranja o rojo, de menor a mayor.
+
+**Ejemplo:** el aviso N.° 392 (precipitaciones en la sierra norte y costa norte) se emitió el 2026-09-30, rige del 2026-10-02 al 2026-10-04 y tiene nivel naranja.
+
+**Para interpretarlo bien:**
+
+- El estado indica si el aviso está **emitido** (publicado, aún no empieza) o **vigente** (en curso). En la consulta del 2026-10-01, los avisos sin estado eran los que ya habían terminado; hay que confirmarlo antes de automatizar, y nunca mostrarlos como activos.
+- La numeración vuelve a empezar cada año: el número no basta para identificar un aviso, hace falta también el año.
+- Algunos avisos actualizan o extienden otro anterior; el título lo indica (por ejemplo, «actualización del aviso N.° 265»).
+- Un aviso meteorológico no implica que el fenómeno se deba a El Niño. No se atribuyen causas.
+
+**Conceptos:** [aviso, alerta y emergencia](../conceptos.md#aviso-alerta-y-emergencia) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - No confundir con `web2.senamhi.gob.pe/?p=avisos`: es un archivo histórico que termina en diciembre de 2020 y reinicia la numeración cada año, así que un número de aviso no basta para identificar su fecha.

@@ -66,6 +66,20 @@ Sistema europeo de pronóstico estacional. Es candidato para mostrar una perspec
 | Umbrales oficiales | No aplica al pronóstico bruto; categorías deben venir de metodología documentada. |
 | Notas metodológicas | La fuente se identifica en la lista de candidatas y en la documentación de herramientas del repo; no se verificó una descarga de SEAS5 en esta revisión. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** un pronóstico estacional de modelo: un conjunto (*ensemble*) de muchas simulaciones que parten de condiciones casi iguales. La dispersión entre ellas indica la incertidumbre.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente. Requiere cuenta en el Climate Data Store.
+
+**Para interpretarlo bien:**
+
+- Es la salida de **un** modelo, no una síntesis institucional como la de NOAA CPC o ENFEN.
+- Sus anomalías se calculan respecto a la climatología del propio modelo. Habrá que confirmar cuál antes de mostrarlas.
+- Se mostraría separado de los demás pronósticos, sin promediarlo con ellos.
+
+**Conceptos:** [pronóstico probabilístico](../conceptos.md#pronóstico-probabilístico) · [anomalía](../conceptos.md#anomalía) · [periodo base](../conceptos.md#periodo-base) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - Cuenta de acceso requerida; se respetó la instrucción de no crearla.

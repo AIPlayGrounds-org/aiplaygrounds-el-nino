@@ -66,6 +66,19 @@ Portal de información hídrica y visores por cuencas. Es candidato para estacio
 | Umbrales oficiales | Por confirmar por estación; no sustituir niveles críticos oficiales. |
 | Notas metodológicas | El visor SNIRH muestra opción de exportar. El servicio ArcGIS consultado para estación de aforo del Mantaro describe 37 estaciones, pero los datos inspeccionados corresponden a puntos/atributos de estación, no a una serie observada de caudal. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** si se confirma la descarga, una serie de caudal (m³/s) o nivel (m) por estación de aforo. Hoy solo se confirmó la lista de estaciones con sus atributos, no sus mediciones.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente.
+
+**Para interpretarlo bien:**
+
+- Se lee igual que los datos hidrológicos de SENAMHI: por estación y con los niveles críticos oficiales.
+- Que una estación aparezca en el mapa no significa que sus datos sean públicos o estén actualizados.
+
+**Conceptos:** [nivel y caudal](../conceptos.md#nivel-y-caudal) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - La presencia de capas/estaciones no prueba que la serie temporal de caudal sea pública.

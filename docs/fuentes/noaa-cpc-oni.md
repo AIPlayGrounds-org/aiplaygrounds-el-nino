@@ -66,6 +66,22 @@ El índice de referencia internacional para declarar un episodio El Niño o La N
 | Umbrales oficiales | CPC marca periodos cálidos/fríos cuando ONI alcanza ±0,5 °C durante al menos cinco temporadas consecutivas y solapadas. |
 | Notas metodológicas | ONI es la media móvil de tres meses de anomalías SST en Niño 3.4. CPC declara que RONI se usa para el monitoreo y pronóstico ENSO oficiales; ONI sigue disponible como serie histórica. El archivo ASCII no incluye etiqueta de versión. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** cada fila es un trimestre móvil. `SEAS` es el trimestre, `YR` el año, `TOTAL` la temperatura media del mar en Niño 3.4 (°C) y `ANOM` su anomalía (°C). El valor que se usa es `ANOM`.
+
+**Ejemplo:** `JJA 2026  29.09  1.80`: entre junio y agosto de 2026 el mar en Niño 3.4 promedió 29,09 °C, 1,80 °C por encima de lo normal.
+
+**Para interpretarlo bien:**
+
+- El año de `DJF` es el de enero y febrero: `DJF 1950` va de diciembre de 1949 a febrero de 1950.
+- Un valor ≥ +0,5 °C **supera el umbral**, pero NOAA solo habla de episodio El Niño tras **cinco trimestres seguidos** por encima. Hasta JJA 2026 había tres seguidos (AMJ, MJJ y JJA).
+- Va uno o dos meses por detrás del presente, y los últimos trimestres pueden revisarse.
+- Hoy NOAA usa el **RONI**, no el ONI, para su monitoreo oficial. El ONI sigue siendo la serie histórica de referencia.
+- Mide el Pacífico central, no la costa peruana. Para la costa se usa el ICEN.
+
+**Conceptos:** [anomalía](../conceptos.md#anomalía) · [media móvil trimestral](../conceptos.md#media-móvil-trimestral) · [umbral](../conceptos.md#umbral) · [ONI, RONI e ICEN](../conceptos.md#índices-enso-oni-roni-e-icen) · [periodo base](../conceptos.md#periodo-base) · [latencia y revisiones](../conceptos.md#latencia-y-revisiones)
+
 ## Riesgos
 
 - El formato del archivo es texto en columnas y el archivo no declara versión.

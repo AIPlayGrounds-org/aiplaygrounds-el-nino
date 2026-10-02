@@ -2,6 +2,8 @@
 
 Tabla resumen de todas las fuentes candidatas. Cada fila enlaza a su ficha cuando existe. La plantilla está en [`_plantilla.md`](_plantilla.md) y el ejemplo de ficha completa, en [`noaa-cpc-oni.md`](noaa-cpc-oni.md).
 
+Cada ficha tiene una sección **Cómo leer el dato** que explica qué significa un valor de esa fuente. Los conceptos comunes (anomalía, periodo base, regiones Niño…) están en [`../conceptos.md`](../conceptos.md).
+
 **Veredictos:** ✅ Automatizable · ✍️ Carga manual · ❌ Descartar · ⏳ Pendiente
 
 **Prioridad:** revisar primero las de la **v0.1**, que necesitan ficha completa y script de prueba. Para las demás basta con la ficha.
@@ -14,7 +16,7 @@ Tabla resumen de todas las fuentes candidatas. Cada fila enlaza a su ficha cuand
 | [`noaa-cpc-nino-semanal`](noaa-cpc-nino-semanal.md) | NOAA CPC — índices Niño semanales | SST y anomalía semanal de Niño 1+2, 3, 3.4 y 4 | ✅ Automatizable | Spike probado; serie desde 02SEP1981, última semana 23SEP2026. Son promedios regionales, no mapas. |
 | [`enfen-icen`](enfen-icen.md) | ENFEN / IGP — ICEN | Índice Costero El Niño, el índice oficial peruano (Niño 1+2) | ⏳ Pendiente | El IGP expone tabla numérica desde 1950 y SIOFEN anuncia descarga; no se confirmó la última fila ni un acceso repetible al dato actual. |
 | [`enfen-comunicado`](enfen-comunicado.md) | ENFEN — comunicado oficial | Estado del sistema de alerta (vigilancia, alerta de El Niño costero…) | ✍️ Carga manual | Texto HTML y PDF; capturar y revisar el estado en cada emisión. |
-| [`noaa-oisst`](noaa-oisst.md) | NOAA — OISST v2.1 | Mapas diarios de SST y anomalía | ✅ Automatizable | Spike probado vía NOAA PSL NCSS: 177,4 KB para SST y anomalía de un recorte Niño 1+2; no descarga los archivos globales. Licencia formal por confirmar. |
+| [`noaa-oisst`](noaa-oisst.md) | NOAA — OISST v2.1 | Mapas diarios de SST y anomalía | ✅ Automatizable | Vía recomendada: ERDDAP de NCEI, CSV recortado en el servidor (datos definitivos desde 2020). PSL para los días preliminares y el histórico anterior. Licencia formal por confirmar. |
 | [`copernicus-ostia`](copernicus-ostia.md) | Copernicus Marine — OSTIA | Alternativa a OISST, mayor resolución | ⏳ Pendiente | Producto diario 0,05°; requiere cuenta y falta confirmar licencia y probar descarga. |
 | [`dhn-boletines`](dhn-boletines.md) | DHN — boletines oceanográficos | Datos del mar peruano (costa) | ✍️ Carga manual | Archivo público de boletines PDF mensuales; requiere extraer y revisar cada edición. |
 | [`iri-enso-pluma`](iri-enso-pluma.md) | IRI (Columbia) — pluma ENSO | Pronóstico de Niño 3.4 de muchos modelos | ✍️ Carga manual | Publica gráficos mensuales, pero indica que ya no entrega los datos subyacentes; CC BY 4.0. |
@@ -28,6 +30,7 @@ Tabla resumen de todas las fuentes candidatas. Cada fila enlaza a su ficha cuand
 | ID | Fuente | Qué aporta | Veredicto | Notas |
 |---|---|---|---|---|
 | [`chirps`](chirps.md) | UCSB CHC — CHIRPS | Precipitación estimada diaria/pentadal, con histórico largo | ✅ Automatizable | Repositorio oficial público y formatos estándar; verificar licencia y producto/versionado elegidos. |
+| [`open-meteo-era5`](open-meteo-era5.md) | Open-Meteo — ERA5 (Copernicus) | Lluvia diaria por punto, desde 1940 | ✅ Automatizable | API gratuita sin cuenta (uso no comercial, CC BY 4.0); probada en Piura. Pedir siempre `models=era5`. Requiere aprobar D-005. |
 | [`nasa-imerg`](nasa-imerg.md) | NASA — GPM IMERG | Precipitación casi en tiempo real | ⏳ Pendiente | Registro gratuito PPS requerido; no se creó cuenta. |
 | [`senamhi-pisco`](senamhi-pisco.md) | SENAMHI — PISCO | Precipitación en rejilla para Perú | ⏳ Pendiente | Resolución e histórico documentados; no se confirmó una descarga actual ni sus condiciones. |
 | [`senamhi-estaciones`](senamhi-estaciones.md) | SENAMHI — estaciones meteorológicas | Lluvia observada por estación | ⏳ Pendiente | Hay visor y solicitud de información; no se verificó una exportación repetible ni licencia. |
@@ -39,6 +42,7 @@ Tabla resumen de todas las fuentes candidatas. Cada fila enlaza a su ficha cuand
 |---|---|---|---|---|
 | [`senamhi-hidro`](senamhi-hidro.md) | SENAMHI — estaciones hidrológicas | Nivel y caudal de ríos | ⏳ Pendiente | Página y reportes por estación identificados; no se probó descarga de series. |
 | [`ana-snirh`](ana-snirh.md) | ANA — SNIRH | Recursos hídricos, caudales | ⏳ Pendiente | Visor ofrece exportación, pero no se confirmó la serie temporal de caudales. |
+| [`open-meteo-glofas`](open-meteo-glofas.md) | Open-Meteo — GloFAS (Copernicus) | Caudal de ríos **simulado**, desde 1984 y con pronóstico | ✅ Automatizable | API gratuita sin cuenta; probada con el río Piura en 2017. Es estimado, no medido; cada punto debe validarse. Requiere aprobar D-005. |
 | [`senamhi-avisos`](senamhi-avisos.md) | SENAMHI — avisos meteorológicos | Alertas de lluvia intensa y otros eventos | ✅ Automatizable | Listado HTML actualizado (último aviso del 2026-09-30) con campos, estado y enlaces de detalle. Usar `www.senamhi.gob.pe`, no el archivo histórico de `web2`. |
 | [`indeci-coen`](indeci-coen.md) | INDECI / COEN | Emergencias y reportes | ✍️ Carga manual | Archivo público de reportes, mayormente PDF; curar solo eventos relevantes. |
 | [`ana-alertas`](ana-alertas.md) | ANA — alertas hidrológicas | Riesgo de desborde | ⏳ Pendiente | No se localizó un producto nacional de alertas ni feed estructurado. |

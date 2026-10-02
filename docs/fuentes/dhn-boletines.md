@@ -66,6 +66,20 @@ Boletines de la Dirección de Hidrografía y Navegación sobre condiciones ocean
 | Umbrales oficiales | Por confirmar; no extraer categorías sin revisar metodología del producto. |
 | Notas metodológicas | La colección enlaza ediciones por mes. La página identifica el producto como boletín mensual y un PDF consultado informa su alcance oceánico. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** cada boletín es un PDF mensual con mapas, gráficos y textos sobre el mar peruano: temperatura, anomalías y otras variables, según la edición.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente. El índice consultado listaba boletines hasta julio de 2026.
+
+**Para interpretarlo bien:**
+
+- Cada edición dice qué periodo, variable, unidad y periodo base usa. Hay que leerlos en el propio boletín antes de transcribir un valor.
+- Los valores son análisis de la DHN. No se mezclan con los de NOAA sin explicar las diferencias de método.
+- Por su frecuencia mensual, da contexto, no información para alertas.
+
+**Conceptos:** [SST](../conceptos.md#temperatura-superficial-del-mar-sst) · [anomalía](../conceptos.md#anomalía) · [periodo base](../conceptos.md#periodo-base)
+
 ## Riesgos
 
 - El PDF puede cambiar de diagramación o tratamiento de las figuras.

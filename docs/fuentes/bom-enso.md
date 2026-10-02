@@ -66,6 +66,18 @@ Producto australiano de monitoreo/alerta ENSO que figuraba como pronóstico alte
 | Umbrales oficiales | No aplica a producto disponible; no se verificaron umbrales históricos. |
 | Notas metodológicas | La página oficial avisa que el producto ENSO Outlook dejó de estar disponible y remite a páginas de monitoreo/gestión climática del hemisferio sur. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** producto retirado: no hay datos vigentes que leer.
+
+**Ejemplo:** ninguno. La página oficial dice «The ENSO Outlook is no longer available».
+
+**Para interpretarlo bien:**
+
+- Si aparece una referencia antigua a un estado del sistema australiano (por ejemplo, «El Niño Watch» o «El Niño Alert»), corresponde a este producto y ya no se actualiza.
+
+**Conceptos:** [pronóstico probabilístico](../conceptos.md#pronóstico-probabilístico)
+
 ## Riesgos
 
 - La página activa dice expresamente que el producto dejó de estar disponible.

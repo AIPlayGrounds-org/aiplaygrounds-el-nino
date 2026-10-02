@@ -37,18 +37,18 @@ Análisis diario de SST y anomalía en una rejilla global de 0,25°. Serviría p
 |---|---|
 | Frecuencia de publicación | Archivo preliminar diario; el archivo final se publica aproximadamente dos semanas después del preliminar, según metadatos ERDDAP. |
 | Latencia | La versión preliminar se describe con un día de latencia y la final alrededor de dos semanas después. |
-| Último dato visto | 2026-09-25; media del recorte Niño 1+2: SST 25,64 °C y anomalía +4,93 °C. |
+| Último dato visto | Preliminar (PSL): 2026-09-25, media del recorte Niño 1+2 con SST 25,64 °C y anomalía +4,93 °C. Definitivo (ERDDAP de NCEI, consultado el 2026-10-01): 2026-09-16, anomalía media de +4,79 °C en Niño 1+2. |
 
 ## Acceso
 
 | Campo | Valor |
 |---|---|
-| Tipo | THREDDS NetCDF Subset Service (NCSS) de NOAA PSL |
-| URL de descarga | `https://psl.noaa.gov/thredds/ncss/grid/Datasets/noaa.oisst.v2.highres/`; el spike solicita `sst.day.mean.<año>.nc` y `sst.day.anom.<año>.nc`. |
-| Formato | NetCDF por HTTP, recortado en servidor por variable, fecha y caja espacial. |
-| Autenticación | Ninguna indicada en el catálogo consultado. |
-| Tamaño aproximado | La prueba descargó 177,4 KB para dos recortes de 15 días y 10° × 10°; la salida contiene solo las celdas seleccionadas. |
-| Script de prueba | `spikes/noaa_oisst.py`, probado con `uv run` el 2026-09-27. |
+| Tipo | Dos vías, ambas recortan en el servidor: **ERDDAP de NCEI** (CSV, datos definitivos; vía recomendada) y **NCSS de NOAA PSL** (NetCDF, incluye los días preliminares más recientes). |
+| URL de descarga | ERDDAP de NCEI, dataset `ncdc_oisst_v2_avhrr_by_time_zlev_lat_lon`: `https://www.ncei.noaa.gov/erddap/griddap/ncdc_oisst_v2_avhrr_by_time_zlev_lat_lon.csv?anom[last][0][(-10):(0)][(270):(280)]` (los corchetes deben ir codificados en la URL). PSL: `https://psl.noaa.gov/thredds/ncss/grid/Datasets/noaa.oisst.v2.highres/`, con `sst.day.mean.<año>.nc` y `sst.day.anom.<año>.nc`. |
+| Formato | ERDDAP: CSV (también JSON y NetCDF), una fila por celda; la segunda fila trae las unidades. PSL: NetCDF. |
+| Autenticación | Ninguna. |
+| Tamaño aproximado | ERDDAP: 77,7 KB y 0,7 s para un día de la caja Niño 1+2 (1681 celdas). PSL: 177,4 KB para dos recortes de 15 días. |
+| Script de prueba | ERDDAP probado el 2026-10-01 leyendo el CSV directamente con polars. PSL: `spikes/noaa_oisst.py`, probado con `uv run` el 2026-09-27. |
 
 ## Uso
 
@@ -66,20 +66,40 @@ Análisis diario de SST y anomalía en una rejilla global de 0,25°. Serviría p
 | Umbrales oficiales | No aplica; no asignar umbrales propios. |
 | Notas metodológicas | Producto Level 4: integra observaciones satelitales (AVHRR y VIIRS) e in situ, interpoladas para generar una rejilla espacialmente completa. Los datos de menos de 15 días pueden revisarse. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** un mapa por día. Cada celda de 0,25° (unos 28 km) tiene la temperatura del mar (°C) y su anomalía (°C, base 1971–2000).
+
+**Ejemplo:** el 2026-09-25, el promedio de las celdas de la caja Niño 1+2 fue 25,64 °C de temperatura y +4,93 °C de anomalía (calculado por el spike de la Fase 0).
+
+**Para interpretarlo bien:**
+
+- Es un dato **estimado**: combina satélites y mediciones in situ para rellenar todo el mapa. Cerca de la costa, una celda puede mezclar mar y tierra.
+- Los últimos 15 días son preliminares y pueden cambiar.
+- El promedio de una caja lo calculamos nosotros. No coincide con el índice semanal de CPC para la misma región porque cambian el método y el periodo base.
+- Un día suelto puede tener picos; para hablar de tendencias conviene mirar varios días.
+
+**Conceptos:** [rejilla y resolución](../conceptos.md#rejilla-y-resolución) · [SST](../conceptos.md#temperatura-superficial-del-mar-sst) · [anomalía](../conceptos.md#anomalía) · [periodo base](../conceptos.md#periodo-base) · [tipos de dato](../conceptos.md#tipos-de-dato) · [latencia y revisiones](../conceptos.md#latencia-y-revisiones)
+
 ## Riesgos
 
-- El ERDDAP de CoastWatch y el catálogo/NCSS de NCEI agotaron el tiempo en esta sesión. NOAA PSL respondió al NCSS con dos recortes NetCDF; la prueba actualizó el dictamen de acceso.
+- El ERDDAP de NCEI solo guarda datos desde el **2020-02-28**. Para el histórico anterior hay que usar los archivos anuales de PSL.
+- El ERDDAP de NCEI publica solo datos definitivos, con unas dos semanas de retraso. Para los días más recientes (preliminares) hay que usar PSL y etiquetarlos como preliminares.
+- En el CSV de ERDDAP las celdas de tierra vienen como `NaN`; hay que convertirlas a `null` (protocolo §2) antes de promediar.
+- Los ERDDAP de CoastWatch y de upwell no respondieron el 2026-09-26 ni el 2026-10-01 (tiempo agotado). No depender de ellos.
 - El spike usa la última quincena y toma la última fecha común. La serie anual de PSL se actualiza con retraso respecto al día actual.
 - La anomalía usa la base 1971–2000, distinta de los índices semanales CPC y de las probabilidades CPC (1991–2020) y del ONI (base móvil). No comparar ni mezclar anomalías con bases distintas.
 - El spike calcula medias de la caja Niño 1+2, excluyendo celdas sin valor; para producción habría que definir si se requieren medias, puntos o mapas.
 
 ## Conclusión
 
-Automatizable: NOAA PSL entregó SST y anomalía como NetCDF para Niño 1+2; el spike leyó la fecha 2026-09-25 y valores en °C sin descargar archivos globales. La licencia con nombre y la atribución siguen por confirmar.
+Automatizable por dos vías probadas. Se recomienda el ERDDAP de NCEI: entrega un CSV recortado en el servidor que polars lee directamente, sin NetCDF ni xarray, con datos definitivos desde 2020. PSL queda para los días preliminares más recientes y el histórico anterior a 2020. La licencia con nombre y la atribución siguen por confirmar.
 
 ## Evidencia consultada
 
 - [Producto NOAA OISST](https://www.ncei.noaa.gov/products/optimum-interpolation-sst)
+- [OISST en el ERDDAP de NCEI](https://www.ncei.noaa.gov/erddap/griddap/ncdc_oisst_v2_avhrr_by_time_zlev_lat_lon.html)
+- [Metadatos del dataset en el ERDDAP de NCEI](https://www.ncei.noaa.gov/erddap/info/ncdc_oisst_v2_avhrr_by_time_zlev_lat_lon/index.html)
 - [Metadatos y acceso ERDDAP NOAA](https://upwell.pfeg.noaa.gov/erddap/info/ncdcOisst21Agg/index.html)
 - [Catálogo OISST diario de NOAA PSL](https://psl.noaa.gov/thredds/catalog/Datasets/noaa.oisst.v2.highres/catalog.html)
 - [Servicio NCSS de la serie SST diaria de NOAA PSL](https://psl.noaa.gov/thredds/ncss/grid/Datasets/noaa.oisst.v2.highres/sst.day.mean.2026.nc/dataset.html)

@@ -27,7 +27,7 @@ Producto nacional gridded de precipitación del SENAMHI construido a partir de e
 | Campo | Valor |
 |---|---|
 | Cobertura espacial | Perú |
-| Resolución espacial | Documentación consultada describe aproximadamente 0,1° (~5 km), según producto/versión. |
+| Resolución espacial | Documentación consultada describe aproximadamente 0,1° (unos 11 km), según producto/versión. |
 | Resolución temporal | Mensual en la versión descrita. |
 | Histórico disponible | Desde 1981 para PISCOp mensual v2.1 según documento SENAMHI consultado. |
 
@@ -65,6 +65,20 @@ Producto nacional gridded de precipitación del SENAMHI construido a partir de e
 | Periodo base de la anomalía | No aplica a valores de precipitación; anomalías calculadas requieren metodología aparte. |
 | Umbrales oficiales | No aplica. |
 | Notas metodológicas | La documentación SENAMHI consultada describe PISCOp v2.1 a paso mensual desde 1981 y ~0,1°. No se confirmó vigencia de esa ficha para la publicación actual. |
+
+## Cómo leer el dato
+
+**Qué es un valor:** lluvia mensual acumulada en milímetros, en celdas de unos 0,1° sobre el Perú, desde 1981 (según la documentación de PISCOp v2.1).
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente.
+
+**Para interpretarlo bien:**
+
+- Combina estaciones de SENAMHI con estimaciones satelitales. Está hecho para el Perú, así que en principio representa mejor el territorio que los productos globales.
+- Es un dato estimado: entre estaciones, el valor de la celda es una interpolación.
+- Hay que confirmar qué versión se usa, porque la documentación consultada describe una versión concreta.
+
+**Conceptos:** [precipitación](../conceptos.md#precipitación) · [rejilla y resolución](../conceptos.md#rejilla-y-resolución) · [tipos de dato](../conceptos.md#tipos-de-dato)
 
 ## Riesgos
 

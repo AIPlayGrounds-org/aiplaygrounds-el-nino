@@ -66,6 +66,20 @@ Capas geográficas de límites administrativos con nombres y códigos para regio
 | Umbrales oficiales | No aplica. |
 | Notas metodológicas | El portal IDE INEI ofrece capas vectoriales departamental/provincial/distrital, con GPKG, y advierte que la información puede tener inconsistencias. El paso requerido de descarga y validación en QGIS no pudo completarse: QGIS no está disponible en este entorno. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** no son datos de clima: son polígonos con el contorno de cada departamento y provincia, con su nombre y su código **UBIGEO** de INEI (dos dígitos para el departamento, cuatro para la provincia y seis para el distrito).
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente. Falta abrir la capa en QGIS.
+
+**Para interpretarlo bien:**
+
+- Sirven para dibujar el mapa de Territorio y para ubicar cada dato en su región o provincia.
+- Para unir datos de distintas fuentes se usa el código UBIGEO, no el nombre, porque los nombres pueden escribirse distinto.
+- Los límites censales de INEI y los límites legales del IGN pueden no coincidir. Se usa uno solo, decidido por el equipo.
+
+**Conceptos:** [rejilla y resolución](../conceptos.md#rejilla-y-resolución)
+
 ## Riesgos
 
 - No se descargó archivo ni se comprobaron códigos/nombres de regiones y provincias dentro de la capa.

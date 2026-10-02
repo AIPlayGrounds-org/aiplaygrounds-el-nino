@@ -66,6 +66,21 @@
 | Umbrales oficiales | Por confirmar; la documentación 2024 revisa la definición operativa y ENFEN publicó una nota técnica posterior en 2026. |
 | Notas metodológicas | SIOFEN describe una media móvil trimestral de anomalías mensuales de TSM en Niño 1+2 calculadas con ERSSTv5 y climatología 1991–2020. Un informe técnico de ENFEN describe ICENtmp como una estimación transitoria que sustituye faltantes mensuales con observaciones semanales y pronósticos consensuados. La relación con el índice operacional anunciado en abril de 2026 queda por confirmar. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** un valor por mes: la media móvil de tres meses de la anomalía de la temperatura del mar en Niño 1+2, en °C. Según SIOFEN se calcula con ERSST v5 y base 1991–2020.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente. La tabla del IGP no respondió durante la revisión.
+
+**Para interpretarlo bien:**
+
+- Mide la costa del Perú, no el Pacífico central: puede haber El Niño Costero sin El Niño en el ONI, como en 2017, y al revés.
+- Existe un **ICEN temporal** (ICENtmp) que completa los meses recientes con datos semanales y pronósticos. No es el valor definitivo y debe etiquetarse así.
+- La metodología cambió (nota técnica de 2024 y un índice operacional en 2026). Solo se comparan valores de la misma versión.
+- Las categorías de El Niño Costero y La Niña Costera se toman de la nota técnica vigente de ENFEN, nunca de umbrales propios.
+
+**Conceptos:** [El Niño Costero](../conceptos.md#el-niño-costero) · [regiones Niño](../conceptos.md#regiones-niño) · [ONI, RONI e ICEN](../conceptos.md#índices-enso-oni-roni-e-icen) · [media móvil trimestral](../conceptos.md#media-móvil-trimestral) · [umbral](../conceptos.md#umbral)
+
 ## Riesgos
 
 - El IGP sí publica una tabla numérica de ICEN; la búsqueda localizó valores desde 1950. El acceso directo a la página agotó el tiempo en esta sesión.

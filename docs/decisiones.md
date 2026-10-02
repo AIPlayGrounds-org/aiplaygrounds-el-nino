@@ -83,3 +83,49 @@ Tres personas trabajando en paralelo, cada una responsable de un área:
 | **Contenido** | _por definir_ | Textos de Aprende y Metodología, carga manual de ENFEN, correos a instituciones y licencias. |
 
 Datos y web se comunican solo a través del formato de los JSON. Web puede avanzar con datos de prueba mientras Datos termina cada fuente.
+
+---
+
+## D-004 — El pipeline se escribe en notebooks de marimo
+
+- **Fecha:** 2026-10-01
+- **Estado:** 🟡 Propuesta
+
+### Qué
+
+Cada fuente es un notebook de [marimo](https://marimo.io) en `pipeline/` que hace todo el recorrido: descargar, validar, mostrar y publicar. Tablas con **polars** y gráficos con **plotly**. El mismo archivo se abre en el navegador para revisar cada paso (`marimo edit`) y se ejecuta sin interfaz en producción (`python <notebook>.py`).
+
+### Por qué
+
+Transparencia: cualquiera del equipo ve qué hace el código y su resultado en cada paso. Un notebook de marimo es un archivo `.py` normal: se versiona bien en Git, se prueba con pytest y se ejecuta en GitHub Actions.
+
+Cambia lo propuesto en [`wawapacha.md` §10](wawapacha.md#10-arquitectura-técnica-propuesta): en lugar de «un script Python por fuente» con pandas, cada fuente es un notebook de marimo con polars. xarray se añadirá cuando lleguen las fuentes en rejilla que lo necesiten.
+
+---
+
+## D-005 — APIs gratuitas para lluvia y ríos
+
+- **Fecha:** 2026-10-01
+- **Estado:** 🟡 Propuesta
+
+### Qué
+
+Añadir al alcance de [D-002](#d-002--alcance-a-fin-de-mes-todas-las-fases-recortadas) dos fuentes servidas por la API gratuita de Open-Meteo:
+
+| Fase | Fuente | Qué aporta |
+|---|---|---|
+| **v0.2** | [`open-meteo-era5`](fuentes/open-meteo-era5.md) | Lluvia diaria por región (reanálisis ERA5). |
+| **v0.3** | [`open-meteo-glofas`](fuentes/open-meteo-glofas.md) | Caudal de ríos **simulado** (GloFAS), mientras no haya caudales observados de SENAMHI o ANA. |
+
+Para OISST (v0.1) se usa el ERDDAP de NCEI, que entrega CSV recortado en el servidor (ver [`noaa-oisst`](fuentes/noaa-oisst.md)).
+
+### Por qué
+
+Son gratuitas, no exigen cuenta y se probaron con datos reales de Piura. Cubren la lluvia por región sin procesar rejillas y son la única vía encontrada para mostrar ríos en la v0.3 sin esperar a las instituciones.
+
+### Condiciones
+
+- Uso solo no comercial, con la atribución que exige CC BY 4.0: «Weather data by Open-Meteo.com» y el crédito a Copernicus (ERA5 o GloFAS).
+- El caudal de GloFAS se muestra siempre como **estimado por modelo**, nunca como dato oficial ni como base para alertas.
+- Cada punto de río se valida contra una crecida conocida antes de publicarse.
+- Cuando SENAMHI o ANA den acceso a datos observados, estos tienen prioridad.

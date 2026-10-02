@@ -66,6 +66,20 @@ Análisis mensual global de SST en rejilla de 2° con reconstrucción estadísti
 | Umbrales oficiales | No aplica al producto SST bruto; umbrales ENSO requieren metodología separada. |
 | Notas metodológicas | ERSSTv5 deriva de ICOADS, se produce en 2° y aumenta la completitud espacial mediante reconstrucción estadística. NOAA indica mayor fiabilidad después de la década de 1940. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** un mapa por mes, desde enero de 1854. Cada celda de 2° (unos 220 km) tiene la temperatura media del mar del mes (°C) y su anomalía (°C, base 1971–2000).
+
+**Ejemplo:** el último archivo disponible el 2026-10-01 era el de agosto de 2026 (`ersst.v5.202608.nc`). Sus valores no se leyeron.
+
+**Para interpretarlo bien:**
+
+- Es una **reconstrucción**: rellena con métodos estadísticos las zonas sin mediciones. Antes de la década de 1940 hay muchas menos mediciones y más incertidumbre.
+- Sus celdas son muy grandes: no muestra detalles de la costa peruana. Sirve para comparar eventos a escala del Pacífico, no para mapas locales.
+- El ONI se calcula a partir de ERSST, pero con su propio método y periodo base. Una anomalía de ERSST no es un valor del ONI.
+
+**Conceptos:** [rejilla y resolución](../conceptos.md#rejilla-y-resolución) · [SST](../conceptos.md#temperatura-superficial-del-mar-sst) · [anomalía](../conceptos.md#anomalía) · [periodo base](../conceptos.md#periodo-base) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - Resolución de 2° es gruesa para costa y mapa local.

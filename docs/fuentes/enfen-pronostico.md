@@ -66,6 +66,19 @@ Pronósticos peruanos para El Niño Costero y Niño 3.4 publicados dentro de com
 | Umbrales oficiales | Usar categorías explícitas de ENFEN en cada edición. |
 | Notas metodológicas | La página y el comunicado 16-2026 contienen texto de estado y pronóstico; no se halló un producto de pronóstico separado. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** el pronóstico ENFEN se publica dentro de cada comunicado oficial, con la magnitud esperada de El Niño Costero y del Pacífico central para los próximos meses.
+
+**Ejemplo:** ver la ficha [`enfen-comunicado`](enfen-comunicado.md).
+
+**Para interpretarlo bien:**
+
+- Se lee en el comunicado, junto con su fecha de emisión. Un pronóstico de un comunicado antiguo ya no es el vigente.
+- Si incluye probabilidades por magnitud, se leen como cualquier pronóstico probabilístico: no indican impactos concretos.
+
+**Conceptos:** [pronóstico probabilístico](../conceptos.md#pronóstico-probabilístico) · [El Niño Costero](../conceptos.md#el-niño-costero) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - Duplicaría la ficha y captura manual de `enfen-comunicado`.

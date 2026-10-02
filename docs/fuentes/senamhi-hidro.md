@@ -66,6 +66,20 @@ Registros de nivel y/o caudal en estaciones hidrológicas. Aportarían observaci
 | Umbrales oficiales | Usar solo niveles críticos publicados oficialmente; no establecerlos en esta ficha. |
 | Notas metodológicas | La página oficial confirma que el monitoreo hidrológico presenta niveles y/o caudales de la red SENAMHI. Otra página explica que los reportes diarios se emiten por estación e incluyen hidrogramas y niveles críticos. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** una medición por estación de río: el **nivel** del agua (en metros) y, cuando existe, el **caudal** (en m³/s). Los reportes diarios incluyen un hidrograma, es decir, un gráfico de su evolución.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente.
+
+**Para interpretarlo bien:**
+
+- Cada estación tiene sus propios niveles críticos oficiales. Un mismo valor puede ser normal en un río y peligroso en otro.
+- No se infiere una alerta a partir del nivel: solo se muestran las que publica la autoridad.
+- Un dato de estación representa ese punto del río, no toda la cuenca.
+
+**Conceptos:** [nivel y caudal](../conceptos.md#nivel-y-caudal) · [aviso, alerta y emergencia](../conceptos.md#aviso-alerta-y-emergencia) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - No se probó descarga automatizada de valores ni formato de serie.

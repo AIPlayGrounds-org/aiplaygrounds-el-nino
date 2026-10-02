@@ -66,6 +66,20 @@ Reportes oficiales de emergencias y peligros difundidos por el Centro de Operaci
 | Umbrales oficiales | No aplica; son reportes de eventos/emergencias. |
 | Notas metodológicas | INDECI describe al COEN como órgano que monitorea, valida y comunica información oficial las 24 h. El archivo público lista reportes y enlaces de descarga; los documentos son narrativos y de actualización frecuente. |
 
+## Cómo leer el dato
+
+**Qué es un valor:** cada reporte describe una emergencia que ya ocurrió: qué pasó, dónde, cuándo y qué daños causó. Hay reportes preliminares, complementarios (que actualizan los anteriores) e informes.
+
+**Ejemplo:** Todavía no hay ejemplo: no se ha descargado ningún dato de esta fuente. El archivo consultado listaba reportes hasta el 2026-08-23.
+
+**Para interpretarlo bien:**
+
+- Es un registro de lo ocurrido, no un pronóstico ni un aviso.
+- Las cifras de daños cambian entre el reporte preliminar y los complementarios. Siempre se muestra el número y la fecha del reporte usado.
+- No se atribuye una emergencia a El Niño salvo que la fuente oficial lo diga.
+
+**Conceptos:** [aviso, alerta y emergencia](../conceptos.md#aviso-alerta-y-emergencia) · [tipos de dato](../conceptos.md#tipos-de-dato)
+
 ## Riesgos
 
 - El volumen es alto y el estado se actualiza por reporte complementario.
