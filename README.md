@@ -1,46 +1,68 @@
 # WawaPacha
 
-Observatorio web para seguir las señales del Fenómeno El Niño en el Perú: temperatura del mar, lluvia, ríos, indicadores ENSO, pronósticos y alertas. Reúne fuentes peruanas e internacionales y muestra de cada dato su fuente, su fecha y si es observado, estimado o pronóstico.
+![The home page: "¿Llegó El Niño?" with the latest ONI reading and the stripes of the series since 1950](docs/assets/site.png)
 
-Es un sitio estático ([Nuxt 4](https://nuxt.com/) con Bun) alimentado por un pipeline de datos en Python (uv), con [notebooks de marimo](https://marimo.io) para explorarlo. No tiene backend, cuentas ni API.
+WawaPacha is a public web observatory for the signals of El Niño in Peru. Every
+number shows its source, its date and whether it is observed, estimated or
+forecast. It is a static site ([Nuxt 4](https://nuxt.com/) with Bun) fed by a
+Python data pipeline (uv), with no backend and no accounts. Live at
+<https://aiplaygrounds-org.github.io/wawapacha/>.
 
-**Estado:** existe una sola página, el [ONI](docs/fuentes/noaa-cpc-oni.md) de NOAA desde 1950. El resto del alcance y las fechas están en [`docs/decisiones.md`](docs/decisiones.md).
+## Run it
 
-## Puesta en marcha
-
-Necesitas [Git](https://git-scm.com/) y [mise](https://mise.jdx.dev/getting-started). mise instala las versiones de Bun y uv que fija `mise.toml`.
+You need [Git](https://git-scm.com/) and
+[mise](https://mise.jdx.dev/getting-started). mise installs the Bun and uv
+versions pinned in [`mise.toml`](mise.toml).
 
 ```sh
 mise install
+cd web
 mise exec -- bun install
 mise exec -- bun run dev
 ```
 
-Abre <http://localhost:3100>. Con mise activado en tu shell, omite `mise exec --`.
+Open <http://localhost:3100>. If mise is activated in your shell, drop
+`mise exec --`.
 
-| Comando | Uso |
-| --- | --- |
-| `bun run dev` | Servidor de desarrollo. |
-| `bun run generate` | Sitio estático en `.output/public`. |
-| `bun run build` | Compilación de producción. |
-| `bun run preview` | Previsualiza la compilación; ejecuta antes `bun run build`. |
+To download a dataset and publish it to `data/`, run this from `pipeline/`:
 
-## Pipeline
+```sh
+uv run wawapacha-pipeline run noaa-cpc-oni
+```
 
-El paquete de `pipeline/` descarga, valida y publica `data/<id>.json`, una fuente a la vez. Los notebooks de `notebooks/` muestran cada paso sin publicar nada. Desde `pipeline/`:
+```text
+Published noaa-cpc-oni: 919 records in data/noaa-cpc-oni.json
+```
 
-| Comando | Uso |
-| --- | --- |
-| `uv run wawapacha-pipeline run noaa-cpc-oni` | Descarga, valida y publica el ONI. |
-| `uv run marimo edit ../notebooks/noaa_cpc_oni.py` | Abre el notebook en el navegador, paso a paso. |
-| `uv run pytest` | Tests. |
+If the download fails validation, nothing is published and the previous JSON
+stays.
 
-Si una descarga no pasa la validación, no se publica nada y se conserva el JSON anterior.
+## What the site shows
 
-## Fuera de alcance
+One page, `/`, built from NOAA's [ONI](docs/sources.md#noaa-cpc-oni) since 1950:
+whether El Niño has arrived, what it means for Peru, the series to explore, and
+how it was made, with the source, the type of data and the date on each number.
 
-Cuentas y login, notificaciones, API pública, descargas propias, búsqueda global, nivel distrito, modelos o consensos propios y módulos sectoriales. La lista completa está en [`docs/producto.md`](docs/producto.md#8-fuera-de-alcance-por-ahora).
+## What is where
 
-## Documentación
+| Folder                         | Holds                                                                 |
+| ------------------------------ | --------------------------------------------------------------------- |
+| [`web/`](web/)                 | The web app.                                                          |
+| [`pipeline/`](pipeline/)       | Downloads, validates and publishes the data.                          |
+| [`data/`](data/)               | The published JSON.                                                   |
+| [`notebooks/`](notebooks/)     | [marimo](https://marimo.io) notebooks that walk through the pipeline. |
+| [`sources.toml`](sources.toml) | The source registry.                                                  |
+| [`schema/`](schema/)           | The contract of the published JSON.                                   |
+| [`docs/`](docs/README.md)      | Product, data contract, concepts, decisions and sources.              |
 
-Empieza por el [índice de `docs/`](docs/README.md). Para trabajar en el repositorio, [`CONTRIBUTING.md`](CONTRIBUTING.md).
+## Not in the product
+
+The site has no accounts, no notifications, no public API, no downloads of its
+own, no models of its own and no model consensus.
+
+## More
+
+[`ARCHITECTURE.md`](ARCHITECTURE.md) maps the code.
+[`CONTRIBUTING.md`](CONTRIBUTING.md) covers branches and checks.
+[`docs/add-a-source.md`](docs/add-a-source.md) adds a source.
+[`ROADMAP.md`](ROADMAP.md) lists what is not built.
