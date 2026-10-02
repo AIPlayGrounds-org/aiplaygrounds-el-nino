@@ -1,0 +1,104 @@
+# Updates data/ daily and redeploys the site when any source changes.
+# Each source runs independently. A validation failure does not stop the other
+# sources, but the job fails at the end and names the failed sources. The
+# pipeline keeps the previous JSON for a source that fails.
+name: Update data
+
+on:
+  schedule:
+    # Run at 14:17 UTC. This is 9:17 in Lima and 9:17 or 10:17 in Washington,
+    # depending on the season. NOAA CPC usually updates its files during the US
+    # East Coast morning, so they are available by this time. Minute 17 avoids
+    # the top of the hour, when GitHub delays cron runs the most.
+    - cron: "17 14 * * *"
+  workflow_dispatch:
+    inputs:
+      source:
+        description: "Id of one source (for example noaa-cpc-oni). Empty: all."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  # Required to start deploy.yml with `gh workflow run` at the end.
+  actions: write
+
+# A second run waits for the first to finish instead of overlapping it.
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+env:
+  # Install only the pipeline package. The notebooks are not used here.
+  UV_LOCKED: "1"
+  UV_NO_DEFAULT_GROUPS: "1"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # Always main, even when the workflow is started by hand from another branch.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Download and validate each source
+        id: sources
+        working-directory: pipeline
+        env:
+          SOURCE: ${{ inputs.source }}
+        run: |
+          ids=$(uv run python -c "from wawapacha_pipeline.cli import SOURCES; print(*SOURCES)")
+          if [ -n "$SOURCE" ]; then ids=$SOURCE; fi
+
+          failed=""
+          for id in $ids; do
+            echo "::group::$id"
+            if ! uv run wawapacha-pipeline run "$id"; then
+              echo "::error title=$id::source failed, nothing was published"
+              failed="$failed $id"
+            fi
+            echo "::endgroup::"
+          done
+          echo "failed=${failed# }" >> "$GITHUB_OUTPUT"
+
+      - name: Publish the changes to main
+        id: commit
+        run: |
+          ids=""
+          while read -r _ path; do
+            ids="$ids $(basename "$path" .json)"
+          done < <(git status --porcelain data/)
+          ids=${ids# }
+
+          if [ -z "$ids" ]; then
+            echo "No changes in data/."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "data: update $ids"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made with GITHUB_TOKEN does not trigger other workflows.
+      # `workflow_dispatch` is the exception used to start deploy.yml.
+      - name: Deploy the site
+        if: steps.commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
+
+      - name: Fail if any source failed
+        if: steps.sources.outputs.failed != ''
+        env:
+          FAILED: ${{ steps.sources.outputs.failed }}
+        run: |
+          echo "::error::Sources that failed: $FAILED"
+          exit 1
