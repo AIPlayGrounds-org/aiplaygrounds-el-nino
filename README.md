@@ -36,4 +36,16 @@ Si mise no está activado en tu shell, antepón `mise exec --` a cualquiera de e
 
 El código de la aplicación está en `app/`; la configuración de Nuxt está en `nuxt.config.ts`. Los scripts están definidos en `package.json` y las dependencias se registran en `bun.lock`.
 
+## Pipeline de datos
+
+Cada fuente es un notebook de [marimo](https://marimo.io) en `pipeline/` que descarga los datos, los valida según [`docs/protocolo-datos.md`](docs/protocolo-datos.md), los muestra y los publica en `data/<id>.json`. Desde la carpeta `pipeline/`:
+
+| Comando | Uso |
+| --- | --- |
+| `uv run marimo edit noaa_cpc_oni.py` | Abre el notebook en el navegador para ver cada paso. Para publicar, pulsa el botón del final. |
+| `uv run python noaa_cpc_oni.py` | Ejecuta el notebook sin interfaz: descarga, valida y publica. |
+| `uv run pytest` | Ejecuta los tests. |
+
+uv instala la versión de Python y las dependencias (marimo, polars y plotly) la primera vez. Si una descarga no pasa la validación, no se publica nada y el JSON anterior se conserva.
+
 Más información: [documentación de Nuxt](https://nuxt.com/docs/getting-started/introduction) · [mise](https://mise.jdx.dev/).
