@@ -10,8 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "echarts": "^6.1.0",
     "nuxt": "^4.5.2",
     "vue": "^3.5.43",
+    "vue-echarts": "^8.3.1",
     "vue-router": "^5.3.1"
   }
 }
