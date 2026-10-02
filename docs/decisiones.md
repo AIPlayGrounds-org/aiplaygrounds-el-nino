@@ -91,6 +91,8 @@ Datos y web se comunican solo a través del formato de los JSON. Web puede avanz
 - **Fecha:** 2026-10-01
 - **Estado:** 🟡 Propuesta
 
+> Reemplazada en parte por [D-006](#d-006--el-pipeline-es-un-paquete-y-los-notebooks-lo-muestran): el notebook ya no es lo que se ejecuta en producción.
+
 ### Qué
 
 Cada fuente es un notebook de [marimo](https://marimo.io) en `pipeline/` que hace todo el recorrido: descargar, validar, mostrar y publicar. Tablas con **polars** y gráficos con **plotly**. El mismo archivo se abre en el navegador para revisar cada paso (`marimo edit`) y se ejecuta sin interfaz en producción (`python <notebook>.py`).
@@ -129,3 +131,35 @@ Son gratuitas, no exigen cuenta y se probaron con datos reales de Piura. Cubren 
 - El caudal de GloFAS se muestra siempre como **estimado por modelo**, nunca como dato oficial ni como base para alertas.
 - Cada punto de río se valida contra una crecida conocida antes de publicarse.
 - Cuando SENAMHI o ANA den acceso a datos observados, estos tienen prioridad.
+
+---
+
+## D-006 — El pipeline es un paquete y los notebooks lo muestran
+
+- **Fecha:** 2026-10-02
+- **Estado:** 🟡 Propuesta
+
+### Qué
+
+El código de cada fuente (descargar, leer, validar, armar el JSON) vive en un paquete de Python, [`pipeline/`](../pipeline/). Los notebooks de marimo viven aparte, en [`notebooks/`](../notebooks/), importan ese paquete y muestran cada paso.
+
+| Carpeta | Contiene |
+| --- | --- |
+| `pipeline/` | El paquete `wawapacha_pipeline`, su CLI, los tests y las muestras reales. |
+| `notebooks/` | Un notebook por fuente. No define funciones ni clases y no escribe en `data/`. |
+| `docs/` | La documentación. |
+
+Producción ejecuta `wawapacha-pipeline run <id>`. Es la única vía que escribe en `data/`.
+
+### Por qué
+
+- Producción no depende de marimo ni de un botón dentro de un notebook.
+- Hay una sola vía de publicación.
+- Los tests llaman a las funciones directamente.
+- Los notebooks conservan lo que pedía D-004: que cualquiera del equipo vea cada paso y su resultado.
+
+### Condiciones
+
+- Un test falla si un notebook define una función o una clase: la lógica va en el paquete.
+- marimo, plotly y polars están en el grupo `notebooks` de `pipeline/pyproject.toml`. El paquete en sí no depende de ellos.
+

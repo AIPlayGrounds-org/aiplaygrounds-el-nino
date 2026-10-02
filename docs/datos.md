@@ -68,4 +68,4 @@ Los campos de `records` dependen de la fuente. La forma del conjunto está en [`
 
 ## 6. Pruebas
 
-Cada fuente tiene un test que usa una copia real del archivo original guardada en el repositorio. Así, si la fuente cambia de formato, el test sigue sirviendo de referencia.
+Cada fuente tiene un test que usa una copia real del archivo original guardada en el repositorio. Así, si la fuente cambia de formato, el test sigue sirviendo de referencia. Las muestras están en `pipeline/tests/samples/`.

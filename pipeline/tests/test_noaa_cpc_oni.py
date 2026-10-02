@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-import noaa_cpc_oni as oni
-from noaa_cpc_oni import REPO_ROOT, ValidationError, publish, relative_path
+from wawapacha_pipeline.contract import REPO_ROOT, ValidationError, publish, relative_path
+from wawapacha_pipeline.sources import noaa_cpc_oni as oni
 
 PIPELINE_DIR = Path(__file__).parents[1]
 SAMPLE_PATH = Path(__file__).parent / "samples" / "oni.ascii.txt"
@@ -21,11 +21,12 @@ def replace_line(text: str, old: str, new: str) -> str:
     return text.replace(old, new, 1)
 
 
-def run_notebook(source: Path, data_dir: Path) -> subprocess.CompletedProcess:
-    """Ejecuta el notebook como script, igual que en producción, leyendo `source`."""
+def run_cli(source: Path, data_dir: Path) -> subprocess.CompletedProcess:
+    """Ejecuta la CLI como en producción, leyendo `source` y publicando en `data_dir`."""
     env = os.environ | {"NOAA_CPC_ONI_URL": source.resolve().as_uri(), "WAWAPACHA_DATA_DIR": str(data_dir)}
     return subprocess.run(
-        [sys.executable, "noaa_cpc_oni.py"], cwd=PIPELINE_DIR, env=env, capture_output=True, text=True, encoding="utf-8"
+        [sys.executable, "-m", "wawapacha_pipeline", "run", "noaa-cpc-oni"],
+        cwd=PIPELINE_DIR, env=env, capture_output=True, text=True, encoding="utf-8",
     )
 
 
@@ -99,8 +100,8 @@ def test_relative_path_outside_the_repo_keeps_the_full_path(tmp_path):
     assert relative_path(path) == Path(path).as_posix()
 
 
-def test_notebook_as_script_publishes_the_json(tmp_path):
-    result = run_notebook(SAMPLE_PATH, tmp_path)
+def test_cli_publishes_the_json(tmp_path):
+    result = run_cli(SAMPLE_PATH, tmp_path)
 
     assert result.returncode == 0, result.stderr
     published = json.loads((tmp_path / "noaa-cpc-oni.json").read_text(encoding="utf-8"))
@@ -108,14 +109,14 @@ def test_notebook_as_script_publishes_the_json(tmp_path):
     assert published["records"][-1]["anomaly"] == 1.80
 
 
-def test_notebook_as_script_keeps_the_previous_json_when_validation_fails(tmp_path):
+def test_cli_keeps_the_previous_json_when_validation_fails(tmp_path):
     broken = tmp_path / "roto.txt"
     broken.write_text("contenido roto\n", encoding="ascii")
     previous = tmp_path / "noaa-cpc-oni.json"
     previous.write_text('{"versión": "anterior"}', encoding="utf-8")
 
-    result = run_notebook(broken, tmp_path)
+    result = run_cli(broken, tmp_path)
 
-    assert result.returncode != 0
+    assert result.returncode == 1
     assert "Cabecera inesperada" in result.stderr
     assert previous.read_text(encoding="utf-8") == '{"versión": "anterior"}'

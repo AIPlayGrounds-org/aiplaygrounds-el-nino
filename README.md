@@ -2,7 +2,7 @@
 
 Observatorio web para seguir las señales del Fenómeno El Niño en el Perú: temperatura del mar, lluvia, ríos, indicadores ENSO, pronósticos y alertas. Reúne fuentes peruanas e internacionales y muestra de cada dato su fuente, su fecha y si es observado, estimado o pronóstico.
 
-Es un sitio estático ([Nuxt 4](https://nuxt.com/) con Bun) alimentado por un pipeline de datos en Python ([marimo](https://marimo.io) con uv). No tiene backend, cuentas ni API.
+Es un sitio estático ([Nuxt 4](https://nuxt.com/) con Bun) alimentado por un pipeline de datos en Python (uv), con [notebooks de marimo](https://marimo.io) para explorarlo. No tiene backend, cuentas ni API.
 
 **Estado:** existe una sola página, el [ONI](docs/fuentes/noaa-cpc-oni.md) de NOAA desde 1950. El resto del alcance y las fechas están en [`docs/decisiones.md`](docs/decisiones.md).
 
@@ -27,12 +27,12 @@ Abre <http://localhost:3100>. Con mise activado en tu shell, omite `mise exec --
 
 ## Pipeline
 
-Cada fuente es un notebook en `pipeline/` que descarga, valida y publica `data/<id>.json`. Desde `pipeline/`:
+El paquete de `pipeline/` descarga, valida y publica `data/<id>.json`, una fuente a la vez. Los notebooks de `notebooks/` muestran cada paso sin publicar nada. Desde `pipeline/`:
 
 | Comando | Uso |
 | --- | --- |
-| `uv run marimo edit noaa_cpc_oni.py` | Abre el notebook en el navegador, paso a paso. |
-| `uv run python noaa_cpc_oni.py` | Descarga, valida y publica sin interfaz. |
+| `uv run wawapacha-pipeline run noaa-cpc-oni` | Descarga, valida y publica el ONI. |
+| `uv run marimo edit ../notebooks/noaa_cpc_oni.py` | Abre el notebook en el navegador, paso a paso. |
 | `uv run pytest` | Tests. |
 
 Si una descarga no pasa la validación, no se publica nada y se conserva el JSON anterior.

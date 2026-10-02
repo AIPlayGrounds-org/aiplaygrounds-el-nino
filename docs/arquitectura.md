@@ -4,7 +4,7 @@ Un sitio estático y un pipeline de datos. No hay backend.
 
 ```text
 fuente pública
-  → pipeline/<id>.py   descarga, valida, publica
+  → pipeline/          descarga, valida y publica (wawapacha-pipeline run <id>)
   → data/<id>.json     datos y procedencia
   → nuxt generate      lee data/ al compilar
   → GitHub Pages
@@ -16,7 +16,8 @@ Datos y web solo se comunican por el formato de los JSON ([`datos.md`](datos.md)
 
 | Pieza | Dónde | Qué hace |
 | --- | --- | --- |
-| Pipeline | [`pipeline/`](../pipeline/) | Un notebook de marimo por fuente. Descarga, valida y escribe `data/<id>.json` ([D-004](decisiones.md#d-004--el-pipeline-se-escribe-en-notebooks-de-marimo)). Python con uv, tablas con polars. |
+| Pipeline | [`pipeline/`](../pipeline/) | Paquete de Python con un módulo por fuente en [`sources/`](../pipeline/src/wawapacha_pipeline/sources/), la publicación común en [`contract.py`](../pipeline/src/wawapacha_pipeline/contract.py) y la CLI. Con uv ([D-006](decisiones.md#d-006--el-pipeline-es-un-paquete-y-los-notebooks-lo-muestran)). |
+| Notebooks | [`notebooks/`](../notebooks/) | Un notebook de marimo por fuente. Importa el paquete y muestra cada paso; no escribe en `data/`. |
 | Datos publicados | [`data/`](../data/) | Un JSON por fuente. Si una descarga falla la validación, se conserva el anterior. |
 | Tipos del formato | [`app/types/dataset.ts`](../app/types/dataset.ts) | La forma de esos JSON en TypeScript. |
 | Web | [`app/`](../app/) | Nuxt 4 y Vue con Bun. Gráficos con ECharts (`vue-echarts`). |
