@@ -97,15 +97,16 @@ explained.
 
 ## Data types
 
-Every published dataset has one of these types. The JSON stores the Spanish word
-in parentheses. The types are never mixed on one line of a chart without telling
-them apart.
+Every published dataset has one of these types. The JSON uses the English
+contract value; the UI supplies the Spanish label. The types are never mixed on
+one line of a chart without telling them apart.
 
-| Type                        | What it is                                                                                                                 | Example                        |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
-| **Observed** (`observado`)  | Measured directly, or computed from measurements.                                                                          | ONI, weekly indices, stations. |
-| **Estimated** (`estimado`)  | Computed by a model from satellites and measurements, to cover areas with no direct measurement. Also called **analysis**. | OISST, CHIRPS, IMERG.          |
-| **Forecast** (`pronóstico`) | What is expected to happen.                                                                                                | CPC probabilities, IRI plume.  |
+| Type          | What it is                                                                                                                 | Example                        |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| **Observed**  | Measured directly, or computed from measurements.                                                                          | ONI, weekly indices, stations. |
+| **Estimated** | Computed by a model from satellites and measurements, to cover areas with no direct measurement. Also called **analysis**. | OISST, CHIRPS, IMERG.          |
+| **Forecast**  | What is expected to happen.                                                                                                | CPC probabilities, IRI plume.  |
+| **Official**  | A statement or status issued by an institution.                                                                            | ENFEN alert status.            |
 
 ## Grid and resolution
 
@@ -140,6 +141,21 @@ OND 2026 season NOAA CPC gives 98 % to the strongest El Niño category (index �
 probability of El Niño **says nothing about the impacts in Peru**. A **model
 plume** shows one line per model, to see how much they agree. WawaPacha does not
 average models or build its own consensus.
+
+NOAA CPC publishes nine strength categories in this order. The pipeline keeps
+the category and its numeric bounds as data; it does not regroup them.
+
+| Category            | Lower bound (°C) | Upper bound (°C) |
+| ------------------- | ---------------- | ---------------- |
+| Very Strong El Niño | 2.0 inclusive    | —                |
+| Strong El Niño      | 1.5 inclusive    | 2.0 exclusive    |
+| Moderate El Niño    | 1.0 inclusive    | 1.5 exclusive    |
+| Weak El Niño        | 0.5 inclusive    | 1.0 exclusive    |
+| Neutral             | −0.5 exclusive   | 0.5 exclusive    |
+| Weak La Niña        | −1.0 exclusive   | −0.5 inclusive   |
+| Moderate La Niña    | −1.5 exclusive   | −1.0 inclusive   |
+| Strong La Niña      | −2.0 exclusive   | −1.5 inclusive   |
+| Very Strong La Niña | —                | −2.0 inclusive   |
 
 ## Precipitation
 

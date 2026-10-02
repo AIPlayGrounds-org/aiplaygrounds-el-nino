@@ -3,9 +3,9 @@
 ![The home page: "¿Llegó El Niño?" with the latest ONI reading and the stripes of the series since 1950](docs/assets/site.png)
 
 WawaPacha is a public web observatory for the signals of El Niño in Peru. Every
-number shows its source, its date and whether it is observed, estimated or
-forecast. It is a static site ([Nuxt 4](https://nuxt.com/) with Bun) fed by a
-Python data pipeline (uv), with no backend and no accounts. Live at
+number shows its source, its date and whether it is observed, estimated,
+forecast or official. It is a static site ([Nuxt 4](https://nuxt.com/) with Bun)
+fed by a Python data pipeline (uv), with no backend and no accounts. Live at
 <https://aiplaygrounds-org.github.io/wawapacha/>.
 
 ## Run it

@@ -8,9 +8,9 @@ A source is one registry entry, one module, one sample and one test.
 2. **Module.** Create `pipeline/src/wawapacha_pipeline/sources/<module>.py`,
    following
    [`noaa_cpc_oni.py`](../pipeline/src/wawapacha_pipeline/sources/noaa_cpc_oni.py):
-   `ID`, `parse`, `build`, and the provenance read with `registry.get(ID)`.
-   Register it in `SOURCES`, in
-   [`cli.py`](../pipeline/src/wawapacha_pipeline/cli.py).
+   `ID`, `fetch`, `parse`, `run`, and the provenance read with
+   `registry.get(ID)`. The CLI discovers the module from the registry id; there
+   is no shared dispatcher edit.
 3. **Schema.** If the source's records have fields of their own, describe them
    in [`schema/dataset.schema.json`](../schema/dataset.schema.json) and run
    `bun run types` in `web/`.
@@ -27,8 +27,8 @@ A source is one registry entry, one module, one sample and one test.
    publish `data/<id>.json`.
 
 [`registry.py`](../pipeline/src/wawapacha_pipeline/registry.py) checks the entry
-on load, and a test checks that every module in `SOURCES` has an `automatable`
-entry.
+on load, discovers the module implied by every `automatable` id, and raises a
+registry error when that module is missing or incomplete.
 
 ## The registry
 
@@ -46,9 +46,10 @@ values. `notes` holds only what was checked and the quirks of the format.
 | `reviewed`                                                      | always        | The date the source was last reviewed, as `YYYY-MM-DD`.                                    |
 | `page`                                                          | always        | URL of the official page.                                                                  |
 | `variable`, `unit`, `spatial_resolution`, `temporal_resolution` | `automatable` | Text, in Spanish. Published as written.                                                    |
-| `data_type`                                                     | `automatable` | One of the values in [the contract](data-contract.md#4-published-format).                  |
+| `data_type`                                                     | `automatable` | `observed`, `estimated`, `forecast` or `official`.                                         |
 | `access.url`                                                    | `automatable` | Download URL.                                                                              |
 | `access.kind`, `access.format`, `access.auth`                   | optional      | Text.                                                                                      |
+| `update`                                                        | always        | `daily`, `weekly`, `monthly` or `manual`; the schedule used by due selection.              |
 | `history`, `cadence`, `license`                                 | optional      | Text.                                                                                      |
 | `reference_period`                                              | optional      | Text, in Spanish. Published as written.                                                    |
 | `notes`                                                         | optional      | A list of texts.                                                                           |
@@ -57,5 +58,6 @@ The five fields the site prints (`variable`, `unit`, both resolutions and
 `reference_period`) stay in Spanish. Everything else in the registry is in
 English.
 
-A source with the verdict `automatable` and a module in `SOURCES` gets a section
-in [`docs/sources.md`](sources.md). The other entries stay in the registry only.
+A source with the verdict `automatable` must have its discovered module and gets
+a section in [`docs/sources.md`](sources.md). The other entries stay in the
+registry only.
