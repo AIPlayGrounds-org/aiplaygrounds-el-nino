@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from wawapacha_pipeline import registry
 from wawapacha_pipeline.contract import REPO_ROOT, ValidationError, publish, relative_path
 from wawapacha_pipeline.sources import noaa_cpc_oni as oni
 
@@ -70,15 +71,30 @@ def test_rejects_a_non_numeric_value():
         oni.parse(replace_line(SAMPLE, "29.09   1.80", "29.09   n/a"))
 
 
+def assert_matches_registry(dataset: dict) -> None:
+    entry = registry.get(dataset["id"])
+
+    assert dataset["source"] == {
+        "institution": entry["institution"],
+        "product": entry["product"],
+        "url": entry["access"]["url"],
+    }
+    assert dataset["variable"] == entry["variable"]
+    assert dataset["unit"] == entry["unit"]
+    assert dataset["data_type"] == entry["data_type"]
+    assert dataset["spatial_resolution"] == entry["spatial_resolution"]
+    assert dataset["temporal_resolution"] == entry["temporal_resolution"]
+    assert dataset["reference_period"] == entry["reference_period"]
+
+
 def test_build_adds_provenance_metadata():
     dataset = oni.build(oni.parse(SAMPLE), datetime(2026, 10, 1, 12, 0, tzinfo=timezone.utc))
 
     assert dataset["id"] == "noaa-cpc-oni"
-    assert dataset["source"]["url"] == oni.URL
-    assert dataset["unit"] == "°C"
-    assert dataset["data_type"] == "observado"
     assert dataset["ingestion_time"] == "2026-10-01T12:00:00+00:00"
+    assert dataset["processing_version"] == oni.VERSION
     assert len(dataset["records"]) == 919
+    assert_matches_registry(dataset)
 
 
 def test_publish_writes_the_json(tmp_path):
@@ -104,9 +120,11 @@ def test_cli_publishes_the_json(tmp_path):
     result = run_cli(SAMPLE_PATH, tmp_path)
 
     assert result.returncode == 0, result.stderr
+    assert result.stdout.startswith("Published noaa-cpc-oni: 919 records in ")
     published = json.loads((tmp_path / "noaa-cpc-oni.json").read_text(encoding="utf-8"))
     assert len(published["records"]) == 919
     assert published["records"][-1]["anomaly"] == 1.80
+    assert_matches_registry(published)
 
 
 def test_cli_keeps_the_previous_json_when_validation_fails(tmp_path):
