@@ -29,14 +29,14 @@ La primera entrega es una página web que muestra el **Índice Oceánico El Niñ
 
 ### Fuera de esta meta
 
-Otros índices (incluido el ICEN peruano), mapas, pronósticos, alertas, resumen con IA y el resto de secciones de [`wawapacha.md`](wawapacha.md). Se abordan después, una por una.
+Otros índices (incluido el ICEN peruano), mapas, pronósticos, alertas, resumen con IA y el resto de secciones de [`producto.md`](producto.md). Se abordan después, una por una.
 
 ### Terminado cuando
 
-- [ ] Existe un documento con las reglas de calidad y procesamiento de datos.
-- [ ] Un script descarga el ONI, lo valida y lo guarda como JSON, con un test.
-- [ ] La web muestra el gráfico con fuente, unidad, fecha y tipo de dato.
-- [ ] El trabajo está en `main` mediante un PR revisado.
+- [x] Existe un documento con las reglas de calidad y procesamiento de datos.
+- [x] Un script descarga el ONI, lo valida y lo guarda como JSON, con un test.
+- [x] La web muestra el gráfico con fuente, unidad, fecha y tipo de dato.
+- [x] El trabajo está en `main` mediante un PR revisado.
 
 ---
 
@@ -48,7 +48,7 @@ Otros índices (incluido el ICEN peruano), mapas, pronósticos, alertas, resumen
 
 ### Qué
 
-Las cuatro fases de [`wawapacha.md` §11](wawapacha.md#11-plan-por-fases-propuesta) se publican antes del 31 de octubre, pero cada una **solo con las fuentes que ya se pueden obtener sin depender de una institución**. El veredicto de cada fuente está en [`fuentes/`](fuentes/README.md).
+Las cuatro fases del plan inicial (`wawapacha.md` §11, en el historial de git) se publican antes del 31 de octubre, pero cada una **solo con las fuentes que ya se pueden obtener sin depender de una institución**. El veredicto de cada fuente está en [`fuentes/`](fuentes/README.md).
 
 | Fase | Entra | Queda para después |
 |---|---|---|
@@ -99,7 +99,7 @@ Cada fuente es un notebook de [marimo](https://marimo.io) en `pipeline/` que hac
 
 Transparencia: cualquiera del equipo ve qué hace el código y su resultado en cada paso. Un notebook de marimo es un archivo `.py` normal: se versiona bien en Git, se prueba con pytest y se ejecuta en GitHub Actions.
 
-Cambia lo propuesto en [`wawapacha.md` §10](wawapacha.md#10-arquitectura-técnica-propuesta): en lugar de «un script Python por fuente» con pandas, cada fuente es un notebook de marimo con polars. xarray se añadirá cuando lleguen las fuentes en rejilla que lo necesiten.
+Cambia lo propuesto en `wawapacha.md` §10 (hoy en [`arquitectura.md`](arquitectura.md)): en lugar de «un script Python por fuente» con pandas, cada fuente es un notebook de marimo con polars. xarray se añadirá cuando lleguen las fuentes en rejilla que lo necesiten.
 
 ---
 

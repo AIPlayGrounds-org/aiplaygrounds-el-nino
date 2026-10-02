@@ -1,4 +1,4 @@
-// Formato de los JSON que publica el pipeline en data/ (docs/protocolo-datos.md §4).
+// Formato de los JSON que publica el pipeline en data/ (docs/datos.md §4).
 
 export interface Dataset<R> {
   id: string

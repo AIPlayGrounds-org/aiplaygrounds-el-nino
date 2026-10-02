@@ -48,7 +48,7 @@ Tabla de probabilidades oficiales por temporada para categorías de intensidad E
 | Formato | HTML con tabla de porcentajes |
 | Autenticación | Ninguna observada |
 | Tamaño aproximado | 30,5 KB medidos; descarga en 1,0 s durante la prueba. |
-| Script de prueba | `spikes/noaa_cpc_outlook.py` ✅ probado con `uv run`. |
+| Script de prueba | Spike probado con `uv run`; no se guardó en el repositorio. |
 
 ## Uso
 

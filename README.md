@@ -1,15 +1,14 @@
-# El Niño
+# WawaPacha
 
-Aplicación web hecha con [Nuxt 4](https://nuxt.com/) y Vue. El proyecto usa Bun y define su versión en `mise.toml`.
+Observatorio web para seguir las señales del Fenómeno El Niño en el Perú: temperatura del mar, lluvia, ríos, indicadores ENSO, pronósticos y alertas. Reúne fuentes peruanas e internacionales y muestra de cada dato su fuente, su fecha y si es observado, estimado o pronóstico.
 
-## Requisitos
+Es un sitio estático ([Nuxt 4](https://nuxt.com/) con Bun) alimentado por un pipeline de datos en Python ([marimo](https://marimo.io) con uv). No tiene backend, cuentas ni API.
 
-- [Git](https://git-scm.com/) para clonar el repositorio.
-- [mise](https://mise.jdx.dev/getting-started) instalado.
+**Estado:** existe una sola página, el [ONI](docs/fuentes/noaa-cpc-oni.md) de NOAA desde 1950. El resto del alcance y las fechas están en [`docs/decisiones.md`](docs/decisiones.md).
 
 ## Puesta en marcha
 
-Después de clonar el repositorio, abre una terminal en su carpeta raíz y ejecuta:
+Necesitas [Git](https://git-scm.com/) y [mise](https://mise.jdx.dev/getting-started). mise instala las versiones de Bun y uv que fija `mise.toml`.
 
 ```sh
 mise install
@@ -17,35 +16,31 @@ mise exec -- bun install
 mise exec -- bun run dev
 ```
 
-Abre [http://localhost:3000](http://localhost:3000) para ver la aplicación. mise instala la versión de Bun declarada en `mise.toml`; `mise exec` la usa sin requerir que actives mise en tu shell.
-
-Si mise ya está activado en tu shell, puedes omitir `mise exec --` y ejecutar los comandos con Bun directamente, por ejemplo `bun install` y `bun run dev`.
-
-## Comandos disponibles
-
-Desde la raíz del proyecto:
+Abre <http://localhost:3100>. Con mise activado en tu shell, omite `mise exec --`.
 
 | Comando | Uso |
 | --- | --- |
-| `bun run dev` | Inicia el servidor de desarrollo. |
-| `bun run build` | Compila la aplicación para producción. |
-| `bun run generate` | Genera una versión estática prerenderizada. |
-| `bun run preview` | Previsualiza la compilación de producción; ejecuta antes `bun run build`. |
+| `bun run dev` | Servidor de desarrollo. |
+| `bun run generate` | Sitio estático en `.output/public`. |
+| `bun run build` | Compilación de producción. |
+| `bun run preview` | Previsualiza la compilación; ejecuta antes `bun run build`. |
 
-Si mise no está activado en tu shell, antepón `mise exec --` a cualquiera de estos comandos; por ejemplo: `mise exec -- bun run build`.
+## Pipeline
 
-El código de la aplicación está en `app/`; la configuración de Nuxt está en `nuxt.config.ts`. Los scripts están definidos en `package.json` y las dependencias se registran en `bun.lock`.
-
-## Pipeline de datos
-
-Cada fuente es un notebook de [marimo](https://marimo.io) en `pipeline/` que descarga los datos, los valida según [`docs/protocolo-datos.md`](docs/protocolo-datos.md), los muestra y los publica en `data/<id>.json`. Desde la carpeta `pipeline/`:
+Cada fuente es un notebook en `pipeline/` que descarga, valida y publica `data/<id>.json`. Desde `pipeline/`:
 
 | Comando | Uso |
 | --- | --- |
-| `uv run marimo edit noaa_cpc_oni.py` | Abre el notebook en el navegador para ver cada paso. Para publicar, pulsa el botón del final. |
-| `uv run python noaa_cpc_oni.py` | Ejecuta el notebook sin interfaz: descarga, valida y publica. |
-| `uv run pytest` | Ejecuta los tests. |
+| `uv run marimo edit noaa_cpc_oni.py` | Abre el notebook en el navegador, paso a paso. |
+| `uv run python noaa_cpc_oni.py` | Descarga, valida y publica sin interfaz. |
+| `uv run pytest` | Tests. |
 
-uv instala la versión de Python y las dependencias (marimo, polars y plotly) la primera vez. Si una descarga no pasa la validación, no se publica nada y el JSON anterior se conserva.
+Si una descarga no pasa la validación, no se publica nada y se conserva el JSON anterior.
 
-Más información: [documentación de Nuxt](https://nuxt.com/docs/getting-started/introduction) · [mise](https://mise.jdx.dev/).
+## Fuera de alcance
+
+Cuentas y login, notificaciones, API pública, descargas propias, búsqueda global, nivel distrito, modelos o consensos propios y módulos sectoriales. La lista completa está en [`docs/producto.md`](docs/producto.md#8-fuera-de-alcance-por-ahora).
+
+## Documentación
+
+Empieza por el [índice de `docs/`](docs/README.md). Para trabajar en el repositorio, [`CONTRIBUTING.md`](CONTRIBUTING.md).

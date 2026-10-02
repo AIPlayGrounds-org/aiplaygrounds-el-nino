@@ -48,7 +48,7 @@ Serie semanal de temperatura superficial del mar (SST) y anomalía para Niño 1+
 | Formato | Texto de ancho fijo con 4 líneas de cabecera; fecha (`02SEP1981`), SST y anomalía para cuatro regiones. Las anomalías negativas van pegadas a la SST (`20.6-0.1`), así que hay que leer por posición y no separar por espacios. |
 | Autenticación | Ninguna observada |
 | Tamaño aproximado | 145 KB (148.353 bytes el 2026-10-01); crece con cada semana. |
-| Script de prueba | `spikes/noaa_cpc_nino_semanal.py` ✅ probado con `uv run`. |
+| Script de prueba | Spike probado con `uv run`; no se guardó en el repositorio. |
 
 ## Uso
 

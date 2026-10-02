@@ -31,7 +31,7 @@ Observatorio web, científico y divulgativo, para seguir las señales del Fenóm
 
 ## Capabilities and Constraints
 
-- Secciones previstas: Dashboard, Territorio, Histórico, Pronósticos, Alertas, Aprende y Metodología (`docs/wawapacha.md` §4). Hoy existe solo la página del ONI.
+- Secciones previstas: Dashboard, Territorio, Histórico, Pronósticos, Alertas, Aprende y Metodología (`docs/producto.md` §4). Hoy existe solo la página del ONI.
 - Fuera de alcance: cuentas y login, favoritos, notificaciones, API pública, descargas propias, búsqueda global, nivel distrito, modelos o consensos propios, módulos sectoriales.
 - Solo español al lanzar, con i18n preparada (inglés y quechua a futuro).
 - Uso de fuentes gratuitas y, en el caso de Open-Meteo, solo no comercial (D-005).
@@ -46,7 +46,7 @@ Observatorio web, científico y divulgativo, para seguir las señales del Fenóm
 ## Evidence on Hand
 
 - Datos reales: `data/noaa-cpc-oni.json` (ONI de NOAA CPC, 919 trimestres desde DJF 1950).
-- Inventario de 27 fuentes con veredicto en `docs/fuentes/`; glosario en `docs/conceptos.md`; reglas de datos en `docs/protocolo-datos.md`.
+- Inventario de 27 fuentes con veredicto en `docs/fuentes/`; glosario en `docs/conceptos.md`; reglas de datos en `docs/datos.md`.
 - No hay testimonios, usuarios, métricas de uso ni prensa: no deben inventarse.
 
 ## Product Principles

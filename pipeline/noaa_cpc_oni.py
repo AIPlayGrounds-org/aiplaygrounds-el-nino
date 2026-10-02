@@ -49,7 +49,7 @@ def _():
     en la región Niño 3.4, promediada en trimestres móviles.
 
     - Ficha de la fuente: [`docs/fuentes/noaa-cpc-oni.md`](../docs/fuentes/noaa-cpc-oni.md)
-    - Reglas que sigue este notebook: [`docs/protocolo-datos.md`](../docs/protocolo-datos.md)
+    - Reglas que sigue este notebook: [`docs/datos.md`](../docs/datos.md)
     - Conceptos: [`docs/conceptos.md`](../docs/conceptos.md)
 
     Se ejecuta de arriba abajo en cinco pasos: **descargar → leer y validar → ver → armar el JSON → publicar**.
