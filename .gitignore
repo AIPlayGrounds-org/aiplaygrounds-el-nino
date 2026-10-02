@@ -18,6 +18,12 @@ __pycache__
 logs
 *.log
 
+# Impeccable: capturas de revisión y estado de trabajo local (se regeneran)
+.impeccable/review/
+.impeccable/questions/
+.impeccable/build/
+.impeccable/config.local.json
+
 # Misc
 .DS_Store
 .fleet
