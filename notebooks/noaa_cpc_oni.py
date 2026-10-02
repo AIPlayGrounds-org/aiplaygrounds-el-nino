@@ -43,7 +43,7 @@ def _():
 
 @app.cell
 def _():
-    raw = source.download()
+    raw = source.fetch()
 
     _lines = raw.splitlines()
     mo.vstack([

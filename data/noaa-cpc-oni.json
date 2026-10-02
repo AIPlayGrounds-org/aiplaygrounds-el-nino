@@ -7,11 +7,11 @@
   },
   "variable": "Anomalía de la temperatura superficial del mar en Niño 3.4, media móvil de tres meses",
   "unit": "°C",
-  "data_type": "observado",
+  "data_type": "observed",
   "spatial_resolution": "Región Niño 3.4 (5°N–5°S, 170°W–120°W)",
   "temporal_resolution": "Trimestral móvil",
   "reference_period": "Periodos de 30 años que CPC actualiza cada 5 años",
-  "ingestion_time": "2026-10-01T23:03:55+00:00",
+  "ingestion_time": "2026-10-02T22:29:57+00:00",
   "processing_version": "0.1.0",
   "records": [
     {

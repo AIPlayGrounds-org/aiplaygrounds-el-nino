@@ -13,7 +13,7 @@ def valid_dataset() -> dict:
         "source": {"institution": "Institution", "product": "Product", "url": "https://example.org/data.txt"},
         "variable": "Variable",
         "unit": "°C",
-        "data_type": "observado",
+        "data_type": "observed",
         "spatial_resolution": "Global",
         "temporal_resolution": "Monthly",
         "ingestion_time": "2026-10-01T12:00:00+00:00",
@@ -43,7 +43,7 @@ def test_accepts_a_source_with_its_own_fields():
     ("change", "where"),
     [
         (lambda d: d.pop("unit"), "unit"),
-        (lambda d: d.update(data_type="oficial"), "data_type"),
+        (lambda d: d.update(data_type="status"), "data_type"),
         (lambda d: d.update(ingestion_time="yesterday"), "ingestion_time"),
         (lambda d: d.update(records=[]), "records"),
         (lambda d: d.update(extra=1), "extra"),
@@ -80,7 +80,7 @@ def test_publish_refuses_an_invalid_dataset_and_leaves_no_file(tmp_path):
 def test_publish_keeps_the_previous_json_when_the_new_one_is_invalid(tmp_path):
     previous = tmp_path / "test-source.json"
     previous.write_text('{"version": "previous"}', encoding="utf-8")
-    dataset = valid_dataset() | {"data_type": "oficial"}
+    dataset = valid_dataset() | {"data_type": "status"}
 
     with pytest.raises(ValidationError):
         publish(dataset, tmp_path)

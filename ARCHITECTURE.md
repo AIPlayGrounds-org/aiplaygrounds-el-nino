@@ -20,7 +20,7 @@ public source
 | [`pipeline/`](pipeline/)                                   | A Python package (uv). Downloads, validates and publishes.                                                                  |
 | [`notebooks/`](notebooks/)                                 | One marimo notebook per source. Imports the package and shows each step. Never writes to `data/`.                           |
 | [`data/`](data/)                                           | One JSON per source. If a download fails validation, the previous file stays.                                               |
-| [`web/`](web/)                                             | The web app: Nuxt 4 and Vue, with Bun. Charts use ECharts (`vue-echarts`).                                                  |
+| [`web/`](web/)                                             | The web app: Nuxt 4 and Vue, with Bun. Charts and the v0.1 map use ECharts (`vue-echarts`).                                 |
 | [`docs/`](docs/README.md)                                  | Product, data contract, concepts, decisions and the source catalog.                                                         |
 | [`.github/workflows/`](.github/workflows/)                 | `ci.yml` checks every PR. `deploy.yml` publishes `web/` to GitHub Pages on every push to `main`.                            |
 | [`mise.toml`](mise.toml)                                   | Pins the Bun and uv versions.                                                                                               |
@@ -33,7 +33,7 @@ public source
 | [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and publishes it to `data/` atomically.       |
 | [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per source. Downloads, parses and builds the dataset from registry facts. |
 | [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Generates [`docs/sources.md`](docs/sources.md) from the registry.                    |
-| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | `wawapacha-pipeline run <id>` and `wawapacha-pipeline sources`.                      |
+| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | `wawapacha-pipeline run <id>`, `due` and `sources`.                                  |
 
 ### `web/app/`
 
@@ -53,8 +53,10 @@ public source
 - **A source's facts live only in `sources.toml`.** A module in `sources/` reads
   them from the registry and does not repeat them. A test checks that the
   published JSON matches its entry.
-- **One module per automatable source.** A test checks that every module listed
-  in `cli.SOURCES` has an `automatable` registry entry.
+- **One module per automatable source.** Discovery maps each automatable
+  registry id to `sources/<id with hyphens replaced by underscores>.py`. A
+  registry check fails when the module is missing or does not expose `ID`,
+  `fetch`, `parse` and `run`.
 - **Nothing is published without passing the schema.** `contract.publish()`
   validates before it writes. If validation fails, the previous JSON stays in
   `data/`.
@@ -68,6 +70,12 @@ public source
   ([`web/app/pages/index.vue`](web/app/pages/index.vue)).
 - **No backend.** There are no accounts, no public API and no downloads of our
   own.
+- **The browser loads only our JSON.** Scheduled ingestion fetches upstream
+  sources and publishes due datasets before the static site build, so visitor
+  traffic never calls an upstream API.
+- **The v0.1 map uses an ECharts canvas.** Its grid is 0.5 degrees over
+  20°N–25°S and 120°W–60°W, stored as JSON coordinates rounded to two decimals
+  and served gzip-compressed by the host.
 
 The reasons behind the layout are in
 [D-006](docs/decisions.md#d-006--the-pipeline-is-a-package-and-the-notebooks-show-it)

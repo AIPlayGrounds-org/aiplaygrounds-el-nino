@@ -3,9 +3,10 @@
 import os
 import urllib.request
 from datetime import datetime, timezone
+from pathlib import Path
 
 from wawapacha_pipeline import registry
-from wawapacha_pipeline.contract import ValidationError
+from wawapacha_pipeline.contract import ValidationError, publish
 
 # Versión de esta fuente. Súbela cuando cambie la lógica: queda en cada JSON publicado.
 VERSION = "0.1.0"
@@ -28,10 +29,17 @@ ANOMALY_RANGE = (-5.0, 5.0)
 THRESHOLD = 0.5
 
 
-def download(url: str = URL, timeout: int = 60) -> str:
+def fetch(url: str = URL, timeout: int = 60) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": "WawaPacha/0.1"})
     with urllib.request.urlopen(request, timeout=timeout) as response:
         return response.read().decode("ascii")
+
+
+def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
+    """Return the record count and the path of the published JSON."""
+    records = parse(fetch())
+    dataset = build(records, ingestion_time or datetime.now(timezone.utc))
+    return len(records), publish(dataset)
 
 
 def parse(text: str) -> list[dict]:

@@ -22,7 +22,8 @@ Reviewed on 2026-09-27.
 | Product             | Oceanic Niño Index (ONI)                                                              |
 | Variable            | Anomalía de la temperatura superficial del mar en Niño 3.4, media móvil de tres meses |
 | Unit                | °C                                                                                    |
-| Data type           | observado                                                                             |
+| Data type           | observed                                                                              |
+| Update              | monthly                                                                               |
 | Spatial resolution  | Región Niño 3.4 (5°N–5°S, 170°W–120°W)                                                |
 | Temporal resolution | Trimestral móvil                                                                      |
 | History             | From DJF 1950                                                                         |

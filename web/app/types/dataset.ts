@@ -22,9 +22,9 @@ export type Dataset = {
   variable: string
   unit: string
   /**
-   * observado (observed), estimado (estimated) or pronóstico (forecast).
+   * The data type: observed, estimated, forecast, or official.
    */
-  data_type: 'observado' | 'estimado' | 'pronóstico'
+  data_type: 'observed' | 'estimated' | 'forecast' | 'official'
   spatial_resolution: string
   temporal_resolution: string
   /**

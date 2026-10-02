@@ -28,7 +28,8 @@ update date and original link of every number.
 1. Clarity over density.
 2. Scientific rigor without needless jargon.
 3. Source and update date are always visible.
-4. **Observed**, **estimated** and **forecast** data stay clearly apart.
+4. **Observed**, **estimated**, **forecast** and **official** data stay clearly
+   apart.
 5. An anomaly is not a danger.
 6. Thresholds are official or scientific, never our own.
 7. The site does not infer causes.
@@ -44,7 +45,7 @@ provenance block, never from text written by hand
 | ----------------------------------------------------- | ---------------------------------------------------- |
 | What does it show, and in which unit?                 | `variable`, `unit`                                   |
 | What period does it cover, and what is its reference? | first and last record, `reference_period`            |
-| Observed, estimated or forecast?                      | `data_type`                                          |
+| Observed, estimated, forecast or official?            | `data_type`                                          |
 | Where does it come from?                              | `source.institution`, `source.product`, `source.url` |
 | When was it last updated?                             | `ingestion_time` and the date of the last record     |
 

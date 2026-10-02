@@ -42,8 +42,9 @@ code (for example `-99.9`).
 
 One JSON file per source, at `data/<id>.json`. It carries the provenance of the
 data (institution, product and URL; what is measured and in which unit; whether
-it is observed, estimated or forecast; its resolution and base period), when it
-was downloaded, the version of the code that produced it, and the records.
+it is observed, estimated, forecast or official; its resolution and base
+period), when it was downloaded, the version of the code that produced it, and
+the records.
 
 The contract is [`schema/dataset.schema.json`](../schema/dataset.schema.json).
 It is the only definition of the fields:
@@ -55,14 +56,15 @@ The fields of a record depend on the source. Every record states the period it
 describes (`start`, `end`). Dates follow ISO 8601: `2026-08` for a month,
 `2026-08-31` for a day.
 
-`data_type` takes one of three Spanish values. They are part of the contract, so
-they stay as they are:
+`data_type` takes one of four English values. The product translates them into
+Spanish labels at the UI boundary:
 
-| Value        | Meaning                                                     |
-| ------------ | ----------------------------------------------------------- |
-| `observado`  | Observed: measured directly, or computed from measurements. |
-| `estimado`   | Estimated: modeled from satellites and measurements.        |
-| `pronóstico` | Forecast: what is expected to happen.                       |
+| Value       | Meaning                                           |
+| ----------- | ------------------------------------------------- |
+| `observed`  | Measured directly, or computed from measurements. |
+| `estimated` | Modeled from satellites and measurements.         |
+| `forecast`  | What is expected to happen.                       |
+| `official`  | A statement or status issued by an institution.   |
 
 The text fields the site prints (`variable`, `unit`, both resolutions and
 `reference_period`) come from the registry as written, so they are in Spanish.
@@ -74,7 +76,8 @@ A real example: [`data/noaa-cpc-oni.json`](../data/noaa-cpc-oni.json).
 
 - Never mix anomalies with different base periods in one chart without saying
   so.
-- Never mix observed, estimated and forecast data without telling them apart.
+- Never mix observed, estimated, forecast and official data without telling them
+  apart.
 
 ## 6. Tests
 

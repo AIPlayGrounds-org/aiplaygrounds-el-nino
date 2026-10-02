@@ -29,6 +29,7 @@ FACTS = (
     ("variable", "Variable"),
     ("unit", "Unit"),
     ("data_type", "Data type"),
+    ("update", "Update"),
     ("spatial_resolution", "Spatial resolution"),
     ("temporal_resolution", "Temporal resolution"),
     ("history", "History"),
