@@ -22,9 +22,9 @@ def _():
     El índice de referencia internacional de El Niño: la anomalía de la temperatura del mar
     en la región Niño 3.4, promediada en trimestres móviles.
 
-    - Ficha de la fuente: [`docs/fuentes/noaa-cpc-oni.md`](../docs/fuentes/noaa-cpc-oni.md)
-    - Reglas de los datos: [`docs/datos.md`](../docs/datos.md)
-    - Conceptos: [`docs/conceptos.md`](../docs/conceptos.md)
+    - La fuente: [`docs/sources.md`](../docs/sources.md#noaa-cpc-oni)
+    - Reglas de los datos: [`docs/data-contract.md`](../docs/data-contract.md)
+    - Conceptos: [`docs/concepts.md`](../docs/concepts.md)
 
     Este notebook muestra paso a paso lo que hace [`pipeline/`](../pipeline/src/wawapacha_pipeline/sources/noaa_cpc_oni.py): **descargar → leer y validar → ver → armar el JSON**. No define lógica de la fuente y no escribe en `data/`; para publicar, usa `wawapacha-pipeline run noaa-cpc-oni`.
     """)
@@ -210,7 +210,7 @@ def _():
     mo.md(r"""
     ## Paso 4 · Armar el JSON
 
-    `source.build()` añade a los registros los metadatos de procedencia que exige [`docs/datos.md`](../docs/datos.md) (§4). Aquí solo se muestra: el JSON no se guarda.
+    `source.build()` añade a los registros la procedencia que declara [`sources.toml`](../sources.toml), según el [esquema](../schema/dataset.schema.json). Aquí solo se muestra: el JSON no se guarda.
     """)
     return
 
