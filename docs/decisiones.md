@@ -163,3 +163,24 @@ Producción ejecuta `wawapacha-pipeline run <id>`. Es la única vía que escribe
 - Un test falla si un notebook define una función o una clase: la lógica va en el paquete.
 - marimo, plotly y polars están en el grupo `notebooks` de `pipeline/pyproject.toml`. El paquete en sí no depende de ellos.
 
+---
+
+## D-007 — La v0.1 es una página hecha de paneles
+
+- **Fecha:** 2026-10-02
+- **Estado:** 🟡 Propuesta
+
+### Qué
+
+La v0.1 es una página, `/`, con la pregunta «¿Llegó El Niño?». Está compuesta por los siete paneles de [`pantallas.md`](pantallas.md). Cada panel lee un solo dato y muestra su procedencia desde el JSON.
+
+### Por qué
+
+- Es lo que la web del ONI ya hace, extendido con las fuentes de la v0.1.
+- Un panel por dato permite añadir una fuente sin tocar las demás.
+- Evita el dashboard saturado que [`producto.md` §9](producto.md#9-requisitos-transversales) descarta.
+
+### Fuera de esta decisión
+
+El Dashboard con orden dinámico, Territorio y el resto de secciones de [`producto.md` §4](producto.md#4-secciones).
+
