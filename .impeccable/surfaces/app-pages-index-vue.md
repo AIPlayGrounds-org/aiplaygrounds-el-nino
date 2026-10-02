@@ -1,8 +1,8 @@
 ---
 version: 1
 slug: "app-pages-index-vue"
-primary_target: "app/pages/index.vue"
-related_targets: ["app/components/OniStory.vue","app/components/OniChart.vue"]
+primary_target: "web/app/pages/index.vue"
+related_targets: ["web/app/components/OniStory.vue","web/app/components/OniChart.vue"]
 ---
 
 # Página del ONI

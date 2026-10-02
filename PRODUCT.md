@@ -25,17 +25,17 @@ Observatorio web, científico y divulgativo, para seguir las señales del Fenóm
 
 ## Operating Context
 
-- Proyecto de un equipo de tres personas (áreas de Datos, Web y Contenido), con entrega de todas las fases recortadas al 2026-10-31 (ver `docs/decisiones.md`).
+- Proyecto de un equipo de tres personas (áreas de Datos, Web y Contenido), con entrega de todas las fases recortadas al 2026-10-31 (ver `docs/decisions.md`).
 - Los datos llegan como JSON en `data/`, publicados por el paquete de `pipeline/` (con notebooks de marimo en `notebooks/`); la web los lee en la compilación (`nuxt generate`) y se sirve como sitio estático.
 - Algunos datos peruanos se cargan a mano (estado de ENFEN) y otros dependen de respuestas institucionales pendientes.
 
 ## Capabilities and Constraints
 
-- Secciones previstas: Dashboard, Territorio, Histórico, Pronósticos, Alertas, Aprende y Metodología (`docs/producto.md` §4). Hoy existe solo la página del ONI.
+- Secciones previstas: Dashboard, Territorio, Histórico, Pronósticos, Alertas, Aprende y Metodología (`ROADMAP.md`). Hoy existe solo la página del ONI.
 - Fuera de alcance: cuentas y login, favoritos, notificaciones, API pública, descargas propias, búsqueda global, nivel distrito, modelos o consensos propios, módulos sectoriales.
 - Solo español al lanzar, con i18n preparada (inglés y quechua a futuro).
 - Uso de fuentes gratuitas y, en el caso de Open-Meteo, solo no comercial (D-005).
-- Terminología: ver `docs/conceptos.md` (anomalía, periodo base, ONI/RONI/ICEN, aviso/alerta/emergencia…).
+- Terminología: ver `docs/concepts.md` (anomalía, periodo base, ONI/RONI/ICEN, aviso/alerta/emergencia…).
 
 ## Brand Commitments
 
@@ -46,7 +46,7 @@ Observatorio web, científico y divulgativo, para seguir las señales del Fenóm
 ## Evidence on Hand
 
 - Datos reales: `data/noaa-cpc-oni.json` (ONI de NOAA CPC, 919 trimestres desde DJF 1950).
-- Inventario de 27 fuentes con veredicto en `docs/fuentes/`; glosario en `docs/conceptos.md`; reglas de datos en `docs/datos.md`.
+- Inventario de 27 fuentes con veredicto en `sources.toml`; glosario en `docs/concepts.md`; reglas de datos en `docs/data-contract.md`.
 - No hay testimonios, usuarios, métricas de uso ni prensa: no deben inventarse.
 
 ## Product Principles
