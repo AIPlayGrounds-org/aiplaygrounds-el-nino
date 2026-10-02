@@ -48,7 +48,7 @@ Análisis diario de SST y anomalía en una rejilla global de 0,25°. Serviría p
 | Formato | ERDDAP: CSV (también JSON y NetCDF), una fila por celda; la segunda fila trae las unidades. PSL: NetCDF. |
 | Autenticación | Ninguna. |
 | Tamaño aproximado | ERDDAP: 77,7 KB y 0,7 s para un día de la caja Niño 1+2 (1681 celdas). PSL: 177,4 KB para dos recortes de 15 días. |
-| Script de prueba | ERDDAP probado el 2026-10-01 leyendo el CSV directamente con polars. PSL: `spikes/noaa_oisst.py`, probado con `uv run` el 2026-09-27. |
+| Script de prueba | ERDDAP probado el 2026-10-01 leyendo el CSV directamente con polars. PSL: spike probado, sin guardar en el repositorio, con `uv run` el 2026-09-27. |
 
 ## Uso
 

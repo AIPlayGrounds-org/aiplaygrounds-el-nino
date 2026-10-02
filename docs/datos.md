@@ -1,6 +1,6 @@
 # Protocolo de datos
 
-Reglas que cumple todo dato de WawaPacha, desde que se descarga hasta que aparece en la web. Los conceptos (anomalía, periodo base…) se explican en [`conceptos.md`](conceptos.md).
+Reglas que cumple todo dato de WawaPacha, desde que se descarga hasta que aparece en la web. Los conceptos (anomalía, periodo base…) se explican en [`conceptos.md`](conceptos.md). El diseño general está en [`arquitectura.md`](arquitectura.md).
 
 ## 1. Origen
 
@@ -44,6 +44,22 @@ Un archivo JSON por fuente en `data/<id>.json`, con los metadatos de procedencia
 | `records` | Los datos. Cada registro indica el periodo que describe (`start`, `end`). |
 
 Las fechas siempre en ISO 8601: `2026-08` para un mes, `2026-08-31` para un día.
+
+Un archivo real, recortado ([`data/noaa-cpc-oni.json`](../data/noaa-cpc-oni.json)):
+
+```json
+{
+  "id": "noaa-cpc-oni",
+  "source": { "institution": "NOAA Climate Prediction Center (CPC)", "product": "Oceanic Niño Index (ONI)", "url": "https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt" },
+  "unit": "°C",
+  "data_type": "observado",
+  "ingestion_time": "2026-10-01T23:03:55+00:00",
+  "processing_version": "0.1.0",
+  "records": [{ "season": "DJF", "start": "1949-12", "end": "1950-02", "sst": 25.01, "anomaly": -1.32 }]
+}
+```
+
+Los campos de `records` dependen de la fuente. La forma del conjunto está en [`app/types/dataset.ts`](../app/types/dataset.ts).
 
 ## 5. Comparabilidad
 
