@@ -53,7 +53,7 @@ The page `/` keeps asking "¿Llegó El Niño?" and has seven panels
 | 1   | ¿Llegó El Niño?                       | [`noaa-cpc-oni`](docs/sources.md#noaa-cpc-oni) | Built                  |
 | 2   | ¿Cómo está el mar frente al Perú?     | [`noaa-cpc-nino-weekly`](sources.toml)         | Pipeline missing       |
 | 3   | ¿Qué dice el estado oficial del Perú? | [`enfen-communique`](sources.toml)             | Pipeline missing       |
-| 4   | ¿Qué esperan las previsiones?         | [`noaa-cpc-outlook`](sources.toml)             | Pipeline missing       |
+| 4   | ¿Qué esperan los pronósticos?          | [`noaa-cpc-outlook`](sources.toml)             | Pipeline missing       |
 | 5   | ¿Dónde está más caliente el mar?      | [`noaa-oisst`](sources.toml)                   | Map spike missing      |
 | 6   | Explora la serie histórica            | [`noaa-cpc-oni`](docs/sources.md#noaa-cpc-oni) | Built                  |
 | 7   | Cómo lo hicimos                       | provenance of each dataset                     | Built for the ONI only |

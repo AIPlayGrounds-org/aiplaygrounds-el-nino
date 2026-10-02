@@ -54,7 +54,7 @@ def source_module_name(source_id: str) -> str:
 def discover(path: Path = REGISTRY_PATH) -> dict[str, object]:
     """Import the implementation for every automatable registry entry.
 
-    Each module is found by its source id, so adding a source needs no dispatcher edit.
+    The source id determines each module name, so no dispatcher edit is needed.
     """
     sources = load(path)
     modules = {}
