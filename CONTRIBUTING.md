@@ -21,5 +21,6 @@ Una decisión nueva se propone como entrada en [`docs/decisiones.md`](docs/decis
 ## Una fuente nueva
 
 1. Una ficha en [`docs/fuentes/`](docs/fuentes/README.md) a partir de [`_plantilla.md`](docs/fuentes/_plantilla.md), con veredicto ✅.
-2. Un notebook en `pipeline/` que cumple [`docs/datos.md`](docs/datos.md), con un test sobre una copia real del archivo original.
-3. El JSON publicado en `data/`.
+2. Un módulo en `pipeline/src/wawapacha_pipeline/sources/` que cumple [`docs/datos.md`](docs/datos.md), registrado en `cli.py`, con un test sobre una copia real del archivo original.
+3. Un notebook en `notebooks/` que importa el módulo y muestra cada paso. Un test falla si define funciones.
+4. El JSON publicado en `data/`, con `wawapacha-pipeline run <id>`.

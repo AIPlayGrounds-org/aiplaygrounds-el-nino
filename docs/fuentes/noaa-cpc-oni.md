@@ -48,7 +48,7 @@ El índice de referencia internacional para declarar un episodio El Niño o La N
 | Formato | Texto en columnas: `SEAS YR TOTAL ANOM` |
 | Autenticación | Ninguna |
 | Tamaño aproximado | 22,5 KB medidos; descarga en 1,7 s durante la prueba del 2026-09-26. |
-| Script de prueba | [`pipeline/noaa_cpc_oni.py`](../../pipeline/noaa_cpc_oni.py) ✅ en uso; spike probado el 2026-09-27. |
+| Script de prueba | [`pipeline/src/wawapacha_pipeline/sources/noaa_cpc_oni.py`](../../pipeline/src/wawapacha_pipeline/sources/noaa_cpc_oni.py) ✅ en uso; spike probado el 2026-09-27. |
 
 ## Uso
 

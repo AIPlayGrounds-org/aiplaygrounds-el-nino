@@ -51,7 +51,7 @@ Una o dos frases: qué mide y por qué nos sirve para WawaPacha.
 | Formato | CSV · texto · NetCDF · GeoTIFF · JSON · PDF · HTML |
 | Autenticación | Ninguna · registro gratuito · clave de API · otra |
 | Tamaño aproximado | Por descarga |
-| Script de prueba | `pipeline/<id>.py`, o "No aplica" si es manual |
+| Script de prueba | `pipeline/src/wawapacha_pipeline/sources/<id>.py`, o "No aplica" si es manual |
 
 ## Uso
 
