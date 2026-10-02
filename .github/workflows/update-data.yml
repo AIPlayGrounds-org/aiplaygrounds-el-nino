@@ -1,15 +1,12 @@
-# Updates data/ daily and redeploys the site when any source changes.
-# Each source runs independently. A validation failure does not stop the other
-# sources, but the job fails at the end and names the failed sources. The
-# pipeline keeps the previous JSON for a source that fails.
+# Download each source daily and redeploy when any source changes.
+# Sources run independently. Failed sources keep their previous JSON, and the
+# job reports failures after the remaining sources finish.
 name: Update data
 
 on:
   schedule:
-    # Run at 14:17 UTC. This is 9:17 in Lima and 9:17 or 10:17 in Washington,
-    # depending on the season. NOAA CPC usually updates its files during the US
-    # East Coast morning, so they are available by this time. Minute 17 avoids
-    # the top of the hour, when GitHub delays cron runs the most.
+    # Run after NOAA CPC's usual US East Coast morning update.
+    # Minute 17 avoids the top of the hour, when GitHub most often delays runs.
     - cron: "17 14 * * *"
   workflow_dispatch:
     inputs:
@@ -20,16 +17,16 @@ on:
 
 permissions:
   contents: write
-  # Required to start deploy.yml with `gh workflow run` at the end.
+  # The final step uses `gh workflow run` to start deploy.yml.
   actions: write
 
-# A second run waits for the first to finish instead of overlapping it.
+# Queue a second run so source updates do not overlap.
 concurrency:
   group: update-data
   cancel-in-progress: false
 
 env:
-  # Install only the pipeline package. The notebooks are not used here.
+  # Install the pipeline package without notebook dependencies.
   UV_LOCKED: "1"
   UV_NO_DEFAULT_GROUPS: "1"
 
@@ -38,12 +35,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      # Always main, even when the workflow is started by hand from another branch.
-      - uses: actions/checkout@v4
+      # Use main even when a manual run starts from another branch.
+      - uses: actions/checkout@v7
         with:
           ref: main
 
-      - uses: astral-sh/setup-uv@v6
+      - uses: astral-sh/setup-uv@v10.2.0
 
       - name: Download and validate each source
         id: sources
@@ -87,8 +84,8 @@ jobs:
           git push origin HEAD:main
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
-      # A push made with GITHUB_TOKEN does not trigger other workflows.
-      # `workflow_dispatch` is the exception used to start deploy.yml.
+      # GITHUB_TOKEN pushes do not trigger other workflows, so start deploy.yml
+      # explicitly with workflow_dispatch.
       - name: Deploy the site
         if: steps.commit.outputs.pushed == 'true'
         env:
@@ -96,7 +93,7 @@ jobs:
         run: gh workflow run deploy.yml --ref main
 
       - name: Fail if any source failed
-        if: steps.sources.outputs.failed != ''
+        if: always() && steps.sources.outputs.failed != ''
         env:
           FAILED: ${{ steps.sources.outputs.failed }}
         run: |
