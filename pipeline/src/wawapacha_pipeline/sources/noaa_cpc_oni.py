@@ -1,17 +1,19 @@
-"""NOAA CPC — Oceanic Niño Index (ONI). Ficha: docs/fuentes/noaa-cpc-oni.md."""
+"""NOAA CPC — Oceanic Niño Index (ONI). Its provenance is in sources.toml."""
 
 import os
 import urllib.request
 from datetime import datetime, timezone
 
+from wawapacha_pipeline import registry
 from wawapacha_pipeline.contract import ValidationError
 
 # Versión de esta fuente. Súbela cuando cambie la lógica: queda en cada JSON publicado.
 VERSION = "0.1.0"
 
 ID = "noaa-cpc-oni"
-# NOAA_CPC_ONI_URL permite leer otro archivo (por ejemplo, en los tests).
-URL = os.environ.get("NOAA_CPC_ONI_URL", "https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt")
+SOURCE = registry.get(ID)
+# NOAA_CPC_ONI_URL reads another file (for example, in tests). The JSON keeps the registry URL.
+URL = os.environ.get("NOAA_CPC_ONI_URL", SOURCE["access"]["url"])
 
 HEADER = ["SEAS", "YR", "TOTAL", "ANOM"]
 # Trimestres en orden. La posición es el mes central: DJF (0) está centrado en enero.
@@ -33,7 +35,7 @@ def download(url: str = URL, timeout: int = 60) -> str:
 
 
 def parse(text: str) -> list[dict]:
-    """Convierte el archivo en registros y lo valida según docs/datos.md."""
+    """Convierte el archivo en registros y lo valida según docs/data-contract.md."""
     lines = [line for line in text.splitlines() if line.strip()]
     if not lines or lines[0].split() != HEADER:
         found = lines[0] if lines else "(archivo vacío)"
@@ -90,20 +92,20 @@ def month_iso(index: int) -> str:
 
 
 def build(records: list[dict], ingestion_time: datetime) -> dict:
-    """Añade a los registros los metadatos de procedencia (docs/datos.md §4)."""
+    """Add to the records the provenance the registry declares, the ingestion time and the version."""
     return {
         "id": ID,
         "source": {
-            "institution": "NOAA Climate Prediction Center (CPC)",
-            "product": "Oceanic Niño Index (ONI)",
-            "url": URL,
+            "institution": SOURCE["institution"],
+            "product": SOURCE["product"],
+            "url": SOURCE["access"]["url"],
         },
-        "variable": "Anomalía de la temperatura superficial del mar en Niño 3.4, media móvil de tres meses",
-        "unit": "°C",
-        "data_type": "observado",
-        "spatial_resolution": "Región Niño 3.4 (5°N–5°S, 170°W–120°W)",
-        "temporal_resolution": "Trimestral móvil",
-        "reference_period": "Periodos de 30 años que CPC actualiza cada 5 años",
+        "variable": SOURCE["variable"],
+        "unit": SOURCE["unit"],
+        "data_type": SOURCE["data_type"],
+        "spatial_resolution": SOURCE["spatial_resolution"],
+        "temporal_resolution": SOURCE["temporal_resolution"],
+        "reference_period": SOURCE["reference_period"],
         "ingestion_time": ingestion_time.astimezone(timezone.utc).isoformat(timespec="seconds"),
         "processing_version": VERSION,
         "records": records,

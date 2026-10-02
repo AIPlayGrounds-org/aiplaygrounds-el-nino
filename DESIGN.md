@@ -163,7 +163,7 @@ El sistema rechaza el panel de indicadores, la página de ficha técnica, las ta
 
 ## Colors
 
-Papel blanco, tinta casi negra y grises neutros para leer; una familia de mar (petróleo profundo, verde agua claro) y una de costa (arena) para dar atmósfera y lugar; dos realces de fase, cálido y frío, reservados a los datos. Los tokens viven en `app/app.vue` como propiedades personalizadas en `:root` y se redefinen bajo `@media (prefers-color-scheme: dark)`; los valores `-dark` del frontmatter son esa redefinición. El gráfico de ECharts lee las mismas variables y las relee al cambiar el tema; el SVG de la historia las usa directamente.
+Papel blanco, tinta casi negra y grises neutros para leer; una familia de mar (petróleo profundo, verde agua claro) y una de costa (arena) para dar atmósfera y lugar; dos realces de fase, cálido y frío, reservados a los datos. Los tokens viven en `web/app/app.vue` como propiedades personalizadas en `:root` y se redefinen bajo `@media (prefers-color-scheme: dark)`; los valores `-dark` del frontmatter son esa redefinición. El gráfico de ECharts lee las mismas variables y las relee al cambiar el tema; el SVG de la historia las usa directamente.
 
 ### Primary (solo datos)
 - **Naranja Niño** (`--warm`): fase cálida (anomalía ≥ +0,5 °C). Tramo cálido de la línea, punto del último dato, círculos de la racha, casillas llenas del contador, línea «tan alto como hoy», muestra de la leyenda y trazo de la caja Niño 3.4.

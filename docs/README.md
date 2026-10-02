@@ -1,11 +1,14 @@
-# Documentación
+# Documentation
 
-| Documento | Responde a |
-| --- | --- |
-| [`producto.md`](producto.md) | Qué construimos, para quién y con qué reglas para cada gráfico. |
-| [`pantallas.md`](pantallas.md) | Qué muestra cada panel de la v0.1 y qué dato lo alimenta. |
-| [`arquitectura.md`](arquitectura.md) | Cómo encajan el pipeline, los datos y la web. |
-| [`datos.md`](datos.md) | Qué reglas cumple un dato y qué formato tiene el JSON publicado. |
-| [`conceptos.md`](conceptos.md) | Glosario: anomalía, periodo base, ONI, ICEN… |
-| [`fuentes/`](fuentes/README.md) | Inventario de fuentes, con una ficha por fuente. |
-| [`decisiones.md`](decisiones.md) | Qué se decidió, cuándo y por qué. |
+| Document                               | Answers                                                                           |
+| -------------------------------------- | --------------------------------------------------------------------------------- |
+| [`product.md`](product.md)             | What WawaPacha is, who it is for, and the rules for every chart.                  |
+| [`data-contract.md`](data-contract.md) | The rules a dataset follows and the contract of the published JSON.               |
+| [`add-a-source.md`](add-a-source.md)   | How to add a source, and the fields of the registry.                              |
+| [`concepts.md`](concepts.md)           | A glossary: anomaly, base period, ONI, ICEN…                                      |
+| [`decisions.md`](decisions.md)         | Why the project is the way it is.                                                 |
+| [`sources.md`](sources.md)             | The sources the pipeline reads. Generated from [`sources.toml`](../sources.toml). |
+
+The code is mapped in [`ARCHITECTURE.md`](../ARCHITECTURE.md). Branches and
+checks are in [`CONTRIBUTING.md`](../CONTRIBUTING.md). What is not built is in
+[`ROADMAP.md`](../ROADMAP.md).

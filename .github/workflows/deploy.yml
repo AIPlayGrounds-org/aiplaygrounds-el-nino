@@ -1,5 +1,5 @@
-# Publica la web en GitHub Pages cada vez que se actualiza main.
-# La web es estática: `nuxt generate` lee los JSON de data/ en la compilación.
+# Publishes the web to GitHub Pages every time main is updated.
+# The site is static: `nuxt generate` reads the JSON in data/ at build time.
 name: Deploy a GitHub Pages
 
 on:
@@ -12,7 +12,8 @@ permissions:
   pages: write
   id-token: write
 
-# Un solo deploy a la vez; si llega otro push, se espera al que está en curso.
+# Run one deploy at a time.
+# A new push waits for the deploy in progress.
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -20,6 +21,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
     steps:
       - uses: actions/checkout@v4
 
@@ -29,14 +33,14 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      # La web vive en una subcarpeta (/<nombre-del-repo>/), no en la raíz del dominio.
+      # GitHub Pages serves the site from a repository subpath.
       - run: bun run generate
         env:
           PAGES_BASE_URL: /${{ github.event.repository.name }}/
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .output/public
+          path: web/.output/public
 
   deploy:
     needs: build

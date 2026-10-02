@@ -1,4 +1,4 @@
-# Comprueba cada PR: tests del pipeline y compilación de la web.
+# Checks every PR: pipeline tests, generated docs and types up to date, and the web build.
 name: CI
 
 on:
@@ -23,13 +23,22 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --locked
       - run: uv run pytest
+      # Fails if docs/sources.md is stale: run the command and commit the result.
+      - run: uv run wawapacha-pipeline sources
+      - run: git diff --exit-code ../docs/sources.md
 
   web:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
+      # Fails if app/types/dataset.ts is stale: run `bun run types` and commit the result.
+      - run: bun run types
+      - run: git diff --exit-code app/types/dataset.ts
       - run: bun run generate

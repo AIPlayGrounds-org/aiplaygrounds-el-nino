@@ -3,7 +3,9 @@ name = "wawapacha-pipeline"
 version = "0.1.0"
 description = "Descarga, valida y publica los datos de WawaPacha."
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "jsonschema>=4.26.0",
+]
 
 [project.scripts]
 wawapacha-pipeline = "wawapacha_pipeline.cli:main"
