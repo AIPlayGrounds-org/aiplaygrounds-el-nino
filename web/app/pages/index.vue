@@ -5,6 +5,12 @@ import type { Dataset, OniRecord } from '~/types/dataset'
 const oni = oniJson as Omit<Dataset, 'records'> & { records: OniRecord[] }
 const records = oni.records
 const last = records.at(-1)
+const DATA_TYPE_LABELS: Record<Dataset['data_type'], string> = {
+  observed: 'Observado',
+  estimated: 'Estimado',
+  forecast: 'Pronóstico',
+  official: 'Oficial',
+}
 
 const CPC_ONI_PAGE = 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/'
 const ENFEN_COMUNICADOS = 'https://enfen.imarpe.gob.pe/downloads/comunicados/'
@@ -227,7 +233,7 @@ useSeoMeta({
                 · <a :href="oni.source.url" target="_blank" rel="noopener">datos originales<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
               </dd>
             </div>
-            <div><dt>Tipo de dato</dt><dd>Observado</dd></div>
+            <div><dt>Tipo de dato</dt><dd>{{ DATA_TYPE_LABELS[oni.data_type] }}</dd></div>
             <div><dt>Datos hasta</dt><dd>{{ monthName(last.end) }}</dd></div>
             <div><dt>Fuente revisada</dt><dd>{{ reviewed }}</dd></div>
           </dl>

@@ -36,8 +36,8 @@
     "variable": { "description": "What is measured.", "type": "string", "minLength": 1 },
     "unit": { "type": "string", "minLength": 1 },
     "data_type": {
-      "description": "observado (observed), estimado (estimated) or pronóstico (forecast).",
-      "enum": ["observado", "estimado", "pronóstico"]
+      "description": "The data type: observed, estimated, forecast, or official.",
+      "enum": ["observed", "estimated", "forecast", "official"]
     },
     "spatial_resolution": { "type": "string", "minLength": 1 },
     "temporal_resolution": { "type": "string", "minLength": 1 },
