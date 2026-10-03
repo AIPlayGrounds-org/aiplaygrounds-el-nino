@@ -4,6 +4,9 @@ const oni = useDataset("noaa-cpc-oni");
 const anomaly: number = oni.records[0]!.anomaly;
 void anomaly;
 
+const geometry = useDataset("limites-inei-ign");
+void geometry.records[0]!.departamentos.features[0]!.geometry;
+
 // @ts-expect-error An ONI record does not expose river discharge.
 const wrongField: number = oni.records[0]!.river_discharge;
 void wrongField;
