@@ -100,6 +100,56 @@ export const messages = {
     methodsBodyTwo:
       "La NOAA usa hoy el RONI, una variante de este índice que descuenta el calentamiento general del océano, para su monitoreo oficial. El ONI se mantiene como la serie histórica de referencia, y sus últimos trimestres pueden revisarse.",
   },
+  panels: {
+    weekly: {
+      title: "¿Cómo está el mar frente al Perú?",
+      summary: (date: string, nino12: string, nino34: string) =>
+        `Anomalías semanales del mar hasta ${date}. Últimos valores: Niño 1+2 ${nino12} °C y Niño 3.4 ${nino34} °C.`,
+      latest: "Último dato",
+      latestValues: "Últimos valores",
+      date: "Semana del",
+      nino12: "Niño 1+2",
+      nino34: "Niño 3.4",
+      chartAxis: "Anomalía (°C)",
+      chartDescription: "Anomalías semanales de la temperatura superficial del mar.",
+      chartAria: "Anomalías semanales",
+    },
+    enfen: {
+      title: "¿Qué dice el estado oficial del Perú?",
+      summary: (status: string, date: string) =>
+        `El comunicado de ENFEN del ${date} declara: ${status}.`,
+      number: (number: number, year: number) => `Comunicado n.º ${number} · ${year}`,
+      date: "Fecha",
+      status: "Estado oficial",
+      latestStatus: "Último estado oficial",
+      nextDue: "Próxima fecha prevista",
+      nextDueStale: (date: string) =>
+        `Próximo comunicado previsto el ${date}; aún no publicado`,
+      detail: "Ver el comunicado oficial",
+    },
+    outlook: {
+      title: "¿Qué esperan los pronósticos?",
+      sourceLabel: "Pronóstico de NOAA CPC",
+      summary: (seasons: number, issueDate: string) =>
+        `Probabilidades oficiales de NOAA CPC por categoría ENSO para ${seasons} temporadas móviles. Emisión: ${issueDate}.`,
+      issueDate: "Emisión",
+      season: "Temporada",
+      probability: "Probabilidad",
+      chartDescription: "Barras apiladas con las probabilidades por categoría ENSO.",
+      chartAria: "Probabilidades del pronóstico",
+      categoryLabels: {
+        "..-2": "Índice ≤ −2,0 °C",
+        "-2..-1.5": "−2,0 °C < índice ≤ −1,5 °C",
+        "-1.5..-1": "−1,5 °C < índice ≤ −1,0 °C",
+        "-1..-0.5": "−1,0 °C < índice ≤ −0,5 °C",
+        "-0.5..0.5": "−0,5 °C < índice < 0,5 °C",
+        "0.5..1": "0,5 °C ≤ índice < 1,0 °C",
+        "1..1.5": "1,0 °C ≤ índice < 1,5 °C",
+        "1.5..2": "1,5 °C ≤ índice < 2,0 °C",
+        "2..": "Índice ≥ 2,0 °C",
+      } as Record<string, string>,
+    },
+  },
   oni: {
     neutralTitle: "Ni El Niño ni La Niña",
     neutralDetail: "El valor está entre −0,5 y +0,5 °C, el rango neutral según NOAA.",
@@ -219,3 +269,15 @@ export const ageLabel = (date: string, now = new Date()) => {
   if (months < 12) return messages.provenance.ageMonth(months);
   return messages.provenance.ageYear(Math.floor(months / 12));
 };
+
+type OutlookBounds = {
+  category: string;
+  lower_bound: number | null;
+  upper_bound: number | null;
+};
+
+export const outlookCategoryKey = (category: OutlookBounds) =>
+  `${category.lower_bound ?? ""}..${category.upper_bound ?? ""}`;
+
+export const outlookCategoryLabel = (category: OutlookBounds) =>
+  messages.panels.outlook.categoryLabels[outlookCategoryKey(category)] ?? category.category;

@@ -5,6 +5,9 @@ import { cropOisst } from '~/utils/oisstMap'
 
 const oni = await useDataset('noaa-cpc-oni')
 const oisst = await useDataset('noaa-oisst', cropOisst)
+const weekly = await useDataset('noaa-cpc-nino-weekly')
+const enfen = await useDataset('enfen-communique')
+const outlook = await useDataset('noaa-cpc-outlook')
 const records = oni.records
 const last = records.at(-1)
 
@@ -159,6 +162,10 @@ useSeoMeta({
             </ul>
           </article>
         </div>
+
+        <NinoWeeklyPanel :dataset="weekly" />
+        <EnfenPanel :dataset="enfen" />
+        <OutlookPanel :dataset="outlook" />
 
         <section class="explore" aria-labelledby="oni-history">
           <div class="prose">
