@@ -61,16 +61,6 @@ sources.toml → source module → schema validation → data branch/<id>.json
 | 7 Content and compliance      | Attribution and reviewed terms for every source; Aprende and Metodología; emails to IGP/ENFEN, SENAMHI, ANA, DHN and INAIGEM; AI summary only if a person reviews it. Open-Meteo says “Weather data by Open-Meteo.com”, credits Copernicus, and remains non-commercial only. | Every published source has attribution on the page                       | 2026-10-27        |
 | 8 Hardening and release       | Accessibility, mobile and dark mode, performance, SEO, error and empty states, freshness check, final docs pass                                                                                                                                                              | Freeze 2026-10-28; release 2026-10-31                                    | 2026-10-31        |
 
-### Current status
-
-| Work item            | Status    |
-| -------------------- | --------- |
-| Web foundation (#23) | Merged    |
-| Data branch (#22)    | Merged    |
-| Limits (#21)         | Merged    |
-| ERA5 (#24)           | Merged    |
-| CHIRPS               | In review |
-
 ### v0.1 panel table
 
 The page `/` keeps asking the seven questions below. Each panel has one dataset
