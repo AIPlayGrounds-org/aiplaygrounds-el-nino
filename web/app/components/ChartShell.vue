@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { ageLabel, dataTypeLabel, messages } from "~/messages";
+import { ageDays, ageLabel, dataTypeLabel, messages } from "~/messages";
 import type { DatasetLike } from "~/types/datasets";
 
 const props = defineProps<{
@@ -27,12 +27,8 @@ const dataAge = computed(() =>
 );
 const staleNotice = computed(() => {
   if (!now.value) return false;
-  const updateDays = Math.floor(
-    (now.value.getTime() - new Date(props.dataset.ingestion_time).getTime()) / 86_400_000,
-  );
-  const recordDays = lastRecord
-    ? Math.floor((now.value.getTime() - new Date(lastRecord.end).getTime()) / 86_400_000)
-    : 0;
+  const updateDays = ageDays(props.dataset.ingestion_time, now.value);
+  const recordDays = lastRecord ? ageDays(lastRecord.end, now.value) : 0;
   return updateDays >= STALE_UPDATE_DAYS || recordDays >= STALE_RECORD_DAYS;
 });
 const period =

@@ -2,7 +2,7 @@ import { mount } from "@vue/test-utils";
 import { nextTick } from "vue";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import ChartShell from "~/components/ChartShell.vue";
-import { ageLabel, messages } from "~/messages";
+import { ageDays, ageLabel, messages } from "~/messages";
 import { geometryFixture } from "./fixtures/geometry";
 import { gridFixture } from "./fixtures/grid";
 import { timeSeriesFixture } from "./fixtures/time-series";
@@ -42,6 +42,27 @@ describe("ChartShell", () => {
 
   it("ages a monthly record from the end of its month", () => {
     expect(ageLabel("2026-08", new Date("2026-10-03T00:00:00Z"))).toBe("hace 1 mes");
+  });
+
+  it("does not stale a monthly record 85 days after month-end", async () => {
+    vi.useFakeTimers();
+    const now = new Date("2026-09-23T00:00:00Z");
+    vi.setSystemTime(now);
+    const dataset = JSON.parse(JSON.stringify(timeSeriesFixture)) as typeof timeSeriesFixture;
+    dataset.ingestion_time = "2026-09-01T00:00:00Z";
+    dataset.records.at(-1)!.end = "2026-06";
+
+    expect(ageDays("2026-06", now)).toBe(85);
+    expect(Math.floor((now.getTime() - new Date("2026-06-01T00:00:00Z").getTime()) / 86_400_000)).toBe(
+      114,
+    );
+    const wrapper = mount(ChartShell, {
+      props: { dataset, summary: "Resumen accesible de prueba" },
+      slots: { default: "<div data-chart>chart</div>" },
+    });
+    await nextTick();
+
+    expect(wrapper.find(".stale-notice").exists()).toBe(false);
   });
 
   it.each([

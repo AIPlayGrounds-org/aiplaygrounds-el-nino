@@ -178,12 +178,18 @@ export const messages = {
 };
 
 export const dataTypeLabel = (type: Dataset["data_type"]) => messages.dataType[type];
-export const ageLabel = (date: string, now = new Date()) => {
+const dateAtEndOfPeriod = (date: string) => {
   const month = /^(\d{4})-(\d{2})$/.exec(date);
-  const dateAtEndOfPeriod = month
-    ? new Date(Date.UTC(Number(month[1]), Number(month[2]), 0, 23, 59, 59, 999))
+  return month
+    ? new Date(Date.UTC(Number(month[1]), Number(month[2]), 0))
     : new Date(date);
-  const days = Math.max(0, Math.floor((now.getTime() - dateAtEndOfPeriod.getTime()) / 86_400_000));
+};
+
+export const ageDays = (date: string, now = new Date()) =>
+  Math.max(0, Math.floor((now.getTime() - dateAtEndOfPeriod(date).getTime()) / 86_400_000));
+
+export const ageLabel = (date: string, now = new Date()) => {
+  const days = ageDays(date, now);
   if (days === 0) return messages.provenance.ageToday;
   if (days < 30) return messages.provenance.ageDay(days);
   const months = Math.floor(days / 30.4375);

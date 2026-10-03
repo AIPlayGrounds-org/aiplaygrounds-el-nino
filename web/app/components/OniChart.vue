@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { use } from 'echarts/core'
 import { LineChart } from 'echarts/charts'
-import { AriaComponent, DataZoomComponent, GridComponent, MarkAreaComponent, MarkLineComponent, MarkPointComponent, TooltipComponent, VisualMapComponent } from 'echarts/components'
+import {
+  AriaComponent,
+  DataZoomComponent,
+  GridComponent,
+  MarkAreaComponent,
+  MarkLineComponent,
+  MarkPointComponent,
+  TooltipComponent,
+  VisualMapComponent,
+} from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import { messages } from '~/messages'
@@ -43,12 +52,7 @@ const initialStart = startFor(selected.value)
 const chart = ref<InstanceType<typeof VChart> | null>(null)
 const choose = (years: RangeYears) => {
   selected.value = years
-  chart.value?.dispatchAction({
-    type: 'dataZoom',
-    dataZoomIndex: 0,
-    startValue: startFor(years),
-    endValue: isoDay(lastDate),
-  })
+  chart.value?.dispatchAction({ type: 'dataZoom', dataZoomIndex: 0, startValue: startFor(years), endValue: isoDay(lastDate) })
 }
 
 // ECharts dibuja en un canvas y no ve el CSS: los colores se leen de las variables del tema
@@ -76,11 +80,7 @@ const refreshTheme = () => (theme.value = readTheme())
 onMounted(() => darkQuery.addEventListener('change', refreshTheme))
 onBeforeUnmount(() => darkQuery.removeEventListener('change', refreshTheme))
 
-const axisNumber = new Intl.NumberFormat('es', {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-  signDisplay: 'exceptZero',
-})
+const axisNumber = new Intl.NumberFormat('es', { minimumFractionDigits: 1, maximumFractionDigits: 1, signDisplay: 'exceptZero' })
 
 const option = computed(() => {
   const t = theme.value
@@ -101,22 +101,23 @@ const option = computed(() => {
       textStyle: { color: t.text },
       formatter: (params: { data: [string, number, number] }[]) => {
         const record = records[params[0]!.data[2]]!
-        return [`<b>${seasonLabel(record)}</b> · ${seasonMonths(record)}`, `${messages.chart.anomaly}: ${formatAnomaly(record.anomaly)} °C`, `${messages.chart.seaTemperature}: ${formatTemperature(record.sst)} °C`].join('<br/>')
+        return [
+          `<b>${seasonLabel(record)}</b> · ${seasonMonths(record)}`,
+          `${messages.chart.anomaly}: ${formatAnomaly(record.anomaly)} °C`,
+          `${messages.chart.seaTemperature}: ${formatTemperature(record.sst)} °C`,
+        ].join('<br/>')
       },
     },
     xAxis: {
       type: 'time',
       axisLine: { lineStyle: { color: t.border } },
-      axisLabel: { color: t.axis, hideOverlap: true },
+            axisLabel: { color: t.axis, hideOverlap: true },
     },
     yAxis: {
       type: 'value',
       name: messages.oni.chartAxis,
       nameTextStyle: { color: t.axis, align: 'left' },
-      axisLabel: {
-        color: t.axis,
-        formatter: (v: number) => axisNumber.format(v).replace('-', '−'),
-      },
+      axisLabel: { color: t.axis, formatter: (v: number) => axisNumber.format(v).replace('-', '−') },
       splitLine: { lineStyle: { color: t.grid } },
     },
     // Color de la línea según el umbral oficial: cálido sobre +0,5 °C, frío bajo −0,5 °C, neutro en medio.
@@ -183,7 +184,13 @@ const option = computed(() => {
 <template>
   <div>
     <div class="ranges" role="group" :aria-label="messages.chart.period">
-      <button v-for="r in RANGES" :key="r.label" type="button" :aria-pressed="selected === r.years" @click="choose(r.years)">
+      <button
+        v-for="r in RANGES"
+        :key="r.label"
+        type="button"
+        :aria-pressed="selected === r.years"
+        @click="choose(r.years)"
+      >
         {{ r.label }}
       </button>
     </div>
@@ -208,9 +215,7 @@ const option = computed(() => {
   background: var(--paper);
   color: var(--text);
   cursor: pointer;
-  transition:
-    border-color 0.15s ease-out,
-    background-color 0.15s ease-out;
+  transition: border-color 0.15s ease-out, background-color 0.15s ease-out;
 }
 .ranges button:hover {
   border-color: var(--text);
