@@ -4,8 +4,11 @@ import {
   alignHistoryEvent,
   CURRENT_EVENT_ID,
   historyEventSelectorData,
+  alignHistoryOniEvent,
   peakOfHistoryEvent,
+  peakOfHistoryOniEvent,
   shapeHistoricoDataset,
+  shapeHistoricoOniDataset,
 } from '~/utils/historico'
 
 describe('historical ERSST comparison', () => {
@@ -57,5 +60,21 @@ describe('historical ERSST comparison', () => {
 
     expect(aligned[1]).toEqual({ offset: 2, month: '1982-08', value: null })
     expect(aligned[2]).toEqual({ offset: 3, month: '1982-09', value: 1.45 })
+  })
+
+  it('aligns and computes official ONI separately from the monthly ERSST series', async () => {
+    const full = await loadDataset('noaa-cpc-oni')
+    const dataset = shapeHistoricoOniDataset(full)
+
+    expect(alignHistoryOniEvent(dataset.records, '1982-83')[0]).toEqual({
+      offset: 1,
+      month: '1982-07',
+      value: 0.78,
+    })
+    expect(peakOfHistoryOniEvent(dataset.records, '1982-83')).toMatchObject({
+      value: 2.14,
+      month: '1983-01',
+    })
+    expect(dataset.records.length).toBeLessThan(full.records.length)
   })
 })
