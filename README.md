@@ -2,10 +2,9 @@
 
 ![The home page: "¿Llegó El Niño?" with the latest ONI reading and the stripes of the series since 1950](docs/assets/site.png)
 
-WawaPacha is a public web observatory for the signals of El Niño in Peru. Every
-number shows its source, its date and whether it is observed, estimated,
-forecast or official. It is a static site ([Nuxt 4](https://nuxt.com/) with Bun)
-fed by a Python data pipeline (uv), with no backend and no accounts. Live at
+WawaPacha is a public web observatory for the signals of El Niño in Peru. It is
+a static site ([Nuxt 4](https://nuxt.com/) with Bun) fed by a Python data
+pipeline (uv), with no backend and no accounts. Live at
 <https://aiplaygrounds-org.github.io/wawapacha/>.
 
 ## Run it
@@ -37,11 +36,14 @@ Published noaa-cpc-oni: 919 records in data/noaa-cpc-oni.json
 If the download fails validation, nothing is published and the previous JSON
 stays.
 
-## What the site shows
+## What the site shows today
 
-One page, `/`, built from NOAA's [ONI](docs/sources.md#noaa-cpc-oni) since 1950:
-whether El Niño has arrived, what it means for Peru, the series to explore, and
-how it was made, with the source, the type of data and the date on each number.
+The `/` page uses NOAA's [ONI](docs/sources.md#noaa-cpc-oni) since 1950. It
+answers “¿Llegó El Niño?”, explains what the central-Pacific signal means for
+Peru, shows the history as an interactive ECharts chart and a recent-data table,
+and describes the method. The page also links to ENFEN's official communiqués
+and SENAMHI's meteorological notices. The ONI page shows its source, data type,
+period and last ingestion time from the published JSON.
 
 ## What is where
 
@@ -53,7 +55,7 @@ how it was made, with the source, the type of data and the date on each number.
 | [`notebooks/`](notebooks/)     | [marimo](https://marimo.io) notebooks that walk through the pipeline. |
 | [`sources.toml`](sources.toml) | The source registry.                                                  |
 | [`schema/`](schema/)           | The contract of the published JSON.                                   |
-| [`docs/`](docs/README.md)      | Product, data contract, concepts, decisions and sources.              |
+| [`docs/`](docs/README.md)      | Chart rules, data contract, concepts, source workflow and catalog.    |
 
 ## Not in the product
 
@@ -63,6 +65,6 @@ own, no models of its own and no model consensus.
 ## More
 
 [`ARCHITECTURE.md`](ARCHITECTURE.md) maps the code.
-[`CONTRIBUTING.md`](CONTRIBUTING.md) covers branches and checks.
+[`CONTRIBUTING.md`](CONTRIBUTING.md) covers branches, checks and merges.
 [`docs/add-a-source.md`](docs/add-a-source.md) adds a source.
 [`ROADMAP.md`](ROADMAP.md) lists what is not built.

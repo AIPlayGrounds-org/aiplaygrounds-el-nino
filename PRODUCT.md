@@ -25,7 +25,7 @@ Observatorio web, científico y divulgativo, para seguir las señales del Fenóm
 
 ## Operating Context
 
-- Proyecto de un equipo de tres personas (áreas de Datos, Web y Contenido), con entrega de todas las fases recortadas al 2026-10-31 (ver `docs/decisions.md`).
+- Proyecto de un equipo de tres personas (áreas de Datos, Web y Contenido), con entrega de todas las fases recortadas al 2026-10-31 (ver `ROADMAP.md`).
 - Los datos llegan como JSON en `data/`, publicados por el paquete de `pipeline/` (con notebooks de marimo en `notebooks/`); la web los lee en la compilación (`nuxt generate`) y se sirve como sitio estático.
 - Algunos datos peruanos se cargan a mano (estado de ENFEN) y otros dependen de respuestas institucionales pendientes.
 
@@ -34,7 +34,7 @@ Observatorio web, científico y divulgativo, para seguir las señales del Fenóm
 - Secciones previstas: Dashboard, Territorio, Histórico, Pronósticos, Alertas, Aprende y Metodología (`ROADMAP.md`). Hoy existe solo la página del ONI.
 - Fuera de alcance: cuentas y login, favoritos, notificaciones, API pública, descargas propias, búsqueda global, nivel distrito, modelos o consensos propios, módulos sectoriales.
 - Solo español al lanzar, con i18n preparada (inglés y quechua a futuro).
-- Uso de fuentes gratuitas y, en el caso de Open-Meteo, solo no comercial (D-005).
+- Uso de fuentes gratuitas y, en el caso de Open-Meteo, solo no comercial.
 - Terminología: ver `docs/concepts.md` (anomalía, periodo base, ONI/RONI/ICEN, aviso/alerta/emergencia…).
 
 ## Brand Commitments
