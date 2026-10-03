@@ -17,14 +17,20 @@
 
 [`ci.yml`](.github/workflows/ci.yml) runs these on every PR. Run them first:
 
+The write commands are `uv run ruff format .` from `pipeline/` and
+`bun run format` from `web/`; the checks below leave the tree unchanged.
+
 ```sh
 cd pipeline
+uv run ruff format --check .
+uv run ruff check .
 uv run pytest
 uv run wawapacha-pipeline sources
 git diff --exit-code ../docs/sources.md
 
 cd ../web
 bun install --frozen-lockfile
+bun run format:check
 bun run types
 git diff --exit-code app/types/dataset.ts
 bun run generate
