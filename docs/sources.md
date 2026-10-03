@@ -7,13 +7,14 @@ The sources the pipeline reads. The rest of the registry is in
 Verdicts: **automatable** (the pipeline publishes it) and **manual** (a person
 loads it).
 
-| ID                                              | Source                                                                                                       | Block   | Verdict     |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------- | ----------- |
-| [`noaa-cpc-oni`](#noaa-cpc-oni)                 | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                               | ENSO    | automatable |
-| [`noaa-cpc-nino-weekly`](#noaa-cpc-nino-weekly) | NOAA Climate Prediction Center (CPC): Weekly SST indices (file `wksst9120.for`)                              | ENSO    | automatable |
-| [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                      | Alerts  | automatable |
-| [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1 | SST     | automatable |
-| [`noaa-ersst`](#noaa-ersst)                     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices              | History | automatable |
+| ID                                              | Source                                                                                                                                          | Block   | Verdict     |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ----------- |
+| [`noaa-cpc-oni`](#noaa-cpc-oni)                 | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                                                                  | ENSO    | automatable |
+| [`noaa-cpc-nino-weekly`](#noaa-cpc-nino-weekly) | NOAA Climate Prediction Center (CPC): Weekly SST indices (file `wksst9120.for`)                                                                 | ENSO    | automatable |
+| [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                                                         | Alerts  | automatable |
+| [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1                                    | SST     | automatable |
+| [`open-meteo-glofas`](#open-meteo-glofas)       | Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service: Flood API, GloFAS v4 (continuous history and forecast) | Rivers  | automatable |
+| [`noaa-ersst`](#noaa-ersst)                     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices                                                 | History | automatable |
 
 ### noaa-cpc-oni
 
@@ -187,6 +188,53 @@ Notes:
 - The NCEI ERDDAP returns final data as CSV, about two weeks late. It is not
   used. Its timestamp query failed with HTTP 400 on 2026-10-02: only the `last`
   index form works.
+
+### open-meteo-glofas
+
+Reviewed on 2026-10-02.
+[Official page](https://open-meteo.com/en/docs/flood-api).
+
+| Field               | Value                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Institution         | Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service                                                                                                                                                                                                                                                                                                                         |
+| Product             | Flood API, GloFAS v4 (continuous history and forecast)                                                                                                                                                                                                                                                                                                                                                          |
+| Variable            | Caudal diario (`river_discharge`); para fechas futuras, también media, mediana, máximo, mínimo y percentiles del conjunto                                                                                                                                                                                                                                                                                       |
+| Unit                | m³/s                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Data type           | estimated                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Update              | daily                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Spatial resolution  | 0,05° (unos 5 km)                                                                                                                                                                                                                                                                                                                                                                                               |
+| Temporal resolution | Diaria                                                                                                                                                                                                                                                                                                                                                                                                          |
+| History             | From 1984                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Cadence             | Daily                                                                                                                                                                                                                                                                                                                                                                                                           |
+| License             | CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content.                                                                                                                                                                                                                                                                                                          |
+| Access              | REST API (HTTP GET)                                                                                                                                                                                                                                                                                                                                                                                             |
+| Download URL        | https://flood-api.open-meteo.com/v1/flood?latitude=-5.19,-3.57,-4.90,-11.99,-8.99,-11.83,-12.90,-14.07,-13.71,-16.23,-12.07&longitude=-80.63,-80.45,-80.70,-76.84,-78.61,-77.03,-76.30,-75.73,-76.20,-72.47,-75.20&daily=river_discharge,river_discharge_mean,river_discharge_median,river_discharge_max,river_discharge_min,river_discharge_p25,river_discharge_p75&past_days=7&forecast_days=210&timezone=GMT |
+| Format              | JSON                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Authentication      | none                                                                                                                                                                                                                                                                                                                                                                                                            |
+
+Notes:
+
+- Discharge comes from a hydrological model, not from a measurement. Future
+  dates are forecast (up to about 7 months).
+- The 11 published points are fixed representatives of the Piura, Tumbes, Chira,
+  Rimac, Santa, Chillon, Canete, Ica, Pisco, Majes/Colca and Mantaro basins. The
+  returned snapped grid coordinates are preserved and checked against their
+  named point; the API does not identify the river for us.
+- The pipeline expands each daily array into one basin/date record. It copies
+  the API values without recomputing them, retains null forecast tails, and
+  assigns `estimated` through the UTC ingestion date and `forecast` afterward.
+- There are no thresholds. SENAMHI or ANA sets the critical levels of each
+  river.
+- No noticeable delay: on 2026-10-01 it returned values up to that date and a
+  forecast for the following days. It accepts several points per request (143 in
+  one test).
+- Attribution: show “Weather data by Open-Meteo.com” linked to
+  https://open-meteo.com/, and credit GloFAS and the Copernicus Emergency
+  Management Service.
+- Limits: 600 calls per minute, 5,000 per hour, 10,000 per day and 300,000 per
+  month.
+- Open-Meteo is an intermediary. If its terms change, the alternative is GloFAS
+  at Copernicus, which needs an account.
 
 ### noaa-ersst
 

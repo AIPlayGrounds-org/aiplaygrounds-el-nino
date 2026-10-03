@@ -70,6 +70,10 @@
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/oniRecord" } } } }
     },
     {
+      "if": { "properties": { "id": { "const": "open-meteo-glofas" } } },
+      "then": { "properties": { "records": { "items": { "$ref": "#/$defs/glofasRecord" } } } }
+    },
+    {
       "if": { "properties": { "id": { "const": "enfen-communique" } } },
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/enfenRecord" } } } }
     },
@@ -129,6 +133,46 @@
         "end": { "$ref": "#/$defs/month" },
         "sst": { "description": "Sea surface temperature in Niño 3.4, in °C.", "type": "number" },
         "anomaly": { "description": "Anomaly of that temperature, in °C.", "type": "number" }
+      }
+    },
+    "glofasRecord": {
+      "title": "GlofasRecord",
+      "description": "One daily modelled discharge value and its ensemble statistics for a named Peruvian basin point.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "point",
+        "lat",
+        "lon",
+        "grid_lat",
+        "grid_lon",
+        "start",
+        "end",
+        "data_type",
+        "river_discharge",
+        "river_discharge_mean",
+        "river_discharge_median",
+        "river_discharge_max",
+        "river_discharge_min",
+        "river_discharge_p25",
+        "river_discharge_p75"
+      ],
+      "properties": {
+        "point": { "type": "string", "minLength": 1 },
+        "lat": { "type": "number" },
+        "lon": { "type": "number" },
+        "grid_lat": { "type": "number" },
+        "grid_lon": { "type": "number" },
+        "start": { "$ref": "#/$defs/day" },
+        "end": { "$ref": "#/$defs/day" },
+        "data_type": { "enum": ["estimated", "forecast"] },
+        "river_discharge": { "type": ["number", "null"], "minimum": 0 },
+        "river_discharge_mean": { "type": ["number", "null"], "minimum": 0 },
+        "river_discharge_median": { "type": ["number", "null"], "minimum": 0 },
+        "river_discharge_max": { "type": ["number", "null"], "minimum": 0 },
+        "river_discharge_min": { "type": ["number", "null"], "minimum": 0 },
+        "river_discharge_p25": { "type": ["number", "null"], "minimum": 0 },
+        "river_discharge_p75": { "type": ["number", "null"], "minimum": 0 }
       }
     },
     "enfenRecord": {

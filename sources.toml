@@ -514,10 +514,10 @@ id = "open-meteo-glofas"
 institution = "Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service"
 product = "Flood API, GloFAS v4 (continuous history and forecast)"
 block = "Rivers"
-verdict = "pending"
+verdict = "automatable"
 update = "daily"
 delivery = "v0.3"
-reviewed = "2026-10-01"
+reviewed = "2026-10-02"
 page = "https://open-meteo.com/en/docs/flood-api"
 variable = "Caudal diario (`river_discharge`); para fechas futuras, también media, mediana, máximo, mínimo y percentiles del conjunto"
 unit = "m³/s"
@@ -529,17 +529,18 @@ cadence = "Daily"
 license = "CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content."
 notes = [
   "Discharge comes from a hydrological model, not from a measurement. Future dates are forecast (up to about 7 months).",
-  "At 5 km resolution, the requested point may not fall on the model's river channel. Each point is chosen by searching the surrounding cells for the highest discharge and is validated against a known flood. At the coordinates of Piura city (-5.19, -80.63) the model gave 2 m³/s in March 2017.",
+  "The 11 published points are fixed representatives of the Piura, Tumbes, Chira, Rimac, Santa, Chillon, Canete, Ica, Pisco, Majes/Colca and Mantaro basins. The returned snapped grid coordinates are preserved and checked against their named point; the API does not identify the river for us.",
+  "The pipeline expands each daily array into one basin/date record. It copies the API values without recomputing them, retains null forecast tails, and assigns `estimated` through the UTC ingestion date and `forecast` afterward.",
   "There are no thresholds. SENAMHI or ANA sets the critical levels of each river.",
   "No noticeable delay: on 2026-10-01 it returned values up to that date and a forecast for the following days. It accepts several points per request (143 in one test).",
-  "Attribution: a “Weather data by Open-Meteo.com” link to https://open-meteo.com/ and credit to GloFAS and the Copernicus Emergency Management Service.",
+  "Attribution: show “Weather data by Open-Meteo.com” linked to https://open-meteo.com/, and credit GloFAS and the Copernicus Emergency Management Service.",
   "Limits: 600 calls per minute, 5,000 per hour, 10,000 per day and 300,000 per month.",
   "Open-Meteo is an intermediary. If its terms change, the alternative is GloFAS at Copernicus, which needs an account.",
 ]
 
 [source.access]
 kind = "REST API (HTTP GET)"
-url = "https://flood-api.open-meteo.com/v1/flood?latitude=-5.225&longitude=-80.675&daily=river_discharge&past_days=7&forecast_days=7"
+url = "https://flood-api.open-meteo.com/v1/flood?latitude=-5.19,-3.57,-4.90,-11.99,-8.99,-11.83,-12.90,-14.07,-13.71,-16.23,-12.07&longitude=-80.63,-80.45,-80.70,-76.84,-78.61,-77.03,-76.30,-75.73,-76.20,-72.47,-75.20&daily=river_discharge,river_discharge_mean,river_discharge_median,river_discharge_max,river_discharge_min,river_discharge_p25,river_discharge_p75&past_days=7&forecast_days=210&timezone=GMT"
 format = "JSON"
 auth = "none"
 
