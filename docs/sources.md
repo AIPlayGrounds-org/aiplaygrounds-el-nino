@@ -7,12 +7,13 @@ The sources the pipeline reads. The rest of the registry is in
 Verdicts: **automatable** (the pipeline publishes it) and **manual** (a person
 loads it).
 
-| ID                                      | Source                                                                                                       | Block   | Verdict     |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------- | ----------- |
-| [`noaa-cpc-oni`](#noaa-cpc-oni)         | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                               | ENSO    | automatable |
-| [`enfen-communique`](#enfen-communique) | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                      | Alerts  | automatable |
-| [`noaa-oisst`](#noaa-oisst)             | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1 | SST     | automatable |
-| [`noaa-ersst`](#noaa-ersst)             | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices              | History | automatable |
+| ID                                              | Source                                                                                                       | Block   | Verdict     |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------- | ----------- |
+| [`noaa-cpc-oni`](#noaa-cpc-oni)                 | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                               | ENSO    | automatable |
+| [`noaa-cpc-nino-weekly`](#noaa-cpc-nino-weekly) | NOAA Climate Prediction Center (CPC): Weekly SST indices (file `wksst9120.for`)                              | ENSO    | automatable |
+| [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                      | Alerts  | automatable |
+| [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1 | SST     | automatable |
+| [`noaa-ersst`](#noaa-ersst)                     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices              | History | automatable |
 
 ### noaa-cpc-oni
 
@@ -48,6 +49,40 @@ Notes:
   ONI stays as the historical series.
 - CPC flags a warm or cold period when the ONI reaches ±0.5 °C for at least five
   consecutive, overlapping seasons.
+
+### noaa-cpc-nino-weekly
+
+Reviewed on 2026-10-01.
+[Official page](https://www.cpc.ncep.noaa.gov/data/indices/).
+
+| Field               | Value                                                              |
+| ------------------- | ------------------------------------------------------------------ |
+| Institution         | NOAA Climate Prediction Center (CPC)                               |
+| Product             | Weekly SST indices (file `wksst9120.for`)                          |
+| Variable            | Temperatura superficial del mar y su anomalía en las regiones Niño |
+| Unit                | °C                                                                 |
+| Data type           | observed                                                           |
+| Update              | weekly                                                             |
+| Spatial resolution  | Un valor por región Niño: Niño 1+2, 3, 3.4 y 4                     |
+| Temporal resolution | Semanal                                                            |
+| History             | From the week centered on 02SEP1981                                |
+| Cadence             | Weekly                                                             |
+| Reference period    | 1991–2020                                                          |
+| Access              | HTTP, fixed-width text file                                        |
+| Download URL        | https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for           |
+| Format              | Fixed-width text: date, SST and anomaly for four regions           |
+| Authentication      | none                                                               |
+
+Notes:
+
+- Fixed-width text with 4 header lines. Negative anomalies are glued to the SST
+  (`20.6-0.1`), so the file is read by position, not by spaces.
+- Each row is one week, identified by its central day (a Wednesday), for example
+  `02SEP1981`.
+- The base period comes from the file name and the indices page. The header does
+  not declare it.
+- Do not compare this anomaly with the ONI one (moving base).
+- These are regional averages, not maps.
 
 ### enfen-communique
 
