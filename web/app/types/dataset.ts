@@ -40,6 +40,19 @@ export type Dataset = {
    */
   processing_version: string
   /**
+   * Revision metadata returned by the upstream source.
+   */
+  source_revision?: {
+    /**
+     * SHA-256 hash of the downloaded source bytes.
+     */
+    sha256: string
+    /**
+     * HTTP Last-Modified value, when supplied.
+     */
+    last_modified: string | null
+  }
+  /**
    * @minItems 1
    */
   records: [DatasetRecord, ...DatasetRecord[]]
