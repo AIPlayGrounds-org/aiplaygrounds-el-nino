@@ -10,9 +10,12 @@ import { messages } from '~/messages'
 import { formatMonth, formatValue } from '~/utils/format'
 import {
   alignHistoryEvent,
+  alignHistoryOniEvent,
+  type AlignedHistoryPoint,
   CURRENT_EVENT_ID,
   historyEventSelectorData,
   peakOfHistoryEvent,
+  peakOfHistoryOniEvent,
   type HistoryEventId,
   type HistoryRegion,
 } from '~/utils/historico'
@@ -20,44 +23,64 @@ import type { DatasetFor } from '~/types/datasets'
 
 use([LineChart, AriaComponent, GridComponent, TooltipComponent, CanvasRenderer])
 
-const props = defineProps<{ dataset: DatasetFor<'noaa-ersst'> }>()
+const props = defineProps<{
+  dataset: DatasetFor<'noaa-ersst'>
+  oni: DatasetFor<'noaa-cpc-oni'>
+}>()
 const region = ref<HistoryRegion>('nino34')
 const availableEvents = historyEventSelectorData(props.dataset.records)
 const selectedEvents = ref<HistoryEventId[]>([...availableEvents])
 const theme = useChartTheme()
 const currentYear = Number(props.dataset.records.at(-1)!.start.slice(0, 4))
+const EVENT_COLORS = {
+  '1982-83': 'warm',
+  '1997-98': 'cold',
+  '2017': 'accent',
+  current: 'neutral',
+} as const
 
 const eventLabel = (event: HistoryEventId) => {
   if (event === CURRENT_EVENT_ID) return messages.historico.currentYear(currentYear)
   return messages.historico.events[event]
 }
-const peakLabel = (event: HistoryEventId) => {
-  const peak = peakOfHistoryEvent(props.dataset.records, event, region.value)
-  return peak
-    ? `${eventLabel(event)} · ${messages.historico.peak(formatValue(peak.value), formatMonth(peak.month))}`
-    : `${eventLabel(event)} · ${messages.historico.noPeak}`
-}
 const selectedSeries = computed(() =>
   selectedEvents.value.map((event) => ({
     event,
     points: alignHistoryEvent(props.dataset.records, event, region.value),
-    label: peakLabel(event),
+    peak: peakOfHistoryEvent(props.dataset.records, event, region.value),
   })),
+)
+const selectedOniSeries = computed(() =>
+  selectedEvents.value
+    .filter((event) => event !== '2017')
+    .map((event) => ({
+      event,
+      points: alignHistoryOniEvent(props.oni.records, event),
+      peak: peakOfHistoryOniEvent(props.oni.records, event),
+    })),
 )
 const maxOffset = computed(() =>
   Math.max(0, ...selectedSeries.value.map((series) => series.points.length)),
 )
+const maxOniOffset = computed(() =>
+  Math.max(0, ...selectedOniSeries.value.map((series) => series.points.length)),
+)
+const labelFor = (event: HistoryEventId, peak: { value: number; month: string } | null) =>
+  peak
+    ? `${eventLabel(event)} · ${messages.historico.peak(formatValue(peak.value), formatMonth(peak.month))}`
+    : `${eventLabel(event)} · ${messages.historico.noPeak}`
 const summary = computed(() => {
   const regionName = messages.historico.regions[region.value]
   const peaks = selectedSeries.value
-    .map((series) => {
-      const peak = peakOfHistoryEvent(props.dataset.records, series.event, region.value)
-      return peak
-        ? `${eventLabel(series.event)}: ${formatValue(peak.value)} °C en ${formatMonth(peak.month)}`
-        : null
-    })
+    .map((series) => (series.peak ? labelFor(series.event, series.peak) : null))
     .filter((peak): peak is string => peak !== null)
   return messages.historico.summary(regionName, peaks.join('; '))
+})
+const oniSummary = computed(() => {
+  const peaks = selectedOniSeries.value
+    .map((series) => (series.peak ? labelFor(series.event, series.peak) : null))
+    .filter((peak): peak is string => peak !== null)
+  return messages.historico.oniSummary(peaks.join('; '))
 })
 const tableRows = computed(() =>
   Array.from({ length: maxOffset.value }, (_, index) => ({
@@ -65,12 +88,19 @@ const tableRows = computed(() =>
     values: selectedSeries.value.map((series) => series.points[index]?.value ?? null),
   })),
 )
+const eventColor = (event: HistoryEventId) =>
+  event === CURRENT_EVENT_ID ? 'var(--neutral-data)' : `var(--${EVENT_COLORS[event]})`
 
-const chartOption = computed(() => {
+type HistorySeries = {
+  event: HistoryEventId
+  points: AlignedHistoryPoint[]
+  peak: { value: number; month: string } | null
+}
+
+const chartOptionFor = (series: HistorySeries[], max: number, description: string) => {
   const t = theme.value
-  const colors = [t.warm, t.cold, t.accent, t.neutral]
   return {
-    aria: { enabled: true, label: { description: summary.value } },
+    aria: { enabled: true, label: { description } },
     animation: false,
     textStyle: { color: t.muted, fontFamily: t.font },
     grid: { left: 48, right: 18, top: 24, bottom: 42 },
@@ -92,7 +122,7 @@ const chartOption = computed(() => {
     xAxis: {
       type: 'category',
       name: messages.historico.months,
-      data: Array.from({ length: maxOffset.value }, (_, index) => index + 1),
+      data: Array.from({ length: max }, (_, index) => index + 1),
       axisLine: { lineStyle: { color: t.border } },
       axisLabel: { color: t.muted },
     },
@@ -102,37 +132,46 @@ const chartOption = computed(() => {
       axisLabel: { color: t.muted, formatter: (value: number) => formatValue(value) },
       splitLine: { lineStyle: { color: t.grid } },
     },
-    series: selectedSeries.value.map((series, index) => ({
-      name: series.label,
+    series: series.map((series) => ({
+      name: labelFor(series.event, series.peak),
       type: 'line',
       data: series.points.map((point) => point.value),
       connectNulls: false,
       showSymbol: false,
-      lineStyle: { width: 2, color: colors[index % colors.length] },
-      itemStyle: { color: colors[index % colors.length] },
+      lineStyle: { width: 2, color: t[EVENT_COLORS[series.event]] },
+      itemStyle: { color: t[EVENT_COLORS[series.event]] },
     })),
   }
-})
+}
+const chartOption = computed(() =>
+  chartOptionFor(selectedSeries.value, maxOffset.value, summary.value),
+)
+const oniChartOption = computed(() =>
+  chartOptionFor(selectedOniSeries.value, maxOniOffset.value, oniSummary.value),
+)
 </script>
 
 <template>
-  <ChartShell :dataset="dataset" :summary="summary">
-    <div class="controls">
-      <label>
-        {{ messages.historico.regionLabel }}
-        <select v-model="region">
-          <option value="nino34">{{ messages.historico.regions.nino34 }}</option>
-          <option value="nino12">{{ messages.historico.regions.nino12 }}</option>
-        </select>
+  <div class="controls">
+    <label>
+      {{ messages.historico.regionLabel }}
+      <select v-model="region">
+        <option value="nino34">{{ messages.historico.regions.nino34 }}</option>
+        <option value="nino12">{{ messages.historico.regions.nino12 }}</option>
+      </select>
+    </label>
+    <fieldset>
+      <legend>{{ messages.historico.eventsLabel }}</legend>
+      <label v-for="event in availableEvents" :key="event">
+        <input v-model="selectedEvents" type="checkbox" :value="event" />
+        {{ eventLabel(event) }}
       </label>
-      <fieldset>
-        <legend>{{ messages.historico.eventsLabel }}</legend>
-        <label v-for="event in availableEvents" :key="event">
-          <input v-model="selectedEvents" type="checkbox" :value="event" />
-          {{ eventLabel(event) }}
-        </label>
-      </fieldset>
-    </div>
+    </fieldset>
+  </div>
+  <p class="coastal-note">{{ messages.historico.coastalNote }}</p>
+
+  <ChartShell :dataset="dataset" :summary="summary">
+    <h3>{{ messages.historico.ersstTitle }}</h3>
 
     <NuxtErrorBoundary>
       <ClientOnly>
@@ -147,15 +186,13 @@ const chartOption = computed(() => {
     </NuxtErrorBoundary>
 
     <ul class="key" :aria-label="messages.historico.eventsLabel">
-      <li v-for="(series, index) in selectedSeries" :key="series.event">
+      <li v-for="series in selectedSeries" :key="series.event">
         <span
           class="swatch"
-          :style="{
-            backgroundColor: `var(--${index === 0 ? 'warm' : index === 1 ? 'cold' : index === 2 ? 'accent' : 'neutral-data'})`,
-          }"
+          :style="{ backgroundColor: eventColor(series.event) }"
           aria-hidden="true"
         />
-        {{ series.label }}
+        {{ labelFor(series.event, series.peak) }}
       </li>
     </ul>
 
@@ -172,7 +209,7 @@ const chartOption = computed(() => {
             <tr>
               <th scope="col">{{ messages.historico.months }}</th>
               <th v-for="series in selectedSeries" :key="series.event" scope="col">
-                {{ series.label }}
+                {{ labelFor(series.event, series.peak) }}
               </th>
             </tr>
           </thead>
@@ -188,6 +225,32 @@ const chartOption = computed(() => {
       </div>
     </details>
   </ChartShell>
+
+  <ChartShell :dataset="oni" :summary="oniSummary">
+    <h3>{{ messages.historico.oniTitle }}</h3>
+    <p class="oni-note">{{ messages.historico.oniNote }}</p>
+    <NuxtErrorBoundary>
+      <ClientOnly>
+        <VChart class="chart" :option="oniChartOption" autoresize />
+        <template #fallback>
+          <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+        </template>
+      </ClientOnly>
+      <template #error>
+        <div class="chart-placeholder">{{ messages.page.chartError }}</div>
+      </template>
+    </NuxtErrorBoundary>
+    <ul class="key" :aria-label="messages.historico.eventsLabel">
+      <li v-for="series in selectedOniSeries" :key="series.event">
+        <span
+          class="swatch"
+          :style="{ backgroundColor: eventColor(series.event) }"
+          aria-hidden="true"
+        />
+        {{ labelFor(series.event, series.peak) }}
+      </li>
+    </ul>
+  </ChartShell>
 </template>
 
 <style scoped>
@@ -195,6 +258,16 @@ const chartOption = computed(() => {
   display: grid;
   gap: 16px;
   margin-bottom: 18px;
+}
+.coastal-note,
+.oni-note {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+h3 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
 }
 .controls label,
 fieldset {

@@ -68,7 +68,6 @@ export const messages = {
     title: '¿Llegó El Niño?',
     peruTitle: '¿Y qué significa para el Perú?',
     historyTitle: 'Explora tú mismo',
-    historyNav: 'Histórico',
     historyLead:
       'Elige el periodo y pasa el cursor (o el dedo) por la línea para ver cada trimestre.',
     methodsTitle: 'Cómo lo hicimos',
@@ -103,12 +102,19 @@ export const messages = {
       'La NOAA usa hoy el RONI, una variante de este índice que descuenta el calentamiento general del océano, para su monitoreo oficial. El ONI se mantiene como la serie histórica de referencia, y sus últimos trimestres pueden revisarse.',
   },
   historico: {
+    historyNav: 'Histórico',
+    navigationLabel: 'Navegación principal',
     seoTitle: 'Histórico de anomalías del mar · WawaPacha',
     seoDescription:
       'Compara por mes las anomalías de la temperatura superficial del mar durante eventos históricos y el año en curso.',
     title: 'Los eventos, mes a mes',
     lead: 'Compara la forma de las anomalías mensuales de ERSSTv5 desde el inicio de cada evento. El valor y el mes del pico se calculan de los datos mostrados.',
     comparisonTitle: 'Una misma escala de meses desde el inicio',
+    ersstTitle: 'ERSSTv5 mensual',
+    oniTitle: 'ONI oficial',
+    oniNote: 'El ONI es la media móvil oficial de tres meses de la anomalía en Niño 3.4.',
+    coastalNote:
+      'Para 2017, la línea costera usa solo ERSST en Niño 1+2; el ONI no corresponde a esa región.',
     regionLabel: 'Región',
     regions: {
       nino34: 'Niño 3.4',
@@ -125,6 +131,8 @@ export const messages = {
     noPeak: 'sin datos',
     summary: (region: string, peaks: string) =>
       `Comparación de la anomalía mensual en ${region}, alineada desde el primer mes disponible de cada evento. Picos: ${peaks || 'sin datos disponibles'}.`,
+    oniSummary: (peaks: string) =>
+      `Comparación del ONI oficial, una media móvil de tres meses de la anomalía en Niño 3.4. Picos: ${peaks || 'sin datos disponibles'}.`,
     anomaly: 'Anomalía',
     months: 'Meses desde el inicio',
     monthFromStart: (month: number) => `Mes ${month} desde el inicio`,

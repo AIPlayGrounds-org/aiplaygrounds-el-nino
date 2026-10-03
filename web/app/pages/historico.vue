@@ -2,9 +2,10 @@
 import { messages } from '~/messages'
 import { useDataset } from '~/composables/useDataset'
 import HistoricoChart from '~/components/HistoricoChart.vue'
-import { shapeHistoricoDataset } from '~/utils/historico'
+import { shapeHistoricoDataset, shapeHistoricoOniDataset } from '~/utils/historico'
 
 const ersst = await useDataset('noaa-ersst', shapeHistoricoDataset)
+const oni = await useDataset('noaa-cpc-oni', shapeHistoricoOniDataset)
 
 useSeoMeta({
   title: messages.historico.seoTitle,
@@ -16,9 +17,8 @@ useSeoMeta({
   <div class="page">
     <header class="header">
       <NuxtLink class="brand" to="/">{{ messages.page.brand }}</NuxtLink>
-      <nav aria-label="Navegación principal">
-        <NuxtLink to="/historico" aria-current="page">{{ messages.page.historyNav }}</NuxtLink>
-      </nav>
+      <NuxtLink to="/territorio">{{ messages.page.territoryLink }}</NuxtLink>
+      <NuxtLink to="/historico" aria-current="page">{{ messages.historico.historyNav }}</NuxtLink>
     </header>
     <main>
       <section class="intro" aria-labelledby="history-title">
@@ -28,7 +28,7 @@ useSeoMeta({
       </section>
       <section class="figure" aria-labelledby="comparison-title" data-dataset="noaa-ersst">
         <h2 id="comparison-title">{{ messages.historico.comparisonTitle }}</h2>
-        <HistoricoChart :dataset="ersst" />
+        <HistoricoChart :dataset="ersst" :oni="oni" />
       </section>
     </main>
   </div>
@@ -55,12 +55,7 @@ useSeoMeta({
   line-height: 1;
   text-decoration: none;
 }
-nav {
-  display: flex;
-  gap: 18px;
-  font-size: 0.95rem;
-}
-nav a[aria-current='page'] {
+.header a[aria-current='page'] {
   font-weight: 700;
 }
 main {
