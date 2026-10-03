@@ -71,6 +71,39 @@ export type Month = string
  * via the `definition` "day".
  */
 export type Day = string
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "boundaryGeometry".
+ */
+export type BoundaryGeometry = PolygonGeometry | MultiPolygonGeometry
+/**
+ * @minItems 1
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "polygonCoordinates".
+ */
+export type PolygonCoordinates = [Ring, ...Ring[]]
+/**
+ * @minItems 4
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "ring".
+ */
+export type Ring = [Position, Position, Position, Position, ...Position[]]
+/**
+ * @minItems 2
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "position".
+ */
+export type Position = [number, number, ...number[]]
+/**
+ * @minItems 1
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "multiPolygonCoordinates".
+ */
+export type MultiPolygonCoordinates = [PolygonCoordinates, ...PolygonCoordinates[]]
 
 /**
  * A value and the period it describes. The other fields depend on the source.
@@ -110,6 +143,66 @@ export interface OniRecord {
    * Anomaly of that temperature, in °C.
    */
   anomaly: number
+}
+/**
+ * One dated administrative-boundary payload.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "geometryRecord".
+ */
+export interface GeometryRecord {
+  start: string
+  end: string
+  version: string
+  departamentos: BoundaryFeatureCollection
+  provincias: BoundaryFeatureCollection
+  attribution: string
+  license_url: string
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "boundaryFeatureCollection".
+ */
+export interface BoundaryFeatureCollection {
+  type: 'FeatureCollection'
+  /**
+   * @minItems 1
+   */
+  features: [BoundaryFeature, ...BoundaryFeature[]]
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "boundaryFeature".
+ */
+export interface BoundaryFeature {
+  type: 'Feature'
+  properties: BoundaryProperties
+  geometry: BoundaryGeometry
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "boundaryProperties".
+ */
+export interface BoundaryProperties {
+  name: string
+  code: string
+  parent?: string
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "polygonGeometry".
+ */
+export interface PolygonGeometry {
+  type: 'Polygon'
+  coordinates: PolygonCoordinates
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "multiPolygonGeometry".
+ */
+export interface MultiPolygonGeometry {
+  type: 'MultiPolygon'
+  coordinates: MultiPolygonCoordinates
 }
 /**
  * One NOAA CPC ENSO strength category and its probability.

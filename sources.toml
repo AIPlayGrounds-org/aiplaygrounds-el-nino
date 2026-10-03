@@ -485,28 +485,34 @@ auth = "request form"
 
 [[source]]
 id = "limites-inei-ign"
-institution = "Instituto Nacional de Estadística e Informática (INEI); alternative: Instituto Geográfico Nacional (IGN)"
-product = "Departmental and provincial boundary layers"
+institution = "Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX"
+product = "Peru administrative boundaries: departments and provinces"
 block = "Territory"
-verdict = "pending"
+verdict = "automatable"
 update = "manual"
 delivery = "v0.2"
-reviewed = "2026-09-26"
-page = "https://ide.inei.gob.pe/"
+reviewed = "2026-10-02"
+page = "https://data.humdata.org/dataset/cod-ab-per"
 variable = "Geometría, código y nombre de la unidad administrativa"
+unit = "No aplica (geometría)"
+data_type = "official"
 spatial_resolution = "Polígonos por departamento y provincia"
 temporal_resolution = "Versión cartográfica, no es una serie"
-history = "Boundaries updated to 2023"
+history = "Valid on 2020-07-14; HDX metadata reviewed through 2025-10-30"
+cadence = "Annual. HDX reports a 365-day update frequency."
+license = "CC BY 3.0 IGO"
 notes = [
-  "The portal offers departmental, provincial and district layers in GeoPackage and warns that the information can have inconsistencies.",
-  "No layer was downloaded or opened.",
-  "INEI census boundaries and IGN legal boundaries may not match.",
+  "HDX publishes the IGN layers through OCHA ROLAC, OCHA FIS and HDX at https://data.humdata.org/dataset/cod-ab-per.",
+  "The ZIP contains `per_admin1.geojson` and `per_admin2.geojson`; the module requires 25 departments and 196 provinces and checks WGS84 polygon geometry, codes, names and common valid_on/version/lang metadata.",
+  "The module keeps only name, code and province parent, then simplifies with Shapely at 0.02 degrees while preserving topology; the published geometry is an adaptation.",
+  "Attribution: Peru administrative boundaries: Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX, CC BY 3.0 IGO. Adapted and simplified by WawaPacha.",
 ]
 
 [source.access]
-kind = "Spatial data portal"
-url = "https://ide.inei.gob.pe/"
-format = "GeoPackage"
+kind = "HDX API resource download"
+url = "https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/63647792-0951-40d2-a30e-4a0e60f7a176/download/per_admin_boundaries.geojson.zip"
+format = "ZIP containing GeoJSON FeatureCollections"
+auth = "none"
 
 # --- v0.3 -------------------------------------------------------------------
 
