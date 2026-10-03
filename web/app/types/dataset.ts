@@ -112,6 +112,29 @@ export interface OniRecord {
   anomaly: number
 }
 /**
+ * One daily modelled discharge value and its ensemble statistics for a named Peruvian basin point.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "glofasRecord".
+ */
+export interface GlofasRecord {
+  point: string
+  lat: number
+  lon: number
+  grid_lat: number
+  grid_lon: number
+  start: Day
+  end: Day
+  data_type: 'estimated' | 'forecast'
+  river_discharge: number | null
+  river_discharge_mean: number | null
+  river_discharge_median: number | null
+  river_discharge_max: number | null
+  river_discharge_min: number | null
+  river_discharge_p25: number | null
+  river_discharge_p75: number | null
+}
+/**
  * One ENFEN official communiqué. The status holds from its date until the next-due date.
  *
  * This interface was referenced by `undefined`'s JSON-Schema
@@ -137,15 +160,15 @@ export interface EnfenRecord {
    */
   url: string
   /**
-   * The communiqué date.
+   * A day in ISO 8601: YYYY-MM-DD.
    */
   start: string
   /**
-   * The next-due date the communiqué states.
+   * A day in ISO 8601: YYYY-MM-DD.
    */
   end: string
   /**
-   * The day a person last checked the archive.
+   * A day in ISO 8601: YYYY-MM-DD.
    */
   checked_at?: string
   /**
