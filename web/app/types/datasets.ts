@@ -41,6 +41,4 @@ export type DatasetFor<Id extends DatasetId> = Omit<Dataset, "id" | "records"> &
 
 export type AnyDataset = DatasetFor<DatasetId>;
 
-export type DatasetLike = Omit<Dataset, "records"> & {
-  records: [{ start: string; end: string }, ...{ start: string; end: string }[]];
-};
+export type DatasetLike = AnyDataset;

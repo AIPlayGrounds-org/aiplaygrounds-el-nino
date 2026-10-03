@@ -8,7 +8,10 @@ const props = defineProps<{
   summary: string;
 }>();
 
+const firstRecord = props.dataset.records[0];
 const lastRecord = props.dataset.records.at(-1);
+const STALE_UPDATE_DAYS = 40;
+const STALE_RECORD_DAYS = 90;
 const now = ref<Date | null>(null);
 onMounted(() => (now.value = new Date()));
 const formatDate = (date: string) =>
@@ -30,13 +33,14 @@ const staleNotice = computed(() => {
   const recordDays = lastRecord
     ? Math.floor((now.value.getTime() - new Date(lastRecord.end).getTime()) / 86_400_000)
     : 0;
-  return updateDays >= 40 || recordDays >= 90;
+  return updateDays >= STALE_UPDATE_DAYS || recordDays >= STALE_RECORD_DAYS;
 });
-const period = lastRecord
-  ? lastRecord.start === lastRecord.end
-    ? lastRecord.end
-    : `${lastRecord.start}–${lastRecord.end}`
-  : "—";
+const period =
+  firstRecord && lastRecord
+    ? firstRecord.start === lastRecord.end
+      ? firstRecord.start
+      : `${firstRecord.start}–${lastRecord.end}`
+    : "—";
 const periodDetails = [
   props.dataset.temporal_resolution,
   period,

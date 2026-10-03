@@ -1,53 +1,50 @@
 <script setup lang="ts">
-import { messages } from "~/messages";
-import { useDataset } from "~/composables/useDataset";
+import { messages } from '~/messages'
+import { useDataset } from '~/composables/useDataset'
 
-const oni = useDataset("noaa-cpc-oni");
-const records = oni.records;
-const last = records.at(-1);
+const oni = useDataset('noaa-cpc-oni')
+const records = oni.records
+const last = records.at(-1)
 
-const CPC_ONI_PAGE = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/";
-const ENFEN_COMUNICADOS = "https://enfen.imarpe.gob.pe/downloads/comunicados/";
-const SENAMHI_AVISOS = "https://www.senamhi.gob.pe/?p=aviso-meteorologico";
+const CPC_ONI_PAGE = 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/'
+const ENFEN_COMUNICADOS = 'https://enfen.imarpe.gob.pe/downloads/comunicados/'
+const SENAMHI_AVISOS = 'https://www.senamhi.gob.pe/?p=aviso-meteorologico'
 
-const phase = last ? ensoPhase(last.anomaly) : "neutral";
-const streak = phaseStreak(records);
+const phase = last ? ensoPhase(last.anomaly) : 'neutral'
+const streak = phaseStreak(records)
 
 /** Responde en llano a «¿hay El Niño (o La Niña)?» con la definición de episodio de NOAA. */
 const status = computed(() => {
-  if (!last || phase === "neutral") {
+  if (!last || phase === 'neutral') {
     return {
       title: messages.oni.neutralTitle,
       detail: messages.oni.neutralDetail,
-    };
+    }
   }
-  const name = phase === "warm" ? messages.oni.warmName : messages.oni.coldName;
-  const side = phase === "warm" ? messages.oni.warmSide : messages.oni.coldSide;
+  const name = phase === 'warm' ? messages.oni.warmName : messages.oni.coldName
+  const side = phase === 'warm' ? messages.oni.warmSide : messages.oni.coldSide
   if (streak >= NOAA_EPISODE_SEASONS) {
     return {
       title: messages.oni.episodeTitle(name),
       detail: messages.oni.episodeDetail(streak, side),
-    };
+    }
   }
-  const umbral =
-    phase === "warm"
-      ? messages.oni.aboveTitle(messages.oni.warmName)
-      : messages.oni.belowTitle(messages.oni.coldName);
+  const umbral = phase === 'warm' ? messages.oni.aboveTitle(messages.oni.warmName) : messages.oni.belowTitle(messages.oni.coldName)
   return {
     title: umbral,
     detail: messages.oni.belowDetail(streak, side, name),
-  };
-});
+  }
+})
 
 /**
  * La respuesta corta a la pregunta del titular. Habla de la regla de episodio de NOAA (5 trimestres seguidos
  * sobre el umbral), no de un estado oficial: NOAA monitorea hoy con el RONI. Pendiente de revisión de Contenido.
  */
 const answer = computed(() => {
-  if (!last) return null;
-  const value = `${formatAnomaly(last.anomaly)} °C`;
-  const rule = messages.oni.episodeRule(streak);
-  if (phase === "warm") {
+  if (!last) return null
+  const value = `${formatAnomaly(last.anomaly)} °C`
+  const rule = messages.oni.episodeRule(streak)
+  if (phase === 'warm') {
     return streak >= NOAA_EPISODE_SEASONS
       ? {
           short: messages.oni.yes,
@@ -60,49 +57,38 @@ const answer = computed(() => {
           lead: messages.oni.centralAbove,
           value,
           tail: messages.oni.warmNotYetTail(rule),
-        };
+        }
   }
-  if (phase === "cold")
+  if (phase === 'cold')
     return {
       short: messages.oni.no,
       lead: messages.oni.centralWarm,
       value,
       tail: messages.oni.coldTail,
-    };
+    }
   return {
     short: messages.oni.no,
     lead: messages.oni.centralNear,
     value,
     tail: messages.oni.neutralTail,
-  };
-});
+  }
+})
 
-const description = computed(() =>
-  last
-    ? messages.oni.summary(
-        monthName(records[0]!.start),
-        monthName(last.end),
-        `${seasonLabel(last)}, ${formatAnomaly(last.anomaly)} °C`,
-        status.value.title,
-      )
-    : "",
-);
+const description = computed(() => (last ? messages.oni.summary(monthName(records[0]!.start), monthName(last.end), `${seasonLabel(last)}, ${formatAnomaly(last.anomaly)} °C`, status.value.title) : ''))
 
-const recent = records.slice(-12).reverse();
+const recent = records.slice(-12).reverse()
 const phaseLabel = {
-  warm: messages.oni.rangeLabel("warm"),
-  neutral: messages.oni.rangeLabel("neutral"),
-  cold: messages.oni.rangeLabel("cold"),
-} as const;
+  warm: messages.oni.rangeLabel('warm'),
+  neutral: messages.oni.rangeLabel('neutral'),
+  cold: messages.oni.rangeLabel('cold'),
+} as const
 
 useSeoMeta({
   title: messages.page.seoTitle,
   description: messages.page.seoDescription,
   ogTitle: messages.page.seoTitle,
-  ogDescription: last
-    ? `${seasonLabel(last)}: ${formatAnomaly(last.anomaly)} °C. ${status.value.title}.`
-    : messages.page.seoTitle,
-});
+  ogDescription: last ? `${seasonLabel(last)}: ${formatAnomaly(last.anomaly)} °C. ${status.value.title}.` : messages.page.seoTitle,
+})
 </script>
 
 <template>
@@ -124,7 +110,7 @@ useSeoMeta({
             <p class="byline">
               {{ messages.page.dataBy }}
               <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener"
-                >NOAA<span class="sr-only"> (se abre en una pestaña nueva)</span></a
+                >NOAA<span class="sr-only">{{ messages.page.newTab }}</span></a
               >,
               {{ messages.page.observedUntil(monthName(last.end)) }}
             </p>
@@ -150,14 +136,12 @@ useSeoMeta({
             <ul class="links">
               <li>
                 <a :href="ENFEN_COMUNICADOS" target="_blank" rel="noopener"
-                  >{{ messages.page.enfenLink
-                  }}<span class="sr-only">{{ messages.page.newTab }}</span></a
+                  >{{ messages.page.enfenLink }}<span class="sr-only">{{ messages.page.newTab }}</span></a
                 >
               </li>
               <li>
                 <a :href="SENAMHI_AVISOS" target="_blank" rel="noopener"
-                  >{{ messages.page.senamhiLink
-                  }}<span class="sr-only">{{ messages.page.newTab }}</span></a
+                  >{{ messages.page.senamhiLink }}<span class="sr-only">{{ messages.page.newTab }}</span></a
                 >
               </li>
             </ul>
@@ -187,17 +171,9 @@ useSeoMeta({
             </ChartShell>
             <figcaption>
               <ul class="key" :aria-label="messages.chart.colors">
-                <li>
-                  <span class="swatch warm" aria-hidden="true" />{{ messages.chart.warmThreshold }}
-                </li>
-                <li>
-                  <span class="swatch neutral" aria-hidden="true" />{{
-                    messages.chart.neutralRange
-                  }}
-                </li>
-                <li>
-                  <span class="swatch cold" aria-hidden="true" />{{ messages.chart.coldThreshold }}
-                </li>
+                <li><span class="swatch warm" aria-hidden="true" />{{ messages.chart.warmThreshold }}</li>
+                <li><span class="swatch neutral" aria-hidden="true" />{{ messages.chart.neutralRange }}</li>
+                <li><span class="swatch cold" aria-hidden="true" />{{ messages.chart.coldThreshold }}</li>
               </ul>
               {{ messages.chart.thresholdNote }}
             </figcaption>

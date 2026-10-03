@@ -110,24 +110,7 @@ export const messages = {
       `Gráfico de la anomalía del ONI desde ${first} hasta ${last}. Último valor: ${current}. ${status}.`,
     rangeLabel: (phase: "warm" | "neutral" | "cold") =>
       ({ warm: "Sobre +0,5 °C", neutral: "Rango neutral", cold: "Bajo −0,5 °C" })[phase],
-    chartDescription: (last: string) => `Anomalía: ${last} °C`,
-    seaDescription: (last: string) => `Temperatura del mar: ${last} °C`,
     chartAxis: "Anomalía (°C)",
-    methods: {
-      variable: "Variable",
-      unit: "Unidad",
-      coverage: "Cobertura",
-      temporalResolution: "Resolución temporal",
-      referencePeriod: "Periodo base",
-      series: "Serie",
-      processing: "Versión del procesamiento",
-      source: "Fuente",
-      dataUntil: "Datos hasta",
-      reviewed: "Fuente revisada",
-      technical: "Ver detalle técnico",
-      periodSummary: (count: number, first: string, last: string) =>
-        `${count} trimestres, de ${first} a ${last}`,
-    },
   },
   story: {
     mapEquator: "línea ecuatorial",
