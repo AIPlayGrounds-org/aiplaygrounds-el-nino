@@ -4,14 +4,15 @@ The sources the pipeline reads. The rest of the registry is in
 [`sources.toml`](../sources.toml). `uv run wawapacha-pipeline sources`, run from
 `pipeline/`, generates this file. Do not edit it by hand.
 
-Verdicts: **automatable** (the pipeline downloads it) and **manual** (a person
+Verdicts: **automatable** (the pipeline publishes it) and **manual** (a person
 loads it).
 
-| ID                              | Source                                                                                                       | Block   | Verdict     |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------- | ----------- |
-| [`noaa-cpc-oni`](#noaa-cpc-oni) | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                               | ENSO    | automatable |
-| [`noaa-oisst`](#noaa-oisst)     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1 | SST     | automatable |
-| [`noaa-ersst`](#noaa-ersst)     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices              | History | automatable |
+| ID                                      | Source                                                                                                       | Block   | Verdict     |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------- | ----------- |
+| [`noaa-cpc-oni`](#noaa-cpc-oni)         | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                               | ENSO    | automatable |
+| [`enfen-communique`](#enfen-communique) | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                      | Alerts  | automatable |
+| [`noaa-oisst`](#noaa-oisst)             | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1 | SST     | automatable |
+| [`noaa-ersst`](#noaa-ersst)             | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices              | History | automatable |
 
 ### noaa-cpc-oni
 
@@ -47,6 +48,55 @@ Notes:
   ONI stays as the historical series.
 - CPC flags a warm or cold period when the ONI reaches ±0.5 °C for at least five
   consecutive, overlapping seasons.
+
+### enfen-communique
+
+Reviewed on 2026-10-02.
+[Official page](https://enfen.imarpe.gob.pe/downloads/comunicados/).
+
+| Field               | Value                                                                                   |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| Institution         | Comisión Multisectorial ENFEN                                                           |
+| Product             | Comunicado Oficial ENFEN                                                                |
+| Variable            | Estado del sistema de alerta de El Niño Costero                                         |
+| Unit                | Estado oficial                                                                          |
+| Data type           | official                                                                                |
+| Update              | manual                                                                                  |
+| Spatial resolution  | Costa del Perú                                                                          |
+| Temporal resolution | Por comunicado, cada dos semanas aproximadamente                                        |
+| Cadence             | Irregular. In the archive consulted, about every two weeks.                             |
+| Access              | Hand-filled YAML, read from the communiqué HTML                                         |
+| Download URL        | https://enfen.imarpe.gob.pe/downloads/comunicados/                                      |
+| Format              | YAML: one `enfen` mapping with number, year, date, status, url, next_due and checked_at |
+| Authentication      | none                                                                                    |
+
+Notes:
+
+- A person fills `pipeline/inputs/enfen.yaml` from the newest communiqué, about
+  every two weeks and at least once a month. Open the archive, copy the number,
+  date, exact status and detail URL from the communiqué HTML, copy the next-due
+  date it states, set `checked_at` to today, then run
+  `uv run wawapacha-pipeline run enfen-communique` from `pipeline/`. The
+  `update` is `manual` for this reason: due selection never runs it.
+- The pipeline does not download. It validates the YAML and publishes one
+  record. `access.url` is the archive where the person reads the communiqué.
+- The status is one of five exact phrases: `No Activo`,
+  `Vigilancia de El Niño Costero`, `Alerta de El Niño Costero`,
+  `Vigilancia de La Niña Costera`, `Alerta de La Niña Costera`. Anything else is
+  rejected, never normalized. The communiqué's own sentence around the phrase
+  varies, so only the phrase is stored.
+- The URL must be the IMARPE detail page of the same number and year,
+  `https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-<number>-<year>/`.
+  The PDF is not the canonical link.
+- Computed: the record's `start` is the communiqué date and its `end` is the
+  next-due date the communiqué states, because the status holds until the next
+  communiqué. `stale` is true when the ingestion date, in Lima time, is after
+  `end`. A stale record means nobody has refreshed the YAML in time. It is
+  recomputed only when the pipeline runs, so the site should also compare `end`
+  with its own build date.
+- Each communiqué has an HTML page and one PDF. Communiqué No. 17-2026, of
+  2026-09-28, states `Alerta de El Niño Costero` in the HTML and says the next
+  one is due on 2026-10-15.
 
 ### noaa-oisst
 
