@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { use } from 'echarts/core'
-import { LineChart } from 'echarts/charts'
+import { use } from "echarts/core";
+import { LineChart } from "echarts/charts";
 import {
   AriaComponent,
   DataZoomComponent,
@@ -10,81 +10,103 @@ import {
   MarkPointComponent,
   TooltipComponent,
   VisualMapComponent,
-} from 'echarts/components'
-import { CanvasRenderer } from 'echarts/renderers'
-import VChart from 'vue-echarts'
-import type { OniRecord } from '~/types/dataset'
+} from "echarts/components";
+import { CanvasRenderer } from "echarts/renderers";
+import VChart from "vue-echarts";
+import { messages } from "~/messages";
+import type { DatasetFor } from "~/types/datasets";
 
 // Solo se cargan las piezas de ECharts que se usan, para que la página pese menos.
-use([LineChart, GridComponent, TooltipComponent, MarkAreaComponent, MarkLineComponent, MarkPointComponent, DataZoomComponent, VisualMapComponent, AriaComponent, CanvasRenderer])
+use([
+  LineChart,
+  GridComponent,
+  TooltipComponent,
+  MarkAreaComponent,
+  MarkLineComponent,
+  MarkPointComponent,
+  DataZoomComponent,
+  VisualMapComponent,
+  AriaComponent,
+  CanvasRenderer,
+]);
 
 const props = defineProps<{
-  records: OniRecord[]
+  dataset: DatasetFor<"noaa-cpc-oni">;
   /** Resumen en texto de la serie, para lectores de pantalla. */
-  description: string
-}>()
+  description: string;
+}>();
+const records = props.dataset.records;
 
 // Este componente solo se monta en el navegador (está dentro de <ClientOnly>), así que puede leer window.
-const narrow = window.matchMedia('(max-width: 599px)').matches
+const narrow = window.matchMedia("(max-width: 599px)").matches;
 
 const RANGES = [
-  { years: 10, label: '10 años' },
-  { years: 30, label: '30 años' },
-  { years: null, label: 'Todo' },
-] as const
-type RangeYears = (typeof RANGES)[number]['years']
+  { years: 10, label: messages.chart.rangeYears },
+  { years: 30, label: messages.chart.rangeDecades },
+  { years: null, label: messages.chart.rangeAll },
+] as const;
+type RangeYears = (typeof RANGES)[number]["years"];
 
 /** Periodo elegido con los botones. En pantallas estrechas empieza en 10 años, que caben bien. */
-const selected = ref<RangeYears>(narrow ? 10 : 30)
+const selected = ref<RangeYears>(narrow ? 10 : 30);
 
-const isoDay = (d: Date) => d.toISOString().slice(0, 10)
-const lastDate = centerDate(props.records.at(-1)!)
+const isoDay = (d: Date) => d.toISOString().slice(0, 10);
+const lastDate = centerDate(records.at(-1)!);
 const startFor = (years: RangeYears) => {
-  if (years === null) return isoDay(centerDate(props.records[0]!))
-  const d = new Date(lastDate)
-  d.setUTCFullYear(d.getUTCFullYear() - years)
-  return isoDay(d)
-}
-const initialStart = startFor(selected.value)
+  if (years === null) return isoDay(centerDate(records[0]!));
+  const d = new Date(lastDate);
+  d.setUTCFullYear(d.getUTCFullYear() - years);
+  return isoDay(d);
+};
+const initialStart = startFor(selected.value);
 
-const chart = ref<InstanceType<typeof VChart> | null>(null)
+const chart = ref<InstanceType<typeof VChart> | null>(null);
 const choose = (years: RangeYears) => {
-  selected.value = years
-  chart.value?.dispatchAction({ type: 'dataZoom', dataZoomIndex: 0, startValue: startFor(years), endValue: isoDay(lastDate) })
-}
+  selected.value = years;
+  chart.value?.dispatchAction({
+    type: "dataZoom",
+    dataZoomIndex: 0,
+    startValue: startFor(years),
+    endValue: isoDay(lastDate),
+  });
+};
 
 // ECharts dibuja en un canvas y no ve el CSS: los colores se leen de las variables del tema
 // y se vuelven a leer cuando el sistema cambia entre modo claro y oscuro.
 const readTheme = () => {
-  const css = getComputedStyle(document.documentElement)
-  const v = (name: string) => css.getPropertyValue(name).trim()
+  const css = getComputedStyle(document.documentElement);
+  const v = (name: string) => css.getPropertyValue(name).trim();
   return {
-    text: v('--text'),
-    muted: v('--muted'),
-    border: v('--border'),
-    surface: v('--surface'),
-    grid: v('--chart-grid'),
-    band: v('--band'),
-    axis: v('--muted'),
-    warm: v('--warm'),
-    cold: v('--cold'),
-    neutral: v('--neutral-data'),
-    font: v('--font'),
-  }
-}
-const theme = ref(readTheme())
-const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
-const refreshTheme = () => (theme.value = readTheme())
-onMounted(() => darkQuery.addEventListener('change', refreshTheme))
-onBeforeUnmount(() => darkQuery.removeEventListener('change', refreshTheme))
+    text: v("--text"),
+    muted: v("--muted"),
+    border: v("--border"),
+    surface: v("--surface"),
+    grid: v("--chart-grid"),
+    band: v("--band"),
+    axis: v("--muted"),
+    warm: v("--warm"),
+    cold: v("--cold"),
+    neutral: v("--neutral-data"),
+    font: v("--font"),
+  };
+};
+const theme = ref(readTheme());
+const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+const refreshTheme = () => (theme.value = readTheme());
+onMounted(() => darkQuery.addEventListener("change", refreshTheme));
+onBeforeUnmount(() => darkQuery.removeEventListener("change", refreshTheme));
 
-const axisNumber = new Intl.NumberFormat('es', { minimumFractionDigits: 1, maximumFractionDigits: 1, signDisplay: 'exceptZero' })
+const axisNumber = new Intl.NumberFormat("es", {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+  signDisplay: "exceptZero",
+});
 
 const option = computed(() => {
-  const t = theme.value
-  const data = props.records.map((r, index) => [isoDay(centerDate(r)), r.anomaly, index])
-  const last = props.records.at(-1)!
-  const lastColor = { warm: t.warm, cold: t.cold, neutral: t.neutral }[ensoPhase(last.anomaly)]
+  const t = theme.value;
+  const data = records.map((r, index) => [isoDay(centerDate(r)), r.anomaly, index]);
+  const last = records.at(-1)!;
+  const lastColor = { warm: t.warm, cold: t.cold, neutral: t.neutral }[ensoPhase(last.anomaly)];
 
   return {
     aria: { enabled: true, label: { description: props.description } },
@@ -92,30 +114,33 @@ const option = computed(() => {
     // A la derecha cabe la etiqueta del último dato y las de los umbrales.
     grid: { left: narrow ? 40 : 48, right: narrow ? 80 : 96, top: 28, bottom: 28 },
     tooltip: {
-      trigger: 'axis',
+      trigger: "axis",
       confine: true,
       backgroundColor: t.surface,
       borderColor: t.border,
       textStyle: { color: t.text },
       formatter: (params: { data: [string, number, number] }[]) => {
-        const record = props.records[params[0]!.data[2]]!
+        const record = records[params[0]!.data[2]]!;
         return [
           `<b>${seasonLabel(record)}</b> · ${seasonMonths(record)}`,
-          `Anomalía: ${formatAnomaly(record.anomaly)} °C`,
-          `Temperatura del mar: ${formatTemperature(record.sst)} °C`,
-        ].join('<br/>')
+          `${messages.chart.anomaly}: ${formatAnomaly(record.anomaly)} °C`,
+          `${messages.chart.seaTemperature}: ${formatTemperature(record.sst)} °C`,
+        ].join("<br/>");
       },
     },
     xAxis: {
-      type: 'time',
+      type: "time",
       axisLine: { lineStyle: { color: t.border } },
-            axisLabel: { color: t.axis, hideOverlap: true },
+      axisLabel: { color: t.axis, hideOverlap: true },
     },
     yAxis: {
-      type: 'value',
-      name: 'Anomalía (°C)',
-      nameTextStyle: { color: t.axis, align: 'left' },
-      axisLabel: { color: t.axis, formatter: (v: number) => axisNumber.format(v).replace('-', '−') },
+      type: "value",
+      name: messages.oni.chartAxis,
+      nameTextStyle: { color: t.axis, align: "left" },
+      axisLabel: {
+        color: t.axis,
+        formatter: (v: number) => axisNumber.format(v).replace("-", "−"),
+      },
       splitLine: { lineStyle: { color: t.grid } },
     },
     // Color de la línea según el umbral oficial: cálido sobre +0,5 °C, frío bajo −0,5 °C, neutro en medio.
@@ -129,22 +154,23 @@ const option = computed(() => {
       ],
     },
     // El periodo se elige solo con los botones: este zoom no tiene barra ni gestos propios.
-    dataZoom: [{ type: 'inside', disabled: true, startValue: initialStart }],
+    dataZoom: [{ type: "inside", disabled: true, startValue: initialStart }],
     series: [
       {
-        type: 'line',
+        type: "line",
         data,
         showSymbol: false,
         lineStyle: { width: 1.5 },
         markLine: {
-          symbol: 'none',
+          symbol: "none",
           silent: true,
-          lineStyle: { type: 'dashed', color: t.muted },
+          lineStyle: { type: "dashed", color: t.muted },
           // Etiquetas fuera del área de la línea, con un decimal como en la leyenda («+0,5 °C»).
           label: {
-            position: 'end',
+            position: "end",
             color: t.muted,
-            formatter: (p: { value: number }) => `${axisNumber.format(p.value).replace('-', '−')} °C`,
+            formatter: (p: { value: number }) =>
+              `${axisNumber.format(p.value).replace("-", "−")} °C`,
           },
           data: [{ yAxis: ENSO_THRESHOLD }, { yAxis: -ENSO_THRESHOLD }],
         },
@@ -156,12 +182,12 @@ const option = computed(() => {
         },
         // El último dato, el mismo del que habla la frase principal de la página.
         markPoint: {
-          symbol: 'circle',
+          symbol: "circle",
           symbolSize: 9,
           itemStyle: { color: lastColor, borderColor: t.surface, borderWidth: 2 },
           // A la derecha del punto, fuera de la línea: así no se confunde con un pico anterior.
           label: {
-            position: 'right',
+            position: "right",
             distance: 8,
             // El último dato, en el color de su fase.
             color: lastColor,
@@ -175,13 +201,13 @@ const option = computed(() => {
         },
       },
     ],
-  }
-})
+  };
+});
 </script>
 
 <template>
   <div>
-    <div class="ranges" role="group" aria-label="Periodo del gráfico">
+    <div class="ranges" role="group" :aria-label="messages.chart.period">
       <button
         v-for="r in RANGES"
         :key="r.label"
@@ -213,12 +239,14 @@ const option = computed(() => {
   background: var(--paper);
   color: var(--text);
   cursor: pointer;
-  transition: border-color 0.15s ease-out, background-color 0.15s ease-out;
+  transition:
+    border-color 0.15s ease-out,
+    background-color 0.15s ease-out;
 }
 .ranges button:hover {
   border-color: var(--text);
 }
-.ranges button[aria-pressed='true'] {
+.ranges button[aria-pressed="true"] {
   background: var(--text);
   border-color: var(--text);
   color: var(--paper);

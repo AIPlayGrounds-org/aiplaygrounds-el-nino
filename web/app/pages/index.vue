@@ -1,201 +1,249 @@
 <script setup lang="ts">
-import oniJson from '#data/noaa-cpc-oni.json'
-import type { Dataset, OniRecord } from '~/types/dataset'
+import { messages } from "~/messages";
+import { useDataset } from "~/composables/useDataset";
 
-const oni = oniJson as Omit<Dataset, 'records'> & { records: OniRecord[] }
-const records = oni.records
-const last = records.at(-1)
-const DATA_TYPE_LABELS: Record<Dataset['data_type'], string> = {
-  observed: 'Observado',
-  estimated: 'Estimado',
-  forecast: 'Pronóstico',
-  official: 'Oficial',
-}
+const oni = useDataset("noaa-cpc-oni");
+const records = oni.records;
+const last = records.at(-1);
 
-const CPC_ONI_PAGE = 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/'
-const ENFEN_COMUNICADOS = 'https://enfen.imarpe.gob.pe/downloads/comunicados/'
-const SENAMHI_AVISOS = 'https://www.senamhi.gob.pe/?p=aviso-meteorologico'
+const CPC_ONI_PAGE = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/";
+const ENFEN_COMUNICADOS = "https://enfen.imarpe.gob.pe/downloads/comunicados/";
+const SENAMHI_AVISOS = "https://www.senamhi.gob.pe/?p=aviso-meteorologico";
 
 // Si el último dato tiene 3 meses o más, NOAA (que publica cada mes) no se ha actualizado
 // o nuestra descarga ha fallado. A los 2 meses es normal: el trimestre JJA se publica a inicios de septiembre.
-const STALE_DATA_MONTHS = 3
-const STALE_REVIEW_DAYS = 40
+const STALE_DATA_MONTHS = 3;
+const STALE_REVIEW_DAYS = 40;
 
-const phase = last ? ensoPhase(last.anomaly) : 'neutral'
-const streak = phaseStreak(records)
+const phase = last ? ensoPhase(last.anomaly) : "neutral";
+const streak = phaseStreak(records);
 
 /** Responde en llano a «¿hay El Niño (o La Niña)?» con la definición de episodio de NOAA. */
 const status = computed(() => {
-  if (!last || phase === 'neutral') {
+  if (!last || phase === "neutral") {
     return {
-      title: 'Ni El Niño ni La Niña',
-      detail: 'El valor está entre −0,5 y +0,5 °C, el rango neutral según NOAA.',
-    }
+      title: messages.oni.neutralTitle,
+      detail: messages.oni.neutralDetail,
+    };
   }
-  const name = phase === 'warm' ? 'El Niño' : 'La Niña'
-  const side = phase === 'warm' ? 'sobre +0,5 °C' : 'bajo −0,5 °C'
+  const name = phase === "warm" ? messages.oni.warmName : messages.oni.coldName;
+  const side = phase === "warm" ? messages.oni.warmSide : messages.oni.coldSide;
   if (streak >= NOAA_EPISODE_SEASONS) {
     return {
-      title: `Episodio ${name} según la definición de NOAA`,
-      detail: `Lleva ${streak} trimestres seguidos ${side}; NOAA exige ${NOAA_EPISODE_SEASONS}.`,
-    }
+      title: messages.oni.episodeTitle(name),
+      detail: messages.oni.episodeDetail(streak, side),
+    };
   }
-  const umbral = phase === 'warm' ? 'Por encima del umbral de El Niño' : 'Por debajo del umbral de La Niña'
+  const umbral =
+    phase === "warm"
+      ? messages.oni.aboveTitle(messages.oni.warmName)
+      : messages.oni.belowTitle(messages.oni.coldName);
   return {
-    title: `${umbral}, pero todavía no es un episodio`,
-    detail: `Van ${streak} de los ${NOAA_EPISODE_SEASONS} trimestres seguidos ${side} que NOAA exige para hablar de un episodio ${name}.`,
-  }
-})
+    title: umbral,
+    detail: messages.oni.belowDetail(streak, side, name),
+  };
+});
 
 /**
  * La respuesta corta a la pregunta del titular. Habla de la regla de episodio de NOAA (5 trimestres seguidos
  * sobre el umbral), no de un estado oficial: NOAA monitorea hoy con el RONI. Pendiente de revisión de Contenido.
  */
 const answer = computed(() => {
-  if (!last) return null
-  const value = `${formatAnomaly(last.anomaly)} °C`
-  const rule = `${streak} de los ${NOAA_EPISODE_SEASONS} trimestres seguidos que la NOAA pide para hablar de un episodio`
-  if (phase === 'warm') {
+  if (!last) return null;
+  const value = `${formatAnomaly(last.anomaly)} °C`;
+  const rule = messages.oni.episodeRule(streak);
+  if (phase === "warm") {
     return streak >= NOAA_EPISODE_SEASONS
-      ? { short: 'Sí: ya cumple la regla de episodio de la NOAA.', lead: 'El Pacífico central está', value, tail: `sobre lo normal, y van ${streak} trimestres seguidos por encima del umbral.` }
-      : { short: 'Todavía no es un episodio.', lead: 'El Pacífico central ya está', value, tail: `sobre lo normal, pero van ${rule}.` }
+      ? {
+          short: messages.oni.yes,
+          lead: messages.oni.centralWarm,
+          value,
+          tail: messages.oni.warmTail(streak),
+        }
+      : {
+          short: messages.oni.notYet,
+          lead: messages.oni.centralAbove,
+          value,
+          tail: messages.oni.warmNotYetTail(rule),
+        };
   }
-  if (phase === 'cold') return { short: 'No.', lead: 'El Pacífico central está', value, tail: 'respecto a lo normal, del lado de La Niña.' }
-  return { short: 'No.', lead: 'El Pacífico central está cerca de lo normal:', value, tail: 'de diferencia.' }
-})
-
-const reviewed = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeZone: 'America/Lima' }).format(new Date(oni.ingestion_time))
+  if (phase === "cold")
+    return {
+      short: messages.oni.no,
+      lead: messages.oni.centralWarm,
+      value,
+      tail: messages.oni.coldTail,
+    };
+  return {
+    short: messages.oni.no,
+    lead: messages.oni.centralNear,
+    value,
+    tail: messages.oni.neutralTail,
+  };
+});
 
 // La antigüedad depende del día en que se abre la página, así que se calcula en el navegador.
-const now = ref<Date | null>(null)
-onMounted(() => (now.value = new Date()))
+const now = ref<Date | null>(null);
+onMounted(() => (now.value = new Date()));
 const staleNotice = computed(() => {
-  if (!now.value || !last) return null
-  const dataMonths = monthsSince(last.end, now.value)
-  const reviewDays = Math.floor((now.value.getTime() - new Date(oni.ingestion_time).getTime()) / 86_400_000)
+  if (!now.value || !last) return null;
+  const dataMonths = monthsSince(last.end, now.value);
+  const reviewDays = Math.floor(
+    (now.value.getTime() - new Date(oni.ingestion_time).getTime()) / 86_400_000,
+  );
   if (dataMonths >= STALE_DATA_MONTHS) {
-    return `El último dato es de ${monthName(last.end)}, hace ${dataMonths} meses. NOAA publica cada mes, así que puede haber datos más recientes en la fuente.`
+    return messages.oni.staleData(monthName(last.end), dataMonths);
   }
   if (reviewDays >= STALE_REVIEW_DAYS) {
-    return `Revisamos la fuente por última vez hace ${reviewDays} días. Puede haber datos más recientes en la fuente.`
+    return messages.oni.staleReview(reviewDays);
   }
-  return null
-})
+  return null;
+});
 
 const description = computed(() =>
   last
-    ? `Gráfico de la anomalía del ONI desde ${monthName(records[0]!.start)} hasta ${monthName(last.end)}. ` +
-      `Último valor: ${seasonLabel(last)}, ${formatAnomaly(last.anomaly)} °C. ${status.value.title}.`
-    : '',
-)
+    ? messages.oni.summary(
+        monthName(records[0]!.start),
+        monthName(last.end),
+        `${seasonLabel(last)}, ${formatAnomaly(last.anomaly)} °C`,
+        status.value.title,
+      )
+    : "",
+);
 
-const recent = records.slice(-12).reverse()
-const phaseLabel = { warm: 'Sobre +0,5 °C', neutral: 'Rango neutral', cold: 'Bajo −0,5 °C' } as const
+const recent = records.slice(-12).reverse();
+const phaseLabel = {
+  warm: messages.oni.rangeLabel("warm"),
+  neutral: messages.oni.rangeLabel("neutral"),
+  cold: messages.oni.rangeLabel("cold"),
+} as const;
 
 useSeoMeta({
-  title: 'Índice Oceánico El Niño (ONI) · WawaPacha',
-  description:
-    'Cuánto más caliente o más frío de lo normal está el Pacífico central, con el último dato de NOAA, su fecha y qué significa para el Perú.',
-  ogTitle: 'Índice Oceánico El Niño (ONI) · WawaPacha',
-  ogDescription: last ? `${seasonLabel(last)}: ${formatAnomaly(last.anomaly)} °C. ${status.value.title}.` : 'Índice Oceánico El Niño (ONI).',
-})
+  title: messages.page.seoTitle,
+  description: messages.page.seoDescription,
+  ogTitle: messages.page.seoTitle,
+  ogDescription: last
+    ? `${seasonLabel(last)}: ${formatAnomaly(last.anomaly)} °C. ${status.value.title}.`
+    : messages.page.seoTitle,
+});
 </script>
-
 
 <template>
   <div class="site">
     <main>
       <template v-if="last && answer">
         <div class="cover">
-        <header class="topbar">
-          <span class="brand">WawaPacha</span>
-        </header>
-        <section class="hero" aria-labelledby="oni-title">
-          <h1 id="oni-title">¿Llegó El Niño?</h1>
-          <p class="answer">
-            <strong>{{ answer.short }}</strong>
-            {{ answer.lead }}
-            <span class="value" :class="phase">{{ answer.value }}</span>
-            {{ answer.tail }}
-          </p>
-          <p class="byline">
-            Por WawaPacha · Datos de la
-            <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener">NOAA<span class="sr-only"> (se abre en una pestaña nueva)</span></a>,
-            observados hasta {{ monthName(last.end) }}
-          </p>
-          <p v-if="staleNotice" class="notice" role="status">
-            {{ staleNotice }}
-            <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener">Ver la fuente<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
-          </p>
-          <p class="cue" aria-hidden="true">
-            Baja para entenderlo
-            <svg width="18" height="28" viewBox="0 0 18 28"><path d="M9 2 V24 M2 17 L9 24 L16 17" /></svg>
-          </p>
-        </section>
-        <OniStripes class="cover-stripes" :records="records" />
+          <header class="topbar">
+            <span class="brand">{{ messages.page.brand }}</span>
+          </header>
+          <section class="hero" aria-labelledby="oni-title">
+            <h1 id="oni-title">{{ messages.page.title }}</h1>
+            <p class="answer">
+              <strong>{{ answer.short }}</strong>
+              {{ answer.lead }}
+              <span class="value" :class="phase">{{ answer.value }}</span>
+              {{ answer.tail }}
+            </p>
+            <p class="byline">
+              {{ messages.page.dataBy }}
+              <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener"
+                >NOAA<span class="sr-only"> (se abre en una pestaña nueva)</span></a
+              >,
+              {{ messages.page.observedUntil(monthName(last.end)) }}
+            </p>
+            <p v-if="staleNotice" class="notice" role="status">
+              {{ staleNotice }}
+              <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener"
+                >{{ messages.page.reviewSource
+                }}<span class="sr-only">{{ messages.page.newTab }}</span></a
+              >
+            </p>
+            <p class="cue" aria-hidden="true">
+              Baja para entenderlo
+              <svg width="18" height="28" viewBox="0 0 18 28">
+                <path d="M9 2 V24 M2 17 L9 24 L16 17" />
+              </svg>
+            </p>
+          </section>
+          <OniStripes class="cover-stripes" :dataset="oni" />
         </div>
 
-        <OniStory :records="records" />
+        <OniStory :dataset="oni" />
 
         <div class="sand">
-        <article class="prose">
-          <h2 id="oni-peru">¿Y qué significa para el Perú?</h2>
-          <p>
-            Todo lo que viste se mide en el Pacífico central, a más de 4000 km de nuestra costa. Para el mar frente al
-            Perú, el índice oficial es otro: el <strong>ICEN</strong> de ENFEN, que se mide en la región Niño 1+2, junto a
-            la costa.
-          </p>
-          <p class="key-point">
-            <strong>Un valor alto del ONI no es una alerta.</strong> En el Perú, los estados de alerta ante El Niño los
-            declara ENFEN, y los avisos de lluvias, SENAMHI.
-          </p>
-          <ul class="links">
-            <li><a :href="ENFEN_COMUNICADOS" target="_blank" rel="noopener">Comunicados oficiales de ENFEN<span class="sr-only"> (se abre en una pestaña nueva)</span></a></li>
-            <li><a :href="SENAMHI_AVISOS" target="_blank" rel="noopener">Avisos meteorológicos de SENAMHI<span class="sr-only"> (se abre en una pestaña nueva)</span></a></li>
-          </ul>
-        </article>
+          <article class="prose">
+            <h2 id="oni-peru">{{ messages.page.peruTitle }}</h2>
+            <p>{{ messages.page.peruBody }}</p>
+            <p class="key-point">
+              <strong>{{ messages.page.peruWarning }}</strong>
+            </p>
+            <ul class="links">
+              <li>
+                <a :href="ENFEN_COMUNICADOS" target="_blank" rel="noopener"
+                  >{{ messages.page.enfenLink
+                  }}<span class="sr-only">{{ messages.page.newTab }}</span></a
+                >
+              </li>
+              <li>
+                <a :href="SENAMHI_AVISOS" target="_blank" rel="noopener"
+                  >{{ messages.page.senamhiLink
+                  }}<span class="sr-only">{{ messages.page.newTab }}</span></a
+                >
+              </li>
+            </ul>
+          </article>
         </div>
 
         <section class="explore" aria-labelledby="oni-history">
           <div class="prose">
-            <h2 id="oni-history">Explora tú mismo</h2>
-            <p>Elige el periodo y pasa el cursor (o el dedo) por la línea para ver cada trimestre.</p>
+            <h2 id="oni-history">{{ messages.page.historyTitle }}</h2>
+            <p>{{ messages.page.historyLead }}</p>
           </div>
           <figure class="figure">
-            <NuxtErrorBoundary>
-              <ClientOnly>
-                <OniChart :records="records" :description="description" />
-                <template #fallback>
-                  <div class="chart-placeholder">Cargando el gráfico…</div>
+            <ChartShell :dataset="oni" :summary="description">
+              <NuxtErrorBoundary>
+                <ClientOnly>
+                  <OniChart :dataset="oni" :description="description" />
+                  <template #fallback>
+                    <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+                  </template>
+                </ClientOnly>
+                <template #error>
+                  <div class="chart-placeholder">
+                    {{ messages.page.chartError }}
+                  </div>
                 </template>
-              </ClientOnly>
-              <template #error>
-                <div class="chart-placeholder">
-                  No se pudo dibujar el gráfico. Los últimos trimestres están en la tabla de abajo.
-                </div>
-              </template>
-            </NuxtErrorBoundary>
+              </NuxtErrorBoundary>
+            </ChartShell>
             <figcaption>
-              <ul class="key" aria-label="Colores de la línea">
-                <li><span class="swatch warm" aria-hidden="true" />Sobre +0,5 °C (umbral de El Niño)</li>
-                <li><span class="swatch neutral" aria-hidden="true" />Rango neutral, sombreado en verde agua</li>
-                <li><span class="swatch cold" aria-hidden="true" />Bajo −0,5 °C (umbral de La Niña)</li>
+              <ul class="key" :aria-label="messages.chart.colors">
+                <li>
+                  <span class="swatch warm" aria-hidden="true" />{{ messages.chart.warmThreshold }}
+                </li>
+                <li>
+                  <span class="swatch neutral" aria-hidden="true" />{{
+                    messages.chart.neutralRange
+                  }}
+                </li>
+                <li>
+                  <span class="swatch cold" aria-hidden="true" />{{ messages.chart.coldThreshold }}
+                </li>
               </ul>
-              Las líneas discontinuas marcan los umbrales oficiales de la NOAA. El punto marca el último dato.
+              {{ messages.chart.thresholdNote }}
             </figcaption>
           </figure>
 
           <details class="prose">
-            <summary>Ver los últimos 12 trimestres en una tabla</summary>
+            <summary>{{ messages.page.tableSummary }}</summary>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th scope="col">Meses</th>
-                    <th scope="col">Código</th>
-                    <th scope="col" class="num">Temperatura del mar</th>
-                    <th scope="col" class="num">Anomalía</th>
-                    <th scope="col">Respecto al umbral</th>
+                    <th scope="col">{{ messages.page.tableMonths }}</th>
+                    <th scope="col">{{ messages.page.tableCode }}</th>
+                    <th scope="col" class="num">{{ messages.page.tableSeaTemperature }}</th>
+                    <th scope="col" class="num">{{ messages.page.tableAnomaly }}</th>
+                    <th scope="col">{{ messages.page.tableThreshold }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -213,52 +261,23 @@ useSeoMeta({
         </section>
 
         <div class="deep-end">
-        <OniStripes class="end-stripes" :records="records" />
-        <footer class="prose methods">
-          <h2>Cómo lo hicimos</h2>
-          <p>
-            Usamos el Índice Oceánico El Niño (ONI) que publica el Climate Prediction Center de la NOAA, sin modificarlo.
-            Los umbrales (±0,5 °C) y la regla de cinco trimestres seguidos son los de la NOAA; no usamos umbrales propios.
-          </p>
-          <p>
-            La NOAA usa hoy el RONI, una variante de este índice que descuenta el calentamiento general del océano, para su
-            monitoreo oficial. El ONI se mantiene como la serie histórica de referencia, y sus últimos trimestres pueden
-            revisarse.
-          </p>
-          <dl class="meta">
-            <div>
-              <dt>Fuente</dt>
-              <dd>
-                <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener">{{ oni.source.institution }}<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
-                · <a :href="oni.source.url" target="_blank" rel="noopener">datos originales<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
-              </dd>
-            </div>
-            <div><dt>Tipo de dato</dt><dd>{{ DATA_TYPE_LABELS[oni.data_type] }}</dd></div>
-            <div><dt>Datos hasta</dt><dd>{{ monthName(last.end) }}</dd></div>
-            <div><dt>Fuente revisada</dt><dd>{{ reviewed }}</dd></div>
-          </dl>
-          <details>
-            <summary>Ver detalle técnico</summary>
-            <dl class="tech">
-              <div><dt>Variable</dt><dd>{{ oni.variable }}</dd></div>
-              <div><dt>Unidad</dt><dd>{{ oni.unit }}</dd></div>
-              <div><dt>Cobertura</dt><dd>{{ oni.spatial_resolution }}</dd></div>
-              <div><dt>Resolución temporal</dt><dd>{{ oni.temporal_resolution }}</dd></div>
-              <div><dt>Periodo base</dt><dd>{{ oni.reference_period }}</dd></div>
-              <div><dt>Serie</dt><dd>{{ records.length }} trimestres, de {{ monthName(records[0]!.start) }} a {{ monthName(last.end) }}</dd></div>
-              <div><dt>Versión del procesamiento</dt><dd>{{ oni.processing_version }}</dd></div>
-            </dl>
-          </details>
-          <p class="sign">WawaPacha · Monitoreando el Fenómeno El Niño en el Perú</p>
-        </footer>
+          <OniStripes class="end-stripes" :dataset="oni" />
+          <footer class="prose methods">
+            <h2>{{ messages.page.methodsTitle }}</h2>
+            <p>{{ messages.page.methodsBody }}</p>
+            <p>{{ messages.page.methodsBodyTwo }}</p>
+            <p class="sign">{{ messages.page.signoff }}</p>
+          </footer>
         </div>
       </template>
 
       <section v-else class="hero" aria-labelledby="oni-empty">
         <h1 id="oni-empty">No hay datos del ONI disponibles ahora</h1>
         <p class="answer">
-          No pudimos cargar la serie. Puedes consultar el último dato directamente en la
-          <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener">página del ONI de la NOAA<span class="sr-only"> (se abre en una pestaña nueva)</span></a>.
+          {{ messages.page.emptyLead }}
+          <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener"
+            >{{ messages.page.oniSource }}<span class="sr-only">{{ messages.page.newTab }}</span></a
+          >.
         </p>
       </section>
     </main>
@@ -326,8 +345,14 @@ h1 {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-.value.warm { color: var(--warm-on-deep); }
-.value.cold { color: var(--on-deep); text-decoration: underline 3px var(--cold); text-underline-offset: 0.18em; }
+.value.warm {
+  color: var(--warm-on-deep);
+}
+.value.cold {
+  color: var(--on-deep);
+  text-decoration: underline 3px var(--cold);
+  text-underline-offset: 0.18em;
+}
 .byline {
   margin: 22px 0 0;
   font-size: 0.9375rem;
@@ -366,8 +391,14 @@ h1 {
   }
 }
 @keyframes baja {
-  0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(5px); }
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(5px);
+  }
 }
 
 /* El Perú, sobre arena: el desierto de la costa. */
@@ -448,9 +479,16 @@ figcaption {
   margin-right: 8px;
   vertical-align: middle;
 }
-.swatch.warm { background: var(--warm); }
-.swatch.neutral { background: var(--neutral-data); box-shadow: 0 0 0 4px var(--band); }
-.swatch.cold { background: var(--cold); }
+.swatch.warm {
+  background: var(--warm);
+}
+.swatch.neutral {
+  background: var(--neutral-data);
+  box-shadow: 0 0 0 4px var(--band);
+}
+.swatch.cold {
+  background: var(--cold);
+}
 
 details {
   margin-top: 24px;
