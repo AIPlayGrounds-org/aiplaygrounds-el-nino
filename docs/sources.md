@@ -241,7 +241,7 @@ Reviewed on 2026-10-03. [Official page](https://chc.ucsb.edu/data/chirps3).
 | Data type           | estimated                                                                                                                             |
 | Update              | daily                                                                                                                                 |
 | Spatial resolution  | 0,05°                                                                                                                                 |
-| Temporal resolution | Pentadal (P = 1–6; P6 runs from day 26 through month end)                                                                             |
+| Temporal resolution | Pentadal (P = 1–6; P6 va del día 26 al fin de mes)                                                                                    |
 | History             | More than 40 years                                                                                                                    |
 | Reference period    | 1991–2020                                                                                                                             |
 | License             | CC BY 4.0. Attribution: CHIRPS v3, Climate Hazards Center, UC Santa Barbara, in collaboration with FEWS NET and USGS EROS; CC BY 4.0. |
