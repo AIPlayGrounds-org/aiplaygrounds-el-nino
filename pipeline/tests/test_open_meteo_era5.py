@@ -3,7 +3,7 @@ import gzip
 import json
 import threading
 from contextlib import contextmanager
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -56,7 +56,9 @@ def fixture_server(payload: object):
 
 def test_loads_25_rounded_points_inside_the_departments():
     assert len(era5.POINTS) == 25
-    assert [point["code"] for point in era5.POINTS] == [f"PE{number:02d}" for number in range(1, 26)]
+    assert [point["code"] for point in era5.POINTS] == [
+        f"PE{number:02d}" for number in range(1, 26)
+    ]
     assert all(len(str(point["lat"]).split(".")[-1]) <= 4 for point in era5.POINTS)
     assert all(len(str(point["lon"]).split(".")[-1]) <= 4 for point in era5.POINTS)
 
@@ -113,14 +115,39 @@ def test_preserves_zero_and_null_values():
     [
         (lambda payload: payload.pop(), "25 points"),
         (lambda payload: payload[0].pop("daily"), "'daily'"),
-        (lambda payload: payload[0].__setitem__("latitude", -5.5), "unexpected snapped coordinates"),
+        (
+            lambda payload: payload[0].__setitem__("latitude", -5.5),
+            "unexpected snapped coordinates",
+        ),
         (lambda payload: payload[0].__setitem__("latitude", -5.1), "0.25-degree grid"),
-        (lambda payload: payload[0]["daily_units"].__setitem__("precipitation_sum", "inch"), "unit"),
-        (lambda payload: payload[0]["daily"]["precipitation_sum"].pop(), "match daily.time length"),
-        (lambda payload: payload[0]["daily"]["time"].__setitem__(1, "2026-07-08"), "without gaps"),
-        (lambda payload: payload[0]["daily"]["time"].__setitem__(1, "2026-99-99"), "invalid date"),
-        (lambda payload: payload[0]["daily"]["precipitation_sum"].__setitem__(0, -1), "outside 0-2000"),
-        (lambda payload: payload[0]["daily"]["precipitation_sum"].__setitem__(0, 2001), "outside 0-2000"),
+        (
+            lambda payload: payload[0]["daily_units"].__setitem__(
+                "precipitation_sum", "inch"
+            ),
+            "unit",
+        ),
+        (
+            lambda payload: payload[0]["daily"]["precipitation_sum"].pop(),
+            "match daily.time length",
+        ),
+        (
+            lambda payload: payload[0]["daily"]["time"].__setitem__(1, "2026-07-08"),
+            "without gaps",
+        ),
+        (
+            lambda payload: payload[0]["daily"]["time"].__setitem__(1, "2026-99-99"),
+            "invalid date",
+        ),
+        (
+            lambda payload: payload[0]["daily"]["precipitation_sum"].__setitem__(0, -1),
+            "outside 0-2000",
+        ),
+        (
+            lambda payload: payload[0]["daily"]["precipitation_sum"].__setitem__(
+                0, 2001
+            ),
+            "outside 0-2000",
+        ),
     ],
 )
 def test_rejects_each_structural_coordinate_date_or_value_rule(change, message):
@@ -168,7 +195,9 @@ def test_fetch_rejects_a_non_200_response(monkeypatch):
     response = MagicMock()
     response.status = 503
     response.__enter__.return_value = response
-    monkeypatch.setattr(era5.urllib.request, "urlopen", lambda request, timeout: response)
+    monkeypatch.setattr(
+        era5.urllib.request, "urlopen", lambda request, timeout: response
+    )
 
     with pytest.raises(ValidationError, match="503"):
         era5.fetch("https://example.org/era5")
@@ -182,13 +211,19 @@ def assert_matches_registry(dataset: dict) -> None:
         "product": entry["product"],
         "url": entry["access"]["url"],
     }
-    for field in ("variable", "unit", "data_type", "spatial_resolution", "temporal_resolution"):
+    for field in (
+        "variable",
+        "unit",
+        "data_type",
+        "spatial_resolution",
+        "temporal_resolution",
+    ):
         assert dataset[field] == entry[field]
 
 
 def test_build_adds_provenance_metadata():
     records = era5.parse(SAMPLE, START, END)
-    dataset = era5.build(records, datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
+    dataset = era5.build(records, datetime(2026, 10, 3, 12, 0, tzinfo=UTC))
 
     assert dataset["id"] == "open-meteo-era5"
     assert dataset["ingestion_time"] == "2026-10-03T12:00:00+00:00"
@@ -199,7 +234,7 @@ def test_build_adds_provenance_metadata():
 def test_publish_validates_and_keeps_the_compressed_payload_under_200_kib(tmp_path):
     dataset = era5.build(
         era5.parse(SAMPLE, START, END),
-        datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc),
+        datetime(2026, 10, 3, 12, 0, tzinfo=UTC),
     )
 
     path = era5.publish(dataset, tmp_path)
@@ -214,7 +249,7 @@ def test_run_publishes_the_fixture(monkeypatch, tmp_path):
 
     with fixture_server(SAMPLE_PAYLOAD) as (url, requests):
         monkeypatch.setattr(era5, "URL", url)
-        count, path = era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
+        count, path = era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=UTC))
 
     assert count == 2100
     assert path == tmp_path / "open-meteo-era5.json"
@@ -239,7 +274,7 @@ def test_run_rejects_a_shifted_response_without_publishing(monkeypatch, tmp_path
     with fixture_server(shifted) as (url, _requests):
         monkeypatch.setattr(era5, "URL", url)
         with pytest.raises(ValidationError, match="response starts"):
-            era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
+            era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=UTC))
 
     assert not (tmp_path / "open-meteo-era5.json").exists()
 
@@ -254,7 +289,7 @@ def test_run_rejects_a_shortened_response_without_publishing(monkeypatch, tmp_pa
     with fixture_server(shortened) as (url, _requests):
         monkeypatch.setattr(era5, "URL", url)
         with pytest.raises(ValidationError, match="response ends"):
-            era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
+            era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=UTC))
 
     assert not (tmp_path / "open-meteo-era5.json").exists()
 
@@ -267,5 +302,5 @@ def test_run_keeps_the_previous_json_when_validation_fails(monkeypatch, tmp_path
     with fixture_server(SAMPLE_PAYLOAD[:-1]) as (url, _requests):
         monkeypatch.setattr(era5, "URL", url)
         with pytest.raises(ValidationError, match="25 points"):
-            era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
+            era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=UTC))
     assert previous.read_text(encoding="utf-8") == '{"version": "previous"}'

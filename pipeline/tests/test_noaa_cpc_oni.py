@@ -2,13 +2,18 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 
 from wawapacha_pipeline import registry
-from wawapacha_pipeline.contract import REPO_ROOT, ValidationError, publish, relative_path
+from wawapacha_pipeline.contract import (
+    REPO_ROOT,
+    ValidationError,
+    publish,
+    relative_path,
+)
 from wawapacha_pipeline.sources import noaa_cpc_oni as oni
 
 PIPELINE_DIR = Path(__file__).parents[1]
@@ -24,10 +29,17 @@ def replace_line(text: str, old: str, new: str) -> str:
 
 def run_cli(source: Path, data_dir: Path) -> subprocess.CompletedProcess:
     """Ejecuta la CLI como en producción, leyendo `source` y publicando en `data_dir`."""
-    env = os.environ | {"NOAA_CPC_ONI_URL": source.resolve().as_uri(), "WAWAPACHA_DATA_DIR": str(data_dir)}
+    env = os.environ | {
+        "NOAA_CPC_ONI_URL": source.resolve().as_uri(),
+        "WAWAPACHA_DATA_DIR": str(data_dir),
+    }
     return subprocess.run(
         [sys.executable, "-m", "wawapacha_pipeline", "run", "noaa-cpc-oni"],
-        cwd=PIPELINE_DIR, env=env, capture_output=True, text=True, encoding="utf-8",
+        cwd=PIPELINE_DIR,
+        env=env,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
     )
 
 
@@ -35,12 +47,26 @@ def test_reads_the_whole_real_file():
     records = oni.parse(SAMPLE)
 
     assert len(records) == 919
-    assert records[0] == {"season": "DJF", "start": "1949-12", "end": "1950-02", "sst": 25.01, "anomaly": -1.32}
-    assert records[-1] == {"season": "JJA", "start": "2026-06", "end": "2026-08", "sst": 29.09, "anomaly": 1.80}
+    assert records[0] == {
+        "season": "DJF",
+        "start": "1949-12",
+        "end": "1950-02",
+        "sst": 25.01,
+        "anomaly": -1.32,
+    }
+    assert records[-1] == {
+        "season": "JJA",
+        "start": "2026-06",
+        "end": "2026-08",
+        "sst": 29.09,
+        "anomaly": 1.80,
+    }
 
 
 def test_ndj_ends_in_january_of_the_next_year():
-    ndj_1950 = next(r for r in oni.parse(SAMPLE) if r["season"] == "NDJ" and r["start"] == "1950-11")
+    ndj_1950 = next(
+        r for r in oni.parse(SAMPLE) if r["season"] == "NDJ" and r["start"] == "1950-11"
+    )
 
     assert ndj_1950["end"] == "1951-01"
 
@@ -88,7 +114,7 @@ def assert_matches_registry(dataset: dict) -> None:
 
 
 def test_build_adds_provenance_metadata():
-    dataset = oni.build(oni.parse(SAMPLE), datetime(2026, 10, 1, 12, 0, tzinfo=timezone.utc))
+    dataset = oni.build(oni.parse(SAMPLE), datetime(2026, 10, 1, 12, 0, tzinfo=UTC))
 
     assert dataset["id"] == "noaa-cpc-oni"
     assert dataset["ingestion_time"] == "2026-10-01T12:00:00+00:00"
@@ -98,7 +124,7 @@ def test_build_adds_provenance_metadata():
 
 
 def test_publish_writes_the_json(tmp_path):
-    dataset = oni.build(oni.parse(SAMPLE), datetime(2026, 10, 1, tzinfo=timezone.utc))
+    dataset = oni.build(oni.parse(SAMPLE), datetime(2026, 10, 1, tzinfo=UTC))
 
     path = publish(dataset, tmp_path)
 
@@ -107,7 +133,10 @@ def test_publish_writes_the_json(tmp_path):
 
 
 def test_relative_path_inside_the_repo_uses_forward_slashes():
-    assert relative_path(REPO_ROOT / "data" / "noaa-cpc-oni.json") == "data/noaa-cpc-oni.json"
+    assert (
+        relative_path(REPO_ROOT / "data" / "noaa-cpc-oni.json")
+        == "data/noaa-cpc-oni.json"
+    )
 
 
 def test_relative_path_outside_the_repo_keeps_the_full_path(tmp_path):

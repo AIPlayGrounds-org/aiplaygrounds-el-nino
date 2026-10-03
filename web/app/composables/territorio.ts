@@ -133,7 +133,7 @@ export const shapeDepartmentGeometry = (
  * Keeps the latest pentad per department, oldest first, so the first and last record bound the
  * period that ChartShell prints.
  */
-export const shapeLatestChirps =(dataset: DatasetFor<'chirps'>): DatasetFor<'chirps'> => {
+export const shapeLatestChirps = (dataset: DatasetFor<'chirps'>): DatasetFor<'chirps'> => {
   const [first, ...rest] = latestChirpsPerDepartment(dataset.records).sort(
     (a, b) => a.end.localeCompare(b.end) || a.region.localeCompare(b.region),
   )

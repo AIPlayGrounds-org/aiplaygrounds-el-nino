@@ -3,7 +3,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -181,14 +181,21 @@ def assert_matches_registry(dataset: dict) -> None:
         "product": entry["product"],
         "url": entry["access"]["url"],
     }
-    for key in ("variable", "unit", "data_type", "spatial_resolution", "temporal_resolution", "reference_period"):
+    for key in (
+        "variable",
+        "unit",
+        "data_type",
+        "spatial_resolution",
+        "temporal_resolution",
+        "reference_period",
+    ):
         assert dataset[key] == entry[key]
 
 
 def test_build_adds_contract_provenance():
     dataset = weekly.build(
         weekly.parse(SAMPLE),
-        datetime(2026, 10, 2, 12, tzinfo=timezone.utc),
+        datetime(2026, 10, 2, 12, tzinfo=UTC),
         {"sha256": "a" * 64, "last_modified": None},
     )
 
@@ -201,7 +208,7 @@ def test_build_adds_contract_provenance():
 
 
 def test_publish_writes_the_json(tmp_path):
-    dataset = weekly.build(weekly.parse(SAMPLE), datetime(2026, 10, 2, 12, tzinfo=timezone.utc))
+    dataset = weekly.build(weekly.parse(SAMPLE), datetime(2026, 10, 2, 12, tzinfo=UTC))
 
     path = publish(dataset, tmp_path)
 
@@ -214,9 +221,14 @@ def test_cli_publishes_the_json(tmp_path):
 
     assert result.returncode == 0, result.stderr
     assert result.stdout.startswith("Published noaa-cpc-nino-weekly: 60 records in ")
-    published = json.loads((tmp_path / "noaa-cpc-nino-weekly.json").read_text(encoding="utf-8"))
+    published = json.loads(
+        (tmp_path / "noaa-cpc-nino-weekly.json").read_text(encoding="utf-8")
+    )
     assert published["records"][-1]["nino_1_2_anomaly"] == 1.9
-    assert published["source_revision"]["sha256"] == hashlib.sha256(SAMPLE_PATH.read_bytes()).hexdigest()
+    assert (
+        published["source_revision"]["sha256"]
+        == hashlib.sha256(SAMPLE_PATH.read_bytes()).hexdigest()
+    )
     assert_matches_registry(published)
 
 

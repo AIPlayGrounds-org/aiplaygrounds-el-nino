@@ -21,7 +21,9 @@ def test_sources_command_writes_the_catalog(tmp_path, monkeypatch, capsys):
 
     assert cli.main(["sources"]) == 0
 
-    assert target.read_text(encoding="utf-8") == catalog.render(registry.load(), cli.SOURCES)
+    assert target.read_text(encoding="utf-8") == catalog.render(
+        registry.load(), cli.SOURCES
+    )
     assert "Wrote" in capsys.readouterr().out
 
 

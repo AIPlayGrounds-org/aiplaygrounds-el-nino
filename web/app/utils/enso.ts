@@ -20,7 +20,20 @@ export const phaseStreak = (records: OniRecord[]): number => {
   return count
 }
 
-const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+const MONTHS = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre',
+]
 
 const parseMonth = (yyyymm: string) => {
   const [year, month] = yyyymm.split('-').map(Number)
@@ -49,7 +62,8 @@ export const centerDate = (record: OniRecord) => {
 }
 
 /** «JJA 2026»: el año es el del mes central, como en la tabla de NOAA. */
-export const seasonLabel = (record: OniRecord) => `${record.season} ${centerDate(record).getUTCFullYear()}`
+export const seasonLabel = (record: OniRecord) =>
+  `${record.season} ${centerDate(record).getUTCFullYear()}`
 
 /** Meses enteros transcurridos entre dos meses AAAA-MM y una fecha. */
 export const monthsSince = (yyyymm: string, now: Date) => {

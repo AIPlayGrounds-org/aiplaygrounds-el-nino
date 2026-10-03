@@ -7,7 +7,7 @@ validates that file and publishes it; nothing is downloaded.
 import os
 import re
 from collections.abc import Hashable
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta, timezone
 from pathlib import Path
 
 import yaml
@@ -51,9 +51,13 @@ class _UniqueKeyLoader(yaml.SafeLoader):
         for key_node, _ in node.value:
             key = self.construct_object(key_node, deep=True)
             if not isinstance(key, Hashable):
-                raise ValidationError(f"Key {key!r} must be a single value, not a list or a mapping.")
+                raise ValidationError(
+                    f"Key {key!r} must be a single value, not a list or a mapping."
+                )
             if key in seen:
-                raise ValidationError(f"Repeated key {key!r}: a communiqué appears twice.")
+                raise ValidationError(
+                    f"Repeated key {key!r}: a communiqué appears twice."
+                )
             seen.add(key)
         return super().construct_mapping(node, deep)
 
@@ -67,7 +71,7 @@ def fetch(path: Path = PATH) -> str:
 
 def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     """Return the record count and the path of the published JSON."""
-    ingestion_time = ingestion_time or datetime.now(timezone.utc)
+    ingestion_time = ingestion_time or datetime.now(UTC)
     records = parse(fetch(), ingestion_time.astimezone(LIMA).date())
     return len(records), publish(build(records, ingestion_time))
 
@@ -81,7 +85,10 @@ def parse(text: str, today: date | None = None) -> list[dict]:
     today = today or datetime.now(LIMA).date()
     try:
         document = yaml.load(text, Loader=_UniqueKeyLoader)
-    except (yaml.YAMLError, ValueError) as error:  # ValueError: a date that does not exist, such as 2026-02-30
+    except (
+        yaml.YAMLError,
+        ValueError,
+    ) as error:  # ValueError: a date that does not exist, such as 2026-02-30
         raise ValidationError(f"The YAML cannot be read: {error}") from None
     if not isinstance(document, dict) or set(document) != {"enfen"}:
         raise ValidationError("Expected one top-level key, `enfen`.")
@@ -107,7 +114,9 @@ def parse(text: str, today: date | None = None) -> list[dict]:
     if published.year != year:
         raise ValidationError(f"date {published} is not in year {year}.")
     if published > today:
-        raise ValidationError(f"date {published} is in the future (today is {today} in Lima).")
+        raise ValidationError(
+            f"date {published} is in the future (today is {today} in Lima)."
+        )
     if next_due <= published:
         raise ValidationError(f"next_due {next_due} must be after date {published}.")
 
@@ -122,7 +131,9 @@ def parse(text: str, today: date | None = None) -> list[dict]:
             f"url {url!r} is not an https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-<number>-<year>/ page."
         )
     if (int(match[1]), int(match[2])) != (number, year):
-        raise ValidationError(f"url {url!r} names a different communiqué than {number}-{year}.")
+        raise ValidationError(
+            f"url {url!r} names a different communiqué than {number}-{year}."
+        )
 
     record = {
         "number": number,
@@ -136,9 +147,13 @@ def parse(text: str, today: date | None = None) -> list[dict]:
     if "checked_at" in entry:
         checked_at = read_date(entry, "checked_at")
         if checked_at < published:
-            raise ValidationError(f"checked_at {checked_at} is before date {published}.")
+            raise ValidationError(
+                f"checked_at {checked_at} is before date {published}."
+            )
         if checked_at > today:
-            raise ValidationError(f"checked_at {checked_at} is in the future (today is {today} in Lima).")
+            raise ValidationError(
+                f"checked_at {checked_at} is in the future (today is {today} in Lima)."
+            )
         record["checked_at"] = checked_at.isoformat()
     return [record]
 
@@ -147,7 +162,9 @@ def read_date(entry: dict, key: str) -> date:
     """YAML turns an unquoted 2026-09-28 into a date. A quoted one stays text and is rejected."""
     value = entry[key]
     if type(value) is not date:
-        raise ValidationError(f"{key} must be an unquoted YYYY-MM-DD date, not {value!r}.")
+        raise ValidationError(
+            f"{key} must be an unquoted YYYY-MM-DD date, not {value!r}."
+        )
     return value
 
 
@@ -165,7 +182,7 @@ def build(records: list[dict], ingestion_time: datetime) -> dict:
         "data_type": SOURCE["data_type"],
         "spatial_resolution": SOURCE["spatial_resolution"],
         "temporal_resolution": SOURCE["temporal_resolution"],
-        "ingestion_time": ingestion_time.astimezone(timezone.utc).isoformat(timespec="seconds"),
+        "ingestion_time": ingestion_time.astimezone(UTC).isoformat(timespec="seconds"),
         "processing_version": VERSION,
         "records": records,
     }

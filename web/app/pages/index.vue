@@ -34,7 +34,10 @@ const status = computed(() => {
       detail: messages.oni.episodeDetail(streak, side),
     }
   }
-  const umbral = phase === 'warm' ? messages.oni.aboveTitle(messages.oni.warmName) : messages.oni.belowTitle(messages.oni.coldName)
+  const umbral =
+    phase === 'warm'
+      ? messages.oni.aboveTitle(messages.oni.warmName)
+      : messages.oni.belowTitle(messages.oni.coldName)
   return {
     title: umbral,
     detail: messages.oni.belowDetail(streak, side, name),
@@ -79,7 +82,16 @@ const answer = computed(() => {
   }
 })
 
-const description = computed(() => (last ? messages.oni.summary(monthName(records[0]!.start), monthName(last.end), `${seasonLabel(last)}, ${formatAnomaly(last.anomaly)} °C`, status.value.title) : ''))
+const description = computed(() =>
+  last
+    ? messages.oni.summary(
+        monthName(records[0]!.start),
+        monthName(last.end),
+        `${seasonLabel(last)}, ${formatAnomaly(last.anomaly)} °C`,
+        status.value.title,
+      )
+    : '',
+)
 
 const recent = records.slice(-12).reverse()
 const phaseLabel = {
@@ -92,7 +104,9 @@ useSeoMeta({
   title: messages.page.seoTitle,
   description: messages.page.seoDescription,
   ogTitle: messages.page.seoTitle,
-  ogDescription: last ? `${seasonLabel(last)}: ${formatAnomaly(last.anomaly)} °C. ${status.value.title}.` : messages.page.seoTitle,
+  ogDescription: last
+    ? `${seasonLabel(last)}: ${formatAnomaly(last.anomaly)} °C. ${status.value.title}.`
+    : messages.page.seoTitle,
 })
 </script>
 
@@ -152,12 +166,14 @@ useSeoMeta({
             <ul class="links">
               <li>
                 <a :href="ENFEN_COMUNICADOS" target="_blank" rel="noopener"
-                  >{{ messages.page.enfenLink }}<span class="sr-only">{{ messages.page.newTab }}</span></a
+                  >{{ messages.page.enfenLink
+                  }}<span class="sr-only">{{ messages.page.newTab }}</span></a
                 >
               </li>
               <li>
                 <a :href="SENAMHI_AVISOS" target="_blank" rel="noopener"
-                  >{{ messages.page.senamhiLink }}<span class="sr-only">{{ messages.page.newTab }}</span></a
+                  >{{ messages.page.senamhiLink
+                  }}<span class="sr-only">{{ messages.page.newTab }}</span></a
                 >
               </li>
             </ul>
@@ -191,9 +207,17 @@ useSeoMeta({
             </ChartShell>
             <figcaption>
               <ul class="key" :aria-label="messages.chart.colors">
-                <li><span class="swatch warm" aria-hidden="true" />{{ messages.chart.warmThreshold }}</li>
-                <li><span class="swatch neutral" aria-hidden="true" />{{ messages.chart.neutralRange }}</li>
-                <li><span class="swatch cold" aria-hidden="true" />{{ messages.chart.coldThreshold }}</li>
+                <li>
+                  <span class="swatch warm" aria-hidden="true" />{{ messages.chart.warmThreshold }}
+                </li>
+                <li>
+                  <span class="swatch neutral" aria-hidden="true" />{{
+                    messages.chart.neutralRange
+                  }}
+                </li>
+                <li>
+                  <span class="swatch cold" aria-hidden="true" />{{ messages.chart.coldThreshold }}
+                </li>
               </ul>
               {{ messages.chart.thresholdNote }}
             </figcaption>

@@ -3,7 +3,7 @@
 import argparse
 import json
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from wawapacha_pipeline import catalog, registry
@@ -14,7 +14,7 @@ SOURCES = registry.discover()
 
 def run(source_id: str) -> str:
     """Download, validate and publish a source. Returns a line that says what was published."""
-    count, path = SOURCES[source_id].run(datetime.now(timezone.utc))
+    count, path = SOURCES[source_id].run(datetime.now(UTC))
     return f"Published {source_id}: {count} records in {relative_path(path)}"
 
 
@@ -24,7 +24,7 @@ def _ingestion_time(path: Path) -> datetime | None:
         ingestion = datetime.fromisoformat(value)
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         return None
-    return ingestion if ingestion.tzinfo else ingestion.replace(tzinfo=timezone.utc)
+    return ingestion if ingestion.tzinfo else ingestion.replace(tzinfo=UTC)
 
 
 def _is_due(update: str, ingestion: datetime, now: datetime) -> bool:
@@ -41,8 +41,8 @@ def _is_due(update: str, ingestion: datetime, now: datetime) -> bool:
 def due_source_ids(
     now: datetime | None = None, data_dir: Path | None = None
 ) -> list[str]:
-    now = now or datetime.now(timezone.utc)
-    now = now if now.tzinfo else now.replace(tzinfo=timezone.utc)
+    now = now or datetime.now(UTC)
+    now = now if now.tzinfo else now.replace(tzinfo=UTC)
     data_dir = data_dir or DATA_DIR
     sources = registry.load()
     return [
@@ -62,7 +62,9 @@ def due_source_ids(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="wawapacha-pipeline")
     commands = parser.add_subparsers(dest="command", required=True)
-    run_parser = commands.add_parser("run", help="download, validate and publish a source")
+    run_parser = commands.add_parser(
+        "run", help="download, validate and publish a source"
+    )
     run_parser.add_argument("source", choices=sorted(SOURCES))
     commands.add_parser("sources", help="generate docs/sources.md from sources.toml")
     due_parser = commands.add_parser(

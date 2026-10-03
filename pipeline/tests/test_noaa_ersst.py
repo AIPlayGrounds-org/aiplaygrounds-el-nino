@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 import urllib.error
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -116,7 +116,11 @@ def test_rejects_a_duplicated_month():
     second_line = SAMPLE.splitlines()[1]
 
     with pytest.raises(ValidationError, match="no contiguo"):
-        ersst.parse(replace_line(SAMPLE, second_line + "\n", second_line + "\n" + second_line + "\n"))
+        ersst.parse(
+            replace_line(
+                SAMPLE, second_line + "\n", second_line + "\n" + second_line + "\n"
+            )
+        )
 
 
 @pytest.mark.parametrize("bad_value", ["not-a-number", "NaN", "inf", "-Infinity"])
@@ -166,7 +170,9 @@ def test_fetch_sends_a_user_agent_and_requires_http_200(monkeypatch):
     class NotFound(Response):
         status = 404
 
-    monkeypatch.setattr(ersst.urllib.request, "urlopen", lambda request, timeout: NotFound())
+    monkeypatch.setattr(
+        ersst.urllib.request, "urlopen", lambda request, timeout: NotFound()
+    )
     with pytest.raises(ValidationError, match="HTTP status inesperado: 404"):
         ersst.fetch("https://example.test/index", retries=1)
 
@@ -189,7 +195,9 @@ def test_fetch_rejects_html_and_retries_transient_errors(monkeypatch):
         def read(self):
             return b"<html>error</html>"
 
-    monkeypatch.setattr(ersst.urllib.request, "urlopen", lambda request, timeout: HtmlResponse())
+    monkeypatch.setattr(
+        ersst.urllib.request, "urlopen", lambda request, timeout: HtmlResponse()
+    )
     with pytest.raises(ValidationError, match="parece HTML"):
         ersst.fetch("https://example.test/index", retries=1)
 
@@ -203,7 +211,9 @@ def test_fetch_rejects_html_and_retries_transient_errors(monkeypatch):
 
         class Response:
             status = 200
-            headers = type("Headers", (), {"get_content_type": lambda self: "text/plain"})()
+            headers = type(
+                "Headers", (), {"get_content_type": lambda self: "text/plain"}
+            )()
 
             def __enter__(self):
                 return self
@@ -241,7 +251,7 @@ def assert_matches_registry(dataset: dict) -> None:
 
 
 def test_build_adds_provenance_metadata():
-    dataset = ersst.build(ersst.parse(SAMPLE), datetime(2026, 10, 2, 12, tzinfo=timezone.utc))
+    dataset = ersst.build(ersst.parse(SAMPLE), datetime(2026, 10, 2, 12, tzinfo=UTC))
 
     assert dataset["id"] == "noaa-ersst"
     assert dataset["ingestion_time"] == "2026-10-02T12:00:00+00:00"
@@ -251,7 +261,7 @@ def test_build_adds_provenance_metadata():
 
 
 def test_publish_writes_typed_records(tmp_path):
-    dataset = ersst.build(ersst.parse(SAMPLE), datetime(2026, 10, 2, 12, tzinfo=timezone.utc))
+    dataset = ersst.build(ersst.parse(SAMPLE), datetime(2026, 10, 2, 12, tzinfo=UTC))
 
     path = publish(dataset, tmp_path)
 

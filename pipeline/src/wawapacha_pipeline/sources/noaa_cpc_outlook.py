@@ -4,7 +4,7 @@ import os
 import re
 import urllib.request
 from calendar import month_name
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -32,8 +32,7 @@ SEASON_START_MONTH = {
     "NDJ": 11,
 }
 SEASON_CENTER_MONTH = {
-    season: start_month % 12 + 1
-    for season, start_month in SEASON_START_MONTH.items()
+    season: start_month % 12 + 1 for season, start_month in SEASON_START_MONTH.items()
 }
 MONTHS = {name.lower(): number for number, name in enumerate(month_name) if name}
 
@@ -104,7 +103,11 @@ class _PageParser(HTMLParser):
                 self.issue_headings.append(heading)
             self._in_h2 = False
             self._h2_parts = []
-        elif self._in_target_table and tag in {"th", "td"} and self._cell_parts is not None:
+        elif (
+            self._in_target_table
+            and tag in {"th", "td"}
+            and self._cell_parts is not None
+        ):
             self._row.append(_clean_text("".join(self._cell_parts)))
             self._cell_parts = None
         elif self._in_target_table and tag == "tr" and self._row is not None:
@@ -137,7 +140,7 @@ def fetch(url: str = URL, timeout: int = 60) -> str:
 def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     """Return the season count and path of the published JSON."""
     records = parse(fetch())
-    dataset = build(records, ingestion_time or datetime.now(timezone.utc))
+    dataset = build(records, ingestion_time or datetime.now(UTC))
     return len(records), publish(dataset)
 
 
@@ -156,7 +159,9 @@ def parse(text: str) -> list[dict]:
             f"Se esperaba exactamente una tabla #probabilities-table, se encontraron {parser.table_count}."
         )
     if len(parser.rows) != 10:
-        raise ValidationError(f"La tabla debía tener una cabecera y 9 filas, tiene {len(parser.rows)}.")
+        raise ValidationError(
+            f"La tabla debía tener una cabecera y 9 filas, tiene {len(parser.rows)}."
+        )
     if parser.rows[0] != EXPECTED_HEADER:
         raise ValidationError(f"Cabecera inesperada: {parser.rows[0]!r}.")
 
@@ -168,10 +173,16 @@ def parse(text: str) -> list[dict]:
     seen_seasons = set()
     for row_number, row in enumerate(parser.rows[1:], start=2):
         if len(row) != 10:
-            raise ValidationError(f"Fila {row_number}: se esperaban 10 celdas, tiene {len(row)}.")
-        season_match = SEASON_RE.fullmatch(row[0].split()[0]) if row[0].split() else None
+            raise ValidationError(
+                f"Fila {row_number}: se esperaban 10 celdas, tiene {len(row)}."
+            )
+        season_match = (
+            SEASON_RE.fullmatch(row[0].split()[0]) if row[0].split() else None
+        )
         if season_match is None or season_match.group(1) not in SEASON_START_MONTH:
-            raise ValidationError(f"Fila {row_number}: temporada desconocida {row[0]!r}.")
+            raise ValidationError(
+                f"Fila {row_number}: temporada desconocida {row[0]!r}."
+            )
         season = season_match.group(1)
         if season in seen_seasons:
             raise ValidationError(f"Fila {row_number}: temporada repetida {season!r}.")
@@ -179,7 +190,9 @@ def parse(text: str) -> list[dict]:
 
         start_month = SEASON_START_MONTH[season]
         if previous_start is not None and start_month != previous_start % 12 + 1:
-            raise ValidationError(f"Fila {row_number}: {season} rompe la secuencia de temporadas.")
+            raise ValidationError(
+                f"Fila {row_number}: {season} rompe la secuencia de temporadas."
+            )
         previous_start = start_month
 
         if first_start_index is None:
@@ -199,10 +212,14 @@ def parse(text: str) -> list[dict]:
             zip(CATEGORY_HEADINGS, CATEGORY_BOUNDS, row[1:], strict=True), start=2
         ):
             if not INTEGER_RE.fullmatch(value):
-                raise ValidationError(f"Fila {row_number}, columna {column}: porcentaje no entero {value!r}.")
+                raise ValidationError(
+                    f"Fila {row_number}, columna {column}: porcentaje no entero {value!r}."
+                )
             probability = int(value)
             if not 0 <= probability <= 100:
-                raise ValidationError(f"Fila {row_number}, columna {column}: porcentaje fuera de rango ({probability}).")
+                raise ValidationError(
+                    f"Fila {row_number}, columna {column}: porcentaje fuera de rango ({probability})."
+                )
             probabilities.append(probability)
             categories.append(
                 {
@@ -213,7 +230,9 @@ def parse(text: str) -> list[dict]:
                 }
             )
         if sum(probabilities) != 100:
-            raise ValidationError(f"Fila {row_number}: los porcentajes suman {sum(probabilities)}, no 100.")
+            raise ValidationError(
+                f"Fila {row_number}: los porcentajes suman {sum(probabilities)}, no 100."
+            )
         records.append(
             {
                 "issue_date": issue_date,
@@ -225,7 +244,9 @@ def parse(text: str) -> list[dict]:
         )
 
     if len(seen_seasons) != 9:
-        raise ValidationError(f"Se esperaban 9 temporadas únicas, se encontraron {len(seen_seasons)}.")
+        raise ValidationError(
+            f"Se esperaban 9 temporadas únicas, se encontraron {len(seen_seasons)}."
+        )
     return records
 
 
@@ -237,10 +258,14 @@ def read_issue_date(headings: list[str]) -> str:
         if match:
             month = MONTHS.get(match.group(1).lower())
             if month is None:
-                raise ValidationError(f"Mes de emisión desconocido: {match.group(1)!r}.")
+                raise ValidationError(
+                    f"Mes de emisión desconocido: {match.group(1)!r}."
+                )
             matches.append(f"{match.group(2)}-{month:02d}")
     if len(matches) != 1:
-        raise ValidationError(f"Se esperaba un único encabezado visible Issued, se encontraron {len(matches)}.")
+        raise ValidationError(
+            f"Se esperaba un único encabezado visible Issued, se encontraron {len(matches)}."
+        )
     return matches[0]
 
 
@@ -265,7 +290,7 @@ def build(records: list[dict], ingestion_time: datetime) -> dict:
         "spatial_resolution": SOURCE["spatial_resolution"],
         "temporal_resolution": SOURCE["temporal_resolution"],
         "reference_period": SOURCE["reference_period"],
-        "ingestion_time": ingestion_time.astimezone(timezone.utc).isoformat(timespec="seconds"),
+        "ingestion_time": ingestion_time.astimezone(UTC).isoformat(timespec="seconds"),
         "processing_version": VERSION,
         "records": records,
     }

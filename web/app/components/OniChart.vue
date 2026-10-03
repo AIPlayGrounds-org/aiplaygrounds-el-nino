@@ -18,7 +18,18 @@ import { messages } from '~/messages'
 import type { DatasetFor } from '~/types/datasets'
 
 // Solo se cargan las piezas de ECharts que se usan, para que la página pese menos.
-use([LineChart, GridComponent, TooltipComponent, MarkAreaComponent, MarkLineComponent, MarkPointComponent, DataZoomComponent, VisualMapComponent, AriaComponent, CanvasRenderer])
+use([
+  LineChart,
+  GridComponent,
+  TooltipComponent,
+  MarkAreaComponent,
+  MarkLineComponent,
+  MarkPointComponent,
+  DataZoomComponent,
+  VisualMapComponent,
+  AriaComponent,
+  CanvasRenderer,
+])
 
 const props = defineProps<{
   dataset: DatasetFor<'noaa-cpc-oni'>
@@ -53,12 +64,21 @@ const initialStart = startFor(selected.value)
 const chart = ref<InstanceType<typeof VChart> | null>(null)
 const choose = (years: RangeYears) => {
   selected.value = years
-  chart.value?.dispatchAction({ type: 'dataZoom', dataZoomIndex: 0, startValue: startFor(years), endValue: isoDay(lastDate) })
+  chart.value?.dispatchAction({
+    type: 'dataZoom',
+    dataZoomIndex: 0,
+    startValue: startFor(years),
+    endValue: isoDay(lastDate),
+  })
 }
 
 const theme = useChartTheme()
 
-const axisNumber = new Intl.NumberFormat('es', { minimumFractionDigits: 1, maximumFractionDigits: 1, signDisplay: 'exceptZero' })
+const axisNumber = new Intl.NumberFormat('es', {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+  signDisplay: 'exceptZero',
+})
 
 const option = computed(() => {
   const t = theme.value
@@ -89,13 +109,16 @@ const option = computed(() => {
     xAxis: {
       type: 'time',
       axisLine: { lineStyle: { color: t.border } },
-            axisLabel: { color: t.axis, hideOverlap: true },
+      axisLabel: { color: t.axis, hideOverlap: true },
     },
     yAxis: {
       type: 'value',
       name: messages.oni.chartAxis,
       nameTextStyle: { color: t.axis, align: 'left' },
-      axisLabel: { color: t.axis, formatter: (v: number) => axisNumber.format(v).replace('-', '−') },
+      axisLabel: {
+        color: t.axis,
+        formatter: (v: number) => axisNumber.format(v).replace('-', '−'),
+      },
       splitLine: { lineStyle: { color: t.grid } },
     },
     // Color de la línea según el umbral oficial: cálido sobre +0,5 °C, frío bajo −0,5 °C, neutro en medio.
@@ -124,7 +147,8 @@ const option = computed(() => {
           label: {
             position: 'end',
             color: t.muted,
-            formatter: (p: { value: number }) => `${axisNumber.format(p.value).replace('-', '−')} °C`,
+            formatter: (p: { value: number }) =>
+              `${axisNumber.format(p.value).replace('-', '−')} °C`,
           },
           data: [{ yAxis: ENSO_THRESHOLD }, { yAxis: -ENSO_THRESHOLD }],
         },
@@ -193,7 +217,9 @@ const option = computed(() => {
   background: var(--paper);
   color: var(--text);
   cursor: pointer;
-  transition: border-color 0.15s ease-out, background-color 0.15s ease-out;
+  transition:
+    border-color 0.15s ease-out,
+    background-color 0.15s ease-out;
 }
 .ranges button:hover {
   border-color: var(--text);

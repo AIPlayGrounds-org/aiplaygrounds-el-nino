@@ -10,13 +10,19 @@ import re
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 from shapely.geometry import Point, shape
 
 from wawapacha_pipeline import registry
-from wawapacha_pipeline.contract import DATA_DIR, ValidationError, publish as contract_publish
+from wawapacha_pipeline.contract import (
+    DATA_DIR,
+    ValidationError,
+)
+from wawapacha_pipeline.contract import (
+    publish as contract_publish,
+)
 
 VERSION = "0.2.0"
 ID = "open-meteo-era5"
@@ -39,7 +45,9 @@ def _load_points() -> tuple[dict[str, str | float], ...]:
         payload = json.loads(BOUNDARIES_PATH.read_text(encoding="utf-8"))
         features = payload["records"][0]["departamentos"]["features"]
     except (KeyError, IndexError, TypeError, json.JSONDecodeError, OSError) as error:
-        raise ValidationError(f"Could not read department boundaries: {error}.") from error
+        raise ValidationError(
+            f"Could not read department boundaries: {error}."
+        ) from error
     if not isinstance(features, list) or len(features) != 25:
         found = len(features) if isinstance(features, list) else "not a list"
         raise ValidationError(f"Expected 25 department boundaries, found {found}.")
@@ -53,7 +61,9 @@ def _load_points() -> tuple[dict[str, str | float], ...]:
             region = properties["name"]
             geometry = shape(feature["geometry"])
         except (KeyError, TypeError, ValueError) as error:
-            raise ValidationError(f"Invalid department boundary feature: {error}.") from error
+            raise ValidationError(
+                f"Invalid department boundary feature: {error}."
+            ) from error
         if not isinstance(code, str) or not re.fullmatch(r"PE\d{2}", code):
             raise ValidationError(f"Invalid department code: {code!r}.")
         if code in seen_codes:
@@ -63,8 +73,12 @@ def _load_points() -> tuple[dict[str, str | float], ...]:
         longitude = round(representative.x, 4)
         latitude = round(representative.y, 4)
         if not geometry.covers(Point(longitude, latitude)):
-            raise ValidationError(f"Rounded representative point is outside department {code}.")
-        points.append({"region": region, "code": code, "lat": latitude, "lon": longitude})
+            raise ValidationError(
+                f"Rounded representative point is outside department {code}."
+            )
+        points.append(
+            {"region": region, "code": code, "lat": latitude, "lon": longitude}
+        )
 
     expected_codes = {f"PE{number:02d}" for number in range(1, 26)}
     if seen_codes != expected_codes:
@@ -118,7 +132,9 @@ def fetch(url: str = URL, timeout: int = 60) -> str:
     except ValidationError:
         raise
     except urllib.error.HTTPError as error:
-        raise ValidationError(f"HTTP request failed with status {error.code}.") from error
+        raise ValidationError(
+            f"HTTP request failed with status {error.code}."
+        ) from error
     except (urllib.error.URLError, OSError, TimeoutError) as error:
         raise ValidationError(f"Could not download ERA5 data: {error}.") from error
 
@@ -137,24 +153,36 @@ def parse(
     point_data = []
     latest_non_null: date | None = None
     dates: list[date] | None = None
-    for number, (payload_point, expected_point) in enumerate(zip(payload, POINTS), start=1):
+    for number, (payload_point, expected_point) in enumerate(
+        zip(payload, POINTS, strict=True), start=1
+    ):
         daily = _validate_point(payload_point, expected_point, number)
         point_dates, values = _validate_daily(daily, number)
         if point_dates[0] != start:
-            raise ValidationError(f"Point {number}: response starts on {point_dates[0]}, expected {start}.")
+            raise ValidationError(
+                f"Point {number}: response starts on {point_dates[0]}, expected {start}."
+            )
         if point_dates[-1] != end:
-            raise ValidationError(f"Point {number}: response ends on {point_dates[-1]}, expected {end}.")
+            raise ValidationError(
+                f"Point {number}: response ends on {point_dates[-1]}, expected {end}."
+            )
         if dates is None:
             dates = point_dates
         elif point_dates != dates:
-            raise ValidationError(f"Point {number}: dates do not match the first point.")
-        for current_date, value in zip(point_dates, values):
-            if value is not None and (latest_non_null is None or current_date > latest_non_null):
+            raise ValidationError(
+                f"Point {number}: dates do not match the first point."
+            )
+        for current_date, value in zip(point_dates, values, strict=True):
+            if value is not None and (
+                latest_non_null is None or current_date > latest_non_null
+            ):
                 latest_non_null = current_date
         point_data.append((expected_point, values))
 
     if dates is None or latest_non_null is None:
-        raise ValidationError("Every precipitation value is null; no publishable day was found.")
+        raise ValidationError(
+            "Every precipitation value is null; no publishable day was found."
+        )
 
     records = []
     for point, values in point_data:
@@ -198,16 +226,24 @@ def _validate_point(payload: object, expected: dict, number: int) -> dict:
         daily_units = payload["daily_units"]
         daily = payload["daily"]
     except KeyError as error:
-        raise ValidationError(f"Point {number}: missing field {error.args[0]!r}.") from None
+        raise ValidationError(
+            f"Point {number}: missing field {error.args[0]!r}."
+        ) from None
     if not finite_number(latitude) or not finite_number(longitude):
-        raise ValidationError(f"Point {number}: snapped coordinates are not finite numbers.")
+        raise ValidationError(
+            f"Point {number}: snapped coordinates are not finite numbers."
+        )
     if not _on_grid(latitude) or not _on_grid(longitude):
-        raise ValidationError(f"Point {number}: snapped coordinates are not on the 0.25-degree grid.")
+        raise ValidationError(
+            f"Point {number}: snapped coordinates are not on the 0.25-degree grid."
+        )
     if (
         abs(latitude - expected["lat"]) > 0.125 + GRID_DISTANCE_EPSILON
         or abs(longitude - expected["lon"]) > 0.125 + GRID_DISTANCE_EPSILON
     ):
-        raise ValidationError(f"Point {number} ({expected['code']}): unexpected snapped coordinates.")
+        raise ValidationError(
+            f"Point {number} ({expected['code']}): unexpected snapped coordinates."
+        )
     if not isinstance(daily_units, dict):
         raise ValidationError(f"Point {number}: daily_units is not an object.")
     if daily_units.get("time") != "iso8601":
@@ -225,20 +261,28 @@ def _validate_daily(daily: dict, number: int) -> tuple[list[date], list[float | 
     if not isinstance(times, list):
         raise ValidationError(f"Point {number}: daily.time is missing or not a list.")
     if not isinstance(values, list) or len(values) != len(times):
-        raise ValidationError(f"Point {number}: precipitation_sum must match daily.time length.")
+        raise ValidationError(
+            f"Point {number}: precipitation_sum must match daily.time length."
+        )
     dates = []
     for position, text in enumerate(times, start=1):
         if not isinstance(text, str) or not DATE_PATTERN.fullmatch(text):
-            raise ValidationError(f"Point {number}, date {position}: expected ISO YYYY-MM-DD.")
+            raise ValidationError(
+                f"Point {number}, date {position}: expected ISO YYYY-MM-DD."
+            )
         try:
             dates.append(date.fromisoformat(text))
         except ValueError:
-            raise ValidationError(f"Point {number}, date {position}: invalid date.") from None
+            raise ValidationError(
+                f"Point {number}, date {position}: invalid date."
+            ) from None
     if not dates:
         raise ValidationError(f"Point {number}: daily.time is empty.")
-    for previous, current in zip(dates, dates[1:]):
+    for previous, current in zip(dates, dates[1:], strict=False):
         if current != previous + timedelta(days=1):
-            raise ValidationError(f"Point {number}: dates are not strictly ascending without gaps.")
+            raise ValidationError(
+                f"Point {number}: dates are not strictly ascending without gaps."
+            )
 
     checked_values: list[float | None] = []
     for position, value in enumerate(values, start=1):
@@ -279,7 +323,7 @@ def build(records: list[dict], ingestion_time: datetime) -> dict:
         "data_type": SOURCE["data_type"],
         "spatial_resolution": SOURCE["spatial_resolution"],
         "temporal_resolution": SOURCE["temporal_resolution"],
-        "ingestion_time": ingestion_time.astimezone(timezone.utc).isoformat(timespec="seconds"),
+        "ingestion_time": ingestion_time.astimezone(UTC).isoformat(timespec="seconds"),
         "processing_version": VERSION,
         "records": records,
     }
@@ -298,8 +342,8 @@ def publish(dataset: dict, data_dir: Path = DATA_DIR) -> Path:
 
 def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     """Fetch the last 90-day window, discover its lag, and publish available days."""
-    ingestion_time = ingestion_time or datetime.now(timezone.utc)
-    start, end = request_window(ingestion_time.astimezone(timezone.utc).date())
+    ingestion_time = ingestion_time or datetime.now(UTC)
+    start, end = request_window(ingestion_time.astimezone(UTC).date())
     responses = [fetch(url) for url in build_urls(start, end, URL)]
     records = []
     for response in responses:
