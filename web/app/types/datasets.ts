@@ -1,6 +1,8 @@
 import type {
   Dataset,
+  ChirpsRecord,
   EnfenRecord,
+  Era5Record,
   ErsstRecord,
   GlofasRecord,
   GeometryRecord,
@@ -16,6 +18,8 @@ export type DatasetRecordMap = {
   "noaa-cpc-outlook": OutlookRecord;
   "enfen-communique": EnfenRecord;
   "limites-inei-ign": GeometryRecord;
+  chirps: ChirpsRecord;
+  "open-meteo-era5": Era5Record;
   "noaa-oisst": GridRecord;
   "open-meteo-glofas": GlofasRecord;
   "noaa-ersst": ErsstRecord;

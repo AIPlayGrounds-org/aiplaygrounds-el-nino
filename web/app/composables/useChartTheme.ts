@@ -13,6 +13,9 @@ type ChartTheme = {
   cold: string
   neutral: string
   warm: string
+  sea: string
+  seaEdge: string
+  deep: string
   accent: string
   font: string
   /** Rampa divergente de nueve pasos, de frío fuerte a cálido fuerte. */
@@ -30,6 +33,9 @@ const THEME_VARIABLES = {
   cold: '--cold',
   neutral: '--neutral-data',
   warm: '--warm',
+  sea: '--sea',
+  seaEdge: '--sea-edge',
+  deep: '--deep',
   accent: '--accent',
   font: '--font',
 } as const
