@@ -18,6 +18,8 @@ from wawapacha_pipeline.sources import open_meteo_era5 as era5
 SAMPLE_PATH = Path(__file__).parent / "samples" / "era5.json"
 SAMPLE_PAYLOAD = json.loads(SAMPLE_PATH.read_text(encoding="utf-8"))
 SAMPLE = SAMPLE_PATH.read_text(encoding="utf-8")
+START = date(2026, 7, 6)
+END = date(2026, 10, 3)
 
 
 def as_text(payload: object) -> str:
@@ -68,12 +70,13 @@ def test_builds_one_api_call_with_the_required_query():
     assert query["models"] == ["era5"]
     assert query["timezone"] == ["UTC"]
     assert query["precipitation_unit"] == ["mm"]
+    assert query["cell_selection"] == ["nearest"]
     assert len(query["latitude"][0].split(",")) == 25
     assert len(query["longitude"][0].split(",")) == 25
 
 
 def test_expands_daily_arrays_and_discovers_the_null_tail():
-    records = era5.parse(SAMPLE, date(2026, 7, 6), date(2026, 10, 3))
+    records = era5.parse(SAMPLE, START, END)
 
     assert era5.last_non_null_day(records) == date(2026, 9, 27)
     assert len(records) == 25 * 84
@@ -99,7 +102,7 @@ def test_preserves_zero_and_null_values():
     payload[0]["daily"]["precipitation_sum"][0] = 0
     payload[0]["daily"]["precipitation_sum"][1] = None
 
-    records = era5.parse(as_text(payload))
+    records = era5.parse(as_text(payload), START, END)
 
     assert records[0]["precipitation_mm"] == 0
     assert records[1]["precipitation_mm"] is None
@@ -125,12 +128,24 @@ def test_rejects_each_structural_coordinate_date_or_value_rule(change, message):
     change(payload)
 
     with pytest.raises(ValidationError, match=message):
-        era5.parse(as_text(payload))
+        era5.parse(as_text(payload), START, END)
+
+
+@pytest.mark.parametrize(
+    ("coordinate", "value"),
+    [("latitude", -5.25), ("longitude", -78.0)],
+)
+def test_rejects_a_neighboring_grid_cell(coordinate, value):
+    payload = copy.deepcopy(SAMPLE_PAYLOAD)
+    payload[0][coordinate] = value
+
+    with pytest.raises(ValidationError, match="unexpected snapped coordinates"):
+        era5.parse(as_text(payload), START, END)
 
 
 def test_rejects_invalid_json():
     with pytest.raises(ValidationError, match="Invalid JSON"):
-        era5.parse("{broken")
+        era5.parse("{broken", START, END)
 
 
 def test_rejects_a_non_finite_value():
@@ -138,7 +153,15 @@ def test_rejects_a_non_finite_value():
     payload[0]["daily"]["precipitation_sum"][0] = float("nan")
 
     with pytest.raises(ValidationError, match="not finite"):
-        era5.parse(as_text(payload))
+        era5.parse(as_text(payload), START, END)
+
+
+def test_rejects_a_huge_integer_as_a_validation_error():
+    payload = copy.deepcopy(SAMPLE_PAYLOAD)
+    payload[0]["daily"]["precipitation_sum"][0] = 10**1000
+
+    with pytest.raises(ValidationError, match="outside 0-2000"):
+        era5.parse(as_text(payload), START, END)
 
 
 def test_fetch_rejects_a_non_200_response(monkeypatch):
@@ -164,7 +187,7 @@ def assert_matches_registry(dataset: dict) -> None:
 
 
 def test_build_adds_provenance_metadata():
-    records = era5.parse(SAMPLE)
+    records = era5.parse(SAMPLE, START, END)
     dataset = era5.build(records, datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
 
     assert dataset["id"] == "open-meteo-era5"
@@ -175,7 +198,7 @@ def test_build_adds_provenance_metadata():
 
 def test_publish_validates_and_keeps_the_compressed_payload_under_200_kib(tmp_path):
     dataset = era5.build(
-        era5.parse(SAMPLE),
+        era5.parse(SAMPLE, START, END),
         datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc),
     )
 
@@ -216,6 +239,21 @@ def test_run_rejects_a_shifted_response_without_publishing(monkeypatch, tmp_path
     with fixture_server(shifted) as (url, _requests):
         monkeypatch.setattr(era5, "URL", url)
         with pytest.raises(ValidationError, match="response starts"):
+            era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
+
+    assert not (tmp_path / "open-meteo-era5.json").exists()
+
+
+def test_run_rejects_a_shortened_response_without_publishing(monkeypatch, tmp_path):
+    shortened = copy.deepcopy(SAMPLE_PAYLOAD)
+    for point in shortened:
+        point["daily"]["time"].pop()
+        point["daily"]["precipitation_sum"].pop()
+
+    monkeypatch.setattr(era5, "DATA_DIR", tmp_path)
+    with fixture_server(shortened) as (url, _requests):
+        monkeypatch.setattr(era5, "URL", url)
+        with pytest.raises(ValidationError, match="response ends"):
             era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
 
     assert not (tmp_path / "open-meteo-era5.json").exists()
