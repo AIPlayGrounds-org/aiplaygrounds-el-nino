@@ -70,6 +70,10 @@
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/oniRecord" } } } }
     },
     {
+      "if": { "properties": { "id": { "const": "noaa-cpc-nino-weekly" } } },
+      "then": { "properties": { "records": { "items": { "$ref": "#/$defs/weeklyNinoRecord" } } } }
+    },
+    {
       "if": { "properties": { "id": { "const": "limites-inei-ign" } } },
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/geometryRecord" } } } }
     },
@@ -145,6 +149,36 @@
         "end": { "$ref": "#/$defs/month" },
         "sst": { "description": "Sea surface temperature in Niño 3.4, in °C.", "type": "number" },
         "anomaly": { "description": "Anomaly of that temperature, in °C.", "type": "number" }
+      }
+    },
+    "weeklyNinoRecord": {
+      "title": "WeeklyNinoRecord",
+      "description": "One weekly NOAA CPC sea-surface temperature index for the Niño regions.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end",
+        "nino_1_2_sst",
+        "nino_1_2_anomaly",
+        "nino_3_sst",
+        "nino_3_anomaly",
+        "nino_3_4_sst",
+        "nino_3_4_anomaly",
+        "nino_4_sst",
+        "nino_4_anomaly"
+      ],
+      "properties": {
+        "start": { "$ref": "#/$defs/day" },
+        "end": { "$ref": "#/$defs/day" },
+        "nino_1_2_sst": { "description": "Sea-surface temperature in Niño 1+2, in °C.", "type": "number" },
+        "nino_1_2_anomaly": { "description": "Sea-surface temperature anomaly in Niño 1+2, in °C.", "type": "number" },
+        "nino_3_sst": { "description": "Sea-surface temperature in Niño 3, in °C.", "type": "number" },
+        "nino_3_anomaly": { "description": "Sea-surface temperature anomaly in Niño 3, in °C.", "type": "number" },
+        "nino_3_4_sst": { "description": "Sea-surface temperature in Niño 3.4, in °C.", "type": "number" },
+        "nino_3_4_anomaly": { "description": "Sea-surface temperature anomaly in Niño 3.4, in °C.", "type": "number" },
+        "nino_4_sst": { "description": "Sea-surface temperature in Niño 4, in °C.", "type": "number" },
+        "nino_4_anomaly": { "description": "Sea-surface temperature anomaly in Niño 4, in °C.", "type": "number" }
       }
     },
     "geometryRecord": {

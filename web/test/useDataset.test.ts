@@ -44,12 +44,14 @@ describe("useDataset", () => {
     },
   );
 
-  it("documents the weekly dataset schema gap without adding a validator", async () => {
+  it("rejects a malformed weekly Niño record", async () => {
     const malformed = JSON.parse(JSON.stringify(await loadDataset("noaa-cpc-nino-weekly"))) as {
       records: Array<Record<string, unknown>>;
     };
     delete malformed.records[0]!.nino_1_2_sst;
 
-    expect(() => validateDataset("noaa-cpc-nino-weekly", malformed)).not.toThrow();
+    expect(() => validateDataset("noaa-cpc-nino-weekly", malformed)).toThrow(
+      "[useDataset] data/noaa-cpc-nino-weekly.json is invalid:",
+    );
   });
 });
