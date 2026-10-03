@@ -99,11 +99,8 @@ def build_urls(start: date, end: date, url: str = URL) -> list[str]:
             }
         )
         parsed = urllib.parse.urlsplit(url)
-        if parsed.scheme == "file":
-            urls.append(url)
-        else:
-            separator = "&" if parsed.query else "?"
-            urls.append(f"{url}{separator}{query}")
+        separator = "&" if parsed.query else "?"
+        urls.append(f"{url}{separator}{query}")
     return urls
 
 
@@ -174,22 +171,13 @@ def parse(
     return records
 
 
-def last_non_null_day(text: str) -> date:
-    """Return the latest day with at least one non-null precipitation value."""
-    payload = _decode(text)
-    if not isinstance(payload, list) or len(payload) != len(POINTS):
-        found = len(payload) if isinstance(payload, list) else "a non-list response"
-        raise ValidationError(f"Expected {len(POINTS)} points, found {found}.")
-    latest: date | None = None
-    for number, (payload_point, expected_point) in enumerate(zip(payload, POINTS), start=1):
-        daily = _validate_point(payload_point, expected_point, number)
-        dates, values = _validate_daily(daily, number)
-        for current_date, value in zip(dates, values):
-            if value is not None and (latest is None or current_date > latest):
-                latest = current_date
-    if latest is None:
-        raise ValidationError("Every precipitation value is null; no latest day was found.")
-    return latest
+def last_non_null_day(records: list[dict]) -> date:
+    """Return the latest day with at least one non-null precipitation record."""
+    return max(
+        date.fromisoformat(record["end"])
+        for record in records
+        if record["precipitation_mm"] is not None
+    )
 
 
 def _decode(text: str) -> object:
@@ -302,8 +290,8 @@ def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     """Fetch the last 90-day window, discover its lag, and publish available days."""
     ingestion_time = ingestion_time or datetime.now(timezone.utc)
     start, end = request_window(ingestion_time.astimezone(timezone.utc).date())
-    responses = [fetch(url) for url in build_urls(start, end)]
+    responses = [fetch(url) for url in build_urls(start, end, URL)]
     records = []
     for response in responses:
-        records.extend(parse(response))
+        records.extend(parse(response, start, end))
     return len(records), publish(build(records, ingestion_time), DATA_DIR)
