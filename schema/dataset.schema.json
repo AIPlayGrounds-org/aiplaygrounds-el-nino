@@ -82,6 +82,10 @@
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/glofasRecord" } } } }
     },
     {
+      "if": { "properties": { "id": { "const": "open-meteo-era5" } } },
+      "then": { "properties": { "records": { "items": { "$ref": "#/$defs/era5Record" } } } }
+    },
+    {
       "if": { "properties": { "id": { "const": "enfen-communique" } } },
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/enfenRecord" } } } }
     },
@@ -314,6 +318,20 @@
         "river_discharge_min": { "type": ["number", "null"], "minimum": 0 },
         "river_discharge_p25": { "type": ["number", "null"], "minimum": 0 },
         "river_discharge_p75": { "type": ["number", "null"], "minimum": 0 }
+      }
+    },
+    "era5Record": {
+      "title": "Era5Record",
+      "description": "One daily ERA5 precipitation value for a representative point in a Peruvian department.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region", "code", "start", "end", "precipitation_mm"],
+      "properties": {
+        "region": { "type": "string", "minLength": 1 },
+        "code": { "type": "string", "pattern": "^PE\\d{2}$" },
+        "start": { "$ref": "#/$defs/day" },
+        "end": { "$ref": "#/$defs/day" },
+        "precipitation_mm": { "type": ["number", "null"], "minimum": 0, "maximum": 2000 }
       }
     },
     "enfenRecord": {

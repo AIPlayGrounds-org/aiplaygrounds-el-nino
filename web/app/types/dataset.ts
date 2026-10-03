@@ -268,6 +268,19 @@ export interface GlofasRecord {
   river_discharge_p75: number | null
 }
 /**
+ * One daily ERA5 precipitation value for a representative point in a Peruvian department.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "era5Record".
+ */
+export interface Era5Record {
+  region: string
+  code: string
+  start: Day
+  end: Day
+  precipitation_mm: number | null
+}
+/**
  * One ENFEN official communiqué. The status holds from its date until the next-due date.
  *
  * This interface was referenced by `undefined`'s JSON-Schema
