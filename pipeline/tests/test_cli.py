@@ -45,3 +45,23 @@ def test_due_command_prints_one_source_per_line(tmp_path, monkeypatch, capsys):
 
     assert cli.main(["due", "--as-of", "2026-10-02T00:00:00+00:00"]) == 0
     assert capsys.readouterr().out == "".join(f"{i}\n" for i in scheduled_ids("daily", "weekly", "monthly"))
+
+
+def test_due_command_honours_an_explicit_data_dir(tmp_path, capsys):
+    for source_id in cli.SOURCES:
+        write_published_data(
+            tmp_path / f"{source_id}.json", "2026-10-01T12:00:00+00:00"
+        )
+
+    assert cli.main(
+        [
+            "due",
+            "--data-dir",
+            str(tmp_path),
+            "--as-of",
+            "2026-10-28T12:00:00+00:00",
+        ]
+    ) == 0
+    assert capsys.readouterr().out == "".join(
+        f"{i}\n" for i in scheduled_ids("daily", "weekly", "monthly")
+    )

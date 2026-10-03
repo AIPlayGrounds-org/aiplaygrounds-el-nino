@@ -40,11 +40,13 @@ code (for example `-99.9`).
 
 ## 4. Published format
 
-One JSON file per source, at `data/<id>.json`. It carries the provenance of the
-data (institution, product and URL; what is measured and in which unit; whether
-it is observed, estimated, forecast or official; its resolution and base
-period), when it was downloaded, the version of the code that produced it, and
-the records.
+One JSON file per source, at `data/<id>.json` in the seed snapshot on `main` and
+at the root of the `data` branch when published by the scheduled workflow. It
+carries the provenance of the data (institution, product and URL; what is
+measured and in which unit; whether it is observed, estimated, forecast or
+official; its resolution and base period), when it was downloaded, the version
+of the code that produced it, and the records. Deploy overlays the branch copy
+into `data/` before the static site build.
 
 The contract is [`schema/dataset.schema.json`](../schema/dataset.schema.json).
 It is the only definition of the fields:

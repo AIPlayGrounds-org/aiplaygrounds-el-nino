@@ -6,21 +6,23 @@ while the repository converges on it.
 ## North star
 
 ```text
-sources.toml → source module → schema validation → data/<id>.json
+sources.toml → source module → schema validation → data branch/<id>.json
        └────────────── update-data.yml ──────────────┘
-                                      ↓
-                         Nuxt 4 static site → GitHub Pages
+                                      ↓ overlay during deploy
+                         main's data/ → Nuxt 4 static site → GitHub Pages
 ```
 
 - `sources.toml` is the single registry. One module per automatable source is
   discovered from the registry id.
-- Every dataset passes `schema/dataset.schema.json` before it is written to
-  `data/<id>.json`. A failure keeps the previous file.
-- `update-data.yml` runs daily, asks `wawapacha-pipeline due`, runs only due
-  sources with per-source failure isolation, commits `data/` when it changed,
-  then dispatches `deploy.yml`.
-- The browser never calls an upstream API. Revisit only for sub-daily sources;
-  then data moves off `main`, probably to a Cloudflare cron writing to R2 or KV.
+- Every dataset passes `schema/dataset.schema.json` before it is written to the
+  published data directory as `<id>.json`. A failure keeps the previous file.
+- `update-data.yml` runs daily, asks `wawapacha-pipeline due` against the
+  published data directory, runs only due sources with per-source failure
+  isolation, commits changed JSON to the `data` branch, then dispatches
+  `deploy.yml`.
+- The browser never calls an upstream API. The `data` branch keeps published
+  JSON off `main`; sub-daily sources may later use a Cloudflare cron writing to
+  R2 or KV.
 - The web is a Nuxt 4 static site. `/` is the v0.1 one-page essay of panels and
   grows into Territorio, Histórico, Pronósticos, Alertas, Aprende and
   Metodología.

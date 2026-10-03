@@ -1,5 +1,6 @@
 # Publishes the web to GitHub Pages every time main is updated.
-# The site is static: `nuxt generate` reads the JSON in data/ at build time.
+# The site is static: `nuxt generate` reads the seed JSON in data/ at build
+# time, after a newer copy from the data branch is overlaid when available.
 name: Deploy a GitHub Pages
 
 on:
@@ -26,6 +27,19 @@ jobs:
         working-directory: web
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Overlay the published data branch
+        working-directory: .
+        run: |
+          if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
+            git fetch origin data
+            mkdir -p data
+            git archive FETCH_HEAD --format=tar -- '*.json' | tar -x -C data
+          else
+            echo "No data branch yet; building with the seed snapshot on main."
+          fi
 
       - uses: oven-sh/setup-bun@v2
         with:
