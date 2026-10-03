@@ -47,15 +47,15 @@ period and last ingestion time from the published JSON.
 
 ## What is where
 
-| Folder                         | Holds                                                                 |
-| ------------------------------ | --------------------------------------------------------------------- |
-| [`web/`](web/)                 | The web app.                                                          |
-| [`pipeline/`](pipeline/)       | Downloads, validates and publishes the data.                          |
-| [`data/`](data/)               | The published JSON.                                                   |
-| [`notebooks/`](notebooks/)     | [marimo](https://marimo.io) notebooks that walk through the pipeline. |
-| [`sources.toml`](sources.toml) | The source registry.                                                  |
-| [`schema/`](schema/)           | The contract of the published JSON.                                   |
-| [`docs/`](docs/README.md)      | Chart rules, data contract, concepts, source workflow and catalog.    |
+| Folder                         | Holds                                                                                            |
+| ------------------------------ | ------------------------------------------------------------------------------------------------ |
+| [`web/`](web/)                 | The web app.                                                                                     |
+| [`pipeline/`](pipeline/)       | Downloads, validates and publishes the data.                                                     |
+| [`data/`](data/)               | Main's seed JSON; deploy overlays the published data branch ([contract](docs/data-contract.md)). |
+| [`notebooks/`](notebooks/)     | [marimo](https://marimo.io) notebooks that walk through the pipeline.                            |
+| [`sources.toml`](sources.toml) | The source registry.                                                                             |
+| [`schema/`](schema/)           | The contract of the published JSON.                                                              |
+| [`docs/`](docs/README.md)      | Chart rules, data contract, concepts, source workflow and catalog.                               |
 
 ## Not in the product
 
