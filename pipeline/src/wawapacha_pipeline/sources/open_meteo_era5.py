@@ -21,12 +21,13 @@ from wawapacha_pipeline.contract import DATA_DIR, ValidationError, publish as co
 VERSION = "0.2.0"
 ID = "open-meteo-era5"
 SOURCE = registry.get(ID)
-URL = os.environ.get("OPEN_METEO_ERA5_URL", "https://archive-api.open-meteo.com/v1/archive")
+URL = os.environ.get("OPEN_METEO_ERA5_URL", SOURCE["access"]["url"])
 DAILY_VARIABLE = "precipitation_sum"
 UNIT = "mm"
 WINDOW_DAYS = 90
 MAX_COORDINATES_PER_REQUEST = 100
 MAX_DAILY_PRECIPITATION_MM = 2_000
+GRID_DISTANCE_EPSILON = 1e-6
 MAX_GZIP_BYTES = 200 * 1024
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 BOUNDARIES_PATH = Path(__file__).resolve().parents[4] / "data" / "limites-inei-ign.json"
@@ -96,6 +97,7 @@ def build_urls(start: date, end: date, url: str = URL) -> list[str]:
                 "models": "era5",
                 "timezone": "UTC",
                 "precipitation_unit": UNIT,
+                "cell_selection": "nearest",
             }
         )
         parsed = urllib.parse.urlsplit(url)
@@ -123,8 +125,8 @@ def fetch(url: str = URL, timeout: int = 60) -> str:
 
 def parse(
     text: str,
-    start: date | None = None,
-    end: date | None = None,
+    start: date,
+    end: date,
 ) -> list[dict]:
     """Validate point responses and expand available daily precipitation values."""
     payload = _decode(text)
@@ -138,9 +140,9 @@ def parse(
     for number, (payload_point, expected_point) in enumerate(zip(payload, POINTS), start=1):
         daily = _validate_point(payload_point, expected_point, number)
         point_dates, values = _validate_daily(daily, number)
-        if start is not None and point_dates[0] != start:
+        if point_dates[0] != start:
             raise ValidationError(f"Point {number}: response starts on {point_dates[0]}, expected {start}.")
-        if end is not None and point_dates[-1] != end:
+        if point_dates[-1] != end:
             raise ValidationError(f"Point {number}: response ends on {point_dates[-1]}, expected {end}.")
         if dates is None:
             dates = point_dates
@@ -201,7 +203,10 @@ def _validate_point(payload: object, expected: dict, number: int) -> dict:
         raise ValidationError(f"Point {number}: snapped coordinates are not finite numbers.")
     if not _on_grid(latitude) or not _on_grid(longitude):
         raise ValidationError(f"Point {number}: snapped coordinates are not on the 0.25-degree grid.")
-    if abs(latitude - expected["lat"]) > 0.25 or abs(longitude - expected["lon"]) > 0.25:
+    if (
+        abs(latitude - expected["lat"]) > 0.125 + GRID_DISTANCE_EPSILON
+        or abs(longitude - expected["lon"]) > 0.125 + GRID_DISTANCE_EPSILON
+    ):
         raise ValidationError(f"Point {number} ({expected['code']}): unexpected snapped coordinates.")
     if not isinstance(daily_units, dict):
         raise ValidationError(f"Point {number}: daily_units is not an object.")
@@ -252,7 +257,12 @@ def _on_grid(value: float) -> bool:
 
 
 def finite_number(value: object) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
 
 
 def build(records: list[dict], ingestion_time: datetime) -> dict:
