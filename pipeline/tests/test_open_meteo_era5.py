@@ -1,7 +1,10 @@
 import copy
 import gzip
 import json
-from datetime import date, datetime, timezone
+import threading
+from contextlib import contextmanager
+from datetime import date, datetime, timedelta, timezone
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import MagicMock
 from urllib.parse import parse_qs, urlsplit
@@ -19,6 +22,34 @@ SAMPLE = SAMPLE_PATH.read_text(encoding="utf-8")
 
 def as_text(payload: object) -> str:
     return json.dumps(payload, ensure_ascii=False)
+
+
+@contextmanager
+def fixture_server(payload: object):
+    body = as_text(payload).encode("utf-8")
+    requests = []
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            requests.append(self.path)
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, format, *args):
+            pass
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever)
+    thread.start()
+    try:
+        yield f"http://127.0.0.1:{server.server_port}/era5", requests
+    finally:
+        server.shutdown()
+        thread.join()
+        server.server_close()
 
 
 def test_loads_25_rounded_points_inside_the_departments():
@@ -42,10 +73,9 @@ def test_builds_one_api_call_with_the_required_query():
 
 
 def test_expands_daily_arrays_and_discovers_the_null_tail():
-    assert era5.last_non_null_day(SAMPLE) == date(2026, 9, 27)
-
     records = era5.parse(SAMPLE, date(2026, 7, 6), date(2026, 10, 3))
 
+    assert era5.last_non_null_day(records) == date(2026, 9, 27)
     assert len(records) == 25 * 84
     assert records[0] == {
         "region": "Amazonas",
@@ -157,25 +187,47 @@ def test_publish_validates_and_keeps_the_compressed_payload_under_200_kib(tmp_pa
 
 
 def test_run_publishes_the_fixture(monkeypatch, tmp_path):
-    monkeypatch.setattr(era5, "fetch", lambda url: SAMPLE)
     monkeypatch.setattr(era5, "DATA_DIR", tmp_path)
 
-    count, path = era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
+    with fixture_server(SAMPLE_PAYLOAD) as (url, requests):
+        monkeypatch.setattr(era5, "URL", url)
+        count, path = era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
 
     assert count == 2100
     assert path == tmp_path / "open-meteo-era5.json"
+    assert len(requests) == 1
+    request_query = parse_qs(urlsplit(requests[0]).query)
+    assert request_query["start_date"] == ["2026-07-06"]
+    assert request_query["end_date"] == ["2026-10-03"]
     published = json.loads(path.read_text(encoding="utf-8"))
     assert len(published["records"]) == 2100
     assert_matches_registry(published)
 
 
+def test_run_rejects_a_shifted_response_without_publishing(monkeypatch, tmp_path):
+    shifted = copy.deepcopy(SAMPLE_PAYLOAD)
+    for point in shifted:
+        point["daily"]["time"] = [
+            (date.fromisoformat(day) + timedelta(days=1)).isoformat()
+            for day in point["daily"]["time"]
+        ]
+
+    monkeypatch.setattr(era5, "DATA_DIR", tmp_path)
+    with fixture_server(shifted) as (url, _requests):
+        monkeypatch.setattr(era5, "URL", url)
+        with pytest.raises(ValidationError, match="response starts"):
+            era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
+
+    assert not (tmp_path / "open-meteo-era5.json").exists()
+
+
 def test_run_keeps_the_previous_json_when_validation_fails(monkeypatch, tmp_path):
-    broken = as_text(SAMPLE_PAYLOAD[:-1])
     previous = tmp_path / "open-meteo-era5.json"
     previous.write_text('{"version": "previous"}', encoding="utf-8")
-    monkeypatch.setattr(era5, "fetch", lambda url: broken)
     monkeypatch.setattr(era5, "DATA_DIR", tmp_path)
 
-    with pytest.raises(ValidationError, match="25 points"):
-        era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
+    with fixture_server(SAMPLE_PAYLOAD[:-1]) as (url, _requests):
+        monkeypatch.setattr(era5, "URL", url)
+        with pytest.raises(ValidationError, match="25 points"):
+            era5.run(datetime(2026, 10, 3, 12, 0, tzinfo=timezone.utc))
     assert previous.read_text(encoding="utf-8") == '{"version": "previous"}'
