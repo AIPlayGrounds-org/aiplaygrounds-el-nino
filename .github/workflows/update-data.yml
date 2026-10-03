@@ -29,6 +29,8 @@ env:
   # Install the pipeline package without notebook dependencies.
   UV_LOCKED: "1"
   UV_NO_DEFAULT_GROUPS: "1"
+  # The published worktree is the root of the data branch.
+  WAWAPACHA_DATA_DIR: published
 
 jobs:
   update:
@@ -40,21 +42,29 @@ jobs:
         with:
           ref: main
 
+      - name: Check out the published data branch
+        run: |
+          if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
+            git fetch origin data
+            git worktree add --detach "$WAWAPACHA_DATA_DIR" FETCH_HEAD
+          else
+            git worktree add --orphan -b data "$WAWAPACHA_DATA_DIR"
+          fi
+
       - uses: astral-sh/setup-uv@v10.2.0
 
       - name: Download and validate each source
         id: sources
-        working-directory: pipeline
         env:
           SOURCE: ${{ inputs.source }}
         run: |
-          ids=$(uv run python -c "from wawapacha_pipeline.cli import SOURCES; print(*SOURCES)")
+          ids=$(uv run --project pipeline wawapacha-pipeline due --data-dir "$WAWAPACHA_DATA_DIR")
           if [ -n "$SOURCE" ]; then ids=$SOURCE; fi
 
           failed=""
           for id in $ids; do
             echo "::group::$id"
-            if ! uv run wawapacha-pipeline run "$id"; then
+            if ! uv run --project pipeline wawapacha-pipeline run "$id"; then
               echo "::error title=$id::source failed, nothing was published"
               failed="$failed $id"
             fi
@@ -62,26 +72,25 @@ jobs:
           done
           echo "failed=${failed# }" >> "$GITHUB_OUTPUT"
 
-      - name: Publish the changes to main
+      - name: Publish the changes to data
         id: commit
         run: |
           ids=""
           while read -r _ path; do
             ids="$ids $(basename "$path" .json)"
-          done < <(git status --porcelain data/)
+          done < <(git -C "$WAWAPACHA_DATA_DIR" status --porcelain -- '*.json')
           ids=${ids# }
 
           if [ -z "$ids" ]; then
-            echo "No changes in data/."
+            echo "No changes in published data."
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/
-          git commit -m "data: update $ids"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          git -C "$WAWAPACHA_DATA_DIR" config user.name "github-actions[bot]"
+          git -C "$WAWAPACHA_DATA_DIR" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$WAWAPACHA_DATA_DIR" add -A -- '*.json'
+          git -C "$WAWAPACHA_DATA_DIR" commit -m "data: update $ids"
+          git -C "$WAWAPACHA_DATA_DIR" push origin HEAD:data
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       # GITHUB_TOKEN pushes do not trigger other workflows, so start deploy.yml
