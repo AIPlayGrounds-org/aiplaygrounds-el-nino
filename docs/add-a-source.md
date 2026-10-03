@@ -21,10 +21,11 @@ A source is one registry entry, one module, one sample and one test.
 6. **Notebook.** Add a notebook in `notebooks/` that imports the module and
    shows each step. A test fails if it defines functions. Open it with
    `uv run marimo edit ../notebooks/<module>.py`, from `pipeline/`.
-7. **Catalog and data.** From `pipeline/`, run
+7. **Catalog and seed data.** From `pipeline/`, run
    `uv run wawapacha-pipeline sources` to add the source to
    [`docs/sources.md`](sources.md), then `uv run wawapacha-pipeline run <id>` to
-   publish `data/<id>.json`.
+   publish the first `data/<id>.json` seed. The scheduled workflow later
+   publishes fresher JSON to the `data` branch.
 
 [`registry.py`](../pipeline/src/wawapacha_pipeline/registry.py) checks the entry
 on load, discovers the module implied by every `automatable` id, and raises a
