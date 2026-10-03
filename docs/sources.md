@@ -7,16 +7,17 @@ The sources the pipeline reads. The rest of the registry is in
 Verdicts: **automatable** (the pipeline publishes it) and **manual** (a person
 loads it).
 
-| ID                                              | Source                                                                                                                                          | Block     | Verdict     |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
-| [`noaa-cpc-oni`](#noaa-cpc-oni)                 | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                                                                  | ENSO      | automatable |
-| [`noaa-cpc-nino-weekly`](#noaa-cpc-nino-weekly) | NOAA Climate Prediction Center (CPC): Weekly SST indices (file `wksst9120.for`)                                                                 | ENSO      | automatable |
-| [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                                                         | Alerts    | automatable |
-| [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1                                    | SST       | automatable |
-| [`noaa-cpc-outlook`](#noaa-cpc-outlook)         | NOAA Climate Prediction Center (CPC): Official NOAA CPC ENSO Strength Probabilities                                                             | Forecasts | automatable |
-| [`limites-inei-ign`](#limites-inei-ign)         | Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX: Peru administrative boundaries: departments and provinces                 | Territory | automatable |
-| [`open-meteo-glofas`](#open-meteo-glofas)       | Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service: Flood API, GloFAS v4 (continuous history and forecast) | Rivers    | automatable |
-| [`noaa-ersst`](#noaa-ersst)                     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices                                                 | History   | automatable |
+| ID                                              | Source                                                                                                                                          | Block         | Verdict     |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ----------- |
+| [`noaa-cpc-oni`](#noaa-cpc-oni)                 | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                                                                  | ENSO          | automatable |
+| [`noaa-cpc-nino-weekly`](#noaa-cpc-nino-weekly) | NOAA Climate Prediction Center (CPC): Weekly SST indices (file `wksst9120.for`)                                                                 | ENSO          | automatable |
+| [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                                                         | Alerts        | automatable |
+| [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1                                    | SST           | automatable |
+| [`noaa-cpc-outlook`](#noaa-cpc-outlook)         | NOAA Climate Prediction Center (CPC): Official NOAA CPC ENSO Strength Probabilities                                                             | Forecasts     | automatable |
+| [`open-meteo-era5`](#open-meteo-era5)           | Open-Meteo (intermediary); ERA5 data from the Copernicus Climate Change Service (C3S) and ECMWF: Historical Weather API, model `era5`           | Precipitation | automatable |
+| [`limites-inei-ign`](#limites-inei-ign)         | Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX: Peru administrative boundaries: departments and provinces                 | Territory     | automatable |
+| [`open-meteo-glofas`](#open-meteo-glofas)       | Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service: Flood API, GloFAS v4 (continuous history and forecast) | Rivers        | automatable |
+| [`noaa-ersst`](#noaa-ersst)                     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices                                                 | History       | automatable |
 
 ### noaa-cpc-oni
 
@@ -225,6 +226,56 @@ Notes:
 - The parser computes ISO start and end months from the visible issue date and
   the rolling season labels because the source season cells do not include
   years.
+
+### open-meteo-era5
+
+Reviewed on 2026-10-01.
+[Official page](https://open-meteo.com/en/docs/historical-weather-api).
+
+| Field               | Value                                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------------------------ |
+| Institution         | Open-Meteo (intermediary); ERA5 data from the Copernicus Climate Change Service (C3S) and ECMWF        |
+| Product             | Historical Weather API, model `era5`                                                                   |
+| Variable            | Precipitación diaria acumulada (`precipitation_sum`)                                                   |
+| Unit                | mm                                                                                                     |
+| Data type           | estimated                                                                                              |
+| Update              | daily                                                                                                  |
+| Spatial resolution  | 0,25° (unos 28 km)                                                                                     |
+| Temporal resolution | Diaria; también horaria                                                                                |
+| History             | From 1940                                                                                              |
+| Cadence             | Daily                                                                                                  |
+| License             | CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content. |
+| Access              | REST API (HTTP GET)                                                                                    |
+| Download URL        | https://archive-api.open-meteo.com/v1/archive                                                          |
+| Format              | JSON                                                                                                   |
+| Authentication      | none                                                                                                   |
+
+Notes:
+
+- Always request `models=era5`. The default (`best_match`) mixes ERA5 with other
+  models (IFS since 2017), and the documentation recommends ERA5 alone for long
+  series.
+- The latest days arrive about 7 days late and come as `null`, never as zero. On
+  2026-10-01 the last day with data was 2026-09-24.
+- The response carries the coordinates of the cell it used, which differ from
+  the ones requested.
+- The pipeline requests one rounded Shapely representative point inside each of
+  Peru's 25 department boundaries. Each record is a point sample of its
+  0.25-degree cell, not a department mean.
+- Each run requests the last 90 UTC days and discovers the latest non-null day;
+  one run uses one API call because 25 coordinates fit under the 100-coordinate
+  request limit.
+- Values below 0 or above 2,000 mm/day are rejected for review and never
+  clipped. The published JSON is kept below 200 KiB gzip.
+- Attribution: a “Weather data by Open-Meteo.com” link to
+  https://open-meteo.com/ and credit to ERA5 and the Copernicus Climate Change
+  Service.
+- Limits: 600 calls per minute, 5,000 per hour, 10,000 per day and 300,000 per
+  month.
+- CC BY 4.0. Free tier use is non-commercial only; the site remains
+  non-commercial.
+- Open-Meteo is an intermediary. If its terms change, the original source is the
+  Copernicus CDS, which needs an account.
 
 ### limites-inei-ign
 
