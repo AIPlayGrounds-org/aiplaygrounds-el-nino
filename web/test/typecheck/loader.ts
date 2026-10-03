@@ -1,10 +1,10 @@
 import { useDataset } from "~/composables/useDataset";
 
-const oni = useDataset("noaa-cpc-oni");
+const oni = await useDataset("noaa-cpc-oni");
 const anomaly: number = oni.records[0]!.anomaly;
 void anomaly;
 
-const geometry = useDataset("limites-inei-ign");
+const geometry = await useDataset("limites-inei-ign");
 void geometry.records[0]!.departamentos.features[0]!.geometry;
 
 // @ts-expect-error An ONI record does not expose river discharge.

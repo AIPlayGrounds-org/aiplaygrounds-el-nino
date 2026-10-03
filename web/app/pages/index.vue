@@ -2,7 +2,7 @@
 import { messages } from '~/messages'
 import { useDataset } from '~/composables/useDataset'
 
-const oni = useDataset('noaa-cpc-oni')
+const oni = await useDataset('noaa-cpc-oni')
 const records = oni.records
 const last = records.at(-1)
 

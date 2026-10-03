@@ -1,17 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { useDataset, validateDataset } from "~/composables/useDataset";
+import { loadDataset, validateDataset } from "../server/utils/loadDataset";
 import type { DatasetId } from "~/types/datasets";
 import { geometryFixture } from "./fixtures/geometry";
 
 describe("useDataset", () => {
-  it("loads the ONI dataset with its narrowed record fields", () => {
-    const oni = useDataset("noaa-cpc-oni");
+  it("loads the ONI dataset with its narrowed record fields", async () => {
+    const oni = await loadDataset("noaa-cpc-oni");
     expect(oni.id).toBe("noaa-cpc-oni");
     expect(oni.records[0]?.anomaly).toEqual(expect.any(Number));
   });
 
-  it("loads the production geometry dataset with its narrowed record fields", () => {
-    const geometry = useDataset("limites-inei-ign");
+  it("loads the production geometry dataset with its narrowed record fields", async () => {
+    const geometry = await loadDataset("limites-inei-ign");
     expect(geometry.records[0]?.departamentos.type).toBe("FeatureCollection");
     expect(validateDataset("limites-inei-ign", geometryFixture).records[0]?.version).toBe("v01");
   });
@@ -32,8 +32,8 @@ describe("useDataset", () => {
     ["noaa-ersst", "nino3_anomaly"],
   ] as [Exclude<DatasetId, "noaa-cpc-nino-weekly">, string][])(
     "rejects a malformed kind-specific record in %s",
-    (id, field) => {
-      const malformed = JSON.parse(JSON.stringify(useDataset(id))) as {
+    async (id, field) => {
+      const malformed = JSON.parse(JSON.stringify(await loadDataset(id))) as {
         records: Array<Record<string, unknown>>;
       };
       delete malformed.records[0]![field];
@@ -44,8 +44,8 @@ describe("useDataset", () => {
     },
   );
 
-  it("documents the weekly dataset schema gap without adding a validator", () => {
-    const malformed = JSON.parse(JSON.stringify(useDataset("noaa-cpc-nino-weekly"))) as {
+  it("documents the weekly dataset schema gap without adding a validator", async () => {
+    const malformed = JSON.parse(JSON.stringify(await loadDataset("noaa-cpc-nino-weekly"))) as {
       records: Array<Record<string, unknown>>;
     };
     delete malformed.records[0]!.nino_1_2_sst;
