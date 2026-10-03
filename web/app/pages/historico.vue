@@ -5,7 +5,9 @@ import HistoricoChart from '~/components/HistoricoChart.vue'
 import { shapeHistoricoDataset, shapeHistoricoOniDataset } from '~/utils/historico'
 
 const ersst = await useDataset('noaa-ersst', shapeHistoricoDataset)
-const oni = await useDataset('noaa-cpc-oni', shapeHistoricoOniDataset)
+const oni = await useDataset('noaa-cpc-oni', (dataset) =>
+  shapeHistoricoOniDataset(dataset, ersst.records),
+)
 
 useSeoMeta({
   title: messages.historico.seoTitle,
@@ -18,7 +20,7 @@ useSeoMeta({
     <header class="header">
       <NuxtLink class="brand" to="/">{{ messages.page.brand }}</NuxtLink>
       <NuxtLink to="/territorio">{{ messages.page.territoryLink }}</NuxtLink>
-      <NuxtLink to="/historico" aria-current="page">{{ messages.historico.historyNav }}</NuxtLink>
+      <NuxtLink to="/historico">{{ messages.historico.historyNav }}</NuxtLink>
     </header>
     <main>
       <section class="intro" aria-labelledby="history-title">
@@ -54,9 +56,6 @@ useSeoMeta({
   font-size: 1.5rem;
   line-height: 1;
   text-decoration: none;
-}
-.header a[aria-current='page'] {
-  font-weight: 700;
 }
 main {
   max-width: 68rem;

@@ -103,7 +103,6 @@ export const messages = {
   },
   historico: {
     historyNav: 'Histórico',
-    navigationLabel: 'Navegación principal',
     seoTitle: 'Histórico de anomalías del mar · WawaPacha',
     seoDescription:
       'Compara por mes las anomalías de la temperatura superficial del mar durante eventos históricos y el año en curso.',
@@ -129,8 +128,8 @@ export const messages = {
     currentYear: (year: number) => `${year} · año en curso`,
     peak: (value: string, month: string) => `pico ${value} °C en ${month}`,
     noPeak: 'sin datos',
-    summary: (region: string, peaks: string) =>
-      `Comparación de la anomalía mensual en ${region}, alineada desde el primer mes disponible de cada evento. Picos: ${peaks || 'sin datos disponibles'}.`,
+    summary: (peaks: string) =>
+      `Comparación de la anomalía mensual por región, alineada desde el primer mes disponible de cada evento. Picos: ${peaks || 'sin datos disponibles'}.`,
     oniSummary: (peaks: string) =>
       `Comparación del ONI oficial, una media móvil de tres meses de la anomalía en Niño 3.4. Picos: ${peaks || 'sin datos disponibles'}.`,
     anomaly: 'Anomalía',
@@ -139,6 +138,8 @@ export const messages = {
     missing: 'Sin dato',
     tableSummary: 'Ver la tabla de datos',
     tableCaption: 'Valores por mes desde el inicio de cada serie.',
+    oniTableSummary: 'Ver la tabla del ONI',
+    oniTableCaption: 'Valores del ONI por mes desde el inicio de cada serie.',
   },
   attribution: {
     openMeteoLabel: 'Weather data by Open-Meteo.com',

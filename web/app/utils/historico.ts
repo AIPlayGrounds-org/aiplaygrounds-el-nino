@@ -1,5 +1,4 @@
-import type { ErsstRecord } from '~/types/dataset'
-import type { OniRecord } from '~/types/dataset'
+import type { ErsstRecord, OniRecord } from '~/types/dataset'
 import type { DatasetFor } from '~/types/datasets'
 
 export const HISTORICAL_EVENT_IDS = ['1982-83', '1997-98', '2017'] as const
@@ -7,6 +6,8 @@ export const CURRENT_EVENT_ID = 'current' as const
 export type HistoricalEventId = (typeof HISTORICAL_EVENT_IDS)[number]
 export type HistoryEventId = HistoricalEventId | typeof CURRENT_EVENT_ID
 export type HistoryRegion = 'nino34' | 'nino12'
+export type HistoryWindow = readonly [string, string]
+export type HistoryWindows = Partial<Record<HistoricalEventId, HistoryWindow>>
 
 export type AlignedHistoryPoint = {
   offset: number
@@ -23,12 +24,6 @@ const monthAt = (index: number) => {
   const year = Math.floor(index / 12)
   const month = (index % 12) + 1
   return `${year}-${String(month).padStart(2, '0')}`
-}
-
-const EVENT_WINDOWS: Record<HistoricalEventId, readonly [string, string]> = {
-  '1982-83': ['1982-07', '1983-11'],
-  '1997-98': ['1997-04', '1998-08'],
-  '2017': ['2017-01', '2017-04'],
 }
 
 const recordsFor = (records: readonly ErsstRecord[], event: HistoryEventId) => {
@@ -55,15 +50,63 @@ export const shapeHistoricoDataset = (dataset: DatasetFor<'noaa-ersst'>) => {
 
 const oniMonth = (record: OniRecord) => monthAt(monthIndex(record.start) + 1)
 
+/** Derive each historical event window from the event tags in the ERSST records. */
+export const historyWindowsFromErsst = (records: readonly ErsstRecord[]): HistoryWindows => {
+  const windows: HistoryWindows = {}
+  for (const event of HISTORICAL_EVENT_IDS) {
+    const eventRecords = records.filter((record) => record.event === event)
+    const first = eventRecords[0]
+    const last = eventRecords.at(-1)
+    if (first && last) windows[event] = [first.start, last.start]
+  }
+  return windows
+}
+
+const alignRecords = <RecordType>(
+  records: readonly RecordType[],
+  firstMonth: string,
+  lastMonth: string,
+  monthForRecord: (record: RecordType) => string,
+  valueForRecord: (record: RecordType) => number,
+): AlignedHistoryPoint[] => {
+  const firstIndex = monthIndex(firstMonth)
+  const lastIndex = monthIndex(lastMonth)
+  const byMonth = new Map(records.map((record) => [monthForRecord(record), record]))
+
+  return Array.from({ length: lastIndex - firstIndex + 1 }, (_, index) => {
+    const month = monthAt(firstIndex + index)
+    const record = byMonth.get(month)
+    return {
+      offset: index + 1,
+      month,
+      value: record ? valueForRecord(record) : null,
+    }
+  })
+}
+
+export const peakOfHistoryPoints = (points: readonly AlignedHistoryPoint[]) =>
+  points
+    .filter((point): point is AlignedHistoryPoint & { value: number } => point.value !== null)
+    .reduce<(AlignedHistoryPoint & { value: number }) | null>(
+      (peak, point) => (peak === null || point.value > peak.value ? point : peak),
+      null,
+    )
+
 /** Keep only the ONI records needed for the historical comparison page. */
-export const shapeHistoricoOniDataset = (dataset: DatasetFor<'noaa-cpc-oni'>) => {
+export const shapeHistoricoOniDataset = (
+  dataset: DatasetFor<'noaa-cpc-oni'>,
+  ersstRecords: readonly ErsstRecord[],
+) => {
+  const windows = historyWindowsFromErsst(ersstRecords)
   const currentYear = yearOf(oniMonth(dataset.records.at(-1)!))
   const records = dataset.records.filter((record) => {
     const month = oniMonth(record)
     return (
       yearOf(month) === currentYear ||
-      HISTORICAL_EVENT_IDS.some((event) => {
-        const [start, end] = EVENT_WINDOWS[event]
+      HISTORICAL_EVENT_IDS.filter((event) => event !== '2017').some((event) => {
+        const window = windows[event]
+        if (!window) return false
+        const [start, end] = window
         const monthNumber = monthIndex(month)
         return monthNumber >= monthIndex(start) && monthNumber <= monthIndex(end)
       })
@@ -95,19 +138,14 @@ export const alignHistoryEvent = (
   const last = eventRecords.at(-1)
   if (!first || !last) return []
 
-  const firstIndex = monthIndex(first.start)
-  const lastIndex = monthIndex(last.start)
-  const byMonth = new Map(eventRecords.map((record) => [record.start, record]))
   const field = fieldFor(region)
-
-  return Array.from({ length: lastIndex - firstIndex + 1 }, (_, index) => {
-    const month = monthAt(firstIndex + index)
-    return {
-      offset: index + 1,
-      month,
-      value: byMonth.get(month)?.[field] ?? null,
-    }
-  })
+  return alignRecords(
+    eventRecords,
+    first.start,
+    last.start,
+    (record) => record.start,
+    (record) => record[field],
+  )
 }
 
 export const peakOfHistoryEvent = (
@@ -115,21 +153,21 @@ export const peakOfHistoryEvent = (
   event: HistoryEventId,
   region: HistoryRegion,
 ) => {
-  const points = alignHistoryEvent(records, event, region).filter(
-    (point): point is AlignedHistoryPoint & { value: number } => point.value !== null,
-  )
-  return points.reduce<(AlignedHistoryPoint & { value: number }) | null>(
-    (peak, point) => (peak === null || point.value > peak.value ? point : peak),
-    null,
-  )
+  return peakOfHistoryPoints(alignHistoryEvent(records, event, region))
 }
 
-const oniRecordsFor = (records: readonly OniRecord[], event: HistoryEventId) => {
+const oniRecordsFor = (
+  records: readonly OniRecord[],
+  event: HistoryEventId,
+  windows: HistoryWindows,
+) => {
   if (event === CURRENT_EVENT_ID) {
     const currentYear = yearOf(oniMonth(records.at(-1)!))
     return records.filter((record) => yearOf(oniMonth(record)) === currentYear)
   }
-  const [start, end] = EVENT_WINDOWS[event]
+  const window = windows[event]
+  if (!window) return []
+  const [start, end] = window
   return records.filter((record) => {
     const month = monthIndex(oniMonth(record))
     return month >= monthIndex(start) && month <= monthIndex(end)
@@ -140,34 +178,21 @@ const oniRecordsFor = (records: readonly OniRecord[], event: HistoryEventId) => 
 export const alignHistoryOniEvent = (
   records: readonly OniRecord[],
   event: HistoryEventId,
+  windows: HistoryWindows,
 ): AlignedHistoryPoint[] => {
-  const eventRecords = oniRecordsFor(records, event)
+  const eventRecords = oniRecordsFor(records, event, windows)
+  const first = eventRecords[0]
   const last = eventRecords.at(-1)
-  if (!last) return []
+  if (!first || !last) return []
 
-  const currentYear = yearOf(oniMonth(records.at(-1)!))
-  const firstMonth = event === CURRENT_EVENT_ID ? `${currentYear}-01` : EVENT_WINDOWS[event][0]
-  const lastMonth = event === CURRENT_EVENT_ID ? oniMonth(last) : EVENT_WINDOWS[event][1]
-  const firstIndex = monthIndex(firstMonth)
-  const lastIndex = monthIndex(lastMonth)
-  const byMonth = new Map(eventRecords.map((record) => [oniMonth(record), record]))
-
-  return Array.from({ length: lastIndex - firstIndex + 1 }, (_, index) => {
-    const month = monthAt(firstIndex + index)
-    return {
-      offset: index + 1,
-      month,
-      value: byMonth.get(month)?.anomaly ?? null,
-    }
-  })
+  const firstMonth = event === CURRENT_EVENT_ID ? oniMonth(first) : windows[event]?.[0]
+  const lastMonth = event === CURRENT_EVENT_ID ? oniMonth(last) : windows[event]?.[1]
+  if (!firstMonth || !lastMonth) return []
+  return alignRecords(eventRecords, firstMonth, lastMonth, oniMonth, (record) => record.anomaly)
 }
 
-export const peakOfHistoryOniEvent = (records: readonly OniRecord[], event: HistoryEventId) => {
-  const points = alignHistoryOniEvent(records, event).filter(
-    (point): point is AlignedHistoryPoint & { value: number } => point.value !== null,
-  )
-  return points.reduce<(AlignedHistoryPoint & { value: number }) | null>(
-    (peak, point) => (peak === null || point.value > peak.value ? point : peak),
-    null,
-  )
-}
+export const peakOfHistoryOniEvent = (
+  records: readonly OniRecord[],
+  event: HistoryEventId,
+  windows: HistoryWindows,
+) => peakOfHistoryPoints(alignHistoryOniEvent(records, event, windows))
