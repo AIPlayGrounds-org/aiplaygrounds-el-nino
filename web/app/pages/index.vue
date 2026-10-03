@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { messages } from '~/messages'
 import { useDataset } from '~/composables/useDataset'
+import { cropOisst } from '~/utils/oisstMap'
 
 const oni = await useDataset('noaa-cpc-oni')
+const oisst = await useDataset('noaa-oisst', cropOisst)
 const records = oni.records
 const last = records.at(-1)
 
@@ -125,6 +127,16 @@ useSeoMeta({
         </div>
 
         <OniStory :dataset="oni" />
+
+        <section class="oisst-panel" aria-labelledby="oisst-title">
+          <div class="prose">
+            <h2 id="oisst-title">{{ messages.oisst.title }}</h2>
+            <p>{{ messages.oisst.lead }}</p>
+          </div>
+          <div class="figure">
+            <OisstMap :dataset="oisst" />
+          </div>
+        </section>
 
         <div class="sand">
           <article class="prose">
@@ -384,6 +396,9 @@ h2 {
 }
 
 .explore {
+  padding: clamp(64px, 10vw, 112px) 0 0;
+}
+.oisst-panel {
   padding: clamp(64px, 10vw, 112px) 0 0;
 }
 .figure {

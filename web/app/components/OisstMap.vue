@@ -9,7 +9,11 @@ import {
 } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
+import { computed } from 'vue'
 import { messages } from '~/messages'
+import { useChartTheme } from '~/composables/useChartTheme'
+import { formatAnomaly } from '~/utils/enso'
+import { buildOisstMap, formatBand, formatCoordinate, summarizeOisst } from '~/utils/oisstMap'
 import type { DatasetFor } from '~/types/datasets'
 
 use([
@@ -22,78 +26,21 @@ use([
 ])
 
 const props = defineProps<{ dataset: DatasetFor<'noaa-oisst'> }>()
-const record = props.dataset.records.at(-1)!
-
-// The source grid covers a wider Pacific window; this view keeps the Peruvian coast readable.
-const VIEW = { west: -90, east: -70, south: -20, north: 10 }
-
-const visibleLatitudes = record.lat
-  .map((value, index) => ({ value, index }))
-  .filter(({ value }) => value >= VIEW.south && value <= VIEW.north)
-const visibleLongitudes = record.lon
-  .map((value, index) => ({ value, index }))
-  .filter(({ value }) => value >= VIEW.west && value <= VIEW.east)
-
-const points = visibleLatitudes.flatMap(({ value: lat, index: latIndex }) =>
-  visibleLongitudes.flatMap(({ value: lon, index: lonIndex }) => {
-    const value = record.anomaly[latIndex]?.[lonIndex]
-    return value === null || value === undefined
-      ? []
-      : [[lon, lat, value] as [number, number, number]]
-  }),
+const record = props.dataset.records[props.dataset.records.length - 1]!
+const mapData = buildOisstMap(record)
+const date = record.end
+const summary = summarizeOisst(mapData, date, props.dataset.unit)
+const theme = useChartTheme()
+const chartPoints = mapData.points.map(
+  (point) =>
+    [
+      formatCoordinate(point.lon, 'longitude'),
+      formatCoordinate(point.lat, 'latitude'),
+      point.value,
+    ] as [string, string, number],
 )
-
-const valueMax = Math.max(...points.map(([, , value]) => Math.abs(value)), 0.01)
-const tableRows = visibleLatitudes.map(({ value: lat, index: latIndex }) => ({
-  lat,
-  values: visibleLongitudes.map(
-    ({ index: lonIndex }) => record.anomaly[latIndex]?.[lonIndex] ?? null,
-  ),
-}))
-const warmest = points.reduce(
-  (current, point) => (point[2] > current[2] ? point : current),
-  points[0]!,
-)
-const number = new Intl.NumberFormat('es', { maximumFractionDigits: 2, signDisplay: 'exceptZero' })
-const display = (value: number | null) =>
-  value === null ? '—' : number.format(value).replace('-', '−')
-const summary = `${props.dataset.variable}. ${messages.provenance.latestData}: ${record.end}. ${messages.chart.anomaly}: ${display(warmest[2])} ${props.dataset.unit} (${display(warmest[1])}°, ${display(warmest[0])}°).`
-
-const readTheme = () => {
-  const css = getComputedStyle(document.documentElement)
-  const value = (name: string) => css.getPropertyValue(name).trim()
-  return {
-    text: value('--text'),
-    muted: value('--muted'),
-    border: value('--border'),
-    surface: value('--surface'),
-    grid: value('--chart-grid'),
-    cold: value('--cold'),
-    neutral: value('--neutral-data'),
-    warm: value('--warm'),
-    font: value('--font'),
-  }
-}
-
-const theme = ref(
-  import.meta.client
-    ? readTheme()
-    : {
-        text: '',
-        muted: '',
-        border: '',
-        surface: '',
-        grid: '',
-        cold: '',
-        neutral: '',
-        warm: '',
-        font: '',
-      },
-)
-const darkQuery = import.meta.client ? window.matchMedia('(prefers-color-scheme: dark)') : undefined
-const refreshTheme = () => (theme.value = readTheme())
-onMounted(() => darkQuery?.addEventListener('change', refreshTheme))
-onBeforeUnmount(() => darkQuery?.removeEventListener('change', refreshTheme))
+const longitudeLabels = mapData.longitudes.map((value) => formatCoordinate(value, 'longitude'))
+const latitudeLabels = mapData.latitudes.map((value) => formatCoordinate(value, 'latitude'))
 
 const option = computed(() => {
   const t = theme.value
@@ -108,49 +55,49 @@ const option = computed(() => {
       borderColor: t.border,
       textStyle: { color: t.text },
       formatter: (
-        params: { value: [number, number, number] } | { value: [number, number, number] }[],
+        params: { value: [string, string, number] } | { value: [string, string, number] }[],
       ) => {
         const item = Array.isArray(params) ? params[0] : params
         if (!item) return ''
-        const [lon, lat, value] = item.value
-        return `${display(value)} ${props.dataset.unit}<br/>${display(lat)}°, ${display(lon)}°`
+        const [longitude, latitude, value] = item.value
+        return messages.oisst.tooltip(formatAnomaly(value), props.dataset.unit, latitude, longitude)
       },
     },
     xAxis: {
-      type: 'value',
-      min: VIEW.west,
-      max: VIEW.east,
-      interval: 5,
+      type: 'category',
+      data: longitudeLabels,
+      axisLabel: { color: t.muted, interval: 3 },
       axisLine: { lineStyle: { color: t.border } },
-      axisLabel: { color: t.muted },
       splitLine: { lineStyle: { color: t.grid } },
     },
     yAxis: {
-      type: 'value',
-      min: VIEW.south,
-      max: VIEW.north,
-      interval: 5,
+      type: 'category',
+      data: latitudeLabels,
+      axisLabel: { color: t.muted, interval: 3 },
       axisLine: { lineStyle: { color: t.border } },
-      axisLabel: { color: t.muted },
       splitLine: { lineStyle: { color: t.grid } },
     },
     visualMap: {
-      min: -valueMax,
-      max: valueMax,
+      min: -mapData.valueMax,
+      max: mapData.valueMax,
       dimension: 2,
       orient: 'horizontal',
       left: 'center',
       bottom: 0,
-      itemWidth: 180,
-      itemHeight: 10,
+      itemWidth: 12,
+      itemHeight: 200,
+      text: [
+        `${formatAnomaly(mapData.valueMax)} ${props.dataset.unit}`,
+        `${formatAnomaly(-mapData.valueMax)} ${props.dataset.unit}`,
+      ],
+      calculable: false,
       textStyle: { color: t.muted },
       inRange: { color: [t.cold, t.neutral, t.warm] },
     },
     series: [
       {
         type: 'heatmap',
-        data: points,
-        itemStyle: { borderColor: t.surface, borderWidth: 0.5 },
+        data: chartPoints,
         emphasis: { itemStyle: { shadowBlur: 8, shadowColor: t.text } },
       },
     ],
@@ -161,44 +108,33 @@ const option = computed(() => {
 <template>
   <ChartShell :dataset="dataset" :summary="summary">
     <div class="map-content">
-      <p class="map-meta">
-        {{ messages.provenance.latestData }}: {{ record.end }} ·
-        {{ messages.provenance.periodBase }}:
-        {{ dataset.reference_period ?? '—' }}
-      </p>
-      <ClientOnly>
+      <ClientOnly v-if="mapData.points.length">
         <VChart class="map" :option="option" autoresize />
         <template #fallback>
           <div class="map-placeholder" aria-hidden="true" />
         </template>
       </ClientOnly>
-      <details class="table-fallback">
-        <summary>{{ messages.provenance.latestData }}</summary>
+      <details v-if="mapData.bands.length" class="table-fallback">
+        <summary>{{ messages.oisst.tableSummary }}</summary>
         <div class="table-wrap">
           <table>
             <caption>
               {{
-                dataset.variable
-              }}
-              ·
-              {{
-                record.end
+                messages.oisst.tableCaption(date)
               }}
             </caption>
             <thead>
               <tr>
-                <th scope="col">°</th>
-                <th v-for="longitude in visibleLongitudes" :key="longitude.index" scope="col">
-                  {{ display(longitude.value) }}°
-                </th>
+                <th scope="col">{{ messages.oisst.latitudeBand }}</th>
+                <th scope="col">{{ messages.oisst.mean }}</th>
+                <th scope="col">{{ messages.oisst.maximum }}</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="row in tableRows" :key="row.lat">
-                <th scope="row">{{ display(row.lat) }}°</th>
-                <td v-for="(value, index) in row.values" :key="visibleLongitudes[index]!.index">
-                  {{ display(value) }}
-                </td>
+              <tr v-for="band in mapData.bands" :key="band.start">
+                <th scope="row">{{ formatBand(band) }}</th>
+                <td>{{ formatAnomaly(band.mean) }} {{ dataset.unit }}</td>
+                <td>{{ formatAnomaly(band.maximum) }} {{ dataset.unit }}</td>
               </tr>
             </tbody>
           </table>
@@ -212,18 +148,13 @@ const option = computed(() => {
 .map-content {
   min-width: 0;
 }
-.map-meta {
-  margin: 0 0 8px;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-.map {
-  width: 100%;
-  height: clamp(320px, 52vw, 520px);
-}
+/* 40 x 44 cells of 0.5 degrees: the frame keeps them square. */
+.map,
 .map-placeholder {
   width: 100%;
-  height: clamp(320px, 52vw, 520px);
+  max-width: 640px;
+  margin: 0 auto;
+  aspect-ratio: 640 / 740;
 }
 .table-fallback {
   margin-top: 12px;
