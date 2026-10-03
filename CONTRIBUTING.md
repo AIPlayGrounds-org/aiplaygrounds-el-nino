@@ -8,8 +8,10 @@
 - A PR does one thing. If it depends on another open PR, branch from that one
   and say so in the description.
 - To add a source, follow [`docs/add-a-source.md`](docs/add-a-source.md).
-- A decision goes in [`docs/decisions.md`](docs/decisions.md), in the same PR
-  that applies it.
+- Read [`ROADMAP.md`](ROADMAP.md) before choosing work; it owns the target
+  architecture, stages and merge plan.
+- Follow the [merge plan](ROADMAP.md#merge-plan): merge commits only, signed,
+  never squash.
 
 ## Checks
 

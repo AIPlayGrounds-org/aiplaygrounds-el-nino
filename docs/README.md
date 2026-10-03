@@ -1,14 +1,14 @@
 # Documentation
 
-| Document                               | Answers                                                                           |
-| -------------------------------------- | --------------------------------------------------------------------------------- |
-| [`product.md`](product.md)             | What WawaPacha is, who it is for, and the rules for every chart.                  |
-| [`data-contract.md`](data-contract.md) | The rules a dataset follows and the contract of the published JSON.               |
-| [`add-a-source.md`](add-a-source.md)   | How to add a source, and the fields of the registry.                              |
-| [`concepts.md`](concepts.md)           | A glossary: anomaly, base period, ONI, ICEN…                                      |
-| [`decisions.md`](decisions.md)         | Why the project is the way it is.                                                 |
-| [`sources.md`](sources.md)             | The sources the pipeline reads. Generated from [`sources.toml`](../sources.toml). |
+| Document                               | Owns                                                |
+| -------------------------------------- | --------------------------------------------------- |
+| [`chart-rules.md`](chart-rules.md)     | The provenance and display rules for every chart.   |
+| [`data-contract.md`](data-contract.md) | The published dataset format and validation rules.  |
+| [`add-a-source.md`](add-a-source.md)   | The workflow for adding a registry source.          |
+| [`concepts.md`](concepts.md)           | The glossary for reading the data.                  |
+| [`sources.md`](sources.md)             | The generated catalog of sources in `sources.toml`. |
 
-The code is mapped in [`ARCHITECTURE.md`](../ARCHITECTURE.md). Branches and
-checks are in [`CONTRIBUTING.md`](../CONTRIBUTING.md). What is not built is in
-[`ROADMAP.md`](../ROADMAP.md).
+The product audience and principles are in [`PRODUCT.md`](../PRODUCT.md). The
+existing code map is in [`ARCHITECTURE.md`](../ARCHITECTURE.md), and unbuilt
+work is in [`ROADMAP.md`](../ROADMAP.md). Branches, checks and merges are in
+[`CONTRIBUTING.md`](../CONTRIBUTING.md).

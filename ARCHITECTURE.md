@@ -1,7 +1,8 @@
 # Architecture
 
 A data pipeline and a static site. There is no backend. This document is the
-code map: what each directory does and which boundaries the code keeps.
+code map: what each directory does and which boundaries the code keeps. The
+target architecture and unbuilt work live in [`ROADMAP.md`](ROADMAP.md).
 
 ```text
 public source
@@ -20,8 +21,8 @@ public source
 | [`pipeline/`](pipeline/)                                   | A Python package (uv). Downloads, validates and publishes.                                                                  |
 | [`notebooks/`](notebooks/)                                 | One marimo notebook per source. Imports the package and shows each step. Never writes to `data/`.                           |
 | [`data/`](data/)                                           | One JSON per source. If a download fails validation, the previous file stays.                                               |
-| [`web/`](web/)                                             | The web app: Nuxt 4 and Vue, with Bun. Charts and the v0.1 map use ECharts (`vue-echarts`).                                 |
-| [`docs/`](docs/README.md)                                  | Product, data contract, concepts, decisions and the source catalog.                                                         |
+| [`web/`](web/)                                             | The web app: Nuxt 4 and Vue, with Bun. The current ONI chart uses ECharts (`vue-echarts`).                                  |
+| [`docs/`](docs/README.md)                                  | Chart rules, data contract, concepts, source workflow and the source catalog.                                               |
 | [`.github/workflows/`](.github/workflows/)                 | `ci.yml` checks every PR. `deploy.yml` publishes `web/` to GitHub Pages on every push to `main`.                            |
 | [`mise.toml`](mise.toml)                                   | Pins the Bun and uv versions.                                                                                               |
 
@@ -49,19 +50,22 @@ public source
 - **`pipeline/` and `web/` meet only at `data/` and the schema.** The web does
   not import pipeline code, and the pipeline does not import web code. Whoever
   works on the web can use test data that satisfies the schema while the
-  pipeline finishes a source.
+  pipeline finishes a source. The JSON contract lets the Data and Web
+  workstreams move independently.
 - **A source's facts live only in `sources.toml`.** A module in `sources/` reads
   them from the registry and does not repeat them. A test checks that the
   published JSON matches its entry.
 - **One module per automatable source.** Discovery maps each automatable
   registry id to `sources/<id with hyphens replaced by underscores>.py`. A
   registry check fails when the module is missing or does not expose `ID`,
-  `fetch`, `parse` and `run`.
+  `fetch`, `parse` and `run`. Discovery keeps source work isolated and avoids a
+  shared dispatcher that every source branch must edit.
 - **Nothing is published without passing the schema.** `contract.publish()`
   validates before it writes. If validation fails, the previous JSON stays in
   `data/`.
 - **Notebooks hold no logic.** They import the package. A test fails if a
-  notebook defines a function or a class.
+  notebook defines a function or a class. Production does not depend on marimo,
+  while contributors can still inspect each pipeline step.
 - **Two files are generated, and CI fails when they are stale:**
   `docs/sources.md` (`uv run wawapacha-pipeline sources`, from `pipeline/`) and
   `web/app/types/dataset.ts` (`bun run types`, from `web/`).
@@ -69,15 +73,10 @@ public source
   ingestion time, and the page shows its age
   ([`web/app/pages/index.vue`](web/app/pages/index.vue)).
 - **No backend.** There are no accounts, no public API and no downloads of our
-  own.
+  own. Static JSON keeps visitor traffic independent of upstream availability
+  and rate limits.
 - **The browser loads only our JSON.** Scheduled ingestion fetches upstream
   sources and publishes due datasets before the static site build, so visitor
   traffic never calls an upstream API.
-- **The v0.1 map uses an ECharts canvas.** Its grid is 0.5 degrees over
-  20°N–25°S and 120°W–60°W, stored as JSON coordinates rounded to two decimals
-  and served gzip-compressed by the host.
-
-The reasons behind the layout are in
-[D-006](docs/decisions.md#d-006--the-pipeline-is-a-package-and-the-notebooks-show-it)
-and
-[D-008](docs/decisions.md#d-008--the-repository-is-organized-around-a-registry-and-a-schema).
+- **ECharts is the current chart renderer.** The planned v0.1 map's grid and
+  serving rules are in [`ROADMAP.md`](ROADMAP.md), not duplicated here.

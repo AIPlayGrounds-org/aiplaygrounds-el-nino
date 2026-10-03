@@ -1,8 +1,7 @@
 # Concepts for reading the data
 
 The ideas that recur across WawaPacha's sources. What is specific to one source,
-such as its format quirks, is in the notes of [`sources.md`](sources.md). The
-examples use real values consulted on 2026-10-01.
+such as its format quirks, is in the notes of [`sources.md`](sources.md).
 
 ## ENSO
 
@@ -47,9 +46,6 @@ does not say whether that is unusual and "+4.7 °C above normal" does. A high
 anomaly is **not a danger**: it says something is unusual, not what follows from
 it.
 
-**Example.** In the week centered on 23 September 2026, the sea in Niño 1+2 was
-at **25.4 °C**, **+4.7 °C** above the normal of about **20.7 °C** (NOAA CPC).
-
 ## Base period
 
 The span of years, usually 30, used to compute the "normal value" of an anomaly.
@@ -61,9 +57,9 @@ It is also called the **climatology**.
 | OISST (NOAA PSL), ERSST v5                        | 1971–2000                            |
 | ONI                                               | 30-year bases, updated every 5 years |
 
-**Rule:** two anomalies with different base periods **cannot be compared or
-subtracted directly**, because the "normal" of 1971–2000 is colder than the
-normal of 1991–2020. Every chart states its base period.
+Two anomalies with different base periods cannot be compared or subtracted
+directly, because the normal of 1971–2000 is colder than the normal of
+1991–2020.
 
 ## Three-month moving average
 
@@ -79,27 +75,25 @@ known until August ends.
 An official value above which a condition is declared. **WawaPacha does not
 invent thresholds.** It uses only those each institution publishes.
 
-**Example.** For NOAA, El Niño conditions exist when the ONI is **≥ +0.5 °C for
-at least five consecutive seasons**. From AMJ to JJA 2026 it was above +0.5 °C
-for three. That is **over the threshold**, but not enough for the ONI to
-**confirm** the episode.
+For NOAA, El Niño conditions exist when the ONI is **≥ +0.5 °C for at least five
+consecutive seasons**. Being over the threshold for fewer seasons does not
+confirm an episode.
 
 ## ENSO indices: ONI, RONI and ICEN
 
-| Index    | Who      | Region   | What it is                                                                                                                                                                              |
-| -------- | -------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **ONI**  | NOAA CPC | Niño 3.4 | The three-month moving average of the SST anomaly. The historical international reference.                                                                                              |
-| **RONI** | NOAA CPC | Niño 3.4 | Like the ONI, but with the average warming of the whole tropics subtracted, to separate El Niño from general ocean warming. NOAA now uses it for its official monitoring and forecasts. |
-| **ICEN** | ENFEN    | Niño 1+2 | The three-month moving average of the SST anomaly off Peru. The official Peruvian index for El Niño Costero.                                                                            |
+| Index    | Who      | Region   | What it is                                                                                                                  |
+| -------- | -------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **ONI**  | NOAA CPC | Niño 3.4 | The three-month moving average of the SST anomaly. The historical international reference.                                  |
+| **RONI** | NOAA CPC | Niño 3.4 | Like the ONI, but with the average warming of the whole tropics subtracted, to separate El Niño from general ocean warming. |
+| **ICEN** | ENFEN    | Niño 1+2 | The three-month moving average of the SST anomaly off Peru. The official Peruvian index for El Niño Costero.                |
 
-The ONI and the RONI can differ for a season. Shown together, the difference is
-explained.
+The ONI and the RONI can differ for a season because RONI removes the average
+warming of the tropical oceans.
 
 ## Data types
 
 Every published dataset has one of these types. The JSON uses the English
-contract value; the UI supplies the Spanish label. The types are never mixed on
-one line of a chart without telling them apart.
+contract value; the UI supplies the Spanish label.
 
 | Type          | What it is                                                                                                                 | Example                        |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
@@ -125,22 +119,16 @@ resolution** is how often there is a value: half-hourly to quarterly.
 ## Latency and revisions
 
 - **Latency:** the delay between the period a value describes and its
-  publication. The ONI for JJA comes out in early September, the one for JAS in
-  early October. A SENAMHI notice comes out before the event starts.
-- **Revisions:** recent values are often **preliminary**. OISST data less than
-  15 days old can change, and the latest ONI values can change for up to two
-  months.
-
-So the site shows **the period of the data**, not only the download date.
+  publication. A notice can be published before the event it describes.
+- **Revisions:** recent values can be preliminary and may change when the source
+  updates its analysis.
 
 ## Probabilistic forecast
 
-It gives **the probability of each outcome** instead of a single answer. For the
-OND 2026 season NOAA CPC gives 98 % to the strongest El Niño category (index ≥
-2.0 °C) and 2 % to the one below. The probabilities add up to 100 %. A high
-probability of El Niño **says nothing about the impacts in Peru**. A **model
-plume** shows one line per model, to see how much they agree. WawaPacha does not
-average models or build its own consensus.
+It gives **the probability of each outcome** instead of a single answer. The
+probabilities add up to 100 %. A high probability of El Niño **says nothing
+about the impacts in Peru**. A **model plume** shows one line per model, to see
+how much they agree.
 
 NOAA CPC publishes nine strength categories in this order. The pipeline keeps
 the category and its numeric bounds as data; it does not regroup them.
@@ -182,5 +170,5 @@ Three different things that must not be confused:
 | **Alert status** (_estado de alerta_)          | A condition declared by an official commission about a phenomenon under way or expected. | While the condition lasts. | The ENFEN alert system status.     |
 | **Emergency report** (_reporte de emergencia_) | A record of damage or impact that has already happened.                                  | **After** the event.       | INDECI COEN report.                |
 
-Every notice or alert has a **validity period**. An expired notice is never
-shown as current.
+Every notice or alert has a **validity period**. An expired notice is not
+current.
