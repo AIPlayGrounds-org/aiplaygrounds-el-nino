@@ -76,8 +76,8 @@ def _():
 
 @app.cell
 def _(raw, start, end):
-    latest = source.last_non_null_day(raw)
     records = source.parse(raw, start, end)
+    latest = source.last_non_null_day(records)
     records_frame = pl.DataFrame(records)
     mo.vstack(
         [

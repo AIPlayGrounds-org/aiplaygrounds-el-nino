@@ -255,8 +255,8 @@ Notes:
 - Always request `models=era5`. The default (`best_match`) mixes ERA5 with other
   models (IFS since 2017), and the documentation recommends ERA5 alone for long
   series.
-- The latest days arrive about 7 days late and come as `null`, never as zero. On
-  2026-10-01 the last day with data was 2026-09-24.
+- The latest days arrive about 6 days late and come as `null`, never as zero. On
+  2026-10-03 the last day with data was 2026-09-27.
 - The response carries the coordinates of the cell it used, which differ from
   the ones requested.
 - The pipeline requests one rounded Shapely representative point inside each of
