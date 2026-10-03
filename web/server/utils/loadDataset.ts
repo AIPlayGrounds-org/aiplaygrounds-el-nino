@@ -13,6 +13,9 @@ const datasetLoaders: { [Id in DatasetId]: () => Promise<unknown> } = {
     import("#data/enfen-communique.json").then(({ default: value }) => value),
   "limites-inei-ign": () =>
     import("#data/limites-inei-ign.json").then(({ default: value }) => value),
+  chirps: () => import("#data/chirps.json").then(({ default: value }) => value),
+  "open-meteo-era5": () =>
+    import("#data/open-meteo-era5.json").then(({ default: value }) => value),
   "noaa-oisst": () => import("#data/noaa-oisst.json").then(({ default: value }) => value),
   "open-meteo-glofas": () =>
     import("#data/open-meteo-glofas.json").then(({ default: value }) => value),

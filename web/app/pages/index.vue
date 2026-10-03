@@ -103,6 +103,7 @@ useSeoMeta({
         <div class="cover">
           <header class="topbar">
             <span class="brand">{{ messages.page.brand }}</span>
+            <NuxtLink to="/territorio">{{ messages.page.territoryLink }}</NuxtLink>
           </header>
           <section class="hero" aria-labelledby="oni-title">
             <h1 id="oni-title">{{ messages.page.title }}</h1>
@@ -556,16 +557,5 @@ thead th {
   font-family: var(--hand);
   font-size: 1.25rem;
   text-align: center;
-}
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 </style>

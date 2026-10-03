@@ -1,4 +1,5 @@
 import type { Dataset } from "~/types/dataset";
+import { formatDay } from "~/utils/format";
 
 export const messages = {
   dataType: {
@@ -89,6 +90,7 @@ export const messages = {
     enfenLink: "Comunicados oficiales de ENFEN",
     senamhiLink: "Avisos meteorológicos de SENAMHI",
     dataBy: "Por WawaPacha · Datos de la",
+    territoryLink: "Territorio",
     observedUntil: (period: string) => `observados hasta ${period}`,
     signoff: "WawaPacha · Monitoreando el Fenómeno El Niño en el Perú",
     peruBody:
@@ -99,6 +101,61 @@ export const messages = {
       "Usamos el Índice Oceánico El Niño (ONI) que publica el Climate Prediction Center de la NOAA, sin modificarlo. Los umbrales (±0,5 °C) y la regla de cinco trimestres seguidos son los de la NOAA; no usamos umbrales propios.",
     methodsBodyTwo:
       "La NOAA usa hoy el RONI, una variante de este índice que descuenta el calentamiento general del océano, para su monitoreo oficial. El ONI se mantiene como la serie histórica de referencia, y sus últimos trimestres pueden revisarse.",
+  },
+  attribution: {
+    openMeteoLabel: "Weather data by Open-Meteo.com",
+    openMeteoUrl: "https://open-meteo.com/",
+    credits: {
+      "open-meteo-era5":
+        "Contiene datos ERA5 del Copernicus Climate Change Service (C3S) y ECMWF.",
+      "open-meteo-glofas":
+        "Contiene datos GloFAS del Copernicus Emergency Management Service.",
+    } as Record<string, string>,
+  },
+  territory: {
+    seoTitle: "Lluvia por departamento · WawaPacha",
+    seoDescription:
+      "Explora la precipitación y su anomalía más reciente por departamento del Perú, con un cruce del periodo disponible de ERA5.",
+    sectionLabel: "Territorio",
+    title: "¿Dónde llovió?",
+    lead:
+      "Compara la precipitación y su anomalía más reciente por departamento. El mapa usa CHIRPS; ERA5 sirve como cruce del periodo disponible.",
+    metricGroup: "Métrica del mapa",
+    precipitation: "Precipitación",
+    anomaly: "Anomalía",
+    precipitationUnit: "mm",
+    anomalyUnit: "mm",
+    mapAria: (metric: string) => `Mapa de departamentos del Perú: ${metric}.`,
+    mapSummary: (metric: string, date: string) =>
+      `Mapa de la ${metric.toLowerCase()} más reciente por departamento, con datos CHIRPS hasta el ${formatDay(date)}.`,
+    boundaryProvenance: "Límites departamentales:",
+    boundaryLicense: "Licencia de los límites",
+    mapTooltip: (region: string, metric: string, precipitation: string, anomaly: string) =>
+      `<strong>${region}</strong><br/>${metric}<br/>Precipitación: ${precipitation}<br/>Anomalía: ${anomaly}`,
+    chirpsSummary: (metric: string, date: string, count: number) =>
+      `Tabla de ${metric.toLowerCase()} CHIRPS para ${count} departamentos. Último pentad: ${formatDay(date)}.`,
+    chirpsCaption: (date: string) =>
+      `Último registro CHIRPS por departamento, con fecha ${formatDay(date)}.`,
+    tableSection: "Tablas de datos por departamento",
+    tableSummary: "Ver la tabla de CHIRPS",
+    department: "Departamento",
+    code: "Código",
+    noData: "Sin dato",
+    loading: "Cargando el mapa…",
+    chartError: "No se pudo dibujar el mapa. La tabla de abajo conserva los datos.",
+    crossCheckTitle: "Cruce ERA5 del periodo disponible",
+    crossCheckLead: (days: number, start: string, end: string) =>
+      `Suma de los ${days} días disponibles, del ${formatDay(start)} al ${formatDay(end)}, junto al último valor de CHIRPS.`,
+    crossCheckCaption: "ERA5 es una muestra puntual de una celda de 0,25°, no un promedio departamental.",
+    chirpsValue: "CHIRPS más reciente",
+    era5Sum: "ERA5 · suma del periodo",
+    era5Unit: "mm",
+    era5Missing: (availableDays: number, missingDays: number) =>
+      `Sin dato completo: faltan ${missingDays} días; solo hay ${availableDays} disponibles.`,
+    sampleType: "Tipo de muestra",
+    pointSample: "Punto de celda de 0,25°",
+    era5Summary: (days: number, start: string, end: string, count: number) =>
+      `Cruce ERA5 de precipitación diaria: suma de los ${days} días disponibles, del ${formatDay(start)} al ${formatDay(end)}, para ${count} puntos departamentales. Cada valor es una muestra puntual de una celda de 0,25°.`,
   },
   panels: {
     weekly: {
