@@ -60,6 +60,23 @@
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/oniRecord" } } } }
     },
     {
+      "if": { "properties": { "id": { "const": "noaa-oisst" } } },
+      "then": {
+        "properties": {
+          "records": {
+            "items": {
+              "$ref": "#/$defs/gridRecord",
+              "properties": {
+                "lat": { "minItems": 90, "maxItems": 90 },
+                "lon": { "minItems": 120, "maxItems": 120 },
+                "anomaly": { "minItems": 90, "maxItems": 90, "items": { "minItems": 120, "maxItems": 120 } }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "if": { "properties": { "id": { "const": "noaa-ersst" } } },
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/ersstRecord" } } } }
     }
@@ -69,6 +86,11 @@
       "description": "A month in ISO 8601: YYYY-MM.",
       "type": "string",
       "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+    },
+    "day": {
+      "description": "A day in ISO 8601: YYYY-MM-DD.",
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
     },
     "record": {
       "title": "DatasetRecord",
@@ -93,6 +115,39 @@
         "end": { "$ref": "#/$defs/month" },
         "sst": { "description": "Sea surface temperature in Niño 3.4, in °C.", "type": "number" },
         "anomaly": { "description": "Anomaly of that temperature, in °C.", "type": "number" }
+      }
+    },
+    "gridRecord": {
+      "title": "GridRecord",
+      "description": "One day of a regular lat/lon grid. anomaly[i][j] is the cell at lat[i] and lon[j], in °C and rounded to 2 decimals, or null where there is no value (land).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "lat", "lon", "anomaly"],
+      "properties": {
+        "start": { "$ref": "#/$defs/day" },
+        "end": { "$ref": "#/$defs/day" },
+        "lat": {
+          "description": "Latitude of each row, in °N, from south to north.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "number", "minimum": -90, "maximum": 90 }
+        },
+        "lon": {
+          "description": "Longitude of each column, in °E, negative to the west, from west to east.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "number", "minimum": -180, "maximum": 180 }
+        },
+        "anomaly": {
+          "description": "Anomaly in °C, one row per lat and one value per lon in each row.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": ["number", "null"] }
+          }
+        }
       }
     },
     "ersstRecord": {

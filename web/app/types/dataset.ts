@@ -51,6 +51,13 @@ export type Dataset = {
  * via the `definition` "month".
  */
 export type Month = string
+/**
+ * A day in ISO 8601: YYYY-MM-DD.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "day".
+ */
+export type Day = string
 
 /**
  * A value and the period it describes. The other fields depend on the source.
@@ -90,6 +97,34 @@ export interface OniRecord {
    * Anomaly of that temperature, in °C.
    */
   anomaly: number
+}
+/**
+ * One day of a regular lat/lon grid. anomaly[i][j] is the cell at lat[i] and lon[j], in °C and rounded to 2 decimals, or null where there is no value (land).
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "gridRecord".
+ */
+export interface GridRecord {
+  start: Day
+  end: Day
+  /**
+   * Latitude of each row, in °N, from south to north.
+   *
+   * @minItems 1
+   */
+  lat: [number, ...number[]]
+  /**
+   * Longitude of each column, in °E, negative to the west, from west to east.
+   *
+   * @minItems 1
+   */
+  lon: [number, ...number[]]
+  /**
+   * Anomaly in °C, one row per lat and one value per lon in each row.
+   *
+   * @minItems 1
+   */
+  anomaly: [[number | null, ...(number | null)[]], ...[number | null, ...(number | null)[]][]]
 }
 /**
  * One monthly ERSSTv5 anomaly for the four Niño regions.
