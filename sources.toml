@@ -400,7 +400,6 @@ notes = [
   "Values below 0 or above 2,000 mm/day are rejected for review and never clipped. The published JSON is kept below 200 KiB gzip.",
   "Attribution: a “Weather data by Open-Meteo.com” link to https://open-meteo.com/ and credit to ERA5 and the Copernicus Climate Change Service.",
   "Limits: 600 calls per minute, 5,000 per hour, 10,000 per day and 300,000 per month.",
-  "CC BY 4.0. Free tier use is non-commercial only; the site remains non-commercial.",
   "Open-Meteo is an intermediary. If its terms change, the original source is the Copernicus CDS, which needs an account.",
 ]
 

@@ -272,8 +272,6 @@ Notes:
   Service.
 - Limits: 600 calls per minute, 5,000 per hour, 10,000 per day and 300,000 per
   month.
-- CC BY 4.0. Free tier use is non-commercial only; the site remains
-  non-commercial.
 - Open-Meteo is an intermediary. If its terms change, the original source is the
   Copernicus CDS, which needs an account.
 
