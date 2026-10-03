@@ -8,7 +8,7 @@ import os
 import re
 import urllib.request
 import zipfile
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 from shapely import coverage_is_valid, coverage_simplify
@@ -16,7 +16,13 @@ from shapely.geometry import mapping, shape
 from shapely.validation import explain_validity
 
 from wawapacha_pipeline import registry
-from wawapacha_pipeline.contract import DATA_DIR, ValidationError, publish as contract_publish
+from wawapacha_pipeline.contract import (
+    DATA_DIR,
+    ValidationError,
+)
+from wawapacha_pipeline.contract import (
+    publish as contract_publish,
+)
 
 VERSION = "0.2.0"
 ID = "limites-inei-ign"
@@ -46,13 +52,15 @@ def fetch(url: str = URL, timeout: int = 60) -> bytes:
     except ValidationError:
         raise
     except (OSError, TimeoutError) as error:
-        raise ValidationError(f"Could not download the boundary ZIP: {error}") from error
+        raise ValidationError(
+            f"Could not download the boundary ZIP: {error}"
+        ) from error
 
 
 def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     """Validate, simplify and publish the one geometry record."""
     parsed = parse(fetch())
-    dataset = build(parsed, ingestion_time or datetime.now(timezone.utc))
+    dataset = build(parsed, ingestion_time or datetime.now(UTC))
     return len(dataset["records"]), publish(dataset)
 
 
@@ -74,7 +82,9 @@ def parse(payload: bytes) -> dict:
     try:
         archive = zipfile.ZipFile(io.BytesIO(payload))
     except (TypeError, zipfile.BadZipFile, ValueError) as error:
-        raise ValidationError(f"The download is not a valid ZIP archive: {error}") from error
+        raise ValidationError(
+            f"The download is not a valid ZIP archive: {error}"
+        ) from error
 
     with archive:
         names = archive.namelist()
@@ -84,7 +94,9 @@ def parse(payload: bytes) -> dict:
             _check_member_name(name)
         missing = EXPECTED_MEMBERS - set(names)
         if missing:
-            raise ValidationError(f"The ZIP archive is missing expected members: {sorted(missing)}.")
+            raise ValidationError(
+                f"The ZIP archive is missing expected members: {sorted(missing)}."
+            )
 
         layers = {
             name: _read_layer(archive.read(name), name)
@@ -139,7 +151,7 @@ def build(parsed: dict, ingestion_time: datetime) -> dict:
         "data_type": SOURCE["data_type"],
         "spatial_resolution": SOURCE["spatial_resolution"],
         "temporal_resolution": SOURCE["temporal_resolution"],
-        "ingestion_time": ingestion_time.astimezone(timezone.utc).isoformat(timespec="seconds"),
+        "ingestion_time": ingestion_time.astimezone(UTC).isoformat(timespec="seconds"),
         "processing_version": VERSION,
         "records": [record],
     }
@@ -201,17 +213,23 @@ def _validate_layer(layer: dict, member: str) -> dict:
         normalized_properties = {"name": name.strip(), "code": code}
         if member == "per_admin2.geojson":
             normalized_properties["parent"] = code[:4]
-        normalized_features.append({
-            "type": "Feature",
-            "properties": normalized_properties,
-            "geometry": feature["geometry"],
-        })
+        normalized_features.append(
+            {
+                "type": "Feature",
+                "properties": normalized_properties,
+                "geometry": feature["geometry"],
+            }
+        )
     return {"type": "FeatureCollection", "features": normalized_features}
 
 
 def _validate_metadata(properties: dict, label: str) -> None:
     for key in ("valid_on", "version", "lang"):
-        if key not in properties or not isinstance(properties[key], str) or not properties[key].strip():
+        if (
+            key not in properties
+            or not isinstance(properties[key], str)
+            or not properties[key].strip()
+        ):
             raise ValidationError(f"{label}: {key} must be a non-empty string.")
     try:
         date.fromisoformat(properties["valid_on"])
@@ -228,22 +246,33 @@ def _validate_common_metadata(layers: dict[str, dict]) -> dict:
     for member in sorted(layers):
         for feature in layers[member]["features"]:
             properties = feature["properties"]
-            values.append((properties["valid_on"], properties["version"], properties["lang"]))
+            values.append(
+                (properties["valid_on"], properties["version"], properties["lang"])
+            )
     first = values[0]
     if any(value != first for value in values[1:]):
-        raise ValidationError("valid_on, version and lang must be consistent across both layers.")
+        raise ValidationError(
+            "valid_on, version and lang must be consistent across both layers."
+        )
     return {"valid_on": first[0], "version": first[1], "lang": first[2]}
 
 
 def _round_geometry(geometry: dict) -> dict:
     """Keep four decimal places, as specified for the map payload."""
+
     def round_coordinates(value):
         if (
             isinstance(value, (list, tuple))
             and len(value) >= 2
-            and all(isinstance(number, (int, float)) and not isinstance(number, bool) for number in value[:2])
+            and all(
+                isinstance(number, (int, float)) and not isinstance(number, bool)
+                for number in value[:2]
+            )
         ):
-            return [round(number, 4) if isinstance(number, (int, float)) else number for number in value]
+            return [
+                round(number, 4) if isinstance(number, (int, float)) else number
+                for number in value
+            ]
         if isinstance(value, (list, tuple)):
             return [round_coordinates(child) for child in value]
         return value
@@ -252,17 +281,26 @@ def _round_geometry(geometry: dict) -> dict:
 
 
 def _validate_parent_codes(departments: dict, provinces: dict) -> None:
-    department_codes = {feature["properties"]["code"] for feature in departments["features"]}
+    department_codes = {
+        feature["properties"]["code"] for feature in departments["features"]
+    }
     for feature in provinces["features"]:
         parent = feature["properties"]["parent"]
         if parent not in department_codes:
-            raise ValidationError(f"Province parent code {parent!r} is not a department code.")
+            raise ValidationError(
+                f"Province parent code {parent!r} is not a department code."
+            )
 
 
 def _validate_geometry(geometry: object, label: str) -> None:
-    if not isinstance(geometry, dict) or geometry.get("type") not in {"Polygon", "MultiPolygon"}:
+    if not isinstance(geometry, dict) or geometry.get("type") not in {
+        "Polygon",
+        "MultiPolygon",
+    }:
         found = geometry.get("type") if isinstance(geometry, dict) else None
-        raise ValidationError(f"{label}: geometry must be Polygon or MultiPolygon, got {found!r}.")
+        raise ValidationError(
+            f"{label}: geometry must be Polygon or MultiPolygon, got {found!r}."
+        )
     coordinates = geometry.get("coordinates")
     if not coordinates:
         raise ValidationError(f"{label}: geometry coordinates cannot be empty.")
@@ -270,16 +308,24 @@ def _validate_geometry(geometry: object, label: str) -> None:
     try:
         parsed = shape(geometry)
     except Exception as error:
-        raise ValidationError(f"{label}: geometry could not be parsed: {error}.") from error
+        raise ValidationError(
+            f"{label}: geometry could not be parsed: {error}."
+        ) from error
     if parsed.is_empty or parsed.area <= 0:
         raise ValidationError(f"{label}: geometry must have non-zero area.")
 
     if not parsed.is_valid:
-        raise ValidationError(f"{label}: invalid polygon topology ({explain_validity(parsed)}).")
+        raise ValidationError(
+            f"{label}: invalid polygon topology ({explain_validity(parsed)})."
+        )
 
 
 def _validate_coordinate_structure(geometry: dict, label: str) -> None:
-    polygons = [geometry["coordinates"]] if geometry["type"] == "Polygon" else geometry["coordinates"]
+    polygons = (
+        [geometry["coordinates"]]
+        if geometry["type"] == "Polygon"
+        else geometry["coordinates"]
+    )
     if not isinstance(polygons, list) or not polygons:
         raise ValidationError(f"{label}: geometry has no polygons.")
     for polygon in polygons:
@@ -295,7 +341,9 @@ def _validate_ring(ring: object, label: str) -> None:
     points = []
     for point in ring:
         if not isinstance(point, (list, tuple)) or len(point) < 2:
-            raise ValidationError(f"{label}: every position needs longitude and latitude.")
+            raise ValidationError(
+                f"{label}: every position needs longitude and latitude."
+            )
         longitude, latitude = point[:2]
         if (
             not isinstance(longitude, (int, float))
@@ -316,10 +364,13 @@ def _validate_ring(ring: object, label: str) -> None:
 
 
 def _ring_area(points: list[tuple[float, float]]) -> float:
-    return sum(
-        first[0] * second[1] - second[0] * first[1]
-        for first, second in zip(points, points[1:])
-    ) / 2
+    return (
+        sum(
+            first[0] * second[1] - second[0] * first[1]
+            for first, second in zip(points, points[1:], strict=False)
+        )
+        / 2
+    )
 
 
 def _simplify(collection: dict, label: str) -> dict:
@@ -330,20 +381,29 @@ def _simplify(collection: dict, label: str) -> dict:
             SIMPLIFICATION_TOLERANCE,
         )
     except Exception as error:
-        raise ValidationError(f"Could not simplify {label} coverage: {error}.") from error
+        raise ValidationError(
+            f"Could not simplify {label} coverage: {error}."
+        ) from error
 
     features = []
-    for feature, simplified in zip(collection["features"], simplified_geometries, strict=True):
-        features.append({
-            "type": "Feature",
-            "properties": feature["properties"],
-            "geometry": mapping(simplified),
-        })
+    for feature, simplified in zip(
+        collection["features"], simplified_geometries, strict=True
+    ):
+        features.append(
+            {
+                "type": "Feature",
+                "properties": feature["properties"],
+                "geometry": mapping(simplified),
+            }
+        )
     return {"type": "FeatureCollection", "features": features}
 
 
 def _validate_simplified(collection: dict, label: str) -> None:
-    if not isinstance(collection, dict) or collection.get("type") != "FeatureCollection":
+    if (
+        not isinstance(collection, dict)
+        or collection.get("type") != "FeatureCollection"
+    ):
         raise ValidationError(f"Simplified {label} is not a FeatureCollection.")
     features = collection.get("features")
     if not isinstance(features, list):
@@ -370,4 +430,6 @@ def _validate_cross_feature_geometry(collection: dict, label: str) -> None:
     """Require the simplified features to remain a valid polygon coverage."""
     geometries = [shape(feature["geometry"]) for feature in collection["features"]]
     if not coverage_is_valid(geometries):
-        raise ValidationError(f"Simplified {label}: features overlap or have mismatched boundaries.")
+        raise ValidationError(
+            f"Simplified {label}: features overlap or have mismatched boundaries."
+        )

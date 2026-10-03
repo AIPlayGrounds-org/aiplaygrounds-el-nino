@@ -4,7 +4,7 @@ import os
 import subprocess
 import sys
 import threading
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
@@ -23,7 +23,7 @@ SAMPLES = Path(__file__).parent / "samples"
 # climatology for 1 October.
 SST = (SAMPLES / "oisst.sst.day.mean.2026.nc").read_bytes()
 CLIMATOLOGY = (SAMPLES / "oisst.sst.day.mean.ltm.1991-2020.nc").read_bytes()
-NOW = datetime(2026, 10, 2, 12, tzinfo=timezone.utc)
+NOW = datetime(2026, 10, 2, 12, tzinfo=UTC)
 
 OCEAN = (0.125, 260.125)  # a cell in the open Pacific, in the source's own axes
 LIMIT = 20 * 1024
@@ -79,7 +79,10 @@ class Upstream:
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
 
     def query(self, number: int) -> dict[str, str]:
-        return {key: values[0] for key, values in parse_qs(urlsplit(self.requests[number]).query).items()}
+        return {
+            key: values[0]
+            for key, values in parse_qs(urlsplit(self.requests[number]).query).items()
+        }
 
 
 @pytest.fixture
@@ -92,10 +95,17 @@ def upstream():
 
 def run_cli(upstream: Upstream, data_dir: Path) -> subprocess.CompletedProcess:
     """Run the CLI as in production, reading from `upstream` and publishing to `data_dir`."""
-    env = os.environ | {"NOAA_OISST_URL": upstream.url, "WAWAPACHA_DATA_DIR": str(data_dir)}
+    env = os.environ | {
+        "NOAA_OISST_URL": upstream.url,
+        "WAWAPACHA_DATA_DIR": str(data_dir),
+    }
     return subprocess.run(
         [sys.executable, "-m", "wawapacha_pipeline", "run", "noaa-oisst"],
-        cwd=PIPELINE_DIR, env=env, capture_output=True, text=True, encoding="utf-8",
+        cwd=PIPELINE_DIR,
+        env=env,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
     )
 
 
@@ -106,7 +116,9 @@ def test_reads_the_real_files(sst, climatology):
     assert len(record["lat"]) == 90 and len(record["lon"]) == 120
     assert (record["lat"][0], record["lat"][-1]) == (-24.75, 19.75)
     assert (record["lon"][0], record["lon"][-1]) == (-119.75, -60.25)
-    assert len(record["anomaly"]) == 90 and all(len(row) == 120 for row in record["anomaly"])
+    assert len(record["anomaly"]) == 90 and all(
+        len(row) == 120 for row in record["anomaly"]
+    )
     assert record["anomaly"][0][:5] == [-0.65, -0.68, -0.67, -0.51, -0.23]
     assert record["anomaly"][45][60] == 5.47
 
@@ -129,7 +141,10 @@ def test_land_is_null_and_ocean_has_a_value(sst, climatology):
     row, column = (record["lat"].index(-10.25), record["lon"].index(-75.25))
 
     assert record["anomaly"][row][column] is None
-    assert record["anomaly"][record["lat"].index(-0.25)][record["lon"].index(-100.25)] is not None
+    assert (
+        record["anomaly"][record["lat"].index(-0.25)][record["lon"].index(-100.25)]
+        is not None
+    )
     assert sum(value is None for line in record["anomaly"] for value in line) == 2594
 
 
@@ -151,7 +166,9 @@ def test_block_means_ignore_missing_cells():
 def test_block_means_are_rounded_to_two_decimals_and_never_negative_zero():
     nan = float("nan")
 
-    grid = oisst.block_means(np.array([[0.123, 0.123, -0.001, nan], [0.124, 0.123, nan, nan]]))
+    grid = oisst.block_means(
+        np.array([[0.123, 0.123, -0.001, nan], [0.124, 0.123, nan, nan]])
+    )
 
     assert grid == [[0.12, 0.0]]
     assert str(grid[0][1]) == "0.0"
@@ -162,14 +179,17 @@ def test_a_missing_value_in_either_file_gives_null(sst, climatology):
     climatology.variables["sst"][cell(climatology, 0, 0.125, 260.375)] = np.nan
 
     kept = [
-        float(sst.variables["sst"][cell(sst, 1, 0.375, lon)]) - float(climatology.variables["sst"][cell(climatology, 0, 0.375, lon)])
+        float(sst.variables["sst"][cell(sst, 1, 0.375, lon)])
+        - float(climatology.variables["sst"][cell(climatology, 0, 0.375, lon)])
         for lon in (260.125, 260.375)
     ]
 
     record = anomaly_record(sst, climatology)
 
     # The 2 × 2 block of lat 0.25, lon -99.75 has two missing cells: it is the mean of the other two.
-    assert record["anomaly"][record["lat"].index(0.25)][record["lon"].index(-99.75)] == round(sum(kept) / 2, 2)
+    assert record["anomaly"][record["lat"].index(0.25)][
+        record["lon"].index(-99.75)
+    ] == round(sum(kept) / 2, 2)
 
 
 def test_a_fill_value_counts_as_missing(sst, climatology):
@@ -180,7 +200,10 @@ def test_a_fill_value_counts_as_missing(sst, climatology):
 
     record = anomaly_record(sst, climatology)
 
-    assert record["anomaly"][record["lat"].index(0.25)][record["lon"].index(-99.75)] is None
+    assert (
+        record["anomaly"][record["lat"].index(0.25)][record["lon"].index(-99.75)]
+        is None
+    )
 
 
 def test_rejects_a_file_that_is_not_netcdf():
@@ -283,7 +306,9 @@ def test_29_february_uses_the_climatology_of_28_february(climatology):
 def test_rejects_an_sst_out_of_range(sst, climatology):
     sst.variables["sst"][cell(sst, 1, *OCEAN)] = 50.0
 
-    with pytest.raises(ValidationError, match=r"SST out of range at lat 0.125, lon -99.875 \(50.0 °C\)"):
+    with pytest.raises(
+        ValidationError, match=r"SST out of range at lat 0.125, lon -99.875 \(50.0 °C\)"
+    ):
         anomaly_record(sst, climatology)
 
 
@@ -354,7 +379,14 @@ def test_publish_writes_the_json_under_the_size_limit(tmp_path):
         (lambda record: record["anomaly"].pop(), "anomaly"),
         (lambda record: record["anomaly"][0].pop(), "anomaly/0"),
     ],
-    ids=["no-lat", "text-cell", "month-instead-of-day", "longitude-in-0-360", "missing-row", "short-row"],
+    ids=[
+        "no-lat",
+        "text-cell",
+        "month-instead-of-day",
+        "longitude-in-0-360",
+        "missing-row",
+        "short-row",
+    ],
 )
 def test_publish_rejects_a_grid_that_breaks_the_grid_schema(tmp_path, change, where):
     dataset = oisst.build(oisst.parse(SST, CLIMATOLOGY), NOW)
@@ -366,24 +398,34 @@ def test_publish_rejects_a_grid_that_breaks_the_grid_schema(tmp_path, change, wh
     assert list(tmp_path.iterdir()) == []
 
 
-def test_fetch_asks_for_the_region_the_last_days_and_the_climatology_of_the_latest_day(upstream):
+def test_fetch_asks_for_the_region_the_last_days_and_the_climatology_of_the_latest_day(
+    upstream,
+):
     sst, climatology = oisst.fetch(NOW, upstream.url)
 
     assert (sst, climatology) == (SST, CLIMATOLOGY)
-    assert [urlsplit(request).path.rsplit("/", 1)[-1] for request in upstream.requests] == [
+    assert [
+        urlsplit(request).path.rsplit("/", 1)[-1] for request in upstream.requests
+    ] == [
         "sst.day.mean.2026.nc",
         "sst.day.mean.ltm.1991-2020.nc",
     ]
     assert upstream.query(0) == {
-        "var": "sst", "north": "20.0", "south": "-25.0", "west": "240.0", "east": "300.0",
-        "horizStride": "1", "accept": "netcdf",
-        "time_start": "2026-09-29T00:00:00Z", "time_end": "2026-10-02T00:00:00Z",
+        "var": "sst",
+        "north": "20.0",
+        "south": "-25.0",
+        "west": "240.0",
+        "east": "300.0",
+        "horizStride": "1",
+        "accept": "netcdf",
+        "time_start": "2026-09-29T00:00:00Z",
+        "time_end": "2026-10-02T00:00:00Z",
     }
     assert upstream.query(1)["time"] == "0001-10-01T00:00:00Z"
 
 
 def test_in_early_january_fetch_reads_the_previous_years_file(upstream):
-    oisst.fetch(datetime(2027, 1, 2, tzinfo=timezone.utc), upstream.url)
+    oisst.fetch(datetime(2027, 1, 2, tzinfo=UTC), upstream.url)
 
     assert urlsplit(upstream.requests[0]).path.endswith("/sst.day.mean.2026.nc")
     assert upstream.query(0)["time_start"] == "2026-12-30T00:00:00Z"
@@ -424,10 +466,17 @@ def test_the_published_json_is_the_registered_source_and_under_the_size_limit():
 
 
 def test_notebook_runs_to_the_end_without_publishing(upstream, tmp_path):
-    env = os.environ | {"NOAA_OISST_URL": upstream.url, "WAWAPACHA_DATA_DIR": str(tmp_path)}
+    env = os.environ | {
+        "NOAA_OISST_URL": upstream.url,
+        "WAWAPACHA_DATA_DIR": str(tmp_path),
+    }
 
     result = subprocess.run(
-        [sys.executable, str(NOTEBOOK)], env=env, capture_output=True, text=True, encoding="utf-8",
+        [sys.executable, str(NOTEBOOK)],
+        env=env,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
     )
 
     assert result.returncode == 0, result.stderr

@@ -12,7 +12,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 import numpy as np
@@ -35,7 +35,9 @@ BASELINE_PATH = Path(
     )
 )
 BOUNDARIES_PATH = Path(
-    os.environ.get("CHIRPS_BOUNDARIES_PATH", REPO_ROOT / "data" / "limites-inei-ign.json")
+    os.environ.get(
+        "CHIRPS_BOUNDARIES_PATH", REPO_ROOT / "data" / "limites-inei-ign.json"
+    )
 )
 MISSING_VALUE = -9999.0
 MAX_VALUE = 5000.0
@@ -63,7 +65,9 @@ class Pentad:
     def end(self) -> date:
         if self.number < 6:
             return date(self.year, self.month, self.number * 5)
-        return date(self.year, self.month, calendar.monthrange(self.year, self.month)[1])
+        return date(
+            self.year, self.month, calendar.monthrange(self.year, self.month)[1]
+        )
 
     @property
     def key(self) -> str:
@@ -92,9 +96,16 @@ def _request(url: str, timeout: int = 60, retries: int = 3) -> bytes:
                 return response.read()
         except ValidationError:
             raise
-        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError) as error:
+        except (
+            urllib.error.HTTPError,
+            urllib.error.URLError,
+            TimeoutError,
+            OSError,
+        ) as error:
             last_error = error
-    raise ValidationError(f"Could not download {url} after {retries} attempts: {last_error}")
+    raise ValidationError(
+        f"Could not download {url} after {retries} attempts: {last_error}"
+    )
 
 
 def fetch(url: str = INDEX_URL, timeout: int = 60, retries: int = 3) -> bytes:
@@ -108,7 +119,9 @@ def discover(index: str | bytes, base_url: str = INDEX_URL) -> list[Pentad]:
         try:
             index = index.decode("utf-8")
         except UnicodeDecodeError as error:
-            raise ValidationError(f"The CHIRPS directory listing is not UTF-8: {error}.") from error
+            raise ValidationError(
+                f"The CHIRPS directory listing is not UTF-8: {error}."
+            ) from error
 
     directory = base_url if base_url.endswith("/") else f"{base_url}/"
     found: dict[tuple[int, int, int], Pentad] = {}
@@ -125,7 +138,9 @@ def discover(index: str | bytes, base_url: str = INDEX_URL) -> list[Pentad]:
         found[key] = Pentad(year, month, number, url)
 
     if not found:
-        raise ValidationError("The CHIRPS directory listing contains no preliminary pentads.")
+        raise ValidationError(
+            "The CHIRPS directory listing contains no preliminary pentads."
+        )
     return sorted(found.values())
 
 
@@ -133,9 +148,13 @@ def select_window(pentads: list[Pentad], months: int = WINDOW_MONTHS) -> list[Pe
     """Select the rolling window ending at the newest file in the listing."""
     latest_month = date(pentads[-1].year, pentads[-1].month, 1)
     first_month = _shift_month(latest_month, -(months - 1))
-    selected = [p for p in pentads if first_month <= date(p.year, p.month, 1) <= latest_month]
+    selected = [
+        p for p in pentads if first_month <= date(p.year, p.month, 1) <= latest_month
+    ]
     if not selected:
-        raise ValidationError("The CHIRPS listing has no pentads in the rolling window.")
+        raise ValidationError(
+            "The CHIRPS listing has no pentads in the rolling window."
+        )
     return selected
 
 
@@ -150,9 +169,13 @@ def load_boundaries(path: Path = BOUNDARIES_PATH) -> list[dict]:
         payload = json.loads(path.read_text(encoding="utf-8"))
         features = payload["records"][0]["departamentos"]["features"]
     except (OSError, KeyError, TypeError, IndexError, json.JSONDecodeError) as error:
-        raise ValidationError(f"Could not read departamento boundaries from {path}: {error}") from error
+        raise ValidationError(
+            f"Could not read departamento boundaries from {path}: {error}"
+        ) from error
     if not isinstance(features, list) or len(features) != EXPECTED_DEPARTMENTS:
-        raise ValidationError(f"Expected {EXPECTED_DEPARTMENTS} departamento boundaries, found {len(features) if isinstance(features, list) else 'invalid'}.")
+        raise ValidationError(
+            f"Expected {EXPECTED_DEPARTMENTS} departamento boundaries, found {len(features) if isinstance(features, list) else 'invalid'}."
+        )
     normalized = []
     codes = set()
     for feature in features:
@@ -165,7 +188,9 @@ def load_boundaries(path: Path = BOUNDARIES_PATH) -> list[dict]:
         except (KeyError, TypeError, ValueError) as error:
             raise ValidationError(f"Invalid departamento boundary: {error}") from error
         if not isinstance(name, str) or not isinstance(code, str) or code in codes:
-            raise ValidationError("Departamento boundaries need unique names and codes.")
+            raise ValidationError(
+                "Departamento boundaries need unique names and codes."
+            )
         if parsed.is_empty or not parsed.is_valid:
             raise ValidationError(f"Invalid geometry for departamento {code}.")
         codes.add(code)
@@ -182,8 +207,12 @@ def aggregate(raw: bytes, boundaries: list[dict]) -> dict[str, float | None]:
                 data = source.read(1, masked=False).astype(float)
                 valid = np.isfinite(data) & (data != MISSING_VALUE)
                 values = data[valid]
-                if values.size and (float(values.min()) < 0 or float(values.max()) > MAX_VALUE):
-                    raise ValidationError("CHIRPS rainfall must be between 0 and 5,000 mm per pentad.")
+                if values.size and (
+                    float(values.min()) < 0 or float(values.max()) > MAX_VALUE
+                ):
+                    raise ValidationError(
+                        "CHIRPS rainfall must be between 0 and 5,000 mm per pentad."
+                    )
                 result = {}
                 for boundary in boundaries:
                     mask = geometry_mask(
@@ -199,7 +228,9 @@ def aggregate(raw: bytes, boundaries: list[dict]) -> dict[str, float | None]:
                     )
                 return result
         except rasterio.errors.RasterioIOError as error:
-            raise ValidationError(f"The CHIRPS download is not a readable GeoTIFF: {error}") from error
+            raise ValidationError(
+                f"The CHIRPS download is not a readable GeoTIFF: {error}"
+            ) from error
 
 
 def _validate_raster(source: rasterio.DatasetReader) -> None:
@@ -207,9 +238,15 @@ def _validate_raster(source: rasterio.DatasetReader) -> None:
         raise ValidationError("CHIRPS files must be single-band GeoTIFFs.")
     if source.crs is None or source.crs.to_epsg() != 4326:
         raise ValidationError("CHIRPS GeoTIFFs must use EPSG:4326.")
-    if not np.isclose(source.res[0], 0.05, atol=0.0001) or not np.isclose(source.res[1], 0.05, atol=0.0001):
+    if not np.isclose(source.res[0], 0.05, atol=0.0001) or not np.isclose(
+        source.res[1], 0.05, atol=0.0001
+    ):
         raise ValidationError("CHIRPS GeoTIFFs must have 0.05 degree cells.")
-    if source.width < 1 or source.height < 1 or not all(math.isfinite(v) for v in source.bounds):
+    if (
+        source.width < 1
+        or source.height < 1
+        or not all(math.isfinite(v) for v in source.bounds)
+    ):
         raise ValidationError("CHIRPS GeoTIFF has invalid dimensions or bounds.")
 
 
@@ -219,7 +256,9 @@ def load_baseline(path: Path = BASELINE_PATH) -> dict[str, dict[str, float | Non
         payload = json.loads(path.read_text(encoding="utf-8"))
         rows = payload["records"]
     except (OSError, KeyError, TypeError, json.JSONDecodeError) as error:
-        raise ValidationError(f"Could not read CHIRPS baseline from {path}: {error}") from error
+        raise ValidationError(
+            f"Could not read CHIRPS baseline from {path}: {error}"
+        ) from error
     baseline = {}
     for row in rows:
         if not isinstance(row, dict):
@@ -237,13 +276,17 @@ def load_baseline(path: Path = BASELINE_PATH) -> dict[str, dict[str, float | Non
             )
         for code, value in values.items():
             if not re.fullmatch(r"PE\d{2}", code):
-                raise ValidationError(f"Baseline {key} has an invalid department code {code!r}.")
+                raise ValidationError(
+                    f"Baseline {key} has an invalid department code {code!r}."
+                )
             if value is not None and (
                 not isinstance(value, (int, float))
                 or not math.isfinite(value)
                 or not 0 <= value <= MAX_VALUE
             ):
-                raise ValidationError(f"Baseline {key} has an invalid rainfall value for {code}.")
+                raise ValidationError(
+                    f"Baseline {key} has an invalid rainfall value for {code}."
+                )
         baseline[key] = values
     if set(baseline) != EXPECTED_BASELINE_KEYS:
         missing = sorted(EXPECTED_BASELINE_KEYS - set(baseline))
@@ -264,7 +307,9 @@ def parse(
     if not files:
         raise ValidationError("No CHIRPS pentads were supplied.")
     if len(boundaries) != EXPECTED_DEPARTMENTS:
-        raise ValidationError(f"Expected 25 department boundaries, found {len(boundaries)}.")
+        raise ValidationError(
+            f"Expected 25 department boundaries, found {len(boundaries)}."
+        )
     records = []
     for pentad, raw in files:
         values = aggregate(raw, boundaries)
@@ -272,7 +317,9 @@ def parse(
             code = boundary["code"]
             value = values[code]
             normal = baseline.get(pentad.key, {}).get(code)
-            anomaly = None if value is None or normal is None else round(value - normal, 1)
+            anomaly = (
+                None if value is None or normal is None else round(value - normal, 1)
+            )
             records.append(
                 {
                     "region": boundary["name"],
@@ -301,7 +348,7 @@ def build(records: list[dict], ingestion_time: datetime) -> dict:
         "spatial_resolution": SOURCE["spatial_resolution"],
         "temporal_resolution": SOURCE["temporal_resolution"],
         "reference_period": SOURCE["reference_period"],
-        "ingestion_time": ingestion_time.astimezone(timezone.utc).isoformat(timespec="seconds"),
+        "ingestion_time": ingestion_time.astimezone(UTC).isoformat(timespec="seconds"),
         "processing_version": VERSION,
         "records": records,
     }
@@ -315,7 +362,7 @@ def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     baseline = load_baseline()
     files = [(pentad, fetch(pentad.url)) for pentad in selected]
     records = parse(files, boundaries, baseline)
-    dataset = build(records, ingestion_time or datetime.now(timezone.utc))
+    dataset = build(records, ingestion_time or datetime.now(UTC))
     return len(records), publish(dataset)
 
 

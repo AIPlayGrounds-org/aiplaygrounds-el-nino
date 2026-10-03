@@ -1,6 +1,6 @@
 import json
 from calendar import month_name
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -21,7 +21,9 @@ def replace_once(text: str, old: str, new: str) -> str:
 def test_reads_the_visible_issue_and_all_categories_in_table_order():
     records = outlook.parse(SAMPLE)
 
-    assert [(record["season"], record["start"], record["end"]) for record in records] == [
+    assert [
+        (record["season"], record["start"], record["end"]) for record in records
+    ] == [
         ("ASO", "2026-08", "2026-10"),
         ("SON", "2026-09", "2026-11"),
         ("OND", "2026-10", "2026-12"),
@@ -39,7 +41,10 @@ def test_reads_the_visible_issue_and_all_categories_in_table_order():
         "upper_bound": -2.0,
         "probability": 0,
     }
-    assert [(category["lower_bound"], category["upper_bound"]) for category in records[0]["categories"]] == [
+    assert [
+        (category["lower_bound"], category["upper_bound"])
+        for category in records[0]["categories"]
+    ] == [
         (None, -2.0),
         (-2.0, -1.5),
         (-1.5, -1.0),
@@ -51,8 +56,15 @@ def test_reads_the_visible_issue_and_all_categories_in_table_order():
         (2.0, None),
     ]
     assert records[-1]["categories"][-1]["probability"] == 0
-    assert all(isinstance(category["probability"], int) for record in records for category in record["categories"])
-    assert all(sum(category["probability"] for category in record["categories"]) == 100 for record in records)
+    assert all(
+        isinstance(category["probability"], int)
+        for record in records
+        for category in record["categories"]
+    )
+    assert all(
+        sum(category["probability"] for category in record["categories"]) == 100
+        for record in records
+    )
 
 
 def test_comments_do_not_override_the_visible_issue_heading():
@@ -63,12 +75,41 @@ def test_comments_do_not_override_the_visible_issue_heading():
 
 def outlook_with_issue_and_first_season(issue_date: str, first_season: str) -> str:
     seasons = ["ASO", "SON", "OND", "NDJ", "DJF", "JFM", "FMA", "MAM", "AMJ"]
-    first_index = ["DJF", "JFM", "FMA", "MAM", "AMJ", "MJJ", "JJA", "JAS", "ASO", "SON", "OND", "NDJ"].index(first_season)
+    first_index = [
+        "DJF",
+        "JFM",
+        "FMA",
+        "MAM",
+        "AMJ",
+        "MJJ",
+        "JJA",
+        "JAS",
+        "ASO",
+        "SON",
+        "OND",
+        "NDJ",
+    ].index(first_season)
     replacement = [
-        ["DJF", "JFM", "FMA", "MAM", "AMJ", "MJJ", "JJA", "JAS", "ASO", "SON", "OND", "NDJ"][(first_index + offset) % 12]
+        [
+            "DJF",
+            "JFM",
+            "FMA",
+            "MAM",
+            "AMJ",
+            "MJJ",
+            "JJA",
+            "JAS",
+            "ASO",
+            "SON",
+            "OND",
+            "NDJ",
+        ][(first_index + offset) % 12]
         for offset in range(len(seasons))
     ]
-    result = SAMPLE.replace("Issued September 2026", f"Issued {month_name[int(issue_date[5:7])]} {issue_date[:4]}")
+    result = SAMPLE.replace(
+        "Issued September 2026",
+        f"Issued {month_name[int(issue_date[5:7])]} {issue_date[:4]}",
+    )
     for offset, season in enumerate(seasons):
         result = result.replace(f"<abbr>{season} ", f"<abbr>__season_{offset} ")
     for offset, season in enumerate(replacement):
@@ -85,9 +126,14 @@ def outlook_with_issue_and_first_season(issue_date: str, first_season: str) -> s
     ],
 )
 def test_issue_month_year_boundaries(
-    issue_date: str, first_season: str, expected_first: tuple[str, str], expected_last: tuple[str, str]
+    issue_date: str,
+    first_season: str,
+    expected_first: tuple[str, str],
+    expected_last: tuple[str, str],
 ):
-    records = outlook.parse(outlook_with_issue_and_first_season(issue_date, first_season))
+    records = outlook.parse(
+        outlook_with_issue_and_first_season(issue_date, first_season)
+    )
 
     assert (records[0]["start"], records[0]["end"]) == expected_first
     assert (records[-1]["start"], records[-1]["end"]) == expected_last
@@ -96,10 +142,25 @@ def test_issue_month_year_boundaries(
 @pytest.mark.parametrize(
     ("broken", "message"),
     [
-        (SAMPLE.replace('id="probabilities-table"', 'id="wrong-table"'), "probabilities-table"),
-        (replace_once(SAMPLE, "Index &le; -2.0&deg;C", "Index &lt; -2.0&deg;C"), "Cabecera"),
-        (SAMPLE.replace("Issued September 2026", "Published September 2026"), "encabezado visible"),
-        (SAMPLE.replace("<h2>Issued September 2026</h2>", "<h2>Issued September 2026</h2><h2>Issued October 2026</h2>"), "encabezado visible"),
+        (
+            SAMPLE.replace('id="probabilities-table"', 'id="wrong-table"'),
+            "probabilities-table",
+        ),
+        (
+            replace_once(SAMPLE, "Index &le; -2.0&deg;C", "Index &lt; -2.0&deg;C"),
+            "Cabecera",
+        ),
+        (
+            SAMPLE.replace("Issued September 2026", "Published September 2026"),
+            "encabezado visible",
+        ),
+        (
+            SAMPLE.replace(
+                "<h2>Issued September 2026</h2>",
+                "<h2>Issued September 2026</h2><h2>Issued October 2026</h2>",
+            ),
+            "encabezado visible",
+        ),
         (replace_once(SAMPLE, "<abbr>SON", "<abbr>ASO"), "repetida"),
         (replace_once(SAMPLE, "<abbr>SON", "<abbr>OND"), "secuencia"),
         (replace_once(SAMPLE, ">23</td>", ">23.0</td>"), "no entero"),
@@ -115,7 +176,7 @@ def test_rejects_each_structural_or_probability_rule(broken: str, message: str):
 def test_rejects_a_table_with_the_wrong_number_of_rows():
     broken = SAMPLE.replace("<tr><th><abbr>AMJ", "<tr><th><abbr>AMJ", 1)
     broken = broken.replace(
-        '<tr><th><abbr>AMJ <span>Apr May Jun</span></abbr>',
+        "<tr><th><abbr>AMJ <span>Apr May Jun</span></abbr>",
         "",
         1,
     )
@@ -125,8 +186,10 @@ def test_rejects_a_table_with_the_wrong_number_of_rows():
 
 
 def test_rejects_a_table_row_with_the_wrong_number_of_cells():
-    broken = replace_once(SAMPLE, '<tr><th><abbr>AMJ', '<tr><th><abbr>AMJ')
-    broken = broken.replace('<td>0</td></tr>\n      </tbody>', '</tr>\n      </tbody>', 1)
+    broken = replace_once(SAMPLE, "<tr><th><abbr>AMJ", "<tr><th><abbr>AMJ")
+    broken = broken.replace(
+        "<td>0</td></tr>\n      </tbody>", "</tr>\n      </tbody>", 1
+    )
 
     with pytest.raises(ValidationError, match="10 celdas"):
         outlook.parse(broken)
@@ -156,7 +219,9 @@ def assert_matches_registry(dataset: dict) -> None:
 
 
 def test_build_adds_registry_provenance():
-    dataset = outlook.build(outlook.parse(SAMPLE), datetime(2026, 10, 1, 12, tzinfo=timezone.utc))
+    dataset = outlook.build(
+        outlook.parse(SAMPLE), datetime(2026, 10, 1, 12, tzinfo=UTC)
+    )
 
     assert dataset["id"] == "noaa-cpc-outlook"
     assert dataset["ingestion_time"] == "2026-10-01T12:00:00+00:00"
@@ -168,7 +233,7 @@ def test_run_publishes_valid_data_without_network(tmp_path, monkeypatch):
     monkeypatch.setattr(outlook, "fetch", lambda: SAMPLE)
     monkeypatch.setattr(outlook, "publish", lambda dataset: publish(dataset, tmp_path))
 
-    count, path = outlook.run(datetime(2026, 10, 1, 12, tzinfo=timezone.utc))
+    count, path = outlook.run(datetime(2026, 10, 1, 12, tzinfo=UTC))
 
     assert count == 9
     assert path == tmp_path / "noaa-cpc-outlook.json"
@@ -183,6 +248,6 @@ def test_run_keeps_the_previous_json_when_validation_fails(tmp_path, monkeypatch
     monkeypatch.setattr(outlook, "fetch", lambda: "broken")
 
     with pytest.raises(ValidationError, match="encabezado visible"):
-        outlook.run(datetime(2026, 10, 1, 12, tzinfo=timezone.utc))
+        outlook.run(datetime(2026, 10, 1, 12, tzinfo=UTC))
 
     assert previous.read_text(encoding="utf-8") == '{"version": "previous"}'

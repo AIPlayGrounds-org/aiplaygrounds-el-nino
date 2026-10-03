@@ -1,10 +1,12 @@
 {
   "name": "wawapacha-web",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "test": "vitest run",
@@ -27,6 +29,7 @@
     "@vue/test-utils": "^2.5.1",
     "happy-dom": "^20.14.5",
     "json-schema-to-typescript": "^16.0.0",
+    "oxfmt": "0.71.0",
     "typescript": "^5.9.3",
     "vitest": "^5.0.3",
     "vue-tsc": "^3.3.12"

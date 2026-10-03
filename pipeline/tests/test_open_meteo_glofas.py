@@ -3,7 +3,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -78,13 +78,33 @@ def test_preserves_zero_and_null_values():
     [
         (lambda payload: payload.pop(), "11 puntos"),
         (lambda payload: payload[0].pop("daily"), "'daily'"),
-        (lambda payload: payload[0].__setitem__("latitude", -5.50), "coordenadas snapped inesperadas"),
-        (lambda payload: payload[0]["daily_units"].__setitem__("river_discharge", "m3/s"), "unidad inesperada"),
+        (
+            lambda payload: payload[0].__setitem__("latitude", -5.50),
+            "coordenadas snapped inesperadas",
+        ),
+        (
+            lambda payload: payload[0]["daily_units"].__setitem__(
+                "river_discharge", "m3/s"
+            ),
+            "unidad inesperada",
+        ),
         (lambda payload: payload[0]["daily"].pop("river_discharge"), "river_discharge"),
-        (lambda payload: payload[0]["daily"]["river_discharge"].pop(), "misma longitud"),
-        (lambda payload: payload[0]["daily"]["time"].__setitem__(1, "2026-09-24"), "huecos"),
-        (lambda payload: payload[0]["daily"]["time"].__setitem__(1, "2026-09-99"), "fecha inválida"),
-        (lambda payload: payload[0]["daily"]["river_discharge"].__setitem__(0, -1), "negativo o no finito"),
+        (
+            lambda payload: payload[0]["daily"]["river_discharge"].pop(),
+            "misma longitud",
+        ),
+        (
+            lambda payload: payload[0]["daily"]["time"].__setitem__(1, "2026-09-24"),
+            "huecos",
+        ),
+        (
+            lambda payload: payload[0]["daily"]["time"].__setitem__(1, "2026-09-99"),
+            "fecha inválida",
+        ),
+        (
+            lambda payload: payload[0]["daily"]["river_discharge"].__setitem__(0, -1),
+            "negativo o no finito",
+        ),
     ],
 )
 def test_rejects_each_structural_or_value_rule(change, message):
@@ -118,7 +138,9 @@ def test_fetch_rejects_a_non_200_response(monkeypatch):
     response = MagicMock()
     response.status = 503
     response.__enter__.return_value = response
-    monkeypatch.setattr(glofas.urllib.request, "urlopen", lambda request, timeout: response)
+    monkeypatch.setattr(
+        glofas.urllib.request, "urlopen", lambda request, timeout: response
+    )
 
     with pytest.raises(ValidationError, match="503"):
         glofas.fetch("https://example.org/glofas")
@@ -132,13 +154,19 @@ def assert_matches_registry(dataset: dict) -> None:
         "product": entry["product"],
         "url": entry["access"]["url"],
     }
-    for field in ("variable", "unit", "data_type", "spatial_resolution", "temporal_resolution"):
+    for field in (
+        "variable",
+        "unit",
+        "data_type",
+        "spatial_resolution",
+        "temporal_resolution",
+    ):
         assert dataset[field] == entry[field]
 
 
 def test_build_adds_provenance_metadata():
     records = glofas.parse(SAMPLE, date(2026, 9, 26))
-    dataset = glofas.build(records, datetime(2026, 10, 1, 12, 0, tzinfo=timezone.utc))
+    dataset = glofas.build(records, datetime(2026, 10, 1, 12, 0, tzinfo=UTC))
 
     assert dataset["id"] == "open-meteo-glofas"
     assert dataset["ingestion_time"] == "2026-10-01T12:00:00+00:00"
@@ -149,7 +177,7 @@ def test_build_adds_provenance_metadata():
 def test_publish_validates_and_writes_typed_records(tmp_path):
     dataset = glofas.build(
         glofas.parse(SAMPLE, date(2026, 9, 26)),
-        datetime(2026, 10, 1, 12, 0, tzinfo=timezone.utc),
+        datetime(2026, 10, 1, 12, 0, tzinfo=UTC),
     )
 
     path = publish(dataset, tmp_path)
@@ -178,7 +206,9 @@ def test_cli_publishes_the_fixture(tmp_path):
 
     assert result.returncode == 0, result.stderr
     assert result.stdout.startswith("Published open-meteo-glofas: 33 records in ")
-    published = json.loads((tmp_path / "open-meteo-glofas.json").read_text(encoding="utf-8"))
+    published = json.loads(
+        (tmp_path / "open-meteo-glofas.json").read_text(encoding="utf-8")
+    )
     assert len(published["records"]) == 33
     assert_matches_registry(published)
 

@@ -9,7 +9,9 @@ from jsonschema import Draft202012Validator
 from jsonschema.exceptions import best_match
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCHEMA = json.loads((REPO_ROOT / "schema" / "dataset.schema.json").read_text(encoding="utf-8"))
+SCHEMA = json.loads(
+    (REPO_ROOT / "schema" / "dataset.schema.json").read_text(encoding="utf-8")
+)
 DATA_TYPES = SCHEMA["properties"]["data_type"]["enum"]
 _VALIDATOR = Draft202012Validator(SCHEMA)
 # Carpeta donde se publican los JSON: data/ en la raíz del repositorio.
@@ -26,7 +28,9 @@ def validate(dataset: dict) -> None:
     error = best_match(_VALIDATOR.iter_errors(dataset))
     if error is not None:
         where = "/".join(str(part) for part in error.absolute_path) or "(root)"
-        raise ValidationError(f"The JSON does not match the schema at {where}: {error.message}")
+        raise ValidationError(
+            f"The JSON does not match the schema at {where}: {error.message}"
+        )
 
 
 def publish(dataset: dict, data_dir: Path = DATA_DIR) -> Path:

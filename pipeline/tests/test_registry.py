@@ -42,7 +42,9 @@ def test_every_automatable_registry_entry_has_a_source_module():
     modules = registry.discover()
 
     assert set(modules) == {
-        source_id for source_id, entry in sources.items() if entry["verdict"] == "automatable"
+        source_id
+        for source_id, entry in sources.items()
+        if entry["verdict"] == "automatable"
     }
     for source_id, module in modules.items():
         assert module.ID == source_id
@@ -75,7 +77,9 @@ def test_the_real_registry_loads_and_has_unique_ids():
 
 
 def test_load_keeps_the_order_of_the_file(tmp_path):
-    path = write_registry(tmp_path, minimal_block("b", "pending"), minimal_block("a", "discard"))
+    path = write_registry(
+        tmp_path, minimal_block("b", "pending"), minimal_block("a", "discard")
+    )
 
     assert list(registry.load(path)) == ["b", "a"]
 

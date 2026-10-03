@@ -2,7 +2,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 import pytest
@@ -24,24 +24,33 @@ def replace_line(text: str, old: str, new: str) -> str:
 
 def run_cli(source: Path, data_dir: Path) -> subprocess.CompletedProcess:
     """Run the CLI as in production, reading `source` and publishing in `data_dir`."""
-    env = os.environ | {"ENFEN_COMMUNIQUE_PATH": str(source), "WAWAPACHA_DATA_DIR": str(data_dir)}
+    env = os.environ | {
+        "ENFEN_COMMUNIQUE_PATH": str(source),
+        "WAWAPACHA_DATA_DIR": str(data_dir),
+    }
     return subprocess.run(
         [sys.executable, "-m", "wawapacha_pipeline", "run", "enfen-communique"],
-        cwd=PIPELINE_DIR, env=env, capture_output=True, text=True, encoding="utf-8",
+        cwd=PIPELINE_DIR,
+        env=env,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
     )
 
 
 def test_reads_the_communique():
-    assert enfen.parse(SAMPLE, TODAY) == [{
-        "number": 17,
-        "year": 2026,
-        "status": "Alerta de El Niño Costero",
-        "url": "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/",
-        "start": "2026-09-28",
-        "end": "2026-10-15",
-        "stale": False,
-        "checked_at": "2026-10-02",
-    }]
+    assert enfen.parse(SAMPLE, TODAY) == [
+        {
+            "number": 17,
+            "year": 2026,
+            "status": "Alerta de El Niño Costero",
+            "url": "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/",
+            "start": "2026-09-28",
+            "end": "2026-10-15",
+            "stale": False,
+            "checked_at": "2026-10-02",
+        }
+    ]
 
 
 def test_the_seeded_input_is_valid():
@@ -77,7 +86,11 @@ def test_is_stale_the_day_after_the_next_due_date():
         ("enfen:", "communique:", "top-level key"),
         ("  number: 17\n", "", "Missing fields"),
         ("  next_due: 2026-10-15\n", "", "Missing fields"),
-        ("  checked_at: 2026-10-02\n", "  checked_at: 2026-10-02\n  color: red\n", "Unknown fields"),
+        (
+            "  checked_at: 2026-10-02\n",
+            "  checked_at: 2026-10-02\n  color: red\n",
+            "Unknown fields",
+        ),
         ("number: 17", "number: 0", "positive integer"),
         ("number: 17", 'number: "17"', "positive integer"),
         ("number: 17", "number: 17.5", "positive integer"),
@@ -93,7 +106,11 @@ def test_is_stale_the_day_after_the_next_due_date():
         ('"Alerta de El Niño Costero"', '"El Niño Costero Alert"', "status"),
         ('"Alerta de El Niño Costero"', "red", "status"),
         ("https://enfen.imarpe", "http://enfen.imarpe", "url"),
-        ("https://enfen.imarpe.gob.pe", "https://enfen.imarpe.gob.pe.evil.example", "url"),
+        (
+            "https://enfen.imarpe.gob.pe",
+            "https://enfen.imarpe.gob.pe.evil.example",
+            "url",
+        ),
         ("https://enfen.imarpe.gob.pe", "https://www.gob.pe", "url"),
         ("-n-17-2026/", "-n-17-2026.pdf", "url"),
         ("-n-17-2026/", "-n-16-2026/", "different communiqué"),
@@ -130,7 +147,9 @@ def test_cli_reports_a_key_that_is_a_list_without_a_traceback(tmp_path):
     assert "single value" in result.stderr
 
 
-@pytest.mark.parametrize("text", ["", "enfen:\n", "enfen: 17\n", "- enfen\n", "enfen: [unclosed\n"])
+@pytest.mark.parametrize(
+    "text", ["", "enfen:\n", "enfen: 17\n", "- enfen\n", "enfen: [unclosed\n"]
+)
 def test_rejects_a_file_that_is_not_one_enfen_mapping(text):
     with pytest.raises(ValidationError):
         enfen.parse(text, TODAY)
@@ -142,10 +161,13 @@ def test_fetch_reports_a_missing_file(tmp_path):
 
 
 def test_run_stamps_the_lima_date(tmp_path, monkeypatch):
-    monkeypatch.setattr("wawapacha_pipeline.sources.enfen_communique.publish", lambda dataset: publish(dataset, tmp_path))
+    monkeypatch.setattr(
+        "wawapacha_pipeline.sources.enfen_communique.publish",
+        lambda dataset: publish(dataset, tmp_path),
+    )
     monkeypatch.setattr(enfen, "PATH", SAMPLE_PATH)
     # 2026-10-16 03:00 UTC is still 2026-10-15 22:00 in Lima: not stale yet.
-    count, path = enfen.run(datetime(2026, 10, 16, 3, tzinfo=timezone.utc))
+    count, path = enfen.run(datetime(2026, 10, 16, 3, tzinfo=UTC))
 
     assert count == 1
     assert json.loads(path.read_text(encoding="utf-8"))["records"][0]["stale"] is False
@@ -167,7 +189,9 @@ def assert_matches_registry(dataset: dict) -> None:
 
 
 def test_build_adds_provenance_metadata():
-    dataset = enfen.build(enfen.parse(SAMPLE, TODAY), datetime(2026, 10, 2, 12, tzinfo=timezone.utc))
+    dataset = enfen.build(
+        enfen.parse(SAMPLE, TODAY), datetime(2026, 10, 2, 12, tzinfo=UTC)
+    )
 
     assert dataset["id"] == "enfen-communique"
     assert dataset["ingestion_time"] == "2026-10-02T12:00:00+00:00"
@@ -177,7 +201,7 @@ def test_build_adds_provenance_metadata():
 
 
 def test_publish_writes_the_json(tmp_path):
-    dataset = enfen.build(enfen.parse(SAMPLE, TODAY), datetime(2026, 10, 2, tzinfo=timezone.utc))
+    dataset = enfen.build(enfen.parse(SAMPLE, TODAY), datetime(2026, 10, 2, tzinfo=UTC))
 
     path = publish(dataset, tmp_path)
 
@@ -197,7 +221,7 @@ def test_publish_writes_the_json(tmp_path):
     ],
 )
 def test_the_schema_rejects_a_bad_record(tmp_path, field, value):
-    dataset = enfen.build(enfen.parse(SAMPLE, TODAY), datetime(2026, 10, 2, tzinfo=timezone.utc))
+    dataset = enfen.build(enfen.parse(SAMPLE, TODAY), datetime(2026, 10, 2, tzinfo=UTC))
     dataset["records"][0][field] = value
 
     with pytest.raises(ValidationError, match="schema"):
@@ -210,14 +234,18 @@ def test_cli_publishes_the_json(tmp_path):
 
     assert result.returncode == 0, result.stderr
     assert result.stdout.startswith("Published enfen-communique: 1 records in ")
-    published = json.loads((tmp_path / "enfen-communique.json").read_text(encoding="utf-8"))
+    published = json.loads(
+        (tmp_path / "enfen-communique.json").read_text(encoding="utf-8")
+    )
     assert published["records"][0]["status"] == "Alerta de El Niño Costero"
     assert_matches_registry(published)
 
 
 def test_cli_keeps_the_previous_json_when_validation_fails(tmp_path):
     broken = tmp_path / "broken.yaml"
-    broken.write_text(replace_line(SAMPLE, "Alerta de El Niño Costero", "red"), encoding="utf-8")
+    broken.write_text(
+        replace_line(SAMPLE, "Alerta de El Niño Costero", "red"), encoding="utf-8"
+    )
     previous = tmp_path / "enfen-communique.json"
     previous.write_text('{"previous": true}', encoding="utf-8")
 

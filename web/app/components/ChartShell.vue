@@ -1,42 +1,42 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { ageDays, ageLabel, dataTypeLabel, messages } from "~/messages";
-import type { DatasetLike } from "~/types/datasets";
+import { computed, onMounted, ref } from 'vue'
+import { ageDays, ageLabel, dataTypeLabel, messages } from '~/messages'
+import type { DatasetLike } from '~/types/datasets'
 
 const props = defineProps<{
-  dataset: DatasetLike;
-  summary: string;
-}>();
+  dataset: DatasetLike
+  summary: string
+}>()
 
-const firstRecord = props.dataset.records[0];
-const lastRecord = props.dataset.records.at(-1);
-const STALE_UPDATE_DAYS = 40;
-const STALE_RECORD_DAYS = 90;
-const now = ref<Date | null>(null);
-onMounted(() => (now.value = new Date()));
+const firstRecord = props.dataset.records[0]
+const lastRecord = props.dataset.records.at(-1)
+const STALE_UPDATE_DAYS = 40
+const STALE_RECORD_DAYS = 90
+const now = ref<Date | null>(null)
+onMounted(() => (now.value = new Date()))
 const formatDate = (date: string) =>
-  new Intl.DateTimeFormat("es", { dateStyle: "long", timeZone: "America/Lima" }).format(
+  new Intl.DateTimeFormat('es', { dateStyle: 'long', timeZone: 'America/Lima' }).format(
     new Date(date),
-  );
-const updateDate = formatDate(props.dataset.ingestion_time);
+  )
+const updateDate = formatDate(props.dataset.ingestion_time)
 const updateAge = computed(() =>
   now.value ? ageLabel(props.dataset.ingestion_time, now.value) : null,
-);
+)
 const dataAge = computed(() =>
   now.value && lastRecord ? ageLabel(lastRecord.end, now.value) : null,
-);
+)
 const staleNotice = computed(() => {
-  if (!now.value) return false;
-  const updateDays = ageDays(props.dataset.ingestion_time, now.value);
-  const recordDays = lastRecord ? ageDays(lastRecord.end, now.value) : 0;
-  return updateDays >= STALE_UPDATE_DAYS || recordDays >= STALE_RECORD_DAYS;
-});
+  if (!now.value) return false
+  const updateDays = ageDays(props.dataset.ingestion_time, now.value)
+  const recordDays = lastRecord ? ageDays(lastRecord.end, now.value) : 0
+  return updateDays >= STALE_UPDATE_DAYS || recordDays >= STALE_RECORD_DAYS
+})
 const period =
   firstRecord && lastRecord
     ? firstRecord.start === lastRecord.end
       ? firstRecord.start
       : `${firstRecord.start}–${lastRecord.end}`
-    : "—";
+    : '—'
 const periodDetails = [
   props.dataset.temporal_resolution,
   period,
@@ -45,7 +45,7 @@ const periodDetails = [
     : null,
 ]
   .filter(Boolean)
-  .join(" · ");
+  .join(' · ')
 </script>
 
 <template>
@@ -90,7 +90,7 @@ const periodDetails = [
       </div>
     </dl>
     <p v-if="dataAge" class="data-age">
-      {{ messages.provenance.latestData }}: {{ lastRecord?.end ?? "—" }} ({{ dataAge }}).
+      {{ messages.provenance.latestData }}: {{ lastRecord?.end ?? '—' }} ({{ dataAge }}).
     </p>
     <p v-if="staleNotice" class="stale-notice" role="status">
       {{ messages.provenance.staleSource }}

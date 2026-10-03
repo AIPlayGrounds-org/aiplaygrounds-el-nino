@@ -199,8 +199,7 @@ useSeoMeta({ title: territory.seoTitle, description: territory.seoDescription })
           </a>
           · {{ geometryRecord.attribution }}
           <a :href="geometryRecord.license_url" target="_blank" rel="noopener">
-            {{ territory.boundaryLicense
-            }}<span class="sr-only">{{ messages.page.newTab }}</span>
+            {{ territory.boundaryLicense }}<span class="sr-only">{{ messages.page.newTab }}</span>
           </a>
         </p>
       </ChartShell>
@@ -242,13 +241,7 @@ useSeoMeta({ title: territory.seoTitle, description: territory.seoDescription })
         <div class="cross-check">
           <h2>{{ territory.crossCheckTitle }}</h2>
           <p>
-            {{
-              territory.crossCheckLead(
-                era5.window.days,
-                era5.window.start,
-                era5.window.end,
-              )
-            }}
+            {{ territory.crossCheckLead(era5.window.days, era5.window.start, era5.window.end) }}
           </p>
           <div class="table-wrap">
             <table>

@@ -24,18 +24,25 @@ def test_notebook_defines_no_functions_or_classes(path):
     defined = [
         node.name
         for node in ast.walk(tree)
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name != "_"
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+        and node.name != "_"
     ]
 
     assert defined == []
 
 
 def test_oni_notebook_runs_to_the_end_without_publishing(tmp_path):
-    env = os.environ | {"NOAA_CPC_ONI_URL": SAMPLE_PATH.resolve().as_uri(), "WAWAPACHA_DATA_DIR": str(tmp_path)}
+    env = os.environ | {
+        "NOAA_CPC_ONI_URL": SAMPLE_PATH.resolve().as_uri(),
+        "WAWAPACHA_DATA_DIR": str(tmp_path),
+    }
 
     result = subprocess.run(
         [sys.executable, str(NOTEBOOKS_DIR / "noaa_cpc_oni.py")],
-        env=env, capture_output=True, text=True, encoding="utf-8",
+        env=env,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
     )
 
     assert result.returncode == 0, result.stderr

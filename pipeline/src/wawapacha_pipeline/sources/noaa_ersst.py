@@ -5,7 +5,7 @@ import os
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from wawapacha_pipeline import registry
@@ -41,23 +41,29 @@ def fetch(url: str = URL, timeout: int = 60, retries: int = 3) -> str:
                 if content_type == "text/html" or raw.lstrip().lower().startswith(
                     (b"<html", b"<!doctype", b"<head", b"<body")
                 ):
-                    raise ValidationError("La respuesta parece HTML, no el índice de ERSSTv5.")
+                    raise ValidationError(
+                        "La respuesta parece HTML, no el índice de ERSSTv5."
+                    )
                 try:
                     return raw.decode("ascii")
                 except UnicodeDecodeError:
-                    raise ValidationError("La respuesta no es texto ASCII válido.") from None
+                    raise ValidationError(
+                        "La respuesta no es texto ASCII válido."
+                    ) from None
         except ValidationError:
             raise
         except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as error:
             last_error = error
 
-    raise ValidationError(f"No se pudo descargar el índice de ERSSTv5 tras {retries} intentos: {last_error}")
+    raise ValidationError(
+        f"No se pudo descargar el índice de ERSSTv5 tras {retries} intentos: {last_error}"
+    )
 
 
 def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     """Return the record count and the path of the published JSON."""
     records = parse(fetch())
-    dataset = build(records, ingestion_time or datetime.now(timezone.utc))
+    dataset = build(records, ingestion_time or datetime.now(UTC))
     return len(records), publish(dataset)
 
 
@@ -79,19 +85,29 @@ def parse(text: str) -> list[dict]:
             month = int(month_text)
             values = [float(value) for value in values_text]
         except ValueError:
-            raise ValidationError(f"Línea {number}: valor no numérico: {line!r}") from None
+            raise ValidationError(
+                f"Línea {number}: valor no numérico: {line!r}"
+            ) from None
         if not 1 <= month <= 12:
             raise ValidationError(f"Línea {number}: mes fuera de rango ({month}).")
         if not all(math.isfinite(value) for value in values):
-            raise ValidationError(f"Línea {number}: las anomalías deben ser números finitos.")
+            raise ValidationError(
+                f"Línea {number}: las anomalías deben ser números finitos."
+            )
         if not all(ANOMALY_RANGE[0] <= value <= ANOMALY_RANGE[1] for value in values):
-            raise ValidationError(f"Línea {number}: anomalía fuera de rango ({line!r}).")
+            raise ValidationError(
+                f"Línea {number}: anomalía fuera de rango ({line!r})."
+            )
 
         index = year * 12 + month - 1
         if previous is None and (year, month) != (1854, 1):
-            raise ValidationError(f"Línea {number}: la serie debería empezar en 1854-01.")
+            raise ValidationError(
+                f"Línea {number}: la serie debería empezar en 1854-01."
+            )
         if previous is not None and index != previous + 1:
-            raise ValidationError(f"Línea {number}: mes no contiguo, hay un hueco o duplicado.")
+            raise ValidationError(
+                f"Línea {number}: mes no contiguo, hay un hueco o duplicado."
+            )
         previous = index
 
         month_iso = f"{year:04d}-{month:02d}"
@@ -133,7 +149,7 @@ def build(records: list[dict], ingestion_time: datetime) -> dict:
         "spatial_resolution": SOURCE["spatial_resolution"],
         "temporal_resolution": SOURCE["temporal_resolution"],
         "reference_period": SOURCE["reference_period"],
-        "ingestion_time": ingestion_time.astimezone(timezone.utc).isoformat(timespec="seconds"),
+        "ingestion_time": ingestion_time.astimezone(UTC).isoformat(timespec="seconds"),
         "processing_version": VERSION,
         "records": records,
     }

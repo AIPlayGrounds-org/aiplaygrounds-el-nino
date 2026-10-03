@@ -31,7 +31,11 @@ const summary = computed(() =>
               </dd>
             </div>
             <div>
-              <dt>{{ record.stale ? messages.panels.enfen.latestStatus : messages.panels.enfen.status }}</dt>
+              <dt>
+                {{
+                  record.stale ? messages.panels.enfen.latestStatus : messages.panels.enfen.status
+                }}
+              </dt>
               <dd class="status">{{ record.status }}</dd>
             </div>
             <div>

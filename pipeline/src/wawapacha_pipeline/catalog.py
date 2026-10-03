@@ -54,7 +54,9 @@ def wrap(text: str, indent: str = "") -> list[str]:
     lines, words = [], []
     for word in re.findall(r"(?:`[^`]*`|\[[^\]]*\]\([^)]*\)|\S)+", text):
         if words and len(indent) + len(" ".join([*words, word])) > WIDTH:
-            carried = [words.pop()] if LIST_MARKER.match(word) and len(words) > 1 else []
+            carried = (
+                [words.pop()] if LIST_MARKER.match(word) and len(words) > 1 else []
+            )
             lines.append(indent + " ".join(words))
             words = carried
         words.append(word)
@@ -67,7 +69,13 @@ def table(header: tuple[str, ...], rows: list[tuple[str, ...]]) -> list[str]:
     widths = [max(3, *(len(row[i]) for row in cells)) for i in range(len(header))]
 
     def line(row: tuple[str, ...]) -> str:
-        return "| " + " | ".join(cell.ljust(width) for cell, width in zip(row, widths)) + " |"
+        return (
+            "| "
+            + " | ".join(
+                cell.ljust(width) for cell, width in zip(row, widths, strict=True)
+            )
+            + " |"
+        )
 
     separator = "| " + " | ".join("-" * width for width in widths) + " |"
     return [line(cells[0]), separator] + [line(row) for row in cells[1:]]

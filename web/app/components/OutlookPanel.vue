@@ -81,7 +81,12 @@ const option = computed(() => {
         </div>
         <NuxtErrorBoundary>
           <ClientOnly>
-            <VChart class="chart" :option="option" autoresize :aria-label="messages.panels.outlook.chartAria" />
+            <VChart
+              class="chart"
+              :option="option"
+              autoresize
+              :aria-label="messages.panels.outlook.chartAria"
+            />
             <template #fallback>
               <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
             </template>
@@ -92,7 +97,11 @@ const option = computed(() => {
         </NuxtErrorBoundary>
         <ul class="category-key" :aria-label="messages.panels.outlook.probability">
           <li v-for="(category, index) in categories" :key="category.category">
-            <span class="swatch" :style="{ backgroundColor: `var(--ramp-${index + 1})` }" aria-hidden="true" />
+            <span
+              class="swatch"
+              :style="{ backgroundColor: `var(--ramp-${index + 1})` }"
+              aria-hidden="true"
+            />
             {{ outlookCategoryLabel(category) }}
           </li>
         </ul>

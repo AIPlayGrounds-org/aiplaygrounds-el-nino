@@ -2,7 +2,13 @@ import json
 
 import pytest
 
-from wawapacha_pipeline.contract import DATA_DIR, REPO_ROOT, ValidationError, publish, validate
+from wawapacha_pipeline.contract import (
+    DATA_DIR,
+    REPO_ROOT,
+    ValidationError,
+    publish,
+    validate,
+)
 
 PUBLISHED = sorted((REPO_ROOT / "data").glob("*.json"))
 
@@ -10,7 +16,11 @@ PUBLISHED = sorted((REPO_ROOT / "data").glob("*.json"))
 def valid_dataset() -> dict:
     return {
         "id": "test-source",
-        "source": {"institution": "Institution", "product": "Product", "url": "https://example.org/data.txt"},
+        "source": {
+            "institution": "Institution",
+            "product": "Product",
+            "url": "https://example.org/data.txt",
+        },
         "variable": "Variable",
         "unit": "°C",
         "data_type": "observed",

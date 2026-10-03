@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { use } from 'echarts/core'
 import { LineChart } from 'echarts/charts'
-import { AriaComponent, DataZoomComponent, GridComponent, TooltipComponent } from 'echarts/components'
+import {
+  AriaComponent,
+  DataZoomComponent,
+  GridComponent,
+  TooltipComponent,
+} from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import { computed } from 'vue'
@@ -94,18 +99,29 @@ const option = computed(() => {
       <ChartShell :dataset="dataset" :summary="summary">
         <div class="latest-grid" :aria-label="messages.panels.weekly.latestValues">
           <div>
-            <span class="latest-label">{{ messages.panels.weekly.latest }} · {{ messages.panels.weekly.nino12 }}</span>
+            <span class="latest-label"
+              >{{ messages.panels.weekly.latest }} · {{ messages.panels.weekly.nino12 }}</span
+            >
             <strong>{{ formatValue(last.nino_1_2_anomaly) }} {{ dataset.unit }}</strong>
           </div>
           <div>
-            <span class="latest-label">{{ messages.panels.weekly.latest }} · {{ messages.panels.weekly.nino34 }}</span>
+            <span class="latest-label"
+              >{{ messages.panels.weekly.latest }} · {{ messages.panels.weekly.nino34 }}</span
+            >
             <strong>{{ formatValue(last.nino_3_4_anomaly) }} {{ dataset.unit }}</strong>
           </div>
-          <time :datetime="last.end">{{ messages.panels.weekly.date }} {{ formatDay(last.end) }}</time>
+          <time :datetime="last.end"
+            >{{ messages.panels.weekly.date }} {{ formatDay(last.end) }}</time
+          >
         </div>
         <NuxtErrorBoundary>
           <ClientOnly>
-            <VChart class="chart" :option="option" autoresize :aria-label="messages.panels.weekly.chartAria" />
+            <VChart
+              class="chart"
+              :option="option"
+              autoresize
+              :aria-label="messages.panels.weekly.chartAria"
+            />
             <template #fallback>
               <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
             </template>
@@ -117,8 +133,12 @@ const option = computed(() => {
       </ChartShell>
       <figcaption>
         <ul class="key" :aria-label="messages.panels.weekly.chartDescription">
-          <li><span class="swatch nino12" aria-hidden="true" />{{ messages.panels.weekly.nino12 }}</li>
-          <li><span class="swatch nino34" aria-hidden="true" />{{ messages.panels.weekly.nino34 }}</li>
+          <li>
+            <span class="swatch nino12" aria-hidden="true" />{{ messages.panels.weekly.nino12 }}
+          </li>
+          <li>
+            <span class="swatch nino34" aria-hidden="true" />{{ messages.panels.weekly.nino34 }}
+          </li>
         </ul>
       </figcaption>
     </figure>

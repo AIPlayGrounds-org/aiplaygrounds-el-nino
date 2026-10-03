@@ -47,9 +47,7 @@ def build_row(
     years = years_for(month, number, calendar_kind)
     with ProcessPoolExecutor(max_workers=8) as executor:
         jobs = {
-            executor.submit(
-                chirps.fetch, final_url(year, month, number), 120
-            ): year
+            executor.submit(chirps.fetch, final_url(year, month, number), 120): year
             for year in years
         }
         for job in as_completed(jobs):
@@ -76,7 +74,9 @@ def main() -> None:
             if month == 2 and number == 6:
                 for sample_year, calendar_kind in ((2025, "common"), (2024, "leap")):
                     key = chirps.Pentad(sample_year, month, number, "").key
-                    rows.append(build_row(month, number, key, calendar_kind, boundaries))
+                    rows.append(
+                        build_row(month, number, key, calendar_kind, boundaries)
+                    )
             else:
                 key = chirps.Pentad(2025, month, number, "").key
                 rows.append(build_row(month, number, key, None, boundaries))
@@ -92,7 +92,9 @@ def main() -> None:
         "boundary_source": "data/limites-inei-ign.json",
         "records": rows,
     }
-    OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    OUTPUT.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     print(f"wrote {len(rows)} pentads x {len(boundaries)} departments to {OUTPUT}")
 
 

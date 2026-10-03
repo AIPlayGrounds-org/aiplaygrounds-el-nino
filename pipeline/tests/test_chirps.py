@@ -1,5 +1,5 @@
 import json
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 import numpy as np
@@ -72,7 +72,9 @@ def test_discover_reads_live_shaped_names_and_select_window():
     year, month = 2023, 10
     for _ in range(36):
         for number in range(1, 7):
-            all_links.append(f'<a href="chirps-v3.0.{year}.{month:02d}.{number}.tif">x</a>')
+            all_links.append(
+                f'<a href="chirps-v3.0.{year}.{month:02d}.{number}.tif">x</a>'
+            )
         month += 1
         if month == 13:
             year, month = year + 1, 1
@@ -120,7 +122,7 @@ def test_parse_builds_records_and_calculates_anomaly():
     }
     assert all(record["anomaly_mm"] == 2.3 for record in records)
 
-    dataset = chirps.build(records, datetime(2026, 10, 3, 12, tzinfo=timezone.utc))
+    dataset = chirps.build(records, datetime(2026, 10, 3, 12, tzinfo=UTC))
     validate(dataset)
     assert dataset["reference_period"] == "1991–2020"
 
@@ -144,7 +146,9 @@ def test_sample_point_reads_native_cell():
 
 
 def test_load_boundaries_reads_the_real_shaped_published_fixture():
-    loaded = chirps.load_boundaries(Path(__file__).parents[2] / "data" / "limites-inei-ign.json")
+    loaded = chirps.load_boundaries(
+        Path(__file__).parents[2] / "data" / "limites-inei-ign.json"
+    )
 
     assert len(loaded) == 25
     assert loaded[0]["code"] == "PE01"
@@ -164,7 +168,9 @@ def test_baseline_shape_is_static_and_complete():
 
     assert len(baseline) == 73
     assert all(len(values) == 25 for values in baseline.values())
-    expected = {f"{month:02d}.{number}" for month in range(1, 13) for number in range(1, 7)}
+    expected = {
+        f"{month:02d}.{number}" for month in range(1, 13) for number in range(1, 7)
+    }
     expected.remove("02.6")
     expected.update({"02.6-common", "02.6-leap"})
     assert set(baseline) == expected
@@ -172,7 +178,9 @@ def test_baseline_shape_is_static_and_complete():
 
 def test_load_baseline_rejects_noncanonical_february_key(tmp_path):
     payload = json.loads(chirps.BASELINE_PATH.read_text(encoding="utf-8"))
-    next(row for row in payload["records"] if row["key"] == "02.6-common")["key"] = "02.6"
+    next(row for row in payload["records"] if row["key"] == "02.6-common")["key"] = (
+        "02.6"
+    )
     path = tmp_path / "invalid-baseline.json"
     path.write_text(json.dumps(payload), encoding="utf-8")
 
@@ -188,7 +196,9 @@ def test_parse_uses_real_baseline_for_common_and_leap_february_pentad_six():
         chirps.Pentad(2024, 2, 6, "leap.tif"),
     ]
 
-    records = chirps.parse([(period, raw) for period in periods], boundaries(), baseline)
+    records = chirps.parse(
+        [(period, raw) for period in periods], boundaries(), baseline
+    )
 
     assert periods[0].key == "02.6-common"
     assert periods[1].key == "02.6-leap"

@@ -11,9 +11,13 @@ const records = props.dataset.records
 const COLD = [42, 95, 168]
 const NEUTRAL = [214, 222, 220]
 const WARM = [217, 84, 26]
-const mix = (a: number[], b: number[], k: number) => a.map((v, i) => Math.round(v + (b[i]! - v) * k))
+const mix = (a: number[], b: number[], k: number) =>
+  a.map((v, i) => Math.round(v + (b[i]! - v) * k))
 const colorFor = (anomaly: number) => {
-  const c = anomaly < 0 ? mix(NEUTRAL, COLD, Math.min(1, -anomaly / 2.5)) : mix(NEUTRAL, WARM, Math.min(1, anomaly / 2.6))
+  const c =
+    anomaly < 0
+      ? mix(NEUTRAL, COLD, Math.min(1, -anomaly / 2.5))
+      : mix(NEUTRAL, WARM, Math.min(1, anomaly / 2.6))
   return `rgb(${c.join(',')})`
 }
 const stripes = records.map((r, i) => ({ x: i, fill: colorFor(r.anomaly) }))

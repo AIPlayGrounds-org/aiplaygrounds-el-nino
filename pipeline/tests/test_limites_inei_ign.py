@@ -6,7 +6,7 @@ import os
 import subprocess
 import sys
 import zipfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -17,8 +17,12 @@ from wawapacha_pipeline.sources import limites_inei_ign as source
 
 PIPELINE_DIR = Path(__file__).parents[1]
 SAMPLES_DIR = Path(__file__).parent / "samples"
-ADMIN1_TEMPLATE = json.loads((SAMPLES_DIR / "limites_admin1.geojson").read_text(encoding="utf-8"))
-ADMIN2_TEMPLATE = json.loads((SAMPLES_DIR / "limites_admin2.geojson").read_text(encoding="utf-8"))
+ADMIN1_TEMPLATE = json.loads(
+    (SAMPLES_DIR / "limites_admin1.geojson").read_text(encoding="utf-8")
+)
+ADMIN2_TEMPLATE = json.loads(
+    (SAMPLES_DIR / "limites_admin2.geojson").read_text(encoding="utf-8")
+)
 
 
 def _feature(template: dict, name: str, code: str, index: int, province: bool) -> dict:
@@ -36,13 +40,15 @@ def _feature(template: dict, name: str, code: str, index: int, province: bool) -
     }
     feature["geometry"] = {
         "type": "Polygon",
-        "coordinates": [[
-            [prefix, bottom],
-            [prefix + width, bottom],
-            [prefix + width, bottom + height],
-            [prefix, bottom + height],
-            [prefix, bottom],
-        ]],
+        "coordinates": [
+            [
+                [prefix, bottom],
+                [prefix + width, bottom],
+                [prefix + width, bottom + height],
+                [prefix, bottom + height],
+                [prefix, bottom],
+            ]
+        ],
     }
     return feature
 
@@ -51,7 +57,13 @@ def valid_layers() -> tuple[dict, dict]:
     departments = {
         "type": "FeatureCollection",
         "features": [
-            _feature(ADMIN1_TEMPLATE, f"Department {index:02d}", f"PE{index:02d}", index, False)
+            _feature(
+                ADMIN1_TEMPLATE,
+                f"Department {index:02d}",
+                f"PE{index:02d}",
+                index,
+                False,
+            )
             for index in range(1, 26)
         ],
     }
@@ -144,125 +156,153 @@ def test_ignores_safe_unexpected_members_without_reading_them():
         ),
         (
             "unsupported geometry",
-            lambda: _change_feature(lambda feature: feature["geometry"].update(type="Point")),
+            lambda: _change_feature(
+                lambda feature: feature["geometry"].update(type="Point")
+            ),
             "Polygon or MultiPolygon",
         ),
         (
             "empty geometry",
-            lambda: _change_feature(lambda feature: feature["geometry"].update(coordinates=[])),
+            lambda: _change_feature(
+                lambda feature: feature["geometry"].update(coordinates=[])
+            ),
             "coordinates cannot be empty",
         ),
         (
             "open ring",
-            lambda: _change_feature(lambda feature: feature["geometry"]["coordinates"][0].pop()),
+            lambda: _change_feature(
+                lambda feature: feature["geometry"]["coordinates"][0].pop()
+            ),
             "not closed",
         ),
-            (
-                "self-intersecting ring",
-                lambda: _change_feature(
-                    lambda feature: feature["geometry"].update(
-                        coordinates=[[[0, 0], [2, 3], [0, 2], [3, 0], [0, 0]]]
-                    )
-                ),
-                "invalid polygon topology",
+        (
+            "self-intersecting ring",
+            lambda: _change_feature(
+                lambda feature: feature["geometry"].update(
+                    coordinates=[[[0, 0], [2, 3], [0, 2], [3, 0], [0, 0]]]
+                )
             ),
-            (
-                "hole outside shell",
-                lambda: _change_feature(
-                    lambda feature: feature["geometry"].update(
-                        coordinates=[
-                            [
-                                [-80, -5],
-                                [-79, -5],
-                                [-78, -4],
-                                [-78, -3],
-                                [-79, -2],
-                                [-80, -3],
-                                [-80, -5],
-                            ],
-                            [
-                                [-81, -4],
-                                [-80.5, -4],
-                                [-80.5, -3.5],
-                                [-81, -3.5],
-                                [-81, -4],
-                            ],
-                        ]
-                    )
-                ),
-                "Hole lies outside shell",
+            "invalid polygon topology",
+        ),
+        (
+            "hole outside shell",
+            lambda: _change_feature(
+                lambda feature: feature["geometry"].update(
+                    coordinates=[
+                        [
+                            [-80, -5],
+                            [-79, -5],
+                            [-78, -4],
+                            [-78, -3],
+                            [-79, -2],
+                            [-80, -3],
+                            [-80, -5],
+                        ],
+                        [
+                            [-81, -4],
+                            [-80.5, -4],
+                            [-80.5, -3.5],
+                            [-81, -3.5],
+                            [-81, -4],
+                        ],
+                    ]
+                )
             ),
-            (
-                "overlapping multipolygon parts",
-                lambda: _change_feature(
-                    lambda feature: feature["geometry"].update(
-                        type="MultiPolygon",
-                        coordinates=[
-                            [[
+            "Hole lies outside shell",
+        ),
+        (
+            "overlapping multipolygon parts",
+            lambda: _change_feature(
+                lambda feature: feature["geometry"].update(
+                    type="MultiPolygon",
+                    coordinates=[
+                        [
+                            [
                                 [-80, -5],
                                 [-79, -5],
                                 [-78.5, -4],
                                 [-79, -3],
                                 [-80, -3],
                                 [-80, -5],
-                            ]],
-                            [[
+                            ]
+                        ],
+                        [
+                            [
                                 [-79.5, -4.5],
                                 [-78.5, -4.5],
                                 [-78, -3.5],
                                 [-79, -3],
                                 [-79.5, -4.5],
-                            ]],
+                            ]
                         ],
-                    )
-                ),
-                "Self-intersection",
+                    ],
+                )
             ),
+            "Self-intersection",
+        ),
         (
             "coordinate outside WGS84",
             lambda: _change_feature(
-                lambda feature: feature["geometry"]["coordinates"][0].__setitem__(0, [181, -5])
+                lambda feature: feature["geometry"]["coordinates"][0].__setitem__(
+                    0, [181, -5]
+                )
             ),
             "outside WGS84",
         ),
         (
             "duplicate department code",
-            lambda: _change_department(lambda feature: feature["properties"].update(adm1_pcode="PE01")),
+            lambda: _change_department(
+                lambda feature: feature["properties"].update(adm1_pcode="PE01")
+            ),
             "duplicate code",
         ),
         (
             "invalid province code",
-            lambda: _change_province(lambda feature: feature["properties"].update(adm2_pcode="PE01")),
+            lambda: _change_province(
+                lambda feature: feature["properties"].update(adm2_pcode="PE01")
+            ),
             "invalid code",
         ),
         (
             "unknown province parent",
-            lambda: _change_province(lambda feature: feature["properties"].update(adm2_pcode="PE9901")),
+            lambda: _change_province(
+                lambda feature: feature["properties"].update(adm2_pcode="PE9901")
+            ),
             "not a department code",
         ),
         (
             "empty name",
-            lambda: _change_feature(lambda feature: feature["properties"].update(adm1_name=" ")),
+            lambda: _change_feature(
+                lambda feature: feature["properties"].update(adm1_name=" ")
+            ),
             "non-empty name",
         ),
         (
             "inconsistent metadata",
-            lambda: _change_feature(lambda feature: feature["properties"].update(version="v02")),
+            lambda: _change_feature(
+                lambda feature: feature["properties"].update(version="v02")
+            ),
             "consistent",
         ),
         (
             "unparseable valid date",
-            lambda: _change_feature(lambda feature: feature["properties"].update(valid_on="2020/07/14")),
+            lambda: _change_feature(
+                lambda feature: feature["properties"].update(valid_on="2020/07/14")
+            ),
             "ISO date",
         ),
         (
             "unparseable version",
-            lambda: _change_feature(lambda feature: feature["properties"].update(version="version-one")),
+            lambda: _change_feature(
+                lambda feature: feature["properties"].update(version="version-one")
+            ),
             "version is not parseable",
         ),
         (
             "unparseable language",
-            lambda: _change_feature(lambda feature: feature["properties"].update(lang="spa")),
+            lambda: _change_feature(
+                lambda feature: feature["properties"].update(lang="spa")
+            ),
             "two-letter code",
         ),
     ],
@@ -274,7 +314,11 @@ def test_rejects_each_declared_validation_failure(label, make_payload, message):
 
 def _remove_member(name: str) -> bytes:
     departments, provinces = valid_layers()
-    members = {"per_admin1.geojson": json.dumps(departments)} if name == "per_admin2.geojson" else {}
+    members = (
+        {"per_admin1.geojson": json.dumps(departments)}
+        if name == "per_admin2.geojson"
+        else {}
+    )
     if name == "per_admin1.geojson":
         members = {"per_admin2.geojson": json.dumps(provinces)}
     with io.BytesIO() as buffer:
@@ -332,7 +376,7 @@ def test_rejects_duplicate_zip_member_names():
 
 def test_build_contains_the_boundary_record_and_attribution():
     parsed = source.parse(archive_bytes())
-    dataset = source.build(parsed, datetime(2026, 10, 2, 12, tzinfo=timezone.utc))
+    dataset = source.build(parsed, datetime(2026, 10, 2, 12, tzinfo=UTC))
 
     validate(dataset)
     record = dataset["records"][0]
@@ -349,7 +393,7 @@ def test_build_contains_the_boundary_record_and_attribution():
 
 def test_publish_writes_the_json(tmp_path):
     parsed = source.parse(archive_bytes())
-    dataset = source.build(parsed, datetime(2026, 10, 2, 12, tzinfo=timezone.utc))
+    dataset = source.build(parsed, datetime(2026, 10, 2, 12, tzinfo=UTC))
 
     path = publish(dataset, tmp_path)
 
@@ -359,7 +403,9 @@ def test_publish_writes_the_json(tmp_path):
 
 def test_rejects_neighbouring_features_that_overlap():
     def overlap_first_department(feature):
-        first = _feature(ADMIN1_TEMPLATE, "Department 01", "PE01", 1, False)["geometry"]["coordinates"][0]
+        first = _feature(ADMIN1_TEMPLATE, "Department 01", "PE01", 1, False)[
+            "geometry"
+        ]["coordinates"][0]
         feature["geometry"]["coordinates"] = [[[x + 0.3, y] for x, y in first]]
 
     with pytest.raises(ValidationError, match="overlap or have mismatched"):
@@ -389,7 +435,9 @@ def test_cli_publishes_a_local_fixture_without_network(tmp_path):
 
     assert result.returncode == 0, result.stderr
     assert result.stdout.startswith("Published limites-inei-ign: 1 records in ")
-    published = json.loads((tmp_path / "data" / "limites-inei-ign.json").read_text(encoding="utf-8"))
+    published = json.loads(
+        (tmp_path / "data" / "limites-inei-ign.json").read_text(encoding="utf-8")
+    )
     assert len(published["records"][0]["departamentos"]["features"]) == 25
 
 
@@ -410,8 +458,10 @@ def test_cli_keeps_the_previous_json_when_the_zip_is_invalid(tmp_path):
 
 def test_publish_rejects_a_payload_over_the_gzip_limit(tmp_path):
     parsed = source.parse(archive_bytes())
-    dataset = source.build(parsed, datetime(2026, 10, 2, 12, tzinfo=timezone.utc))
-    dataset["records"][0]["attribution"] = base64.b64encode(os.urandom(300_000)).decode("ascii")
+    dataset = source.build(parsed, datetime(2026, 10, 2, 12, tzinfo=UTC))
+    dataset["records"][0]["attribution"] = base64.b64encode(os.urandom(300_000)).decode(
+        "ascii"
+    )
 
     with pytest.raises(ValidationError, match="gzip bytes"):
         source.publish(dataset, tmp_path)
@@ -421,9 +471,11 @@ def test_publish_rejects_a_payload_over_the_gzip_limit(tmp_path):
 
 def test_run_reports_the_number_of_dataset_records(monkeypatch, tmp_path):
     monkeypatch.setattr(source, "fetch", lambda: archive_bytes())
-    monkeypatch.setattr(source, "publish", lambda dataset: tmp_path / "limites-inei-ign.json")
+    monkeypatch.setattr(
+        source, "publish", lambda dataset: tmp_path / "limites-inei-ign.json"
+    )
 
-    count, path = source.run(datetime(2026, 10, 2, 12, tzinfo=timezone.utc))
+    count, path = source.run(datetime(2026, 10, 2, 12, tzinfo=UTC))
 
     assert count == 1
     assert path == tmp_path / "limites-inei-ign.json"
@@ -438,7 +490,10 @@ def test_notebook_runs_to_the_end_without_publishing(tmp_path):
     }
 
     result = subprocess.run(
-        [sys.executable, str(Path(__file__).parents[2] / "notebooks" / "limites_inei_ign.py")],
+        [
+            sys.executable,
+            str(Path(__file__).parents[2] / "notebooks" / "limites_inei_ign.py"),
+        ],
         env=env,
         capture_output=True,
         text=True,
