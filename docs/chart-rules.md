@@ -6,8 +6,9 @@ The audience, purpose and product principles are in
 ## Provenance
 
 Every chart answers five questions from the dataset's provenance block, never
-from hand-written chart text. `useDataset(id)` is the only web data loader, and
-the shared chart shell prints these fields with the chart.
+from hand-written chart text. `useDataset(id)` is the only web data loader. It
+validates the static catalog against the shared schema, and the shared chart
+shell prints these fields with the chart.
 
 | Question                                              | Provenance fields                                                |
 | ----------------------------------------------------- | ---------------------------------------------------------------- |
@@ -25,8 +26,8 @@ the shared chart shell prints these fields with the chart.
 - A trend includes direction and size, never an arrow alone.
 - A source that stops updating keeps its last value and shows its age.
 - The update date and age come from `ingestion_time`; the latest data period
-  comes from the last record. Neither is hidden behind a loading state in the
-  static HTML.
+  comes from the last record. The date and period are in static HTML; the
+  browser adds the current age after mount.
 - Empty and error states explain what the reader can do next.
 - Alerts link to the official source. WawaPacha does not invent a threshold,
   index or traffic light.
