@@ -10,7 +10,7 @@
   "data_type": "estimated",
   "spatial_resolution": "0,25° (unos 28 km)",
   "temporal_resolution": "Diaria; también horaria",
-  "ingestion_time": "2026-10-03T15:38:13+00:00",
+  "ingestion_time": "2026-10-03T15:55:08+00:00",
   "processing_version": "0.2.0",
   "records": [
     {
@@ -606,77 +606,77 @@
       "code": "PE02",
       "start": "2026-07-06",
       "end": "2026-07-06",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.2
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-07",
       "end": "2026-07-07",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.2
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-08",
       "end": "2026-07-08",
-      "precipitation_mm": 3.4
+      "precipitation_mm": 3.2
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-09",
       "end": "2026-07-09",
-      "precipitation_mm": 11.0
+      "precipitation_mm": 9.1
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-10",
       "end": "2026-07-10",
-      "precipitation_mm": 10.8
+      "precipitation_mm": 8.9
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-11",
       "end": "2026-07-11",
-      "precipitation_mm": 1.6
+      "precipitation_mm": 1.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-12",
       "end": "2026-07-12",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-13",
       "end": "2026-07-13",
-      "precipitation_mm": 1.2
+      "precipitation_mm": 1.3
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-14",
       "end": "2026-07-14",
-      "precipitation_mm": 4.8
+      "precipitation_mm": 4.3
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-15",
       "end": "2026-07-15",
-      "precipitation_mm": 1.8
+      "precipitation_mm": 1.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-16",
       "end": "2026-07-16",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 1.1
     },
     {
       "region": "Ancash",
@@ -690,126 +690,126 @@
       "code": "PE02",
       "start": "2026-07-18",
       "end": "2026-07-18",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-19",
       "end": "2026-07-19",
-      "precipitation_mm": 1.9
+      "precipitation_mm": 1.7
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-20",
       "end": "2026-07-20",
-      "precipitation_mm": 0.9
+      "precipitation_mm": 1.4
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-21",
       "end": "2026-07-21",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.2
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-22",
       "end": "2026-07-22",
-      "precipitation_mm": 6.3
+      "precipitation_mm": 6.2
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-23",
       "end": "2026-07-23",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.7
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-24",
       "end": "2026-07-24",
-      "precipitation_mm": 1.2
+      "precipitation_mm": 5.0
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-25",
       "end": "2026-07-25",
-      "precipitation_mm": 1.4
+      "precipitation_mm": 4.7
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-26",
       "end": "2026-07-26",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.8
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-27",
       "end": "2026-07-27",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-28",
       "end": "2026-07-28",
-      "precipitation_mm": 2.2
+      "precipitation_mm": 2.1
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-29",
       "end": "2026-07-29",
-      "precipitation_mm": 1.1
+      "precipitation_mm": 1.7
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-30",
       "end": "2026-07-30",
-      "precipitation_mm": 1.7
+      "precipitation_mm": 4.2
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-07-31",
       "end": "2026-07-31",
-      "precipitation_mm": 6.7
+      "precipitation_mm": 6.1
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-01",
       "end": "2026-08-01",
-      "precipitation_mm": 1.0
+      "precipitation_mm": 1.3
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-02",
       "end": "2026-08-02",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.3
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-03",
       "end": "2026-08-03",
-      "precipitation_mm": 0.7
+      "precipitation_mm": 2.0
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-04",
       "end": "2026-08-04",
-      "precipitation_mm": 1.2
+      "precipitation_mm": 1.6
     },
     {
       "region": "Ancash",
@@ -823,112 +823,112 @@
       "code": "PE02",
       "start": "2026-08-06",
       "end": "2026-08-06",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 1.4
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-07",
       "end": "2026-08-07",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.9
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-08",
       "end": "2026-08-08",
-      "precipitation_mm": 2.0
+      "precipitation_mm": 1.8
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-09",
       "end": "2026-08-09",
-      "precipitation_mm": 10.8
+      "precipitation_mm": 8.9
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-10",
       "end": "2026-08-10",
-      "precipitation_mm": 4.5
+      "precipitation_mm": 5.0
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-11",
       "end": "2026-08-11",
-      "precipitation_mm": 0.8
+      "precipitation_mm": 1.1
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-12",
       "end": "2026-08-12",
-      "precipitation_mm": 1.0
+      "precipitation_mm": 0.7
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-13",
       "end": "2026-08-13",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.9
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-14",
       "end": "2026-08-14",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 1.8
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-15",
       "end": "2026-08-15",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.7
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-16",
       "end": "2026-08-16",
-      "precipitation_mm": 8.0
+      "precipitation_mm": 6.3
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-17",
       "end": "2026-08-17",
-      "precipitation_mm": 2.4
+      "precipitation_mm": 0.6
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-18",
       "end": "2026-08-18",
-      "precipitation_mm": 8.6
+      "precipitation_mm": 5.4
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-19",
       "end": "2026-08-19",
-      "precipitation_mm": 3.9
+      "precipitation_mm": 3.4
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-20",
       "end": "2026-08-20",
-      "precipitation_mm": 2.5
+      "precipitation_mm": 1.7
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-21",
       "end": "2026-08-21",
-      "precipitation_mm": 1.3
+      "precipitation_mm": 2.0
     },
     {
       "region": "Ancash",
@@ -942,231 +942,231 @@
       "code": "PE02",
       "start": "2026-08-23",
       "end": "2026-08-23",
-      "precipitation_mm": 6.2
+      "precipitation_mm": 3.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-24",
       "end": "2026-08-24",
-      "precipitation_mm": 14.6
+      "precipitation_mm": 10.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-25",
       "end": "2026-08-25",
-      "precipitation_mm": 4.3
+      "precipitation_mm": 3.2
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-26",
       "end": "2026-08-26",
-      "precipitation_mm": 1.2
+      "precipitation_mm": 1.1
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-27",
       "end": "2026-08-27",
-      "precipitation_mm": 1.1
+      "precipitation_mm": 1.3
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-28",
       "end": "2026-08-28",
-      "precipitation_mm": 1.4
+      "precipitation_mm": 3.0
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-29",
       "end": "2026-08-29",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 2.4
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-30",
       "end": "2026-08-30",
-      "precipitation_mm": 1.9
+      "precipitation_mm": 2.6
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-08-31",
       "end": "2026-08-31",
-      "precipitation_mm": 2.0
+      "precipitation_mm": 2.6
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-01",
       "end": "2026-09-01",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 2.3
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-02",
       "end": "2026-09-02",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 1.8
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-03",
       "end": "2026-09-03",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 2.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-04",
       "end": "2026-09-04",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 2.0
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-05",
       "end": "2026-09-05",
-      "precipitation_mm": 0.8
+      "precipitation_mm": 4.0
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-06",
       "end": "2026-09-06",
-      "precipitation_mm": 1.6
+      "precipitation_mm": 2.6
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-07",
       "end": "2026-09-07",
-      "precipitation_mm": 2.4
+      "precipitation_mm": 2.3
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-08",
       "end": "2026-09-08",
-      "precipitation_mm": 4.0
+      "precipitation_mm": 3.1
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-09",
       "end": "2026-09-09",
-      "precipitation_mm": 5.7
+      "precipitation_mm": 3.8
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-10",
       "end": "2026-09-10",
-      "precipitation_mm": 24.5
+      "precipitation_mm": 20.4
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-11",
       "end": "2026-09-11",
-      "precipitation_mm": 11.2
+      "precipitation_mm": 8.8
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-12",
       "end": "2026-09-12",
-      "precipitation_mm": 1.7
+      "precipitation_mm": 1.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-13",
       "end": "2026-09-13",
-      "precipitation_mm": 1.5
+      "precipitation_mm": 2.4
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-14",
       "end": "2026-09-14",
-      "precipitation_mm": 6.3
+      "precipitation_mm": 5.0
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-15",
       "end": "2026-09-15",
-      "precipitation_mm": 11.3
+      "precipitation_mm": 6.9
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-16",
       "end": "2026-09-16",
-      "precipitation_mm": 2.5
+      "precipitation_mm": 4.8
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-17",
       "end": "2026-09-17",
-      "precipitation_mm": 2.4
+      "precipitation_mm": 7.6
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-18",
       "end": "2026-09-18",
-      "precipitation_mm": 4.6
+      "precipitation_mm": 4.9
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-19",
       "end": "2026-09-19",
-      "precipitation_mm": 11.4
+      "precipitation_mm": 8.7
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-20",
       "end": "2026-09-20",
-      "precipitation_mm": 4.1
+      "precipitation_mm": 3.8
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-21",
       "end": "2026-09-21",
-      "precipitation_mm": 3.1
+      "precipitation_mm": 2.1
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-22",
       "end": "2026-09-22",
-      "precipitation_mm": 9.3
+      "precipitation_mm": 7.7
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-23",
       "end": "2026-09-23",
-      "precipitation_mm": 6.2
+      "precipitation_mm": 5.4
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-24",
       "end": "2026-09-24",
-      "precipitation_mm": 5.73
+      "precipitation_mm": 4.55
     },
     {
       "region": "Ancash",
@@ -1180,14 +1180,14 @@
       "code": "PE02",
       "start": "2026-09-26",
       "end": "2026-09-26",
-      "precipitation_mm": 0.7
+      "precipitation_mm": 5.5
     },
     {
       "region": "Ancash",
       "code": "PE02",
       "start": "2026-09-27",
       "end": "2026-09-27",
-      "precipitation_mm": 1.4
+      "precipitation_mm": 9.6
     },
     {
       "region": "Apurimac",
@@ -3560,7 +3560,7 @@
       "code": "PE07",
       "start": "2026-07-08",
       "end": "2026-07-08",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.1
     },
     {
       "region": "Callao",
@@ -3574,14 +3574,14 @@
       "code": "PE07",
       "start": "2026-07-10",
       "end": "2026-07-10",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.5
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-11",
       "end": "2026-07-11",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
@@ -3595,21 +3595,21 @@
       "code": "PE07",
       "start": "2026-07-13",
       "end": "2026-07-13",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-14",
       "end": "2026-07-14",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.3
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-15",
       "end": "2026-07-15",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
@@ -3623,56 +3623,56 @@
       "code": "PE07",
       "start": "2026-07-17",
       "end": "2026-07-17",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.6
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-18",
       "end": "2026-07-18",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.6
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-19",
       "end": "2026-07-19",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-20",
       "end": "2026-07-20",
-      "precipitation_mm": 0.6
+      "precipitation_mm": 0.8
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-21",
       "end": "2026-07-21",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-22",
       "end": "2026-07-22",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.1
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-23",
       "end": "2026-07-23",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.5
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-24",
       "end": "2026-07-24",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.3
     },
     {
       "region": "Callao",
@@ -3700,14 +3700,14 @@
       "code": "PE07",
       "start": "2026-07-28",
       "end": "2026-07-28",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-07-29",
       "end": "2026-07-29",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.3
     },
     {
       "region": "Callao",
@@ -3728,21 +3728,21 @@
       "code": "PE07",
       "start": "2026-08-01",
       "end": "2026-08-01",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.7
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-08-02",
       "end": "2026-08-02",
-      "precipitation_mm": 0.8
+      "precipitation_mm": 1.1
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-08-03",
       "end": "2026-08-03",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.8
     },
     {
       "region": "Callao",
@@ -3756,7 +3756,7 @@
       "code": "PE07",
       "start": "2026-08-05",
       "end": "2026-08-05",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.0
     },
     {
       "region": "Callao",
@@ -3791,7 +3791,7 @@
       "code": "PE07",
       "start": "2026-08-10",
       "end": "2026-08-10",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.7
     },
     {
       "region": "Callao",
@@ -3805,7 +3805,7 @@
       "code": "PE07",
       "start": "2026-08-12",
       "end": "2026-08-12",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.6
     },
     {
       "region": "Callao",
@@ -3826,21 +3826,21 @@
       "code": "PE07",
       "start": "2026-08-15",
       "end": "2026-08-15",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-08-16",
       "end": "2026-08-16",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-08-17",
       "end": "2026-08-17",
-      "precipitation_mm": 4.5
+      "precipitation_mm": 3.4
     },
     {
       "region": "Callao",
@@ -3875,21 +3875,21 @@
       "code": "PE07",
       "start": "2026-08-22",
       "end": "2026-08-22",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-08-23",
       "end": "2026-08-23",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.2
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-08-24",
       "end": "2026-08-24",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.0
     },
     {
       "region": "Callao",
@@ -3910,7 +3910,7 @@
       "code": "PE07",
       "start": "2026-08-27",
       "end": "2026-08-27",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.5
     },
     {
       "region": "Callao",
@@ -3924,21 +3924,21 @@
       "code": "PE07",
       "start": "2026-08-29",
       "end": "2026-08-29",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.4
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-08-30",
       "end": "2026-08-30",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.1
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-08-31",
       "end": "2026-08-31",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.2
     },
     {
       "region": "Callao",
@@ -3966,14 +3966,14 @@
       "code": "PE07",
       "start": "2026-09-04",
       "end": "2026-09-04",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.1
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-09-05",
       "end": "2026-09-05",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.0
     },
     {
       "region": "Callao",
@@ -3987,7 +3987,7 @@
       "code": "PE07",
       "start": "2026-09-07",
       "end": "2026-09-07",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.1
     },
     {
       "region": "Callao",
@@ -4001,49 +4001,49 @@
       "code": "PE07",
       "start": "2026-09-09",
       "end": "2026-09-09",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.2
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-09-10",
       "end": "2026-09-10",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.6
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-09-11",
       "end": "2026-09-11",
-      "precipitation_mm": 0.6
+      "precipitation_mm": 1.3
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-09-12",
       "end": "2026-09-12",
-      "precipitation_mm": 0.9
+      "precipitation_mm": 1.0
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-09-13",
       "end": "2026-09-13",
-      "precipitation_mm": 0.8
+      "precipitation_mm": 1.0
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-09-14",
       "end": "2026-09-14",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.7
     },
     {
       "region": "Callao",
       "code": "PE07",
       "start": "2026-09-15",
       "end": "2026-09-15",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.1
     },
     {
       "region": "Callao",
@@ -4078,7 +4078,7 @@
       "code": "PE07",
       "start": "2026-09-20",
       "end": "2026-09-20",
-      "precipitation_mm": 0.7
+      "precipitation_mm": 0.9
     },
     {
       "region": "Callao",
@@ -4120,7 +4120,7 @@
       "code": "PE07",
       "start": "2026-09-26",
       "end": "2026-09-26",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.1
     },
     {
       "region": "Callao",
@@ -5310,28 +5310,28 @@
       "code": "PE10",
       "start": "2026-07-06",
       "end": "2026-07-06",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.6
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-07",
       "end": "2026-07-07",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.6
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-08",
       "end": "2026-07-08",
-      "precipitation_mm": 3.0
+      "precipitation_mm": 2.7
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-09",
       "end": "2026-07-09",
-      "precipitation_mm": 3.1
+      "precipitation_mm": 2.1
     },
     {
       "region": "Huanuco",
@@ -5345,189 +5345,189 @@
       "code": "PE10",
       "start": "2026-07-11",
       "end": "2026-07-11",
-      "precipitation_mm": 2.0
+      "precipitation_mm": 1.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-12",
       "end": "2026-07-12",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.7
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-13",
       "end": "2026-07-13",
-      "precipitation_mm": 1.5
+      "precipitation_mm": 2.2
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-14",
       "end": "2026-07-14",
-      "precipitation_mm": 2.8
+      "precipitation_mm": 4.2
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-15",
       "end": "2026-07-15",
-      "precipitation_mm": 3.0
+      "precipitation_mm": 2.4
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-16",
       "end": "2026-07-16",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.2
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-17",
       "end": "2026-07-17",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-18",
       "end": "2026-07-18",
-      "precipitation_mm": 1.6
+      "precipitation_mm": 1.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-19",
       "end": "2026-07-19",
-      "precipitation_mm": 2.8
+      "precipitation_mm": 0.4
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-20",
       "end": "2026-07-20",
-      "precipitation_mm": 1.7
+      "precipitation_mm": 0.7
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-21",
       "end": "2026-07-21",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-22",
       "end": "2026-07-22",
-      "precipitation_mm": 0.9
+      "precipitation_mm": 0.6
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-23",
       "end": "2026-07-23",
-      "precipitation_mm": 6.9
+      "precipitation_mm": 4.8
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-24",
       "end": "2026-07-24",
-      "precipitation_mm": 7.8
+      "precipitation_mm": 9.4
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-25",
       "end": "2026-07-25",
-      "precipitation_mm": 6.7
+      "precipitation_mm": 4.6
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-26",
       "end": "2026-07-26",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.2
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-27",
       "end": "2026-07-27",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.3
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-28",
       "end": "2026-07-28",
-      "precipitation_mm": 3.8
+      "precipitation_mm": 1.6
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-29",
       "end": "2026-07-29",
-      "precipitation_mm": 0.7
+      "precipitation_mm": 0.4
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-30",
       "end": "2026-07-30",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-07-31",
       "end": "2026-07-31",
-      "precipitation_mm": 1.7
+      "precipitation_mm": 1.3
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-01",
       "end": "2026-08-01",
-      "precipitation_mm": 3.6
+      "precipitation_mm": 2.9
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-02",
       "end": "2026-08-02",
-      "precipitation_mm": 4.5
+      "precipitation_mm": 4.6
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-03",
       "end": "2026-08-03",
-      "precipitation_mm": 2.4
+      "precipitation_mm": 2.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-04",
       "end": "2026-08-04",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.1
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-05",
       "end": "2026-08-05",
-      "precipitation_mm": 1.1
+      "precipitation_mm": 0.1
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-06",
       "end": "2026-08-06",
-      "precipitation_mm": 0.7
+      "precipitation_mm": 0.2
     },
     {
       "region": "Huanuco",
@@ -5541,42 +5541,42 @@
       "code": "PE10",
       "start": "2026-08-08",
       "end": "2026-08-08",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-09",
       "end": "2026-08-09",
-      "precipitation_mm": 5.9
+      "precipitation_mm": 1.2
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-10",
       "end": "2026-08-10",
-      "precipitation_mm": 8.7
+      "precipitation_mm": 3.9
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-11",
       "end": "2026-08-11",
-      "precipitation_mm": 4.9
+      "precipitation_mm": 4.2
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-12",
       "end": "2026-08-12",
-      "precipitation_mm": 3.2
+      "precipitation_mm": 2.2
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-13",
       "end": "2026-08-13",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
@@ -5590,287 +5590,287 @@
       "code": "PE10",
       "start": "2026-08-15",
       "end": "2026-08-15",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-16",
       "end": "2026-08-16",
-      "precipitation_mm": 3.0
+      "precipitation_mm": 1.8
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-17",
       "end": "2026-08-17",
-      "precipitation_mm": 5.4
+      "precipitation_mm": 3.7
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-18",
       "end": "2026-08-18",
-      "precipitation_mm": 11.9
+      "precipitation_mm": 8.3
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-19",
       "end": "2026-08-19",
-      "precipitation_mm": 3.0
+      "precipitation_mm": 2.8
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-20",
       "end": "2026-08-20",
-      "precipitation_mm": 7.4
+      "precipitation_mm": 5.9
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-21",
       "end": "2026-08-21",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.1
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-22",
       "end": "2026-08-22",
-      "precipitation_mm": 1.2
+      "precipitation_mm": 1.1
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-23",
       "end": "2026-08-23",
-      "precipitation_mm": 3.6
+      "precipitation_mm": 3.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-24",
       "end": "2026-08-24",
-      "precipitation_mm": 9.1
+      "precipitation_mm": 6.9
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-25",
       "end": "2026-08-25",
-      "precipitation_mm": 10.2
+      "precipitation_mm": 24.8
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-26",
       "end": "2026-08-26",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-27",
       "end": "2026-08-27",
-      "precipitation_mm": 0.7
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-28",
       "end": "2026-08-28",
-      "precipitation_mm": 0.6
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-29",
       "end": "2026-08-29",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-30",
       "end": "2026-08-30",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-08-31",
       "end": "2026-08-31",
-      "precipitation_mm": 1.4
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-01",
       "end": "2026-09-01",
-      "precipitation_mm": 1.0
+      "precipitation_mm": 0.9
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-02",
       "end": "2026-09-02",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.6
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-03",
       "end": "2026-09-03",
-      "precipitation_mm": 1.0
+      "precipitation_mm": 1.4
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-04",
       "end": "2026-09-04",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.8
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-05",
       "end": "2026-09-05",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.0
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-06",
       "end": "2026-09-06",
-      "precipitation_mm": 2.0
+      "precipitation_mm": 0.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-07",
       "end": "2026-09-07",
-      "precipitation_mm": 6.2
+      "precipitation_mm": 4.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-08",
       "end": "2026-09-08",
-      "precipitation_mm": 8.4
+      "precipitation_mm": 4.1
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-09",
       "end": "2026-09-09",
-      "precipitation_mm": 4.3
+      "precipitation_mm": 3.3
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-10",
       "end": "2026-09-10",
-      "precipitation_mm": 3.8
+      "precipitation_mm": 2.8
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-11",
       "end": "2026-09-11",
-      "precipitation_mm": 2.2
+      "precipitation_mm": 0.7
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-12",
       "end": "2026-09-12",
-      "precipitation_mm": 3.2
+      "precipitation_mm": 0.6
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-13",
       "end": "2026-09-13",
-      "precipitation_mm": 1.6
+      "precipitation_mm": 0.8
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-14",
       "end": "2026-09-14",
-      "precipitation_mm": 6.1
+      "precipitation_mm": 7.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-15",
       "end": "2026-09-15",
-      "precipitation_mm": 5.6
+      "precipitation_mm": 3.1
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-16",
       "end": "2026-09-16",
-      "precipitation_mm": 5.4
+      "precipitation_mm": 4.4
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-17",
       "end": "2026-09-17",
-      "precipitation_mm": 9.6
+      "precipitation_mm": 6.7
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-18",
       "end": "2026-09-18",
-      "precipitation_mm": 14.6
+      "precipitation_mm": 16.4
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-19",
       "end": "2026-09-19",
-      "precipitation_mm": 5.1
+      "precipitation_mm": 3.1
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-20",
       "end": "2026-09-20",
-      "precipitation_mm": 4.6
+      "precipitation_mm": 2.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-21",
       "end": "2026-09-21",
-      "precipitation_mm": 3.6
+      "precipitation_mm": 1.8
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-22",
       "end": "2026-09-22",
-      "precipitation_mm": 4.5
+      "precipitation_mm": 1.5
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-23",
       "end": "2026-09-23",
-      "precipitation_mm": 2.1
+      "precipitation_mm": 0.2
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-24",
       "end": "2026-09-24",
-      "precipitation_mm": 2.62
+      "precipitation_mm": 1.2
     },
     {
       "region": "Huanuco",
@@ -5884,14 +5884,14 @@
       "code": "PE10",
       "start": "2026-09-26",
       "end": "2026-09-26",
-      "precipitation_mm": 5.1
+      "precipitation_mm": 7.8
     },
     {
       "region": "Huanuco",
       "code": "PE10",
       "start": "2026-09-27",
       "end": "2026-09-27",
-      "precipitation_mm": 7.1
+      "precipitation_mm": 4.6
     },
     {
       "region": "Ica",
@@ -8250,35 +8250,35 @@
       "code": "PE15",
       "start": "2026-07-06",
       "end": "2026-07-06",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-07-07",
       "end": "2026-07-07",
-      "precipitation_mm": 1.1
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-07-08",
       "end": "2026-07-08",
-      "precipitation_mm": 3.4
+      "precipitation_mm": 0.2
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-07-09",
       "end": "2026-07-09",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-07-10",
       "end": "2026-07-10",
-      "precipitation_mm": 1.3
+      "precipitation_mm": 0.2
     },
     {
       "region": "Lima",
@@ -8299,28 +8299,28 @@
       "code": "PE15",
       "start": "2026-07-13",
       "end": "2026-07-13",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-07-14",
       "end": "2026-07-14",
-      "precipitation_mm": 1.9
+      "precipitation_mm": 0.2
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-07-15",
       "end": "2026-07-15",
-      "precipitation_mm": 2.5
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-07-16",
       "end": "2026-07-16",
-      "precipitation_mm": 4.0
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
@@ -8369,21 +8369,21 @@
       "code": "PE15",
       "start": "2026-07-23",
       "end": "2026-07-23",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-07-24",
       "end": "2026-07-24",
-      "precipitation_mm": 0.7
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-07-25",
       "end": "2026-07-25",
-      "precipitation_mm": 1.2
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
@@ -8418,7 +8418,7 @@
       "code": "PE15",
       "start": "2026-07-30",
       "end": "2026-07-30",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
@@ -8446,28 +8446,28 @@
       "code": "PE15",
       "start": "2026-08-03",
       "end": "2026-08-03",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-04",
       "end": "2026-08-04",
-      "precipitation_mm": 0.3
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-05",
       "end": "2026-08-05",
-      "precipitation_mm": 1.0
+      "precipitation_mm": 0.6
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-06",
       "end": "2026-08-06",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
@@ -8488,42 +8488,42 @@
       "code": "PE15",
       "start": "2026-08-09",
       "end": "2026-08-09",
-      "precipitation_mm": 5.2
+      "precipitation_mm": 0.6
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-10",
       "end": "2026-08-10",
-      "precipitation_mm": 10.5
+      "precipitation_mm": 1.6
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-11",
       "end": "2026-08-11",
-      "precipitation_mm": 1.2
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-12",
       "end": "2026-08-12",
-      "precipitation_mm": 1.6
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-13",
       "end": "2026-08-13",
-      "precipitation_mm": 1.0
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-14",
       "end": "2026-08-14",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
@@ -8544,7 +8544,7 @@
       "code": "PE15",
       "start": "2026-08-17",
       "end": "2026-08-17",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
@@ -8572,28 +8572,28 @@
       "code": "PE15",
       "start": "2026-08-21",
       "end": "2026-08-21",
-      "precipitation_mm": 2.5
+      "precipitation_mm": 0.4
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-22",
       "end": "2026-08-22",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.5
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-23",
       "end": "2026-08-23",
-      "precipitation_mm": 2.4
+      "precipitation_mm": 0.3
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-24",
       "end": "2026-08-24",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
@@ -8614,28 +8614,28 @@
       "code": "PE15",
       "start": "2026-08-27",
       "end": "2026-08-27",
-      "precipitation_mm": 1.1
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-28",
       "end": "2026-08-28",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 1.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-29",
       "end": "2026-08-29",
-      "precipitation_mm": 0.6
+      "precipitation_mm": 0.8
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-08-30",
       "end": "2026-08-30",
-      "precipitation_mm": 0.6
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
@@ -8649,42 +8649,42 @@
       "code": "PE15",
       "start": "2026-09-01",
       "end": "2026-09-01",
-      "precipitation_mm": 0.2
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-02",
       "end": "2026-09-02",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.2
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-03",
       "end": "2026-09-03",
-      "precipitation_mm": 0.5
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-04",
       "end": "2026-09-04",
-      "precipitation_mm": 0.0
+      "precipitation_mm": 0.2
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-05",
       "end": "2026-09-05",
-      "precipitation_mm": 2.2
+      "precipitation_mm": 2.6
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-06",
       "end": "2026-09-06",
-      "precipitation_mm": 7.4
+      "precipitation_mm": 5.5
     },
     {
       "region": "Lima",
@@ -8698,84 +8698,84 @@
       "code": "PE15",
       "start": "2026-09-08",
       "end": "2026-09-08",
-      "precipitation_mm": 1.9
+      "precipitation_mm": 2.6
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-09",
       "end": "2026-09-09",
-      "precipitation_mm": 10.6
+      "precipitation_mm": 1.3
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-10",
       "end": "2026-09-10",
-      "precipitation_mm": 0.4
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-11",
       "end": "2026-09-11",
-      "precipitation_mm": 2.0
+      "precipitation_mm": 0.4
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-12",
       "end": "2026-09-12",
-      "precipitation_mm": 0.9
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-13",
       "end": "2026-09-13",
-      "precipitation_mm": 1.4
+      "precipitation_mm": 0.2
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-14",
       "end": "2026-09-14",
-      "precipitation_mm": 0.1
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-15",
       "end": "2026-09-15",
-      "precipitation_mm": 0.6
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-16",
       "end": "2026-09-16",
-      "precipitation_mm": 0.6
+      "precipitation_mm": 0.1
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-17",
       "end": "2026-09-17",
-      "precipitation_mm": 0.6
+      "precipitation_mm": 0.0
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-18",
       "end": "2026-09-18",
-      "precipitation_mm": 3.8
+      "precipitation_mm": 0.6
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-19",
       "end": "2026-09-19",
-      "precipitation_mm": 2.0
+      "precipitation_mm": 0.3
     },
     {
       "region": "Lima",
@@ -8796,21 +8796,21 @@
       "code": "PE15",
       "start": "2026-09-22",
       "end": "2026-09-22",
-      "precipitation_mm": 2.4
+      "precipitation_mm": 0.5
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-23",
       "end": "2026-09-23",
-      "precipitation_mm": 6.6
+      "precipitation_mm": 0.4
     },
     {
       "region": "Lima",
       "code": "PE15",
       "start": "2026-09-24",
       "end": "2026-09-24",
-      "precipitation_mm": 0.73
+      "precipitation_mm": 0.03
     },
     {
       "region": "Lima",
@@ -8831,7 +8831,7 @@
       "code": "PE15",
       "start": "2026-09-27",
       "end": "2026-09-27",
-      "precipitation_mm": 5.5
+      "precipitation_mm": 0.0
     },
     {
       "region": "Loreto",
