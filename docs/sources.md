@@ -7,14 +7,15 @@ The sources the pipeline reads. The rest of the registry is in
 Verdicts: **automatable** (the pipeline publishes it) and **manual** (a person
 loads it).
 
-| ID                                              | Source                                                                                                                                          | Block   | Verdict     |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ----------- |
-| [`noaa-cpc-oni`](#noaa-cpc-oni)                 | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                                                                  | ENSO    | automatable |
-| [`noaa-cpc-nino-weekly`](#noaa-cpc-nino-weekly) | NOAA Climate Prediction Center (CPC): Weekly SST indices (file `wksst9120.for`)                                                                 | ENSO    | automatable |
-| [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                                                         | Alerts  | automatable |
-| [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1                                    | SST     | automatable |
-| [`open-meteo-glofas`](#open-meteo-glofas)       | Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service: Flood API, GloFAS v4 (continuous history and forecast) | Rivers  | automatable |
-| [`noaa-ersst`](#noaa-ersst)                     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices                                                 | History | automatable |
+| ID                                              | Source                                                                                                                                          | Block     | Verdict     |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
+| [`noaa-cpc-oni`](#noaa-cpc-oni)                 | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                                                                  | ENSO      | automatable |
+| [`noaa-cpc-nino-weekly`](#noaa-cpc-nino-weekly) | NOAA Climate Prediction Center (CPC): Weekly SST indices (file `wksst9120.for`)                                                                 | ENSO      | automatable |
+| [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                                                         | Alerts    | automatable |
+| [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1                                    | SST       | automatable |
+| [`noaa-cpc-outlook`](#noaa-cpc-outlook)         | NOAA Climate Prediction Center (CPC): Official NOAA CPC ENSO Strength Probabilities                                                             | Forecasts | automatable |
+| [`open-meteo-glofas`](#open-meteo-glofas)       | Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service: Flood API, GloFAS v4 (continuous history and forecast) | Rivers    | automatable |
+| [`noaa-ersst`](#noaa-ersst)                     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices                                                 | History   | automatable |
 
 ### noaa-cpc-oni
 
@@ -188,6 +189,41 @@ Notes:
 - The NCEI ERDDAP returns final data as CSV, about two weeks late. It is not
   used. Its timestamp query failed with HTTP 400 on 2026-10-02: only the `last`
   index form works.
+
+### noaa-cpc-outlook
+
+Reviewed on 2026-10-01.
+[Official page](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/).
+
+| Field               | Value                                                                           |
+| ------------------- | ------------------------------------------------------------------------------- |
+| Institution         | NOAA Climate Prediction Center (CPC)                                            |
+| Product             | Official NOAA CPC ENSO Strength Probabilities                                   |
+| Variable            | Probabilidad de cada categoría de intensidad ENSO, por temporada                |
+| Unit                | %                                                                               |
+| Data type           | forecast                                                                        |
+| Update              | monthly                                                                         |
+| Spatial resolution  | Un valor por categoría de intensidad y temporada                                |
+| Temporal resolution | Nueve temporadas móviles de tres meses                                          |
+| Cadence             | Monthly. CPC says the second Thursday, together with the ENSO diagnostic.       |
+| Reference period    | 1991–2020 (RONI)                                                                |
+| Access              | HTTP, HTML table                                                                |
+| Download URL        | https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/ |
+| Format              | HTML with a table of percentages                                                |
+| Authentication      | none                                                                            |
+
+Notes:
+
+- The HTML holds a hidden comment with an old issue (`Issued April 2026`). Read
+  the issue date from the visible text, never from the first “Issued” in the
+  code.
+- The probabilities are computed on the RONI, not on the ONI.
+- A team of about ten forecasters sets the official probability from
+  observations and models. It is not the output of a single model.
+- The page shows the limits of each category in °C.
+- The parser computes ISO start and end months from the visible issue date and
+  the rolling season labels because the source season cells do not include
+  years.
 
 ### open-meteo-glofas
 

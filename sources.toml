@@ -255,7 +255,7 @@ id = "noaa-cpc-outlook"
 institution = "NOAA Climate Prediction Center (CPC)"
 product = "Official NOAA CPC ENSO Strength Probabilities"
 block = "Forecasts"
-verdict = "pending"
+verdict = "automatable"
 update = "monthly"
 delivery = "v0.1"
 reviewed = "2026-10-01"
@@ -272,6 +272,7 @@ notes = [
   "The probabilities are computed on the RONI, not on the ONI.",
   "A team of about ten forecasters sets the official probability from observations and models. It is not the output of a single model.",
   "The page shows the limits of each category in °C.",
+  "The parser computes ISO start and end months from the visible issue date and the rolling season labels because the source season cells do not include years.",
 ]
 
 [source.access]

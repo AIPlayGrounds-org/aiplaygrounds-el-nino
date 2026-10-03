@@ -112,6 +112,46 @@ export interface OniRecord {
   anomaly: number
 }
 /**
+ * One NOAA CPC ENSO strength category and its probability.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "outlookCategory".
+ */
+export interface OutlookCategory {
+  category: string
+  lower_bound: number | null
+  upper_bound: number | null
+  probability: number
+}
+/**
+ * One NOAA CPC ENSO strength outlook for a rolling three-month season.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "outlookRecord".
+ */
+export interface OutlookRecord {
+  issue_date: Month
+  season:
+    'DJF' | 'JFM' | 'FMA' | 'MAM' | 'AMJ' | 'MJJ' | 'JJA' | 'JAS' | 'ASO' | 'SON' | 'OND' | 'NDJ'
+  start: Month
+  end: Month
+  /**
+   * @minItems 9
+   * @maxItems 9
+   */
+  categories: [
+    OutlookCategory,
+    OutlookCategory,
+    OutlookCategory,
+    OutlookCategory,
+    OutlookCategory,
+    OutlookCategory,
+    OutlookCategory,
+    OutlookCategory,
+    OutlookCategory
+  ]
+}
+/**
  * One daily modelled discharge value and its ensemble statistics for a named Peruvian basin point.
  *
  * This interface was referenced by `undefined`'s JSON-Schema
