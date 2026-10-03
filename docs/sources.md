@@ -14,6 +14,7 @@ loads it).
 | [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                                                         | Alerts        | automatable |
 | [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1                                    | SST           | automatable |
 | [`noaa-cpc-outlook`](#noaa-cpc-outlook)         | NOAA Climate Prediction Center (CPC): Official NOAA CPC ENSO Strength Probabilities                                                             | Forecasts     | automatable |
+| [`chirps`](#chirps)                             | Climate Hazards Center (CHC), University of California Santa Barbara: CHIRPS v3 (CHC Infrared Precipitation with Stations)                      | Precipitation | automatable |
 | [`open-meteo-era5`](#open-meteo-era5)           | Open-Meteo (intermediary); ERA5 data from the Copernicus Climate Change Service (C3S) and ECMWF: Historical Weather API, model `era5`           | Precipitation | automatable |
 | [`limites-inei-ign`](#limites-inei-ign)         | Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX: Peru administrative boundaries: departments and provinces                 | Territory     | automatable |
 | [`open-meteo-glofas`](#open-meteo-glofas)       | Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service: Flood API, GloFAS v4 (continuous history and forecast) | Rivers        | automatable |
@@ -226,6 +227,50 @@ Notes:
 - The parser computes ISO start and end months from the visible issue date and
   the rolling season labels because the source season cells do not include
   years.
+
+### chirps
+
+Reviewed on 2026-10-03. [Official page](https://chc.ucsb.edu/data/chirps3).
+
+| Field               | Value                                                                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Institution         | Climate Hazards Center (CHC), University of California Santa Barbara                                                                  |
+| Product             | CHIRPS v3 (CHC Infrared Precipitation with Stations)                                                                                  |
+| Variable            | Precipitación                                                                                                                         |
+| Unit                | mm por intervalo de acumulación                                                                                                       |
+| Data type           | estimated                                                                                                                             |
+| Update              | daily                                                                                                                                 |
+| Spatial resolution  | 0,05°                                                                                                                                 |
+| Temporal resolution | Pentadal (P = 1–6; P6 runs from day 26 through month end)                                                                             |
+| History             | More than 40 years                                                                                                                    |
+| Reference period    | 1991–2020                                                                                                                             |
+| License             | CC BY 4.0. Attribution: CHIRPS v3, Climate Hazards Center, UC Santa Barbara, in collaboration with FEWS NET and USGS EROS; CC BY 4.0. |
+| Access              | HTTP, FTP and RSYNC with public indexes                                                                                               |
+| Download URL        | https://data.chc.ucsb.edu/products/CHIRPS/v3.0/prelim/pentads/latam/tifs/                                                             |
+| Format              | GeoTIFF, NetCDF, BIL and COG                                                                                                          |
+| Authentication      | none                                                                                                                                  |
+
+Notes:
+
+- The daily products derive from the pentadal and monthly totals, spread with
+  IMERG Late V07 or ERA5 depending on the product.
+- The satellite daily product (`sat`), the reanalysis daily product (`rnl`) and
+  the pentadal and monthly products are different things.
+- v3 can have different properties from v2.
+- The preliminary Latin America pentad GeoTIFF directory is discovered at
+  runtime; the newest file in its listing ends the rolling 36-month window.
+- Preliminary pentads are published about two days after the pentad ends.
+  Missing values are -9999; values above 5,000 mm per pentad fail validation.
+- The live preliminary archive begins in 2025-01 and can have an absent pentad;
+  the module publishes only files present in the discovered rolling window and
+  never fills gaps from the final product.
+- The static department baseline is the arithmetic mean of 1991–2020 CHC v3
+  final pentad GeoTIFFs from
+  https://data.chc.ucsb.edu/products/CHIRPS/v3.0/pentads/latam/tifs/, using the
+  same department mask; February P6 is split into common and leap years.
+- Anomalies subtract this final-pentad climatology from preliminary pentad
+  department means. Preliminary and final products are never mixed for a single
+  input.
 
 ### open-meteo-era5
 

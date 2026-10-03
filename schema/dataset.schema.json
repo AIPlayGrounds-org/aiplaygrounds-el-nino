@@ -113,6 +113,10 @@
     {
       "if": { "properties": { "id": { "const": "noaa-ersst" } } },
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/ersstRecord" } } } }
+    },
+    {
+      "if": { "properties": { "id": { "const": "chirps" } } },
+      "then": { "properties": { "records": { "items": { "$ref": "#/$defs/chirpsRecord" } } } }
     }
   ],
   "$defs": {
@@ -448,6 +452,21 @@
           "description": "ENFEN Technical Note 01-2024 event window containing this month.",
           "enum": ["1982-83", "1997-98", "2017"]
         }
+      }
+    },
+    "chirpsRecord": {
+      "title": "ChirpsRecord",
+      "description": "One CHIRPS v3 preliminary pentad rainfall value for a Peru department.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region", "code", "start", "end", "precipitation_mm", "anomaly_mm"],
+      "properties": {
+        "region": { "type": "string", "minLength": 1 },
+        "code": { "type": "string", "pattern": "^PE\\d{2}$" },
+        "start": { "$ref": "#/$defs/day" },
+        "end": { "$ref": "#/$defs/day" },
+        "precipitation_mm": { "type": ["number", "null"], "minimum": 0, "maximum": 5000 },
+        "anomaly_mm": { "type": ["number", "null"], "minimum": -5000, "maximum": 5000 }
       }
     }
   }

@@ -422,3 +422,17 @@ export interface ErsstRecord {
    */
   event?: '1982-83' | '1997-98' | '2017'
 }
+/**
+ * One CHIRPS v3 preliminary pentad rainfall value for a Peru department.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "chirpsRecord".
+ */
+export interface ChirpsRecord {
+  region: string
+  code: string
+  start: Day
+  end: Day
+  precipitation_mm: number | null
+  anomaly_mm: number | null
+}
