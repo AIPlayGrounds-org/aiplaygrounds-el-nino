@@ -21,6 +21,29 @@ export const messages = {
     thresholdNote:
       "Las líneas discontinuas marcan los umbrales oficiales de la NOAA. El punto marca el último dato.",
   },
+  oisst: {
+    title: "¿Dónde está más caliente el mar?",
+    lead:
+      "La anomalía diaria de la temperatura superficial del mar frente a la costa del Perú, comparada con 1991–2020.",
+    summary: (date: string, value: string, unit: string, location: string) =>
+      `La celda más cálida del ${date} registra ${value} ${unit} (${location}).`,
+    empty: (date: string) => `No hay celdas con datos disponibles para el ${date}.`,
+    tableSummary: "Ver resumen por franjas de latitud",
+    tableCaption: (date: string) => `Resumen por franjas de latitud del ${date}.`,
+    latitudeBand: "Franja de latitud",
+    mean: "Media",
+    maximum: "Máxima anomalía",
+    coordinate: (value: string, direction: string) => `${value}° ${direction}`,
+    band: (start: string, end: string) => `${start}–${end}`,
+    tooltip: (value: string, unit: string, latitude: string, longitude: string) =>
+      `${value} ${unit}<br/>${latitude}, ${longitude}`,
+    directions: {
+      north: "N",
+      south: "S",
+      east: "E",
+      west: "O",
+    },
+  },
   provenance: {
     variable: "Variable",
     unit: "Unidad",
