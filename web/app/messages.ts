@@ -101,6 +101,46 @@ export const messages = {
     methodsBodyTwo:
       'La NOAA usa hoy el RONI, una variante de este índice que descuenta el calentamiento general del océano, para su monitoreo oficial. El ONI se mantiene como la serie histórica de referencia, y sus últimos trimestres pueden revisarse.',
   },
+  historico: {
+    historyNav: 'Histórico',
+    seoTitle: 'Histórico de anomalías del mar · WawaPacha',
+    seoDescription:
+      'Compara por mes las anomalías de la temperatura superficial del mar durante eventos históricos y el año en curso.',
+    title: 'Los eventos, mes a mes',
+    lead: 'Compara la forma de las anomalías mensuales de ERSSTv5 desde el inicio de cada evento. El valor y el mes del pico se calculan de los datos mostrados.',
+    comparisonTitle: 'Una misma escala de meses desde el inicio',
+    ersstTitle: 'ERSSTv5 mensual',
+    oniTitle: 'ONI oficial',
+    oniNote: 'El ONI es la media móvil oficial de tres meses de la anomalía en Niño 3.4.',
+    coastalNote:
+      'Para 2017, la línea costera usa solo ERSST en Niño 1+2; el ONI no corresponde a esa región.',
+    regionLabel: 'Región',
+    regions: {
+      nino34: 'Niño 3.4',
+      nino12: 'Niño 1+2 (costa)',
+    },
+    eventsLabel: 'Eventos que se muestran',
+    events: {
+      '1982-83': '1982–83',
+      '1997-98': '1997–98',
+      '2017': '2017 · El Niño Costero',
+    },
+    currentYear: (year: number) => `${year} · año en curso`,
+    peak: (value: string, month: string) => `pico ${value} °C en ${month}`,
+    noPeak: 'sin datos',
+    summary: (peaks: string) =>
+      `Comparación de la anomalía mensual por región, alineada desde el primer mes disponible de cada evento. Picos: ${peaks || 'sin datos disponibles'}.`,
+    oniSummary: (peaks: string) =>
+      `Comparación del ONI oficial, una media móvil de tres meses de la anomalía en Niño 3.4. Picos: ${peaks || 'sin datos disponibles'}.`,
+    anomaly: 'Anomalía',
+    months: 'Meses desde el inicio',
+    monthFromStart: (month: number) => `Mes ${month} desde el inicio`,
+    missing: 'Sin dato',
+    tableSummary: 'Ver la tabla de datos',
+    tableCaption: 'Valores por mes desde el inicio de cada serie.',
+    oniTableSummary: 'Ver la tabla del ONI',
+    oniTableCaption: 'Valores del ONI por mes desde el inicio de cada serie.',
+  },
   attribution: {
     openMeteoLabel: 'Weather data by Open-Meteo.com',
     openMeteoUrl: 'https://open-meteo.com/',

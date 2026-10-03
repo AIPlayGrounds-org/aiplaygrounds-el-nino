@@ -118,6 +118,7 @@ useSeoMeta({
           <header class="topbar">
             <span class="brand">{{ messages.page.brand }}</span>
             <NuxtLink to="/territorio">{{ messages.page.territoryLink }}</NuxtLink>
+            <NuxtLink to="/historico">{{ messages.historico.historyNav }}</NuxtLink>
           </header>
           <section class="hero" aria-labelledby="oni-title">
             <h1 id="oni-title">{{ messages.page.title }}</h1>
@@ -289,6 +290,8 @@ useSeoMeta({
 }
 .topbar {
   display: flex;
+  align-items: center;
+  gap: 24px;
   justify-content: center;
   padding: 18px 16px 0;
 }
