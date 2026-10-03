@@ -1,0 +1,123 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "adm2_name": "Asuncion",
+        "adm2_name1": null,
+        "adm2_name2": null,
+        "adm2_name3": null,
+        "adm2_pcode": "PE0204",
+        "adm1_name": "Ancash",
+        "adm1_name1": null,
+        "adm1_name2": null,
+        "adm1_name3": null,
+        "adm1_pcode": "PE02",
+        "adm0_name": "Perú",
+        "adm0_name1": null,
+        "adm0_name2": null,
+        "adm0_name3": null,
+        "adm0_pcode": "PE",
+        "valid_on": "2020-07-14",
+        "valid_to": null,
+        "area_sqkm": 527.75998487,
+        "version": "v01",
+        "lang": "es",
+        "adm0_en": "Peru",
+        "adm2_ref_name": "Asuncion",
+        "center_lat": -9.19044816,
+        "center_lon": -77.39973002
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-77.38754098699997, -9.057802726999967],
+          [-77.53237836199992, -9.198595476999856],
+          [-77.3191841119999, -9.324105601999918],
+          [-77.26280011199992, -9.198685976999968],
+          [-77.38754098699997, -9.057802726999967]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "adm2_name": "Hualgayoc",
+        "adm2_name1": null,
+        "adm2_name2": null,
+        "adm2_name3": null,
+        "adm2_pcode": "PE0607",
+        "adm1_name": "Cajamarca",
+        "adm1_name1": null,
+        "adm1_name2": null,
+        "adm1_name3": null,
+        "adm1_pcode": "PE06",
+        "adm0_name": "Perú",
+        "adm0_name1": null,
+        "adm0_name2": null,
+        "adm0_name3": null,
+        "adm0_pcode": "PE",
+        "valid_on": "2020-07-14",
+        "valid_to": null,
+        "area_sqkm": 787.56124078,
+        "version": "v01",
+        "lang": "es",
+        "adm0_en": "Peru",
+        "adm2_ref_name": "Hualgayoc",
+        "center_lat": -6.71417004,
+        "center_lon": -78.56603727
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-78.43574211299995, -6.571845724999946],
+          [-78.64973636299999, -6.680755848999979],
+          [-78.76946186299989, -6.65107672399995],
+          [-78.60137873799994, -6.867628849999903],
+          [-78.4341733629999, -6.835233974999881],
+          [-78.43574211299995, -6.571845724999946]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "adm2_name": "Julcan",
+        "adm2_name1": null,
+        "adm2_name2": null,
+        "adm2_name3": null,
+        "adm2_pcode": "PE1305",
+        "adm1_name": "La Libertad",
+        "adm1_name1": null,
+        "adm1_name2": null,
+        "adm1_name3": null,
+        "adm1_pcode": "PE13",
+        "adm0_name": "Perú",
+        "adm0_name1": null,
+        "adm0_name2": null,
+        "adm0_name3": null,
+        "adm0_pcode": "PE",
+        "valid_on": "2020-07-14",
+        "valid_to": null,
+        "area_sqkm": 1109.30446814,
+        "version": "v01",
+        "lang": "es",
+        "adm0_en": "Peru",
+        "adm2_ref_name": "Julcan",
+        "center_lat": -8.18884554,
+        "center_lon": -78.46112463
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-78.4061477379999, -7.990096476999952],
+          [-78.68236961299993, -8.097219725999878],
+          [-78.46967286299991, -8.38740722599988],
+          [-78.30004773799999, -8.234000600999934],
+          [-78.4061477379999, -7.990096476999952]
+        ]]
+      }
+    }
+  ]
+}
