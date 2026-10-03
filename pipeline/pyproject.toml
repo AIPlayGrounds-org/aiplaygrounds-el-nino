@@ -9,6 +9,7 @@ dependencies = [
     "pyyaml>=6",
     "numpy>=2.4.6",
     "scipy>=1.17.1",
+    "rasterio>=1.4.4",
 ]
 
 [project.scripts]
