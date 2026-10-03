@@ -23,22 +23,33 @@ describe("useDataset", () => {
   });
 
   it.each([
-    "noaa-cpc-oni",
-    "limites-inei-ign",
-    "noaa-cpc-outlook",
-    "open-meteo-glofas",
-    "enfen-communique",
-    "noaa-oisst",
-    "noaa-ersst",
-    "noaa-cpc-nino-weekly",
-  ] as DatasetId[])("rejects a malformed record in %s", (id) => {
-    const malformed = JSON.parse(JSON.stringify(useDataset(id))) as {
+    ["noaa-cpc-oni", "anomaly"],
+    ["limites-inei-ign", "version"],
+    ["noaa-cpc-outlook", "categories"],
+    ["open-meteo-glofas", "river_discharge"],
+    ["enfen-communique", "status"],
+    ["noaa-oisst", "lat"],
+    ["noaa-ersst", "nino3_anomaly"],
+  ] as [Exclude<DatasetId, "noaa-cpc-nino-weekly">, string][])(
+    "rejects a malformed kind-specific record in %s",
+    (id, field) => {
+      const malformed = JSON.parse(JSON.stringify(useDataset(id))) as {
+        records: Array<Record<string, unknown>>;
+      };
+      delete malformed.records[0]![field];
+
+      expect(() => validateDataset(id, malformed)).toThrow(
+        `[useDataset] data/${id}.json is invalid:`,
+      );
+    },
+  );
+
+  it("documents the weekly dataset schema gap without adding a validator", () => {
+    const malformed = JSON.parse(JSON.stringify(useDataset("noaa-cpc-nino-weekly"))) as {
       records: Array<Record<string, unknown>>;
     };
-    delete malformed.records[0]!.start;
+    delete malformed.records[0]!.nino_1_2_sst;
 
-    expect(() => validateDataset(id, malformed)).toThrow(
-      `[useDataset] data/${id}.json is invalid:`,
-    );
+    expect(() => validateDataset("noaa-cpc-nino-weekly", malformed)).not.toThrow();
   });
 });
