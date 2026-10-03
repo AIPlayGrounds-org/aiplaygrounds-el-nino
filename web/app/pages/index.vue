@@ -10,11 +10,6 @@ const CPC_ONI_PAGE = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring
 const ENFEN_COMUNICADOS = "https://enfen.imarpe.gob.pe/downloads/comunicados/";
 const SENAMHI_AVISOS = "https://www.senamhi.gob.pe/?p=aviso-meteorologico";
 
-// Si el último dato tiene 3 meses o más, NOAA (que publica cada mes) no se ha actualizado
-// o nuestra descarga ha fallado. A los 2 meses es normal: el trimestre JJA se publica a inicios de septiembre.
-const STALE_DATA_MONTHS = 3;
-const STALE_REVIEW_DAYS = 40;
-
 const phase = last ? ensoPhase(last.anomaly) : "neutral";
 const streak = phaseStreak(records);
 
@@ -82,24 +77,6 @@ const answer = computed(() => {
   };
 });
 
-// La antigüedad depende del día en que se abre la página, así que se calcula en el navegador.
-const now = ref<Date | null>(null);
-onMounted(() => (now.value = new Date()));
-const staleNotice = computed(() => {
-  if (!now.value || !last) return null;
-  const dataMonths = monthsSince(last.end, now.value);
-  const reviewDays = Math.floor(
-    (now.value.getTime() - new Date(oni.ingestion_time).getTime()) / 86_400_000,
-  );
-  if (dataMonths >= STALE_DATA_MONTHS) {
-    return messages.oni.staleData(monthName(last.end), dataMonths);
-  }
-  if (reviewDays >= STALE_REVIEW_DAYS) {
-    return messages.oni.staleReview(reviewDays);
-  }
-  return null;
-});
-
 const description = computed(() =>
   last
     ? messages.oni.summary(
@@ -151,15 +128,8 @@ useSeoMeta({
               >,
               {{ messages.page.observedUntil(monthName(last.end)) }}
             </p>
-            <p v-if="staleNotice" class="notice" role="status">
-              {{ staleNotice }}
-              <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener"
-                >{{ messages.page.reviewSource
-                }}<span class="sr-only">{{ messages.page.newTab }}</span></a
-              >
-            </p>
             <p class="cue" aria-hidden="true">
-              Baja para entenderlo
+              {{ messages.page.scrollCue }}
               <svg width="18" height="28" viewBox="0 0 18 28">
                 <path d="M9 2 V24 M2 17 L9 24 L16 17" />
               </svg>
@@ -272,7 +242,7 @@ useSeoMeta({
       </template>
 
       <section v-else class="hero" aria-labelledby="oni-empty">
-        <h1 id="oni-empty">No hay datos del ONI disponibles ahora</h1>
+        <h1 id="oni-empty">{{ messages.page.emptyTitle }}</h1>
         <p class="answer">
           {{ messages.page.emptyLead }}
           <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener"

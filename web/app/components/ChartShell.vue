@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import { ageLabel, dataTypeLabel, messages } from "~/messages";
 import type { DatasetLike } from "~/types/datasets";
 
@@ -8,13 +9,29 @@ const props = defineProps<{
 }>();
 
 const lastRecord = props.dataset.records.at(-1);
+const now = ref<Date | null>(null);
+onMounted(() => (now.value = new Date()));
 const formatDate = (date: string) =>
   new Intl.DateTimeFormat("es", { dateStyle: "long", timeZone: "America/Lima" }).format(
     new Date(date),
   );
 const updateDate = formatDate(props.dataset.ingestion_time);
-const updateAge = ageLabel(props.dataset.ingestion_time);
-const dataAge = lastRecord ? ageLabel(lastRecord.end) : null;
+const updateAge = computed(() =>
+  now.value ? ageLabel(props.dataset.ingestion_time, now.value) : null,
+);
+const dataAge = computed(() =>
+  now.value && lastRecord ? ageLabel(lastRecord.end, now.value) : null,
+);
+const staleNotice = computed(() => {
+  if (!now.value) return false;
+  const updateDays = Math.floor(
+    (now.value.getTime() - new Date(props.dataset.ingestion_time).getTime()) / 86_400_000,
+  );
+  const recordDays = lastRecord
+    ? Math.floor((now.value.getTime() - new Date(lastRecord.end).getTime()) / 86_400_000)
+    : 0;
+  return updateDays >= 40 || recordDays >= 90;
+});
 const period = lastRecord
   ? lastRecord.start === lastRecord.end
     ? lastRecord.end
@@ -68,12 +85,19 @@ const periodDetails = [
         <dt>{{ messages.provenance.lastUpdate }}</dt>
         <dd>
           <time :datetime="dataset.ingestion_time">{{ updateDate }}</time>
-          <span> ({{ updateAge }})</span>
+          <span v-if="updateAge"> ({{ updateAge }})</span>
         </dd>
       </div>
     </dl>
     <p v-if="dataAge" class="data-age">
       {{ messages.provenance.latestData }}: {{ period }} ({{ dataAge }}).
+    </p>
+    <p v-if="staleNotice" class="stale-notice" role="status">
+      {{ messages.provenance.staleSource }}
+      <a :href="dataset.source.url" target="_blank" rel="noopener">
+        {{ messages.page.reviewSource }}
+        <span class="sr-only">{{ messages.page.newTab }}</span>
+      </a>
     </p>
   </section>
 </template>
@@ -121,6 +145,11 @@ const periodDetails = [
   padding: 10px 12px;
   border-left: 3px solid var(--accent);
   background: var(--band);
+  font-size: 0.95rem;
+}
+.stale-notice {
+  margin: 0 16px 16px;
+  color: var(--muted);
   font-size: 0.95rem;
 }
 .sr-only {

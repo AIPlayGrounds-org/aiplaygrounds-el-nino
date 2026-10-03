@@ -1,5 +1,4 @@
 import type { Dataset } from "~/types/dataset";
-import { formatAnomaly, formatMagnitude, monthName, seasonLabel, seasonMonths } from "~/utils/enso";
 
 export const messages = {
   dataType: {
@@ -29,14 +28,14 @@ export const messages = {
     periodBase: "Base",
     dataType: "Tipo de dato",
     source: "Fuente",
-    originalData: "datos originales",
     lastUpdate: "Última actualización",
     latestData: "Último dato",
+    staleSource:
+      "La fuente puede tener datos más recientes. Conservamos el último valor disponible.",
     ageToday: "hoy",
     ageDay: (days: number) => `hace ${days} día${days === 1 ? "" : "s"}`,
     ageMonth: (months: number) => `hace ${months} mes${months === 1 ? "" : "es"}`,
     ageYear: (years: number) => `hace ${years} año${years === 1 ? "" : "s"}`,
-    stale: "La fuente puede tener datos más recientes. Conservamos el último valor disponible.",
   },
   page: {
     brand: "WawaPacha",
@@ -52,6 +51,7 @@ export const messages = {
     reviewSource: "Ver la fuente",
     chartLoading: "Cargando el gráfico…",
     chartError: "No se pudo dibujar el gráfico. Los últimos trimestres están en la tabla de abajo.",
+    scrollCue: "Baja para entenderlo",
     tableSummary: "Ver los últimos 12 trimestres en una tabla",
     tableMonths: "Meses",
     tableCode: "Código",
@@ -62,7 +62,6 @@ export const messages = {
     emptyTitle: "No hay datos del ONI disponibles ahora",
     emptyLead: "No pudimos cargar la serie. Puedes consultar el último dato directamente en la",
     oniSource: "página del ONI de la NOAA",
-    originalData: "datos originales",
     newTab: " (se abre en una pestaña nueva)",
     enfenLink: "Comunicados oficiales de ENFEN",
     senamhiLink: "Avisos meteorológicos de SENAMHI",
@@ -107,10 +106,6 @@ export const messages = {
     warmNotYetTail: (rule: string) => `sobre lo normal, pero van ${rule}.`,
     coldTail: "respecto a lo normal, del lado de La Niña.",
     neutralTail: "de diferencia.",
-    staleData: (period: string, months: number) =>
-      `El último dato es de ${period}, hace ${months} meses. NOAA publica cada mes, así que puede haber datos más recientes en la fuente.`,
-    staleReview: (days: number) =>
-      `Revisamos la fuente por última vez hace ${days} días. Puede haber datos más recientes en la fuente.`,
     summary: (first: string, last: string, current: string, status: string) =>
       `Gráfico de la anomalía del ONI desde ${first} hasta ${last}. Último valor: ${current}. ${status}.`,
     rangeLabel: (phase: "warm" | "neutral" | "cold") =>
@@ -144,7 +139,6 @@ export const messages = {
     sceneNeutral: "rango neutral",
     sceneThresholdCold: "umbral de La Niña (−0,5)",
     counter: (current: number, total: number) => `${current} de ${total}`,
-    range: "Periodo del gráfico",
     stepMap:
       "Todo empieza en <strong>un rectángulo de océano</strong> en medio del Pacífico, justo sobre la línea ecuatorial. Los científicos lo llaman <strong>región Niño 3.4</strong>.",
     stepDistance: (km: string) =>
@@ -209,5 +203,3 @@ export const ageLabel = (date: string, now = new Date()) => {
   if (months < 12) return messages.provenance.ageMonth(months);
   return messages.provenance.ageYear(Math.floor(months / 12));
 };
-
-export const oniMessages = { formatAnomaly, formatMagnitude, monthName, seasonLabel, seasonMonths };
