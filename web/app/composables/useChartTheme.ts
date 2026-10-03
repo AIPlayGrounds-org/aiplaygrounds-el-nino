@@ -1,5 +1,7 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
+export const RAMP_STEPS = 9
+
 type ChartTheme = {
   text: string
   muted: string
@@ -11,7 +13,10 @@ type ChartTheme = {
   cold: string
   neutral: string
   warm: string
+  accent: string
   font: string
+  /** Rampa divergente de nueve pasos, de frío fuerte a cálido fuerte. */
+  ramp: string[]
 }
 
 const THEME_VARIABLES = {
@@ -25,17 +30,19 @@ const THEME_VARIABLES = {
   cold: '--cold',
   neutral: '--neutral-data',
   warm: '--warm',
+  accent: '--accent',
   font: '--font',
 } as const
 
 const readTheme = (): ChartTheme => {
   const css = import.meta.client ? getComputedStyle(document.documentElement) : null
-  return Object.fromEntries(
-    Object.entries(THEME_VARIABLES).map(([key, variable]) => [
-      key,
-      css?.getPropertyValue(variable).trim() ?? '',
-    ]),
-  ) as ChartTheme
+  const value = (variable: string) => css?.getPropertyValue(variable).trim() ?? ''
+  return {
+    ...(Object.fromEntries(
+      Object.entries(THEME_VARIABLES).map(([key, variable]) => [key, value(variable)]),
+    ) as Omit<ChartTheme, 'ramp'>),
+    ramp: Array.from({ length: RAMP_STEPS }, (_, index) => value(`--ramp-${index + 1}`)),
+  }
 }
 
 export const useChartTheme = () => {

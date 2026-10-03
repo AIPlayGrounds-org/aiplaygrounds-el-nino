@@ -13,8 +13,8 @@ import {
 } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
-import { messages } from '~/messages'
 import { useChartTheme } from '~/composables/useChartTheme'
+import { messages } from '~/messages'
 import type { DatasetFor } from '~/types/datasets'
 
 // Solo se cargan las piezas de ECharts que se usan, para que la página pese menos.
