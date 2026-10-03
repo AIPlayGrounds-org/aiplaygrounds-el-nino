@@ -60,6 +60,10 @@
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/oniRecord" } } } }
     },
     {
+      "if": { "properties": { "id": { "const": "enfen-communique" } } },
+      "then": { "properties": { "records": { "items": { "$ref": "#/$defs/enfenRecord" } } } }
+    },
+    {
       "if": { "properties": { "id": { "const": "noaa-oisst" } } },
       "then": {
         "properties": {
@@ -115,6 +119,36 @@
         "end": { "$ref": "#/$defs/month" },
         "sst": { "description": "Sea surface temperature in Niño 3.4, in °C.", "type": "number" },
         "anomaly": { "description": "Anomaly of that temperature, in °C.", "type": "number" }
+      }
+    },
+    "enfenRecord": {
+      "title": "EnfenRecord",
+      "description": "One ENFEN official communiqué. The status holds from its date until the next-due date.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["number", "year", "status", "url", "start", "end", "stale"],
+      "properties": {
+        "number": { "description": "Communiqué number within its year.", "type": "integer", "minimum": 1 },
+        "year": { "type": "integer", "minimum": 1000, "maximum": 9999 },
+        "status": {
+          "description": "The exact status phrase ENFEN declares.",
+          "enum": [
+            "No Activo",
+            "Vigilancia de El Niño Costero",
+            "Alerta de El Niño Costero",
+            "Vigilancia de La Niña Costera",
+            "Alerta de La Niña Costera"
+          ]
+        },
+        "url": {
+          "description": "The IMARPE detail page of the communiqué.",
+          "type": "string",
+          "pattern": "^https://enfen\\.imarpe\\.gob\\.pe/download/comunicado-oficial-enfen-n-\\d+-\\d{4}/?$"
+        },
+        "start": { "description": "The communiqué date.", "$ref": "#/$defs/day" },
+        "end": { "description": "The next-due date the communiqué states.", "$ref": "#/$defs/day" },
+        "checked_at": { "description": "The day a person last checked the archive.", "$ref": "#/$defs/day" },
+        "stale": { "description": "True when the next-due date had passed at ingestion, in Lima time.", "type": "boolean" }
       }
     },
     "gridRecord": {

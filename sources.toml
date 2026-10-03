@@ -103,27 +103,31 @@ format = "HTML table"
 id = "enfen-communique"
 institution = "Comisión Multisectorial ENFEN"
 product = "Comunicado Oficial ENFEN"
-block = "Forecasts"
-verdict = "manual"
+block = "Alerts"
+verdict = "automatable"
 update = "manual"
 delivery = "v0.1"
-reviewed = "2026-09-26"
+reviewed = "2026-10-02"
 page = "https://enfen.imarpe.gob.pe/downloads/comunicados/"
-variable = "Estado del sistema de alerta, diagnóstico y pronóstico de El Niño Costero"
-spatial_resolution = "Perú y regiones Niño 1+2 y 3.4, según la emisión"
-temporal_resolution = "Por emisión, no es una serie regular"
+variable = "Estado del sistema de alerta de El Niño Costero"
+unit = "Estado oficial"
+spatial_resolution = "Costa del Perú"
+temporal_resolution = "Por comunicado, cada dos semanas aproximadamente"
 data_type = "official"
 cadence = "Irregular. In the archive consulted, about every two weeks."
 notes = [
-  "Each communiqué has an HTML page and a PDF. Communiqué No. 16-2026, of 2026-09-14, states the alert status in the HTML.",
-  "The status holds until the next communiqué.",
-  "ENFEN declares its own categories in each communiqué.",
+  "A person fills `pipeline/inputs/enfen.yaml` from the newest communiqué, about every two weeks and at least once a month. Open the archive, copy the number, date, exact status and detail URL from the communiqué HTML, copy the next-due date it states, set `checked_at` to today, then run `uv run wawapacha-pipeline run enfen-communique` from `pipeline/`. The `update` is `manual` for this reason: due selection never runs it.",
+  "The pipeline does not download. It validates the YAML and publishes one record. `access.url` is the archive where the person reads the communiqué.",
+  "The status is one of five exact phrases: `No Activo`, `Vigilancia de El Niño Costero`, `Alerta de El Niño Costero`, `Vigilancia de La Niña Costera`, `Alerta de La Niña Costera`. Anything else is rejected, never normalized. The communiqué's own sentence around the phrase varies, so only the phrase is stored.",
+  "The URL must be the IMARPE detail page of the same number and year, `https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-<number>-<year>/`. The PDF is not the canonical link.",
+  "Computed: the record's `start` is the communiqué date and its `end` is the next-due date the communiqué states, because the status holds until the next communiqué. `stale` is true when the ingestion date, in Lima time, is after `end`. A stale record means nobody has refreshed the YAML in time. It is recomputed only when the pipeline runs, so the site should also compare `end` with its own build date.",
+  "Each communiqué has an HTML page and one PDF. Communiqué No. 17-2026, of 2026-09-28, states `Alerta de El Niño Costero` in the HTML and says the next one is due on 2026-10-15.",
 ]
 
 [source.access]
-kind = "HTML page and linked PDF"
-url = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-16-2026/"
-format = "HTML and PDF"
+kind = "Hand-filled YAML, read from the communiqué HTML"
+url = "https://enfen.imarpe.gob.pe/downloads/comunicados/"
+format = "YAML: one `enfen` mapping with number, year, date, status, url, next_due and checked_at"
 auth = "none"
 
 [[source]]

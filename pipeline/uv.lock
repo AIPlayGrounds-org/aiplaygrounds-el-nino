@@ -1212,6 +1212,7 @@ dependencies = [
     { name = "jsonschema" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "pyyaml" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
@@ -1230,6 +1231,7 @@ notebooks = [
 requires-dist = [
     { name = "jsonschema", specifier = ">=4.26.0" },
     { name = "numpy", specifier = ">=2.4.6" },
+    { name = "pyyaml", specifier = ">=6" },
     { name = "scipy", specifier = ">=1.17.1" },
 ]
 

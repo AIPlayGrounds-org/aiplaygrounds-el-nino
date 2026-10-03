@@ -99,6 +99,48 @@ export interface OniRecord {
   anomaly: number
 }
 /**
+ * One ENFEN official communiqué. The status holds from its date until the next-due date.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "enfenRecord".
+ */
+export interface EnfenRecord {
+  /**
+   * Communiqué number within its year.
+   */
+  number: number
+  year: number
+  /**
+   * The exact status phrase ENFEN declares.
+   */
+  status:
+    | 'No Activo'
+    | 'Vigilancia de El Niño Costero'
+    | 'Alerta de El Niño Costero'
+    | 'Vigilancia de La Niña Costera'
+    | 'Alerta de La Niña Costera'
+  /**
+   * The IMARPE detail page of the communiqué.
+   */
+  url: string
+  /**
+   * The communiqué date.
+   */
+  start: string
+  /**
+   * The next-due date the communiqué states.
+   */
+  end: string
+  /**
+   * The day a person last checked the archive.
+   */
+  checked_at?: string
+  /**
+   * True when the next-due date had passed at ingestion, in Lima time.
+   */
+  stale: boolean
+}
+/**
  * One day of a regular lat/lon grid. anomaly[i][j] is the cell at lat[i] and lon[j], in °C and rounded to 2 decimals, or null where there is no value (land).
  *
  * This interface was referenced by `undefined`'s JSON-Schema

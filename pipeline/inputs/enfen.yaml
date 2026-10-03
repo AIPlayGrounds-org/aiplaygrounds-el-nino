@@ -1,0 +1,12 @@
+# Filled by hand from the newest communiqué: https://enfen.imarpe.gob.pe/downloads/comunicados/
+# Open its detail page and copy the values from the HTML, not from the PDF.
+# Dates are unquoted YYYY-MM-DD. `status` is the exact phrase ENFEN uses.
+# `next_due` is the date the communiqué says the next one is due.
+enfen:
+  number: 17
+  year: 2026
+  date: 2026-09-28
+  status: "Alerta de El Niño Costero"
+  url: "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+  next_due: 2026-10-15
+  checked_at: 2026-10-02

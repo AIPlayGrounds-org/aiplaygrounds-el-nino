@@ -18,7 +18,7 @@ INTRO = (
     "from `pipeline/`, generates this file. Do not edit it by hand."
 )
 VERDICTS = (
-    "Verdicts: **automatable** (the pipeline downloads it) and **manual** (a "
+    "Verdicts: **automatable** (the pipeline publishes it) and **manual** (a "
     "person loads it)."
 )
 
