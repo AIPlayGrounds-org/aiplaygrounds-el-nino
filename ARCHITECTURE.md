@@ -15,17 +15,17 @@ public source
 
 ## Code map
 
-| Path                                                       | Job                                                                                                                                  |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| [`sources.toml`](sources.toml)                             | The registry. Holds the facts about each source: institution, URL, variable, unit, verdict. It is the only place they live.          |
-| [`schema/dataset.schema.json`](schema/dataset.schema.json) | The contract of the published JSON. The pipeline validates against it and the web generates its types from it.                       |
-| [`pipeline/`](pipeline/)                                   | A Python package (uv). Downloads, validates and publishes.                                                                           |
-| [`notebooks/`](notebooks/)                                 | One marimo notebook per source. Imports the package and shows each step. Never writes to `data/`.                                    |
-| [`data/`](data/)                                           | Seed JSON on main for CI and tests; deploy overlays it with the published data branch.                                               |
-| [`web/`](web/)                                             | The web app: Nuxt 4 and Vue, with Bun. The current ONI chart uses ECharts (`vue-echarts`).                                           |
-| [`docs/`](docs/README.md)                                  | Chart rules, data contract, concepts, source workflow and the source catalog.                                                        |
-| [`.github/workflows/`](.github/workflows/)                 | `ci.yml` checks every PR. `update-data.yml` publishes JSON to `data`; `deploy.yml` overlays it and publishes `web/` to GitHub Pages. |
-| [`mise.toml`](mise.toml)                                   | Pins the Bun and uv versions.                                                                                                        |
+| Path                                                       | Job                                                                                                                                                   |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`sources.toml`](sources.toml)                             | The registry. Holds the facts about each source: institution, URL, variable, unit, verdict. It is the only place they live.                           |
+| [`schema/dataset.schema.json`](schema/dataset.schema.json) | The contract of the published JSON. The pipeline validates against it and the web generates its types from it.                                        |
+| [`pipeline/`](pipeline/)                                   | A Python package (uv). Downloads, validates and publishes.                                                                                            |
+| [`notebooks/`](notebooks/)                                 | One marimo notebook per source. Imports the package and shows each step. Never writes to `data/`.                                                     |
+| [`data/`](data/)                                           | Seed JSON on main for CI and tests; deploy overlays it with the published data branch.                                                                |
+| [`web/`](web/)                                             | The web app: Nuxt 4 and Vue, with Bun. Datasets enter through one typed build-time loader and charts render inside one ECharts shell (`vue-echarts`). |
+| [`docs/`](docs/README.md)                                  | Chart rules, data contract, concepts, source workflow and the source catalog.                                                                         |
+| [`.github/workflows/`](.github/workflows/)                 | `ci.yml` checks every PR. `update-data.yml` publishes JSON to `data`; `deploy.yml` overlays it and publishes `web/` to GitHub Pages.                  |
+| [`mise.toml`](mise.toml)                                   | Pins the Bun and uv versions.                                                                                                                         |
 
 ### `pipeline/src/wawapacha_pipeline/`
 
@@ -39,12 +39,17 @@ public source
 
 ### `web/app/`
 
-| Path                                           | Job                                                     |
-| ---------------------------------------------- | ------------------------------------------------------- |
-| [`pages/index.vue`](web/app/pages/index.vue)   | The `/` page. Reads the ONI JSON and builds the panels. |
-| [`components/`](web/app/components/)           | The ONI charts.                                         |
-| [`utils/enso.ts`](web/app/utils/enso.ts)       | ENSO phases and ONI dates.                              |
-| [`types/dataset.ts`](web/app/types/dataset.ts) | Types for the JSON. **Generated**: do not edit.         |
+| Path                                                             | Job                                                                                                          |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [`pages/index.vue`](web/app/pages/index.vue)                     | The `/` page. Loads ONI once and passes the typed dataset to the panel components.                           |
+| [`composables/useDataset.ts`](web/app/composables/useDataset.ts) | The only web loader for `data/<id>.json`; it validates the static catalog and narrows records by dataset id. |
+| [`components/ChartShell.vue`](web/app/components/ChartShell.vue) | Shared chart wrapper. It renders the accessible summary and provenance block for every chart.                |
+| [`components/`](web/app/components/)                             | The ONI charts. Components receive the dataset from the loader and do not import JSON.                       |
+| [`messages.ts`](web/app/messages.ts)                             | Flat Spanish UI messages and the single `data_type` label map, ready for i18n.                               |
+| [`utils/enso.ts`](web/app/utils/enso.ts)                         | ENSO phases and ONI dates.                                                                                   |
+| [`types/dataset.ts`](web/app/types/dataset.ts)                   | Schema-generated JSON types. **Generated**: do not edit.                                                     |
+| [`types/datasets.ts`](web/app/types/datasets.ts)                 | Id-to-record type map built from the generated types.                                                        |
+| [`test/`](web/test/)                                             | Behavior tests for the shell fixtures and loader type contract.                                              |
 
 ## Boundaries
 
@@ -75,9 +80,21 @@ public source
 - **No backend.** There are no accounts, no public API and no downloads of our
   own. Static JSON keeps visitor traffic independent of upstream availability
   and rate limits.
+- **The web reads JSON through one path.** `useDataset(id)` reads the static
+  catalog at build time, validates each dataset against
+  `schema/dataset.schema.json`, and returns the record type bound to that id.
+  Pages and components do not import `data/` directly.
 - **The browser loads only our JSON.** Scheduled ingestion fetches upstream
   sources and publishes due datasets to the data branch before the static site
   build overlays them, so visitor traffic never calls an upstream API. If the
-  branch does not exist yet, deploy uses the seed snapshot on main.
+  branch does not exist yet, deploy uses the seed snapshot on main. A missing or
+  invalid dataset throws an error naming `data/<id>.json` during the build.
+- **Every chart uses the shell.** `ChartShell` owns the accessible text summary,
+  variable, unit, period, Spanish data type, source and update age. It keeps the
+  latest record visible when the source is stale. Chart-specific controls and
+  technical explanation remain in the panel.
+- **Copy has one home.** Spanish product copy and the data-type label map live
+  in `web/app/messages.ts`; components reference message keys rather than
+  embedding UI copy. The module's flat keys are the handoff point for i18n.
 - **ECharts is the current chart renderer.** The planned v0.1 map's grid and
   serving rules are in [`ROADMAP.md`](ROADMAP.md), not duplicated here.

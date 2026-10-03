@@ -2,9 +2,10 @@
 // Franjas de temperatura: cada trimestre desde 1950 es una franja vertical, del azul de La Niña
 // al naranja de El Niño según su anomalía. Es decorativa (la historia y la tabla dan los datos),
 // pero su color sale de la serie, no de una paleta inventada.
-import type { OniRecord } from '~/types/dataset'
+import type { DatasetFor } from '~/types/datasets'
 
-const props = defineProps<{ records: OniRecord[] }>()
+const props = defineProps<{ dataset: DatasetFor<'noaa-cpc-oni'> }>()
+const records = props.dataset.records
 
 // Escala divergente: frío (−2,5) → neutro (0) → cálido (+2,6), interpolada en RGB entre tres paradas.
 const COLD = [42, 95, 168]
@@ -15,10 +16,10 @@ const colorFor = (anomaly: number) => {
   const c = anomaly < 0 ? mix(NEUTRAL, COLD, Math.min(1, -anomaly / 2.5)) : mix(NEUTRAL, WARM, Math.min(1, anomaly / 2.6))
   return `rgb(${c.join(',')})`
 }
-const stripes = props.records.map((r, i) => ({ x: i, fill: colorFor(r.anomaly) }))
+const stripes = records.map((r, i) => ({ x: i, fill: colorFor(r.anomaly) }))
 // El año de cada trimestre es el de su mes central, como en la tabla de NOAA (DJF 1950 empieza en diciembre de 1949).
-const first = centerDate(props.records[0]!).getUTCFullYear()
-const last = centerDate(props.records.at(-1)!).getUTCFullYear()
+const first = centerDate(records[0]!).getUTCFullYear()
+const last = centerDate(records.at(-1)!).getUTCFullYear()
 </script>
 
 <template>

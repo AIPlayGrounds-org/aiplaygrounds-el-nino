@@ -13,24 +13,26 @@ import {
 } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
-import type { OniRecord } from '~/types/dataset'
+import { messages } from '~/messages'
+import type { DatasetFor } from '~/types/datasets'
 
 // Solo se cargan las piezas de ECharts que se usan, para que la página pese menos.
 use([LineChart, GridComponent, TooltipComponent, MarkAreaComponent, MarkLineComponent, MarkPointComponent, DataZoomComponent, VisualMapComponent, AriaComponent, CanvasRenderer])
 
 const props = defineProps<{
-  records: OniRecord[]
+  dataset: DatasetFor<'noaa-cpc-oni'>
   /** Resumen en texto de la serie, para lectores de pantalla. */
   description: string
 }>()
+const records = props.dataset.records
 
 // Este componente solo se monta en el navegador (está dentro de <ClientOnly>), así que puede leer window.
 const narrow = window.matchMedia('(max-width: 599px)').matches
 
 const RANGES = [
-  { years: 10, label: '10 años' },
-  { years: 30, label: '30 años' },
-  { years: null, label: 'Todo' },
+  { years: 10, label: messages.chart.rangeYears },
+  { years: 30, label: messages.chart.rangeDecades },
+  { years: null, label: messages.chart.rangeAll },
 ] as const
 type RangeYears = (typeof RANGES)[number]['years']
 
@@ -38,9 +40,9 @@ type RangeYears = (typeof RANGES)[number]['years']
 const selected = ref<RangeYears>(narrow ? 10 : 30)
 
 const isoDay = (d: Date) => d.toISOString().slice(0, 10)
-const lastDate = centerDate(props.records.at(-1)!)
+const lastDate = centerDate(records.at(-1)!)
 const startFor = (years: RangeYears) => {
-  if (years === null) return isoDay(centerDate(props.records[0]!))
+  if (years === null) return isoDay(centerDate(records[0]!))
   const d = new Date(lastDate)
   d.setUTCFullYear(d.getUTCFullYear() - years)
   return isoDay(d)
@@ -82,8 +84,8 @@ const axisNumber = new Intl.NumberFormat('es', { minimumFractionDigits: 1, maxim
 
 const option = computed(() => {
   const t = theme.value
-  const data = props.records.map((r, index) => [isoDay(centerDate(r)), r.anomaly, index])
-  const last = props.records.at(-1)!
+  const data = records.map((r, index) => [isoDay(centerDate(r)), r.anomaly, index])
+  const last = records.at(-1)!
   const lastColor = { warm: t.warm, cold: t.cold, neutral: t.neutral }[ensoPhase(last.anomaly)]
 
   return {
@@ -98,11 +100,11 @@ const option = computed(() => {
       borderColor: t.border,
       textStyle: { color: t.text },
       formatter: (params: { data: [string, number, number] }[]) => {
-        const record = props.records[params[0]!.data[2]]!
+        const record = records[params[0]!.data[2]]!
         return [
           `<b>${seasonLabel(record)}</b> · ${seasonMonths(record)}`,
-          `Anomalía: ${formatAnomaly(record.anomaly)} °C`,
-          `Temperatura del mar: ${formatTemperature(record.sst)} °C`,
+          `${messages.chart.anomaly}: ${formatAnomaly(record.anomaly)} °C`,
+          `${messages.chart.seaTemperature}: ${formatTemperature(record.sst)} °C`,
         ].join('<br/>')
       },
     },
@@ -113,7 +115,7 @@ const option = computed(() => {
     },
     yAxis: {
       type: 'value',
-      name: 'Anomalía (°C)',
+      name: messages.oni.chartAxis,
       nameTextStyle: { color: t.axis, align: 'left' },
       axisLabel: { color: t.axis, formatter: (v: number) => axisNumber.format(v).replace('-', '−') },
       splitLine: { lineStyle: { color: t.grid } },
@@ -181,7 +183,7 @@ const option = computed(() => {
 
 <template>
   <div>
-    <div class="ranges" role="group" aria-label="Periodo del gráfico">
+    <div class="ranges" role="group" :aria-label="messages.chart.period">
       <button
         v-for="r in RANGES"
         :key="r.label"
