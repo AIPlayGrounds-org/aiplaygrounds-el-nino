@@ -94,7 +94,7 @@ const periodDetails = [
       </div>
     </dl>
     <p v-if="dataAge" class="data-age">
-      {{ messages.provenance.latestData }}: {{ period }} ({{ dataAge }}).
+      {{ messages.provenance.latestData }}: {{ lastRecord?.end ?? "—" }} ({{ dataAge }}).
     </p>
     <p v-if="staleNotice" class="stale-notice" role="status">
       {{ messages.provenance.staleSource }}

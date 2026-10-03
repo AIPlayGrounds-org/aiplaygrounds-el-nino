@@ -2,7 +2,7 @@ import { mount } from "@vue/test-utils";
 import { nextTick } from "vue";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import ChartShell from "~/components/ChartShell.vue";
-import { messages } from "~/messages";
+import { ageLabel, messages } from "~/messages";
 import { geometryFixture } from "./fixtures/geometry";
 import { gridFixture } from "./fixtures/grid";
 import { timeSeriesFixture } from "./fixtures/time-series";
@@ -32,9 +32,16 @@ describe("ChartShell", () => {
     const first = dataset.records[0]!;
     const last = dataset.records.at(-1)!;
     const coverage = first.start === last.end ? first.start : `${first.start}–${last.end}`;
-    expect(wrapper.text()).toContain(coverage);
+    expect(wrapper.get(".provenance").text()).toContain(coverage);
+    const dataAge = wrapper.get(".data-age").text();
+    expect(dataAge).toContain(`${messages.provenance.latestData}: ${last.end}`);
+    expect(dataAge.includes(coverage)).toBe(coverage === last.end);
     expect(wrapper.text()).toContain("hace 2 días");
     expect(wrapper.text()).toContain("Resumen accesible de prueba");
+  });
+
+  it("ages a monthly record from the end of its month", () => {
+    expect(ageLabel("2026-08", new Date("2026-10-03T00:00:00Z"))).toBe("hace 1 mes");
   });
 
   it.each([
