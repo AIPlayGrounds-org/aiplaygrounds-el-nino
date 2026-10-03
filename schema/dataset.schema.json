@@ -70,6 +70,10 @@
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/oniRecord" } } } }
     },
     {
+      "if": { "properties": { "id": { "const": "noaa-cpc-outlook" } } },
+      "then": { "properties": { "records": { "items": { "$ref": "#/$defs/outlookRecord" } } } }
+    },
+    {
       "if": { "properties": { "id": { "const": "open-meteo-glofas" } } },
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/glofasRecord" } } } }
     },
@@ -133,6 +137,41 @@
         "end": { "$ref": "#/$defs/month" },
         "sst": { "description": "Sea surface temperature in Niño 3.4, in °C.", "type": "number" },
         "anomaly": { "description": "Anomaly of that temperature, in °C.", "type": "number" }
+      }
+    },
+    "outlookCategory": {
+      "title": "OutlookCategory",
+      "description": "One NOAA CPC ENSO strength category and its probability.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "lower_bound", "upper_bound", "probability"],
+      "properties": {
+        "category": { "type": "string", "minLength": 1 },
+        "lower_bound": { "type": ["number", "null"] },
+        "upper_bound": { "type": ["number", "null"] },
+        "probability": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "outlookRecord": {
+      "title": "OutlookRecord",
+      "description": "One NOAA CPC ENSO strength outlook for a rolling three-month season.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issue_date", "season", "start", "end", "categories"],
+      "properties": {
+        "issue_date": { "$ref": "#/$defs/month" },
+        "season": {
+          "type": "string",
+          "enum": ["DJF", "JFM", "FMA", "MAM", "AMJ", "MJJ", "JJA", "JAS", "ASO", "SON", "OND", "NDJ"]
+        },
+        "start": { "$ref": "#/$defs/month" },
+        "end": { "$ref": "#/$defs/month" },
+        "categories": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": { "$ref": "#/$defs/outlookCategory" }
+        }
       }
     },
     "glofasRecord": {
