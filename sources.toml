@@ -690,34 +690,34 @@ auth = "none"
 [[source]]
 id = "noaa-ersst"
 institution = "NOAA National Centers for Environmental Information (NCEI)"
-product = "Extended Reconstructed Sea Surface Temperature, version 5 (ERSSTv5)"
+product = "ERSSTv5 monthly Niño-region indices"
 block = "History"
-verdict = "pending"
+verdict = "automatable"
 update = "monthly"
 delivery = "v0.4"
-reviewed = "2026-10-01"
+reviewed = "2026-10-02"
 page = "https://www.ncei.noaa.gov/products/extended-reconstructed-sst"
-variable = "Temperatura superficial del mar y su anomalía"
+variable = "Anomalía mensual de la temperatura superficial del mar en Niño 1+2, Niño 3, Niño 3.4 y Niño 4"
 unit = "°C"
 data_type = "estimated"
-spatial_resolution = "2° × 2°"
+spatial_resolution = "Regiones Niño 1+2, Niño 3, Niño 3.4 y Niño 4"
 temporal_resolution = "Mensual"
 history = "From January 1854"
 cadence = "Monthly"
 license = "No access or use restrictions according to the NCEI ERDDAP metadata, with a disclaimer."
 reference_period = "1971–2000"
 notes = [
-  "One global NetCDF file per month: `ersst.v5.YYYYMM.nc`. On 2026-10-01 the latest was August 2026.",
-  "The CoastWatch ERDDAP (https://coastwatch.pfeg.noaa.gov/erddap/griddap/nceiErsstv5.html) subsets on the server, but did not respond on 2026-10-01. The NCEI server itself did.",
-  "Citation: Huang et al. (2017), NOAA NCEI, DOI 10.7289/V5T72FNM.",
-  "A statistical reconstruction from ICOADS that fills the areas with no measurements. NOAA states it is more reliable after the 1940s.",
-  "The ONI is computed from ERSST with its own method and base period. An ERSST anomaly is not an ONI value.",
+  "The published file is the small NCEI index, not the 2° grid. Its columns are NINO3, NINO4, NINO3.4 and NINO1.2; the module publishes them as `nino3_anomaly`, `nino4_anomaly`, `nino34_anomaly` and `nino12_anomaly`.",
+  "The NCEI index supplies one row per month and does not document a missing-value token. A month is accepted only when all four finite anomalies are present.",
+  "Event labels use the inclusive ENFEN Technical Note 01-2024 chronology: 1982-07–1983-11, 1997-04–1998-08 and 2017-01–2017-04. This is computed metadata; it is not an additional anomaly.",
+  "The anomalies are ERSSTv5 values on the 1971–2000 climatology. They are not ONI or ICEN values.",
+  "Citation: Huang et al. (2017), NOAA NCEI, DOI 10.7289/V5T72FNM. Accessed 2026-10-02.",
 ]
 
 [source.access]
-kind = "HTTP and FTP, with ERDDAP available"
-url = "https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/netcdf/"
-format = "NetCDF and ASCII; ERDDAP exports CSV and NetCDF"
+kind = "HTTP text file"
+url = "https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.el_nino.dat"
+format = "Six-column whitespace-delimited text: year, month, NINO3, NINO4, NINO3.4, NINO1.2"
 auth = "none"
 
 [[source]]

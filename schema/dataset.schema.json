@@ -58,6 +58,10 @@
     {
       "if": { "properties": { "id": { "const": "noaa-cpc-oni" } } },
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/oniRecord" } } } }
+    },
+    {
+      "if": { "properties": { "id": { "const": "noaa-ersst" } } },
+      "then": { "properties": { "records": { "items": { "$ref": "#/$defs/ersstRecord" } } } }
     }
   ],
   "$defs": {
@@ -89,6 +93,25 @@
         "end": { "$ref": "#/$defs/month" },
         "sst": { "description": "Sea surface temperature in Niño 3.4, in °C.", "type": "number" },
         "anomaly": { "description": "Anomaly of that temperature, in °C.", "type": "number" }
+      }
+    },
+    "ersstRecord": {
+      "title": "ErsstRecord",
+      "description": "One monthly ERSSTv5 anomaly for the four Niño regions.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "nino3_anomaly", "nino4_anomaly", "nino34_anomaly", "nino12_anomaly"],
+      "properties": {
+        "start": { "$ref": "#/$defs/month" },
+        "end": { "$ref": "#/$defs/month" },
+        "nino3_anomaly": { "description": "Monthly ERSSTv5 anomaly in Niño 3, in °C.", "type": "number" },
+        "nino4_anomaly": { "description": "Monthly ERSSTv5 anomaly in Niño 4, in °C.", "type": "number" },
+        "nino34_anomaly": { "description": "Monthly ERSSTv5 anomaly in Niño 3.4, in °C.", "type": "number" },
+        "nino12_anomaly": { "description": "Monthly ERSSTv5 anomaly in Niño 1+2, in °C.", "type": "number" },
+        "event": {
+          "description": "ENFEN Technical Note 01-2024 event window containing this month.",
+          "enum": ["1982-83", "1997-98", "2017"]
+        }
       }
     }
   }
