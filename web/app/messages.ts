@@ -68,6 +68,7 @@ export const messages = {
     title: '¿Llegó El Niño?',
     peruTitle: '¿Y qué significa para el Perú?',
     historyTitle: 'Explora tú mismo',
+    historyNav: 'Histórico',
     historyLead:
       'Elige el periodo y pasa el cursor (o el dedo) por la línea para ver cada trimestre.',
     methodsTitle: 'Cómo lo hicimos',
@@ -100,6 +101,36 @@ export const messages = {
       'Usamos el Índice Oceánico El Niño (ONI) que publica el Climate Prediction Center de la NOAA, sin modificarlo. Los umbrales (±0,5 °C) y la regla de cinco trimestres seguidos son los de la NOAA; no usamos umbrales propios.',
     methodsBodyTwo:
       'La NOAA usa hoy el RONI, una variante de este índice que descuenta el calentamiento general del océano, para su monitoreo oficial. El ONI se mantiene como la serie histórica de referencia, y sus últimos trimestres pueden revisarse.',
+  },
+  historico: {
+    seoTitle: 'Histórico de anomalías del mar · WawaPacha',
+    seoDescription:
+      'Compara por mes las anomalías de la temperatura superficial del mar durante eventos históricos y el año en curso.',
+    title: 'Los eventos, mes a mes',
+    lead: 'Compara la forma de las anomalías mensuales de ERSSTv5 desde el inicio de cada evento. El valor y el mes del pico se calculan de los datos mostrados.',
+    comparisonTitle: 'Una misma escala de meses desde el inicio',
+    regionLabel: 'Región',
+    regions: {
+      nino34: 'Niño 3.4',
+      nino12: 'Niño 1+2 (costa)',
+    },
+    eventsLabel: 'Eventos que se muestran',
+    events: {
+      '1982-83': '1982–83',
+      '1997-98': '1997–98',
+      '2017': '2017 · El Niño Costero',
+    },
+    currentYear: (year: number) => `${year} · año en curso`,
+    peak: (value: string, month: string) => `pico ${value} °C en ${month}`,
+    noPeak: 'sin datos',
+    summary: (region: string, peaks: string) =>
+      `Comparación de la anomalía mensual en ${region}, alineada desde el primer mes disponible de cada evento. Picos: ${peaks || 'sin datos disponibles'}.`,
+    anomaly: 'Anomalía',
+    months: 'Meses desde el inicio',
+    monthFromStart: (month: number) => `Mes ${month} desde el inicio`,
+    missing: 'Sin dato',
+    tableSummary: 'Ver la tabla de datos',
+    tableCaption: 'Valores por mes desde el inicio de cada serie.',
   },
   attribution: {
     openMeteoLabel: 'Weather data by Open-Meteo.com',
