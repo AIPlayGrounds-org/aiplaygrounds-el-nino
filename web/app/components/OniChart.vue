@@ -14,6 +14,7 @@ import {
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import { messages } from '~/messages'
+import { useChartTheme } from '~/composables/useChartTheme'
 import type { DatasetFor } from '~/types/datasets'
 
 // Solo se cargan las piezas de ECharts que se usan, para que la página pese menos.
@@ -55,30 +56,7 @@ const choose = (years: RangeYears) => {
   chart.value?.dispatchAction({ type: 'dataZoom', dataZoomIndex: 0, startValue: startFor(years), endValue: isoDay(lastDate) })
 }
 
-// ECharts dibuja en un canvas y no ve el CSS: los colores se leen de las variables del tema
-// y se vuelven a leer cuando el sistema cambia entre modo claro y oscuro.
-const readTheme = () => {
-  const css = getComputedStyle(document.documentElement)
-  const v = (name: string) => css.getPropertyValue(name).trim()
-  return {
-    text: v('--text'),
-    muted: v('--muted'),
-    border: v('--border'),
-    surface: v('--surface'),
-    grid: v('--chart-grid'),
-    band: v('--band'),
-    axis: v('--muted'),
-    warm: v('--warm'),
-    cold: v('--cold'),
-    neutral: v('--neutral-data'),
-    font: v('--font'),
-  }
-}
-const theme = ref(readTheme())
-const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
-const refreshTheme = () => (theme.value = readTheme())
-onMounted(() => darkQuery.addEventListener('change', refreshTheme))
-onBeforeUnmount(() => darkQuery.removeEventListener('change', refreshTheme))
+const theme = useChartTheme()
 
 const axisNumber = new Intl.NumberFormat('es', { minimumFractionDigits: 1, maximumFractionDigits: 1, signDisplay: 'exceptZero' })
 
