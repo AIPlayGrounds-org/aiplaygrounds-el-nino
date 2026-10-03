@@ -1,6 +1,5 @@
 import type {
   Dataset,
-  DatasetRecord,
   EnfenRecord,
   ErsstRecord,
   GlofasRecord,
@@ -8,18 +7,8 @@ import type {
   GridRecord,
   OniRecord,
   OutlookRecord,
+  WeeklyNinoRecord,
 } from "~/types/dataset";
-
-export interface WeeklyNinoRecord extends DatasetRecord {
-  nino_1_2_sst: number;
-  nino_1_2_anomaly: number;
-  nino_3_sst: number;
-  nino_3_anomaly: number;
-  nino_3_4_sst: number;
-  nino_3_4_anomaly: number;
-  nino_4_sst: number;
-  nino_4_anomaly: number;
-}
 
 export type DatasetRecordMap = {
   "noaa-cpc-oni": OniRecord;

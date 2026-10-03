@@ -145,6 +145,48 @@ export interface OniRecord {
   anomaly: number
 }
 /**
+ * One weekly NOAA CPC sea-surface temperature index for the Niño regions.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "weeklyNinoRecord".
+ */
+export interface WeeklyNinoRecord {
+  start: Day
+  end: Day
+  /**
+   * Sea-surface temperature in Niño 1+2, in °C.
+   */
+  nino_1_2_sst: number
+  /**
+   * Sea-surface temperature anomaly in Niño 1+2, in °C.
+   */
+  nino_1_2_anomaly: number
+  /**
+   * Sea-surface temperature in Niño 3, in °C.
+   */
+  nino_3_sst: number
+  /**
+   * Sea-surface temperature anomaly in Niño 3, in °C.
+   */
+  nino_3_anomaly: number
+  /**
+   * Sea-surface temperature in Niño 3.4, in °C.
+   */
+  nino_3_4_sst: number
+  /**
+   * Sea-surface temperature anomaly in Niño 3.4, in °C.
+   */
+  nino_3_4_anomaly: number
+  /**
+   * Sea-surface temperature in Niño 4, in °C.
+   */
+  nino_4_sst: number
+  /**
+   * Sea-surface temperature anomaly in Niño 4, in °C.
+   */
+  nino_4_anomaly: number
+}
+/**
  * One dated administrative-boundary payload.
  *
  * This interface was referenced by `undefined`'s JSON-Schema
