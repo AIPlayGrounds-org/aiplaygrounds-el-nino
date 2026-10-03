@@ -91,3 +91,33 @@ export interface OniRecord {
    */
   anomaly: number
 }
+/**
+ * One monthly ERSSTv5 anomaly for the four Niño regions.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "ersstRecord".
+ */
+export interface ErsstRecord {
+  start: Month
+  end: Month
+  /**
+   * Monthly ERSSTv5 anomaly in Niño 3, in °C.
+   */
+  nino3_anomaly: number
+  /**
+   * Monthly ERSSTv5 anomaly in Niño 4, in °C.
+   */
+  nino4_anomaly: number
+  /**
+   * Monthly ERSSTv5 anomaly in Niño 3.4, in °C.
+   */
+  nino34_anomaly: number
+  /**
+   * Monthly ERSSTv5 anomaly in Niño 1+2, in °C.
+   */
+  nino12_anomaly: number
+  /**
+   * ENFEN Technical Note 01-2024 event window containing this month.
+   */
+  event?: '1982-83' | '1997-98' | '2017'
+}
