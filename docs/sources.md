@@ -14,6 +14,7 @@ loads it).
 | [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                                                         | Alerts    | automatable |
 | [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1                                    | SST       | automatable |
 | [`noaa-cpc-outlook`](#noaa-cpc-outlook)         | NOAA Climate Prediction Center (CPC): Official NOAA CPC ENSO Strength Probabilities                                                             | Forecasts | automatable |
+| [`limites-inei-ign`](#limites-inei-ign)         | Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX: Peru administrative boundaries: departments and provinces                 | Territory | automatable |
 | [`open-meteo-glofas`](#open-meteo-glofas)       | Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service: Flood API, GloFAS v4 (continuous history and forecast) | Rivers    | automatable |
 | [`noaa-ersst`](#noaa-ersst)                     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices                                                 | History   | automatable |
 
@@ -224,6 +225,43 @@ Notes:
 - The parser computes ISO start and end months from the visible issue date and
   the rolling season labels because the source season cells do not include
   years.
+
+### limites-inei-ign
+
+Reviewed on 2026-10-02.
+[Official page](https://data.humdata.org/dataset/cod-ab-per).
+
+| Field               | Value                                                                                                                                                         |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Institution         | Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX                                                                                          |
+| Product             | Peru administrative boundaries: departments and provinces                                                                                                     |
+| Variable            | Geometría, código y nombre de la unidad administrativa                                                                                                        |
+| Unit                | No aplica (geometría)                                                                                                                                         |
+| Data type           | official                                                                                                                                                      |
+| Update              | manual                                                                                                                                                        |
+| Spatial resolution  | Polígonos por departamento y provincia                                                                                                                        |
+| Temporal resolution | Versión cartográfica, no es una serie                                                                                                                         |
+| History             | Valid on 2020-07-14; HDX metadata reviewed through 2025-10-30                                                                                                 |
+| Cadence             | Annual. HDX reports a 365-day update frequency.                                                                                                               |
+| License             | CC BY 3.0 IGO                                                                                                                                                 |
+| Access              | HDX API resource download                                                                                                                                     |
+| Download URL        | https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/63647792-0951-40d2-a30e-4a0e60f7a176/download/per_admin_boundaries.geojson.zip |
+| Format              | ZIP containing GeoJSON FeatureCollections                                                                                                                     |
+| Authentication      | none                                                                                                                                                          |
+
+Notes:
+
+- HDX publishes the IGN layers through OCHA ROLAC, OCHA FIS and HDX at
+  https://data.humdata.org/dataset/cod-ab-per.
+- The ZIP contains `per_admin1.geojson` and `per_admin2.geojson`; the module
+  requires 25 departments and 196 provinces and checks WGS84 polygon geometry,
+  codes, names and common valid_on/version/lang metadata.
+- The module keeps only name, code and province parent, then simplifies with
+  Shapely at 0.02 degrees while preserving topology; the published geometry is
+  an adaptation.
+- Attribution: Peru administrative boundaries: Instituto Geográfico Nacional
+  (IGN), via OCHA ROLAC/OCHA FIS and HDX, CC BY 3.0 IGO. Adapted and simplified
+  by WawaPacha.
 
 ### open-meteo-glofas
 
