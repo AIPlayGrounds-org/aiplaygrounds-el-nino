@@ -4,6 +4,7 @@ import {
   alignHistoryEvent,
   CURRENT_EVENT_ID,
   historyEventSelectorData,
+  historyWindowsFromErsst,
   alignHistoryOniEvent,
   peakOfHistoryEvent,
   peakOfHistoryOniEvent,
@@ -64,17 +65,20 @@ describe('historical ERSST comparison', () => {
 
   it('aligns and computes official ONI separately from the monthly ERSST series', async () => {
     const full = await loadDataset('noaa-cpc-oni')
-    const dataset = shapeHistoricoOniDataset(full)
+    const ersst = await loadDataset('noaa-ersst').then(shapeHistoricoDataset)
+    const dataset = shapeHistoricoOniDataset(full, ersst.records)
+    const windows = historyWindowsFromErsst(ersst.records)
 
-    expect(alignHistoryOniEvent(dataset.records, '1982-83')[0]).toEqual({
+    expect(alignHistoryOniEvent(dataset.records, '1982-83', windows)[0]).toEqual({
       offset: 1,
       month: '1982-07',
       value: 0.78,
     })
-    expect(peakOfHistoryOniEvent(dataset.records, '1982-83')).toMatchObject({
+    expect(peakOfHistoryOniEvent(dataset.records, '1982-83', windows)).toMatchObject({
       value: 2.14,
       month: '1983-01',
     })
     expect(dataset.records.length).toBeLessThan(full.records.length)
+    expect(dataset.records.some((record) => record.start.startsWith('2017'))).toBe(false)
   })
 })
