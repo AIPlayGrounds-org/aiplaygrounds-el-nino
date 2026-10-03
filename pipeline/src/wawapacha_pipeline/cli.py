@@ -69,6 +69,12 @@ def main(argv: list[str] | None = None) -> int:
         "due", help="list automatable sources due for an update"
     )
     due_parser.add_argument("--as-of", help="evaluate due dates at this ISO 8601 time")
+    due_parser.add_argument(
+        "--data-dir",
+        type=Path,
+        default=DATA_DIR,
+        help="directory containing published source JSON",
+    )
     args = parser.parse_args(argv)
 
     if args.command == "sources":
@@ -82,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "due":
         try:
             as_of = datetime.fromisoformat(args.as_of) if args.as_of else None
-            for source_id in due_source_ids(as_of):
+            for source_id in due_source_ids(as_of, args.data_dir):
                 print(source_id)
         except (ValueError, registry.RegistryError) as error:
             print(f"cannot select due sources. {error}", file=sys.stderr)
