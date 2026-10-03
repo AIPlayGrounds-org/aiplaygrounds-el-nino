@@ -48,6 +48,16 @@ import '@fontsource/patrick-hand/latin-ext.css'
   --link: var(--accent);
   --focus: var(--accent);
   --chart-grid: #ececec;
+  /* Rampa divergente del pronóstico: frío fuerte (1) a cálido fuerte (9), neutral en el centro (5). Cada paso tiene al menos 3:1 sobre el fondo. */
+  --ramp-1: #0a3a78;
+  --ramp-2: #1d5ba5;
+  --ramp-3: #3a7dbf;
+  --ramp-4: #5c92c8;
+  --ramp-5: #8a8a8a;
+  --ramp-6: #c9783c;
+  --ramp-7: #b9622a;
+  --ramp-8: #9c4818;
+  --ramp-9: #6e300b;
   --notice-bg: #fff3d6;
   --notice-text: #5a3d07;
   /* Usados por los gráficos, que leen estas variables. */
@@ -82,6 +92,15 @@ import '@fontsource/patrick-hand/latin-ext.css'
     --cold: #74aaeb;
     --cold-text: #8ab8ee;
     --chart-grid: #232323;
+    --ramp-1: #7db8ff;
+    --ramp-2: #6ea3ea;
+    --ramp-3: #6190d0;
+    --ramp-4: #5683bd;
+    --ramp-5: #777777;
+    --ramp-6: #b9835f;
+    --ramp-7: #d9894f;
+    --ramp-8: #f09050;
+    --ramp-9: #ffa468;
     --notice-bg: #33280f;
     --notice-text: #f4dca5;
   }
