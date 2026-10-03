@@ -60,7 +60,7 @@ notes = [
   "Fixed-width text with 4 header lines. Negative anomalies are glued to the SST (`20.6-0.1`), so the file is read by position, not by spaces.",
   "Each row is one week, identified by its central day (a Wednesday), for example `02SEP1981`.",
   "The base period comes from the file name and the indices page. The header does not declare it.",
-  "Do not compare this anomaly with the OISST one (1971–2000) or the ONI one (moving base).",
+  "Do not compare this anomaly with the ONI one (moving base).",
   "These are regional averages, not maps.",
 ]
 
@@ -128,39 +128,39 @@ auth = "none"
 
 [[source]]
 id = "noaa-oisst"
-institution = "NOAA National Centers for Environmental Information (NCEI)"
+institution = "NOAA NCEI, distributed by NOAA PSL"
 product = "Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1"
 block = "SST"
-verdict = "pending"
+verdict = "automatable"
 update = "daily"
 delivery = "v0.1"
-reviewed = "2026-10-01"
+reviewed = "2026-10-02"
 page = "https://www.ncei.noaa.gov/products/optimum-interpolation-sst"
-variable = "Temperatura superficial del mar, anomalía, error analítico y concentración de hielo"
+variable = "Anomalía de la temperatura superficial del mar respecto a la climatología 1991–2020"
 unit = "°C"
 data_type = "estimated"
-spatial_resolution = "0,25° × 0,25°"
+spatial_resolution = "Malla de 0,5° × 0,5° entre 20°N–25°S y 120°W–60°W"
 temporal_resolution = "Diaria"
-history = "From 1981-09-01"
-cadence = "Daily preliminary data. The final version arrives about two weeks later."
+history = "From 1981-09-01. The published file holds only the latest day."
+cadence = "Daily, with preliminary data. On 2026-10-02 PSL held up to 2026-10-01. NCEI's final version arrives about two weeks later."
 license = "The ERDDAP metadata allow free use and redistribution, with a disclaimer. They do not name a formal license."
-reference_period = "1971–2000"
+reference_period = "1991–2020"
 notes = [
   "A level 4 product: it merges satellite (AVHRR and VIIRS) and in situ observations, interpolated onto a complete grid.",
-  "Two routes subset on the server. The NCEI ERDDAP returns CSV with final data and is the recommended one. NOAA PSL NCSS returns NetCDF and includes the preliminary days.",
-  "The NCEI ERDDAP holds data from 2020-02-28. Earlier history comes from the PSL yearly files: `https://psl.noaa.gov/thredds/ncss/grid/Datasets/noaa.oisst.v2.highres/`, with `sst.day.mean.<year>.nc` and `sst.day.anom.<year>.nc`.",
-  "Example query (anomaly of the last day in Niño 1+2): append `anom[last][0][(-10):(0)][(270):(280)]` to the URL. The brackets must be encoded.",
-  "The CSV has one row per cell, and the second row holds the units. Land cells arrive as `NaN`: convert them to `null` before averaging.",
+  "Computed here: the daily SST of the latest day minus the PSL daily climatology (`sst.day.mean.ltm.1991-2020.nc`) for the same month and day, on the 0.25° grid. The product's own `anom` variable is not used: it is based on 1971–2000.",
+  "The published grid is the mean of each 2 × 2 block of 0.25° cells, ignoring missing cells, rounded to 2 decimals. A block with no value is `null`. The axes are the block centers, with longitude in °E, negative to the west (-119.75 to -60.25).",
+  "Baseline checked on 2026-10-02. The climatology file's global metadata says 1971–2000, but its time axis says 1991/01/01–2020/12/31. Over the 38 CPC weeks of 2026 up to 23SEP2026, the mean of this anomaly over the Niño 3.4 box (5°N–5°S, 170°W–120°W) differs from `wksst9120.for` by -0.005 °C on average and by 0.10 °C at most. PSL's own 1971–2000 `anom` differs by +0.07 °C on average and by 0.23 °C at most. The baseline is 1991–2020, the same as CPC's weekly indices. The 1971–2000 text is inherited metadata.",
+  "The climatology has 365 days, numbered in the Julian calendar, with no 29 February. 29 February uses 28 February. The pipeline places the day from the first day of the file, because Python decodes the dates two days early.",
+  "PSL keeps one SST file per year (`sst.day.mean.<year>.nc`). The pipeline asks for the last 3 days and keeps the latest. In the first days of January the newest day is still in the previous year's file.",
+  "NCSS returns the cells just outside the box too (one row and one column). The pipeline keeps the 180 × 240 cells inside it. Land arrives as `NaN`.",
   "Data less than 15 days old is preliminary and can change.",
-  "The CoastWatch and upwell ERDDAP servers did not respond on 2026-09-26 or 2026-10-01.",
-  "The anomaly uses the 1971–2000 base. CPC's weekly indices and probabilities use 1991–2020, and the ONI uses a moving base: do not mix them.",
-  "WawaPacha computes the average of a box. It does not match CPC's weekly index for the same region.",
+  "The NCEI ERDDAP returns final data as CSV, about two weeks late. It is not used. Its timestamp query failed with HTTP 400 on 2026-10-02: only the `last` index form works.",
 ]
 
 [source.access]
-kind = "NCEI ERDDAP (CSV) and NOAA PSL NCSS (NetCDF)"
-url = "https://www.ncei.noaa.gov/erddap/griddap/ncdc_oisst_v2_avhrr_by_time_zlev_lat_lon.csv"
-format = "CSV (also JSON and NetCDF) on ERDDAP; NetCDF on PSL"
+kind = "NOAA PSL NCSS (NetCDF subset service)"
+url = "https://psl.noaa.gov/thredds/ncss/grid/Datasets/noaa.oisst.v2.highres"
+format = "NetCDF classic (`accept=netcdf`): `sst.day.mean.<year>.nc` and `sst.day.mean.ltm.1991-2020.nc`"
 auth = "none"
 
 [[source]]

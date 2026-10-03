@@ -7,10 +7,11 @@ The sources the pipeline reads. The rest of the registry is in
 Verdicts: **automatable** (the pipeline downloads it) and **manual** (a person
 loads it).
 
-| ID                              | Source                                                                                          | Block   | Verdict     |
-| ------------------------------- | ----------------------------------------------------------------------------------------------- | ------- | ----------- |
-| [`noaa-cpc-oni`](#noaa-cpc-oni) | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                  | ENSO    | automatable |
-| [`noaa-ersst`](#noaa-ersst)     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices | History | automatable |
+| ID                              | Source                                                                                                       | Block   | Verdict     |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------- | ----------- |
+| [`noaa-cpc-oni`](#noaa-cpc-oni) | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                               | ENSO    | automatable |
+| [`noaa-oisst`](#noaa-oisst)     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1 | SST     | automatable |
+| [`noaa-ersst`](#noaa-ersst)     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices              | History | automatable |
 
 ### noaa-cpc-oni
 
@@ -46,6 +47,61 @@ Notes:
   ONI stays as the historical series.
 - CPC flags a warm or cold period when the ONI reaches ±0.5 °C for at least five
   consecutive, overlapping seasons.
+
+### noaa-oisst
+
+Reviewed on 2026-10-02.
+[Official page](https://www.ncei.noaa.gov/products/optimum-interpolation-sst).
+
+| Field               | Value                                                                                                                      |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Institution         | NOAA NCEI, distributed by NOAA PSL                                                                                         |
+| Product             | Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1                                                   |
+| Variable            | Anomalía de la temperatura superficial del mar respecto a la climatología 1991–2020                                        |
+| Unit                | °C                                                                                                                         |
+| Data type           | estimated                                                                                                                  |
+| Update              | daily                                                                                                                      |
+| Spatial resolution  | Malla de 0,5° × 0,5° entre 20°N–25°S y 120°W–60°W                                                                          |
+| Temporal resolution | Diaria                                                                                                                     |
+| History             | From 1981-09-01. The published file holds only the latest day.                                                             |
+| Cadence             | Daily, with preliminary data. On 2026-10-02 PSL held up to 2026-10-01. NCEI's final version arrives about two weeks later. |
+| Reference period    | 1991–2020                                                                                                                  |
+| License             | The ERDDAP metadata allow free use and redistribution, with a disclaimer. They do not name a formal license.               |
+| Access              | NOAA PSL NCSS (NetCDF subset service)                                                                                      |
+| Download URL        | https://psl.noaa.gov/thredds/ncss/grid/Datasets/noaa.oisst.v2.highres                                                      |
+| Format              | NetCDF classic (`accept=netcdf`): `sst.day.mean.<year>.nc` and `sst.day.mean.ltm.1991-2020.nc`                             |
+| Authentication      | none                                                                                                                       |
+
+Notes:
+
+- A level 4 product: it merges satellite (AVHRR and VIIRS) and in situ
+  observations, interpolated onto a complete grid.
+- Computed here: the daily SST of the latest day minus the PSL daily climatology
+  (`sst.day.mean.ltm.1991-2020.nc`) for the same month and day, on the 0.25°
+  grid. The product's own `anom` variable is not used: it is based on 1971–2000.
+- The published grid is the mean of each 2 × 2 block of 0.25° cells, ignoring
+  missing cells, rounded to 2 decimals. A block with no value is `null`. The
+  axes are the block centers, with longitude in °E, negative to the west
+  (-119.75 to -60.25).
+- Baseline checked on 2026-10-02. The climatology file's global metadata says
+  1971–2000, but its time axis says 1991/01/01–2020/12/31. Over the 38 CPC weeks
+  of 2026 up to 23SEP2026, the mean of this anomaly over the Niño 3.4 box
+  (5°N–5°S, 170°W–120°W) differs from `wksst9120.for` by -0.005 °C on average
+  and by 0.10 °C at most. PSL's own 1971–2000 `anom` differs by +0.07 °C on
+  average and by 0.23 °C at most. The baseline is 1991–2020, the same as CPC's
+  weekly indices. The 1971–2000 text is inherited metadata.
+- The climatology has 365 days, numbered in the Julian calendar, with no 29
+  February. 29 February uses 28 February. The pipeline places the day from the
+  first day of the file, because Python decodes the dates two days early.
+- PSL keeps one SST file per year (`sst.day.mean.<year>.nc`). The pipeline asks
+  for the last 3 days and keeps the latest. In the first days of January the
+  newest day is still in the previous year's file.
+- NCSS returns the cells just outside the box too (one row and one column). The
+  pipeline keeps the 180 × 240 cells inside it. Land arrives as `NaN`.
+- Data less than 15 days old is preliminary and can change.
+- The NCEI ERDDAP returns final data as CSV, about two weeks late. It is not
+  used. Its timestamp query failed with HTTP 400 on 2026-10-02: only the `last`
+  index form works.
 
 ### noaa-ersst
 
