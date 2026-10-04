@@ -29,7 +29,6 @@ def test_snapshot_aggregates_to_months_and_keeps_daily_values_out():
         "lat",
         "lon",
         "start",
-        "end",
         "precipitation_mm",
         "precipitation_days",
         "tmax_c",
@@ -39,7 +38,6 @@ def test_snapshot_aggregates_to_months_and_keeps_daily_values_out():
         "precipitation_median_mm",
     }
     assert len(first["start"]) == 7
-    assert first["end"] == first["start"]
     assert all("precipitation_daily" not in record for record in records)
     assert any(record["region"] == "JAYANCA (LA VIÑA)" for record in records)
 
@@ -67,6 +65,36 @@ def test_monthly_quality_gate_is_independent_per_variable():
     assert january["tmax_days"] == 24
     assert january["tmin_c"] == 5
     assert january["tmin_days"] == 25
+
+
+def test_partial_first_year_is_the_sep_to_dec_tail():
+    station = {
+        "dep": "TEST",
+        "name": "TEST",
+        "lat": 0,
+        "lon": 0,
+        "years": [["2000", 122], ["2001", 365]],
+        "precipitation_mm": [1] * (122 + 365),
+        "tmax_c": [10] * (122 + 365),
+        "tmin_c": [5] * (122 + 365),
+    }
+
+    rows = senamhi_estaciones.aggregate_station("test", station)
+    tail = {row["start"]: row for row in rows if row["start"].startswith("2000-")}
+
+    assert set(tail) == {"2000-09", "2000-10", "2000-11", "2000-12"}
+    assert [tail[month]["precipitation_mm"] for month in sorted(tail)] == [
+        30,
+        31,
+        30,
+        31,
+    ]
+    assert [tail[month]["precipitation_days"] for month in sorted(tail)] == [
+        30,
+        31,
+        30,
+        31,
+    ]
 
 
 def test_interior_year_must_be_complete():

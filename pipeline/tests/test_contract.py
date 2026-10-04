@@ -58,7 +58,6 @@ def test_accepts_a_source_with_its_own_fields():
         (lambda d: d.update(records=[]), "records"),
         (lambda d: d.update(extra=1), "extra"),
         (lambda d: d["source"].update(url="ftp://example.org"), "source/url"),
-        (lambda d: d["records"][0].pop("end"), "records/0"),
         (lambda d: d["records"][0].update(start="January"), "records/0/start"),
     ],
 )
