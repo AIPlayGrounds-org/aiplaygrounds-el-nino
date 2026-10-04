@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">WawaPacha</title>
+  <desc id="description">Señales de El Niño en el Perú</desc>
+  <rect width="1200" height="630" fill="#0f3d46"/>
+  <path d="M0 470C180 410 280 520 440 455S770 410 920 470s190 30 280-10v170H0Z" fill="#e3f0ee"/>
+  <path d="M0 520c180-60 300 40 460-20s290-40 430 12 210 22 310-12v130H0Z" fill="#a9cdc8" opacity=".8"/>
+  <text x="88" y="210" fill="#eef6f5" font-family="Georgia,serif" font-size="104" font-weight="700">WawaPacha</text>
+  <text x="94" y="300" fill="#b2cfcc" font-family="Georgia,serif" font-size="42">Señales de El Niño en el Perú</text>
+  <circle cx="1010" cy="160" r="54" fill="#ffa46d"/>
+</svg>

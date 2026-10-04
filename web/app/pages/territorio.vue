@@ -20,6 +20,7 @@ import {
   shapeLatestChirps,
   type TerritoryMetric,
 } from '~/composables/territorio'
+import { useSiteSeo } from '~/composables/useSiteSeo'
 
 use([MapChart, TooltipComponent, VisualMapComponent, AriaComponent, CanvasRenderer])
 
@@ -152,7 +153,7 @@ const era5Summary = territory.era5Summary(
   era5Records.length,
 )
 
-useSeoMeta({ title: territory.seoTitle, description: territory.seoDescription })
+useSiteSeo({ title: territory.seoTitle, description: territory.seoDescription })
 </script>
 
 <template>

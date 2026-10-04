@@ -4,6 +4,7 @@ import { useSourceCatalog } from '~/composables/useSourceCatalog'
 import { dataTypeLabel, messages } from '~/messages'
 import { formatDay } from '~/utils/format'
 import { sourceGroupId } from '~/utils/sourceCatalog'
+import { useSiteSeo } from '~/composables/useSiteSeo'
 
 const methodology = messages.metodologia
 const catalog = await useSourceCatalog()
@@ -19,7 +20,7 @@ const sourceNamesByDataType = (dataType: string) =>
 const estimatedSources = sourceNamesByDataType('estimated')
 const forecastSources = sourceNamesByDataType('forecast')
 
-useSeoMeta({ title: methodology.seoTitle, description: methodology.seoDescription })
+useSiteSeo({ title: methodology.seoTitle, description: methodology.seoDescription })
 </script>
 
 <template>

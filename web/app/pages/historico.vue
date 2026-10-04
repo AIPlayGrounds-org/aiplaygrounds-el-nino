@@ -3,13 +3,14 @@ import { messages } from '~/messages'
 import { useDataset } from '~/composables/useDataset'
 import HistoricoChart from '~/components/HistoricoChart.vue'
 import { shapeHistoricoDataset, shapeHistoricoOniDataset } from '~/utils/historico'
+import { useSiteSeo } from '~/composables/useSiteSeo'
 
 const ersst = await useDataset('noaa-ersst', shapeHistoricoDataset)
 const oni = await useDataset('noaa-cpc-oni', (dataset) =>
   shapeHistoricoOniDataset(dataset, ersst.records),
 )
 
-useSeoMeta({
+useSiteSeo({
   title: messages.historico.seoTitle,
   description: messages.historico.seoDescription,
 })

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ENFEN_NOTAS_TECNICAS, NOAA_ENSO_EXPLAINER, NOAA_NINO_INDICES, NOAA_ONI } from '~/links'
 import { messages } from '~/messages'
+import { useSiteSeo } from '~/composables/useSiteSeo'
 
 const learn = messages.aprende
 
-useSeoMeta({ title: learn.seoTitle, description: learn.seoDescription })
+useSiteSeo({ title: learn.seoTitle, description: learn.seoDescription })
 </script>
 
 <template>

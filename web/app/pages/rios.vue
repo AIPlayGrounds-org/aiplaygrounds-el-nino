@@ -4,10 +4,11 @@ import { useDataset } from '~/composables/useDataset'
 import { messages } from '~/messages'
 import { ENFEN_COMUNICADOS, SENAMHI_AVISOS } from '~/links'
 import { shapeRiosDataset } from '~/utils/rios'
+import { useSiteSeo } from '~/composables/useSiteSeo'
 
 const rios = await useDataset('open-meteo-glofas', shapeRiosDataset)
 
-useSeoMeta({ title: messages.rios.seoTitle, description: messages.rios.seoDescription })
+useSiteSeo({ title: messages.rios.seoTitle, description: messages.rios.seoDescription })
 </script>
 
 <template>
