@@ -9,26 +9,32 @@ on:
 permissions:
   contents: read
 
+env:
+  UV_LOCKED: "1"
+  UV_NO_DEFAULT_GROUPS: "1"
+  WAWAPACHA_DATA_DIR: published
+
 jobs:
   freshness:
     runs-on: ubuntu-latest
-    continue-on-error: true
     defaults:
       run:
         working-directory: pipeline
     steps:
-      - uses: actions/checkout@v4
-      - name: Overlay the published data branch
-        working-directory: .
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Check out the published data branch
         run: |
           if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
             git fetch origin data
-            mkdir -p data
-            git archive FETCH_HEAD --format=tar -- '*.json' | tar -x -C data
+            git worktree add --detach "$WAWAPACHA_DATA_DIR" FETCH_HEAD
           else
-            echo "No data branch yet; checking the seed snapshot on main."
+            git worktree add --orphan -b data "$WAWAPACHA_DATA_DIR"
           fi
-      - uses: astral-sh/setup-uv@v6
-      - run: uv sync --locked
+
+      - uses: astral-sh/setup-uv@v10.2.0
+
       - name: Check published dataset freshness
-        run: uv run wawapacha-pipeline freshness
+        run: uv run wawapacha-pipeline freshness --data-dir "$WAWAPACHA_DATA_DIR"

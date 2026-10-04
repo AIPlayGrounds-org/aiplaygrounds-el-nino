@@ -11,10 +11,25 @@ from wawapacha_pipeline import catalog, registry
 from wawapacha_pipeline.contract import DATA_DIR, ValidationError, relative_path
 
 SOURCES = registry.discover()
-DUE_AGES = {
-    "daily": timedelta(hours=20),
-    "weekly": timedelta(days=6),
-    "monthly": timedelta(days=27),
+CADENCE_RULES = {
+    "daily": {
+        "interval": timedelta(days=1),
+        "due_after": timedelta(hours=20),
+        "slack": timedelta(hours=4),
+        "stale_label": "2 × 24 hours + 4 hours slack",
+    },
+    "weekly": {
+        "interval": timedelta(days=7),
+        "due_after": timedelta(days=6),
+        "slack": timedelta(days=1),
+        "stale_label": "2 × 7 days + 1 day slack",
+    },
+    "monthly": {
+        "interval": timedelta(days=31),
+        "due_after": timedelta(days=27),
+        "slack": timedelta(days=1),
+        "stale_label": "2 × 31 days + 1 day slack",
+    },
 }
 
 
@@ -61,7 +76,18 @@ def _published_update_times(path: Path) -> list[datetime]:
 def _is_due(update: str, ingestion: datetime, now: datetime) -> bool:
     if update == "manual":
         return False
-    return now - ingestion >= DUE_AGES[update]
+    return now - ingestion >= CADENCE_RULES[update]["due_after"]
+
+
+def _is_stale(update: str, last_update: datetime, now: datetime) -> bool:
+    if update == "manual":
+        return False
+    return now - last_update > _freshness_tolerance(update)
+
+
+def _freshness_tolerance(update: str) -> timedelta:
+    rule = CADENCE_RULES[update]
+    return rule["interval"] * 2 + rule["slack"]
 
 
 def due_source_ids(
@@ -88,7 +114,7 @@ def due_source_ids(
 def freshness_issues(
     now: datetime | None = None, data_dir: Path | None = None
 ) -> list[str]:
-    """Return stale or missing published datasets using the due selector's ages.
+    """Return stale or missing published datasets using cadence tolerances.
 
     Ingestion is the publication timestamp. When an HTTP Last-Modified value is
     present, the newest of those two timestamps is used so a source revision is
@@ -109,11 +135,13 @@ def freshness_issues(
             issues.append(f"{source_id}: missing or invalid ingestion/update timestamp")
             continue
         latest = max(times)
-        if _is_due(update, latest, now):
+        if _is_stale(update, latest, now):
             age = now - latest
             issues.append(
                 f"{source_id}: last update {latest.isoformat()} is {age} old; "
-                f"{update} cadence allows {DUE_AGES[update]}"
+                f"{update} freshness tolerance is "
+                f"{_freshness_tolerance(update)} "
+                f"({CADENCE_RULES[update]['stale_label']})"
             )
     return issues
 
