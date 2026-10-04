@@ -8,7 +8,7 @@ const props = defineProps<{
   dataset: DatasetFor<'enfen-communique'>
 }>()
 
-const record = props.dataset.records.at(-1)
+const record = props.dataset.records[0]
 const summary = computed(() =>
   record
     ? messages.panels.enfen.summary(record.status, formatDay(record.start))

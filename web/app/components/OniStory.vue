@@ -653,10 +653,6 @@ svg {
   border: 1px solid var(--border);
   font-size: 1.125rem;
   line-height: 1.55;
-  transition: opacity 0.3s ease-out;
-}
-.step:not(.active) p {
-  opacity: 1;
 }
 .step :deep(strong) {
   font-weight: 650;
@@ -694,9 +690,6 @@ svg {
     background: none;
     border: 0;
     font-size: 1.1875rem;
-  }
-  .step:not(.active) p {
-    opacity: 1;
   }
 }
 
@@ -884,8 +877,7 @@ svg {
 @media (prefers-reduced-motion: reduce) {
   .scene,
   .fade,
-  .counter,
-  .step p {
+  .counter {
     transition: none;
   }
 }

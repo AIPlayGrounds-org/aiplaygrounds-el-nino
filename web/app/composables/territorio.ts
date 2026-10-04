@@ -1,5 +1,5 @@
 import type { BoundaryFeature, ChirpsRecord, Era5Record, GeometryRecord } from '~/types/dataset'
-import type { DatasetFor } from '~/types/datasets'
+import type { DatasetFor, DatasetWithRecords } from '~/types/datasets'
 
 export type TerritoryMetric = 'precipitation' | 'anomaly'
 
@@ -113,20 +113,20 @@ export const joinTerritoryRows = (
 }
 
 export type DepartmentGeometry = Omit<DatasetFor<'limites-inei-ign'>, 'records'> & {
-  records: [Omit<GeometryRecord, 'provincias'>]
+  records: Omit<GeometryRecord, 'provincias'>[]
 }
 
-export type Era5Summary = DatasetFor<'open-meteo-era5'> & {
+export type Era5Summary = DatasetWithRecords<'open-meteo-era5'> & {
   window: Era5Window
   departments: Era5Department[]
 }
 
-/** Keeps the newest boundary record without the province layer, which the page never draws. */
+/** Keeps the boundary record without the province layer, which the page never draws. */
 export const shapeDepartmentGeometry = (
   dataset: DatasetFor<'limites-inei-ign'>,
 ): DepartmentGeometry => {
-  const latest = dataset.records.at(-1)
-  if (!latest) return dataset as unknown as DepartmentGeometry
+  const latest = dataset.records[0]
+  if (!latest) return { ...dataset, records: [] }
   const { start, end, version, departamentos, attribution, license_url } = latest
   return { ...dataset, records: [{ start, end, version, departamentos, attribution, license_url }] }
 }
@@ -135,12 +135,11 @@ export const shapeDepartmentGeometry = (
  * Keeps the latest pentad per department, oldest first, so the first and last record bound the
  * period that ChartShell prints.
  */
-export const shapeLatestChirps = (dataset: DatasetFor<'chirps'>): DatasetFor<'chirps'> => {
-  if (!dataset.records.length) return dataset
-  const [first, ...rest] = latestChirpsPerDepartment(dataset.records).sort(
+export const shapeLatestChirps = (dataset: DatasetFor<'chirps'>): DatasetWithRecords<'chirps'> => {
+  const records = latestChirpsPerDepartment(dataset.records).sort(
     (a, b) => a.end.localeCompare(b.end) || a.region.localeCompare(b.region),
   )
-  return { ...dataset, records: [first!, ...rest] }
+  return { ...dataset, records }
 }
 
 /**

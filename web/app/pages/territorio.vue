@@ -25,7 +25,7 @@ use([MapChart, TooltipComponent, VisualMapComponent, AriaComponent, CanvasRender
 
 // Each dataset is reduced on the server to what this page draws, to keep the payload small.
 const geometry = await useDataset('limites-inei-ign', shapeDepartmentGeometry)
-const geometryRecord = geometry.records.at(-1)
+const geometryRecord = geometry.records[0]
 const [chirps, era5] = await Promise.all([
   useDataset('chirps', shapeLatestChirps),
   useDataset('open-meteo-era5', shapeEra5Summary(geometryRecord?.departamentos.features ?? [])),
