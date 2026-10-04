@@ -105,25 +105,6 @@ def test_due_command_honours_an_explicit_data_dir(tmp_path, capsys):
     )
 
 
-def test_freshness_uses_the_newest_ingestion_or_source_update(tmp_path):
-    for source_id in cli.SOURCES:
-        write_published_data(
-            tmp_path / f"{source_id}.json", "2026-10-04T12:00:00+00:00"
-        )
-    weekly = tmp_path / "noaa-cpc-nino-weekly.json"
-    weekly.write_text(
-        json.dumps(
-            {
-                "ingestion_time": "2026-10-01T12:00:00+00:00",
-                "source_revision": {"last_modified": "Fri, 02 Oct 2026 12:00:00 GMT"},
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    assert cli.freshness_issues(datetime(2026, 10, 4, 12, tzinfo=UTC), tmp_path) == []
-
-
 @pytest.mark.parametrize("update", ["daily", "weekly", "monthly"])
 def test_freshness_tolerance_is_independent_from_due_threshold(update, tmp_path):
     now = datetime(2026, 10, 4, 12, tzinfo=UTC)
@@ -167,7 +148,7 @@ def test_freshness_reports_stale_missing_and_invalid_data(tmp_path):
 
 def test_freshness_command_returns_failure_with_visible_errors(tmp_path, capsys):
     write_published_data(
-        tmp_path / "noaa-cpc-nino-weekly.json", "2026-09-20T12:00:00+00:00"
+        tmp_path / "noaa-cpc-nino-weekly.json", "2026-09-19T11:59:59+00:00"
     )
 
     assert (

@@ -4,7 +4,6 @@ import argparse
 import json
 import sys
 from datetime import UTC, datetime, timedelta
-from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 from wawapacha_pipeline import catalog, registry
@@ -16,19 +15,16 @@ CADENCE_RULES = {
         "interval": timedelta(days=1),
         "due_after": timedelta(hours=20),
         "slack": timedelta(hours=4),
-        "stale_label": "2 × 24 hours + 4 hours slack",
     },
     "weekly": {
         "interval": timedelta(days=7),
         "due_after": timedelta(days=6),
         "slack": timedelta(days=1),
-        "stale_label": "2 × 7 days + 1 day slack",
     },
     "monthly": {
         "interval": timedelta(days=31),
         "due_after": timedelta(days=27),
         "slack": timedelta(days=1),
-        "stale_label": "2 × 31 days + 1 day slack",
     },
 }
 
@@ -46,31 +42,6 @@ def _ingestion_time(path: Path) -> datetime | None:
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         return None
     return ingestion if ingestion.tzinfo else ingestion.replace(tzinfo=UTC)
-
-
-def _parse_update_time(value: object) -> datetime | None:
-    if not isinstance(value, str):
-        return None
-    try:
-        parsed = datetime.fromisoformat(value)
-    except ValueError:
-        try:
-            parsed = parsedate_to_datetime(value)
-        except (TypeError, ValueError, IndexError, OverflowError):
-            return None
-    return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
-
-
-def _published_update_times(path: Path) -> list[datetime]:
-    try:
-        dataset = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return []
-    times = [_parse_update_time(dataset.get("ingestion_time"))]
-    revision = dataset.get("source_revision")
-    if isinstance(revision, dict):
-        times.append(_parse_update_time(revision.get("last_modified")))
-    return [time for time in times if time is not None]
 
 
 def _is_due(update: str, ingestion: datetime, now: datetime) -> bool:
@@ -114,12 +85,7 @@ def due_source_ids(
 def freshness_issues(
     now: datetime | None = None, data_dir: Path | None = None
 ) -> list[str]:
-    """Return stale or missing published datasets using cadence tolerances.
-
-    Ingestion is the publication timestamp. When an HTTP Last-Modified value is
-    present, the newest of those two timestamps is used so a source revision is
-    not reported stale merely because the file was checked later.
-    """
+    """Return stale or missing published datasets using cadence tolerances."""
     now = now or datetime.now(UTC)
     now = now if now.tzinfo else now.replace(tzinfo=UTC)
     data_dir = data_dir or DATA_DIR
@@ -130,18 +96,16 @@ def freshness_issues(
         if update == "manual":
             continue
         path = data_dir / f"{source_id}.json"
-        times = _published_update_times(path)
-        if not times:
+        last_update = _ingestion_time(path)
+        if last_update is None:
             issues.append(f"{source_id}: missing or invalid ingestion/update timestamp")
             continue
-        latest = max(times)
-        if _is_stale(update, latest, now):
-            age = now - latest
+        if _is_stale(update, last_update, now):
+            age = now - last_update
             issues.append(
-                f"{source_id}: last update {latest.isoformat()} is {age} old; "
+                f"{source_id}: last update {last_update.isoformat()} is {age} old; "
                 f"{update} freshness tolerance is "
-                f"{_freshness_tolerance(update)} "
-                f"({CADENCE_RULES[update]['stale_label']})"
+                f"{_freshness_tolerance(update)}"
             )
     return issues
 
