@@ -129,7 +129,7 @@ describe('territory data transformations', () => {
     const geometry = await loadDataset('limites-inei-ign')
     const chirps = await loadDataset('chirps')
     const era5 = await loadDataset('open-meteo-era5')
-    const departments = geometry.records.at(-1)!.departamentos.features
+    const departments = geometry.records[0]!.departamentos.features
 
     const shapedGeometry = shapeDepartmentGeometry(geometry)
     const shapedChirps = shapeLatestChirps(chirps)

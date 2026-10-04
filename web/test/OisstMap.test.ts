@@ -108,7 +108,7 @@ describe('OisstMap component', () => {
     const empty = { ...gridFixture, records: [] } as unknown as DatasetFor<'noaa-oisst'>
     const wrapper = mountMap(empty)
 
-    expect(wrapper.text()).toContain(messages.oisst.empty('este periodo'))
+    expect(wrapper.text()).toContain(messages.oisst.empty(messages.oisst.emptyPeriod))
     expect(wrapper.find('.map').exists()).toBe(false)
     expect(wrapper.text()).not.toMatch(/NaN|undefined/)
   })

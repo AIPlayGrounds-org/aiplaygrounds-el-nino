@@ -91,6 +91,17 @@ describe('OutlookPanel', () => {
     expect(wrapper.text()).not.toMatch(/NaN|undefined/)
   })
 
+  it('provides a usable table fallback for the weekly series', async () => {
+    const weekly = await loadDataset('noaa-cpc-nino-weekly')
+    const { wrapper } = mountChart(NinoWeeklyPanel, weekly)
+
+    expect(wrapper.get('details').text()).toContain(messages.panels.weekly.tableSummary)
+    expect(wrapper.get('[role="region"]').attributes('aria-label')).toBe(
+      messages.panels.weekly.tableSummary,
+    )
+    expect(wrapper.get('tbody tr').text()).toContain('°C')
+  })
+
   it('draws each series from its own category even when a record orders them differently', () => {
     const [first, ...rest] = outlookFixture.records
     const reversed = { ...first!, categories: [...first!.categories].reverse() }
@@ -112,6 +123,16 @@ describe('OutlookPanel', () => {
 
     expect(wrapper.get('.outlook-meta').text()).toBe('Emisión: septiembre de 2026')
     expect(wrapper.text()).not.toMatch(/\b1 de septiembre/)
+  })
+
+  it('provides a usable table fallback for forecast probabilities', () => {
+    const { wrapper } = mountOutlook(outlookFixture)
+
+    expect(wrapper.get('details').text()).toContain(messages.panels.outlook.tableSummary)
+    expect(wrapper.get('[role="region"]').attributes('aria-label')).toBe(
+      messages.panels.outlook.tableSummary,
+    )
+    expect(wrapper.findAll('tbody tr')).toHaveLength(outlookFixture.records.length)
   })
 
   it('puts the first season on top of the inverted category axis', () => {
