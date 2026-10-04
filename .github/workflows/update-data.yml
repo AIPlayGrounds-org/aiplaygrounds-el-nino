@@ -1,4 +1,4 @@
-# Download each source daily and redeploy when any source changes.
+# Check due automatable sources daily and redeploy when any source changes.
 # Sources run independently. Failed sources keep their previous JSON, and the
 # job reports failures after the remaining sources finish.
 name: Update data
