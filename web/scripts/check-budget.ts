@@ -1,9 +1,12 @@
 import { resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { normalizeBasePath } from '../shared/site'
+import { htmlAssetReferences, manifestJavaScriptFiles } from './budget-assets'
 
 type RouteBudget = {
   payloadBytes: number
   entryJsBytes: number
+  cssBytes: number
 }
 
 type Budget = {
@@ -27,24 +30,52 @@ async function size(path: string): Promise<number> {
   return file.size
 }
 
-async function entryJsBytes(html: string): Promise<number> {
-  const sources = [...html.matchAll(/<script\b[^>]*\s+src\s*=\s*["']([^"']+)["']/gi)].map(
-    (match) => match[1]!,
-  )
+async function manifestPath(): Promise<string> {
+  const candidates = [
+    resolve(import.meta.dir, '../node_modules/.cache/nuxt/.nuxt/dist/server/client.manifest.mjs'),
+    resolve(import.meta.dir, '../.nuxt/dist/server/client.manifest.mjs'),
+  ]
+  for (const candidate of candidates) {
+    if (await Bun.file(candidate).exists()) return candidate
+  }
+  throw new Error('Nuxt client manifest is missing; run bun run generate first')
+}
+
+const clientManifest = (await import(pathToFileURL(await manifestPath()).href))
+  .default as Parameters<typeof manifestJavaScriptFiles>[1]
+
+function outputPath(source: string): string {
+  const assetPath = new URL(source, 'https://wawapacha.invalid').pathname
+  if (!assetPath.startsWith(basePath)) {
+    throw new Error(`Generated asset is outside PAGES_BASE_URL: ${source}`)
+  }
+  const relativePath = assetPath.slice(basePath.length)
+  return resolve(root, relativePath)
+}
+
+function manifestSource(file: string): string {
+  return `${basePath}_nuxt/${file}`
+}
+
+async function assetBytes(sources: string[], kind: string): Promise<number> {
   const files = new Set<string>()
   for (const source of sources) {
-    const assetPath = new URL(source, 'https://wawapacha.invalid').pathname
-    if (!assetPath.startsWith(basePath)) {
-      throw new Error(`Generated asset is outside PAGES_BASE_URL: ${source}`)
-    }
-    const relativePath = assetPath.slice(basePath.length)
-    const file = resolve(root, relativePath)
+    const file = outputPath(source)
     if (!(await Bun.file(file).exists())) {
-      throw new Error(`Missing generated JavaScript asset referenced by HTML: ${source}`)
+      throw new Error(`Missing generated ${kind} asset referenced by HTML: ${source}`)
     }
     files.add(file)
   }
   return (await Promise.all([...files].map(size))).reduce((total, bytes) => total + bytes, 0)
+}
+
+async function routeAssetBytes(route: string, html: string) {
+  const references = htmlAssetReferences(html)
+  const manifestJs = manifestJavaScriptFiles(route, clientManifest).map(manifestSource)
+  return {
+    js: await assetBytes([...references.js, ...manifestJs], 'JavaScript'),
+    css: await assetBytes(references.css, 'CSS'),
+  }
 }
 
 let failed = false
@@ -53,15 +84,18 @@ for (const [route, expected] of Object.entries(budget.routes)) {
   const htmlPath = resolve(directory, 'index.html')
   const html = await Bun.file(htmlPath).text()
   const payloadBytes = await size(resolve(directory, '_payload.json'))
-  const jsBytes = await entryJsBytes(html)
+  const { js: jsBytes, css: cssBytes } = await routeAssetBytes(route, html)
   const payloadLimit = Math.ceil(expected.payloadBytes * (1 + budget.margin))
   const jsLimit = Math.ceil(expected.entryJsBytes * (1 + budget.margin))
+  const cssLimit = Math.ceil(expected.cssBytes * (1 + budget.margin))
   const payloadStatus = payloadBytes <= payloadLimit ? 'ok' : 'FAIL'
   const jsStatus = jsBytes <= jsLimit ? 'ok' : 'FAIL'
+  const cssStatus = cssBytes <= cssLimit ? 'ok' : 'FAIL'
   console.log(
-    `${route} payload=${payloadBytes}/${payloadLimit} ${payloadStatus} entry-js=${jsBytes}/${jsLimit} ${jsStatus}`,
+    `${route} payload=${payloadBytes}/${payloadLimit} ${payloadStatus} ` +
+      `entry-js=${jsBytes}/${jsLimit} ${jsStatus} css=${cssBytes}/${cssLimit} ${cssStatus}`,
   )
-  if (payloadStatus === 'FAIL' || jsStatus === 'FAIL') failed = true
+  if (payloadStatus === 'FAIL' || jsStatus === 'FAIL' || cssStatus === 'FAIL') failed = true
 }
 
 if (failed) process.exit(1)
