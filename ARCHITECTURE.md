@@ -36,7 +36,7 @@ public source
 | [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                                                                                                        |
 | [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset; [`enfen_icen.py`](pipeline/src/wawapacha_pipeline/sources/enfen_icen.py) publishes the official monthly ICEN table. |
 | [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry.                                                                            |
-| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due`, `freshness` and `sources`. `due` and `freshness` apply the registry update class to published JSON timestamps.      |
+| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due`, `freshness` and `sources`. `due` and `freshness` apply the registry update class to published JSON timestamps.                                                                                 |
 
 The scheduled [`update-data.yml`](.github/workflows/update-data.yml) runs once a
 day. It asks `due` for missing or old daily, weekly and monthly datasets, skips
@@ -52,8 +52,8 @@ the registry cadence schedule, but its independent tolerance is two nominal
 cadence intervals plus slack: 52 hours for daily, 15 days for weekly, and 63
 days for monthly. Those values live with the due thresholds in
 `pipeline/src/wawapacha_pipeline/cli.py`. It compares the published file's
-`ingestion_time`; a stale result fails this separate workflow and
-therefore does not block deploys.
+`ingestion_time`; a stale result fails this separate workflow and therefore does
+not block deploys.
 
 ### Web
 
@@ -138,12 +138,13 @@ payload limits; their current values are in the generated
   `pipeline/inputs/senamhi-estaciones-*.json.gz` without network access,
   validates run-length year coverage, publishes monthly aggregates only, and
   keeps the daily arrays out of `data/`. A refresh takes a new operator snapshot
-  from the public histogram map and station pages, adds the new gzip to the input
-  directory unchanged (the module reads the newest by filename), reruns the module, and verifies the aggregate tests and generated
-  site. The module reads the date and source pages from the snapshot metadata,
-  so a refresh needs no code edit. Access must use the public pages only: no
-  login and no bot-check bypass. The licence remains unconfirmed, so derived
-  monthly aggregates are the publication boundary.
+  from the public histogram map and station pages, adds the new gzip to the
+  input directory unchanged (the module reads the newest by filename), reruns
+  the module, and verifies the aggregate tests and generated site. The module
+  reads the date and source pages from the snapshot metadata, so a refresh needs
+  no code edit. Access must use the public pages only: no login and no bot-check
+  bypass. The licence remains unconfirmed, so derived monthly aggregates are the
+  publication boundary.
 - **Stale data remains visible.** The shell shows the latest valid record and
   its age, then links to the source when its update or record age crosses the
   current stale threshold.

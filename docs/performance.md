@@ -40,10 +40,3 @@ google-chrome --headless=new --disable-gpu --hide-scrollbars --no-sandbox \
   --screenshot=web/public/og-image.png \
   file://$PWD/web/public/og-image.svg
 ```
-
-## Station rain budget
-
-The `/historico` payload budget is 146,593 bytes. The SENAMHI station panel
-adds event-window months and a monthly median for 42 stations to that page. The
-budgets for the other routes were re-measured after the ICEN and station
-sources and the link styling landed.
