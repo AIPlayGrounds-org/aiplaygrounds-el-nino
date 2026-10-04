@@ -94,6 +94,10 @@
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/enfenRecord" } } } }
     },
     {
+      "if": { "properties": { "id": { "const": "enfen-icen" } } },
+      "then": { "properties": { "records": { "items": { "$ref": "#/$defs/icenRecord" } } } }
+    },
+    {
       "if": { "properties": { "id": { "const": "noaa-oisst" } } },
       "then": {
         "properties": {
@@ -400,6 +404,18 @@
         "end": { "description": "The next-due date the communiqué states.", "$ref": "#/$defs/day" },
         "checked_at": { "description": "The day a person last checked the archive.", "$ref": "#/$defs/day" },
         "stale": { "description": "True when the next-due date had passed at ingestion, in Lima time.", "type": "boolean" }
+      }
+    },
+    "icenRecord": {
+      "title": "IcenRecord",
+      "description": "One monthly official ICEN anomaly in Niño 1+2.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "icen"],
+      "properties": {
+        "start": { "$ref": "#/$defs/month" },
+        "end": { "$ref": "#/$defs/month" },
+        "icen": { "description": "Official ICEN anomaly in Niño 1+2, in °C.", "type": "number", "minimum": -10, "maximum": 10 }
       }
     },
     "gridRecord": {

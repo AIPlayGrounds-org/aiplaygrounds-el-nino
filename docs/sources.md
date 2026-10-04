@@ -11,6 +11,7 @@ loads it).
 | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ----------- |
 | [`noaa-cpc-oni`](#noaa-cpc-oni)                 | NOAA Climate Prediction Center (CPC): Oceanic Niño Index (ONI)                                                                                  | ENSO          | automatable |
 | [`noaa-cpc-nino-weekly`](#noaa-cpc-nino-weekly) | NOAA Climate Prediction Center (CPC): Weekly SST indices (file `wksst9120.for`)                                                                 | ENSO          | automatable |
+| [`enfen-icen`](#enfen-icen)                     | Comisión Multisectorial ENFEN: Índice Costero El Niño (ICEN)                                                                                    | ENSO          | automatable |
 | [`enfen-communique`](#enfen-communique)         | Comisión Multisectorial ENFEN: Comunicado Oficial ENFEN                                                                                         | Alerts        | automatable |
 | [`noaa-oisst`](#noaa-oisst)                     | NOAA NCEI, distributed by NOAA PSL: Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1                                    | SST           | automatable |
 | [`noaa-cpc-outlook`](#noaa-cpc-outlook)         | NOAA Climate Prediction Center (CPC): Official NOAA CPC ENSO Strength Probabilities                                                             | Forecasts     | automatable |
@@ -88,6 +89,37 @@ Notes:
   not declare it.
 - Do not compare this anomaly with the ONI one (moving base).
 - These are regional averages, not maps.
+
+### enfen-icen
+
+Reviewed on 2026-10-04. [Official page](https://enfen.imarpe.gob.pe/).
+
+| Field               | Value                                                           |
+| ------------------- | --------------------------------------------------------------- |
+| Institution         | Comisión Multisectorial ENFEN                                   |
+| Product             | Índice Costero El Niño (ICEN)                                   |
+| Variable            | Anomalía de la temperatura superficial del mar en Niño 1+2      |
+| Unit                | °C                                                              |
+| Data type           | observed                                                        |
+| Update              | daily                                                           |
+| Spatial resolution  | Región Niño 1+2                                                 |
+| Temporal resolution | Mensual, media móvil de tres meses                              |
+| History             | IGP numeric table from 1950                                     |
+| Cadence             | Daily check; the upstream update lag is unconfirmed.            |
+| Reference period    | 1991–2020 según ENFEN (2024)                                    |
+| Access              | HTTP text file                                                  |
+| Download URL        | http://met.igp.gob.pe/datos/ICEN.txt                            |
+| Format              | Whitespace-delimited text: `yy mm ICEN`, with `%` comment lines |
+| Authentication      | none                                                            |
+
+Notes:
+
+- The official table header cites ENFEN (2024) and says `Versión oficial`.
+- The update lag is unconfirmed; outreach email is pending.
+- Terms for automated access and reuse are unconfirmed; outreach email is
+  pending.
+- The ICENtmp.txt path at the same host returned 404; this source uses the
+  official ICEN.txt table only.
 
 ### enfen-communique
 
