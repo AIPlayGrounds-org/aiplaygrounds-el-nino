@@ -10,8 +10,11 @@ import type {
   IcenRecord,
   OniRecord,
   OutlookRecord,
+  SenamhiEstacionesRecord,
   WeeklyNinoRecord,
 } from '~/types/dataset'
+
+export type { SenamhiEstacionesRecord } from '~/types/dataset'
 
 export type DatasetRecordMap = {
   'noaa-cpc-oni': OniRecord
@@ -25,6 +28,7 @@ export type DatasetRecordMap = {
   'noaa-oisst': GridRecord
   'open-meteo-glofas': GlofasRecord
   'noaa-ersst': ErsstRecord
+  'senamhi-estaciones': SenamhiEstacionesRecord
 }
 
 export type DatasetId = keyof DatasetRecordMap

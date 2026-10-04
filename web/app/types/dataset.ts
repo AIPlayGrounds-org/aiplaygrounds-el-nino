@@ -119,7 +119,7 @@ export interface DatasetRecord {
   /**
    * End of the period: YYYY-MM or YYYY-MM-DD.
    */
-  end: string
+  end?: string
   [k: string]: unknown
 }
 /**
@@ -449,4 +449,25 @@ export interface ChirpsRecord {
   end: Day
   precipitation_mm: number | null
   anomaly_mm: number | null
+}
+/**
+ * One monthly precipitation and temperature aggregate for a SENAMHI station.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "senamhiEstacionesRecord".
+ */
+export interface SenamhiEstacionesRecord {
+  station: string
+  region: string
+  department: string
+  lat: number
+  lon: number
+  start: Month
+  precipitation_mm: number | null
+  precipitation_days: number
+  tmax_c: number | null
+  tmax_days: number
+  tmin_c: number | null
+  tmin_days: number
+  precipitation_median_mm: number | null
 }

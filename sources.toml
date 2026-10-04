@@ -490,18 +490,24 @@ format = "GeoTIFF"
 id = "senamhi-estaciones"
 institution = "Servicio Nacional de Meteorología e Hidrología del Perú (SENAMHI)"
 product = "Datos hidrometeorológicos a nivel nacional: estaciones meteorológicas"
+site_pages = ["/historico"]
 block = "Precipitation"
-verdict = "pending"
+verdict = "manual"
 update = "manual"
 delivery = "v0.2"
-reviewed = "2026-09-26"
+reviewed = "2026-10-04"
 page = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
 variable = "Lluvia, temperatura y otras variables, según la estación"
+unit = "mm; °C"
 data_type = "observed"
 spatial_resolution = "Punto de estación"
+temporal_resolution = "Mensual"
+history = "Manual snapshot taken 2026-10-04; most station series end between 2013 and 2015"
+license = "Unconfirmed; outreach pending"
 notes = [
-  "The earlier request-form claim was wrong in kind: the download sits behind a Cloudflare Turnstile bot check.",
-  "No series was obtained from the portal.",
+  "Snapshot taken 2026-10-04 from the public histogram pages, with no login and no bot-check bypass.",
+  "The licence is unconfirmed; only derived monthly aggregates are published.",
+  "Shown on /historico. Most station series end between 2013 and 2015, so the 2017 coastal El Niño is not covered.",
 ]
 
 [source.access]

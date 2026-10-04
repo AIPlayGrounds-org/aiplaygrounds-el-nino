@@ -30,13 +30,13 @@ public source
 
 ### Pipeline
 
-| Path                                                         | Owns                                                                                                                                       |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                                                |
-| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                             |
+| Path                                                         | Owns                                                                                                                                                                                                                  |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                                                                                                                           |
+| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                                                                                                        |
 | [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset; [`enfen_icen.py`](pipeline/src/wawapacha_pipeline/sources/enfen_icen.py) publishes the official monthly ICEN table. |
-| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry. |
-| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due`, `freshness` and `sources`. `due` and `freshness` apply the registry update class to published JSON timestamps.      |
+| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry.                                                                            |
+| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due`, `freshness` and `sources`. `due` and `freshness` apply the registry update class to published JSON timestamps.                                                                                 |
 
 The scheduled [`update-data.yml`](.github/workflows/update-data.yml) runs once a
 day. It asks `due` for missing or old daily, weekly and monthly datasets, skips
@@ -52,8 +52,8 @@ the registry cadence schedule, but its independent tolerance is two nominal
 cadence intervals plus slack: 52 hours for daily, 15 days for weekly, and 63
 days for monthly. Those values live with the due thresholds in
 `pipeline/src/wawapacha_pipeline/cli.py`. It compares the published file's
-`ingestion_time`; a stale result fails this separate workflow and
-therefore does not block deploys.
+`ingestion_time`; a stale result fails this separate workflow and therefore does
+not block deploys.
 
 ### Web
 
@@ -61,7 +61,7 @@ therefore does not block deploys.
 | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | [`pages/index.vue`](web/app/pages/index.vue)                                     | The home page: ONI, weekly Niño indices, the ENFEN communiqué, CPC probabilities and the OISST map.                               |
 | [`pages/territorio.vue`](web/app/pages/territorio.vue)                           | The department rainfall map and its ERA5 cross-check.                                                                             |
-| [`pages/historico.vue`](web/app/pages/historico.vue)                             | The comparison of current and tagged historical events.                                                                           |
+| [`pages/historico.vue`](web/app/pages/historico.vue)                             | The comparison of current and tagged historical events, including the SENAMHI station-rain panel.                                 |
 | [`pages/rios.vue`](web/app/pages/rios.vue)                                       | The modeled river-discharge series and official alert links.                                                                      |
 | [`pages/aprende.vue`](web/app/pages/aprende.vue)                                 | The Spanish explainer for ENSO, Niño regions, ONI and the Peruvian coast.                                                         |
 | [`pages/metodologia.vue`](web/app/pages/metodologia.vue)                         | The generated source catalogue and data-type explanations.                                                                        |
@@ -76,6 +76,7 @@ therefore does not block deploys.
 | [`server/routes/sitemap.xml.ts`](web/server/routes/sitemap.xml.ts)               | Generates the sitemap from the public route list during static generation.                                                        |
 | [`server/routes/robots.txt.ts`](web/server/routes/robots.txt.ts)                 | Generates crawler rules and links the generated sitemap.                                                                          |
 | [`components/ChartShell.vue`](web/app/components/ChartShell.vue)                 | The shared chart frame, accessible summary, provenance fields, data age and stale-source notice.                                  |
+| [`components/SenamhiRainChart.vue`](web/app/components/SenamhiRainChart.vue)     | The station selector, 1982–83 and 1997–98 monthly rain comparison, median climatology, table fallback and snapshot notes.         |
 | [`components/DatasetAttribution.vue`](web/app/components/DatasetAttribution.vue) | The Open-Meteo credit and the required ERA5 or GloFAS attribution.                                                                |
 | [`messages.ts`](web/app/messages.ts)                                             | Spanish product copy and the single `data_type` label map.                                                                        |
 | [`types/dataset.ts`](web/app/types/dataset.ts)                                   | Schema-generated TypeScript types. **Generated:** run `bun run types` in `web/`; do not edit by hand.                             |
@@ -89,12 +90,12 @@ does not call an upstream source. The server loader imports one dataset by id,
 validates it against [`dataset.schema.json`](schema/dataset.schema.json), and
 then `useDataset` optionally reduces the returned value before hydration.
 
-| Route         | Server-side shaping                                                                                                                    |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `/`           | Crops the OISST grid to the map window. The ONI, weekly indices, communiqué and outlook use the records their panels read.             |
-| `/territorio` | Keeps department geometry, the latest CHIRPS record per department, and ERA5 department totals plus the first and last source records. |
-| `/historico`  | Keeps tagged ERSST event records and the current year, then keeps the matching ONI windows.                                            |
-| `/rios`       | Keeps the river fields used by the chart and orders records by point and date.                                                         |
+| Route         | Server-side shaping                                                                                                                             |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`           | Crops the OISST grid to the map window. The ONI, weekly indices, communiqué and outlook use the records their panels read.                      |
+| `/territorio` | Keeps department geometry, the latest CHIRPS record per department, and ERA5 department totals plus the first and last source records.          |
+| `/historico`  | Keeps tagged ERSST event records and the current year, matching ONI windows, the two SENAMHI rain event windows and each station's latest year. |
+| `/rios`       | Keeps the river fields used by the chart and orders records by point and date.                                                                  |
 
 The route's shaped return value is what Nuxt serializes into its
 `_payload.json`. The route byte budget and generated-output check live in
@@ -133,6 +134,17 @@ payload limits; their current values are in the generated
 - **Charts use one provenance frame.** `ChartShell` owns the variable, unit,
   period, data type, source and update age. Chart-specific controls and
   explanations stay in the page or panel.
+- **SENAMHI station rain is a manual snapshot.** The source module reads
+  `pipeline/inputs/senamhi-estaciones-*.json.gz` without network access,
+  validates run-length year coverage, publishes monthly aggregates only, and
+  keeps the daily arrays out of `data/`. A refresh takes a new operator snapshot
+  from the public histogram map and station pages, adds the new gzip to the
+  input directory unchanged (the module reads the newest by filename), reruns
+  the module, and verifies the aggregate tests and generated site. The module
+  reads the date and source pages from the snapshot metadata, so a refresh needs
+  no code edit. Access must use the public pages only: no login and no bot-check
+  bypass. The licence remains unconfirmed, so derived monthly aggregates are the
+  publication boundary.
 - **Stale data remains visible.** The shell shows the latest valid record and
   its age, then links to the source when its update or record age crosses the
   current stale threshold.

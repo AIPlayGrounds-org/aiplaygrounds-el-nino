@@ -160,6 +160,52 @@ export const messages = {
     oniTableSummary: 'Ver la tabla del ONI',
     oniTableCaption: 'Valores del ONI por mes desde el inicio de cada serie.',
     empty: 'No hay datos históricos disponibles ahora.',
+    stations: {
+      title: 'Lluvia observada en estaciones',
+      lead: 'Compara la lluvia mensual observada en una estación durante 1982–83 y 1997–98 con la mediana de esa estación para el mismo mes del año.',
+      stationLabel: 'Estación',
+      stationNote: (name: string, department: string, lat: number, lon: number) =>
+        name +
+        ', ' +
+        department +
+        ' · punto ' +
+        Math.abs(lat).toFixed(2) +
+        '°S, ' +
+        Math.abs(lon).toFixed(2) +
+        '°O.',
+      events: {
+        '1982-83': '1982–83',
+        '1997-98': '1997–98',
+      },
+      climatology: 'Mediana mensual',
+      months: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+      monthsAxis: 'Mes',
+      month: 'Mes desde enero',
+      seriesLabel: 'Series de lluvia observada',
+      chartDescription:
+        'Lluvia mensual observada en la estación seleccionada durante 1982–83 y 1997–98, comparada con su mediana mensual.',
+      chartError: 'No se pudo dibujar el gráfico. La tabla de abajo conserva los datos.',
+      tableSummary: 'Ver la tabla de lluvia de la estación',
+      tableCaption: 'Precipitación mensual observada y mediana de la estación.',
+      missing: 'Sin dato',
+      summary: (name: string, department: string) =>
+        'Lluvia mensual de la estación ' +
+        name +
+        ', ' +
+        department +
+        ', en los eventos 1982–83 y 1997–98 frente a su mediana mensual.',
+      empty: 'No hay datos de estaciones disponibles ahora.',
+      provenance: (snapshotDate: string, year: number) =>
+        'SENAMHI, snapshot manual del ' +
+        snapshotDate +
+        '; datos históricos hasta ' +
+        year +
+        '. Las series terminan entre 2013 y 2015; el Niño Costero de 2017 no está cubierto.',
+      license: 'Licencia no confirmada.',
+      refresh: 'No se actualizan automáticamente.',
+      point: 'Es un punto de estación, no un promedio regional.',
+      crossCheck: 'Consulta CHIRPS y ERA5 en Territorio',
+    },
   },
   attribution: {
     openMeteoLabel: 'Weather data by Open-Meteo.com',

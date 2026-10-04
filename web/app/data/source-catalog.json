@@ -137,6 +137,22 @@
       "license": "CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content."
     },
     {
+      "id": "senamhi-estaciones",
+      "name": "Datos hidrometeorológicos a nivel nacional: estaciones meteorológicas",
+      "provider": "Servicio Nacional de Meteorología e Hidrología del Perú (SENAMHI)",
+      "variable": "Lluvia, temperatura y otras variables, según la estación",
+      "unit": "mm; °C",
+      "data_type": "observed",
+      "spatial_resolution": "Punto de estación",
+      "temporal_resolution": "Mensual",
+      "provider_url": "https://www.senamhi.gob.pe/servicios/?p=estaciones",
+      "data_url": "https://www.senamhi.gob.pe/site/descarga-datos/map_hist_data.php",
+      "site_pages": [
+        "/historico"
+      ],
+      "license": "Unconfirmed; outreach pending"
+    },
+    {
       "id": "limites-inei-ign",
       "name": "Peru administrative boundaries: departments and provinces",
       "provider": "Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX",

@@ -17,6 +17,7 @@ loads it).
 | [`noaa-cpc-outlook`](#noaa-cpc-outlook)         | NOAA Climate Prediction Center (CPC): Official NOAA CPC ENSO Strength Probabilities                                                             | Forecasts     | automatable |
 | [`chirps`](#chirps)                             | Climate Hazards Center (CHC), University of California Santa Barbara: CHIRPS v3 (CHC Infrared Precipitation with Stations)                      | Precipitation | automatable |
 | [`open-meteo-era5`](#open-meteo-era5)           | Open-Meteo (intermediary); ERA5 data from the Copernicus Climate Change Service (C3S) and ECMWF: Historical Weather API, model `era5`           | Precipitation | automatable |
+| [`senamhi-estaciones`](#senamhi-estaciones)     | Servicio Nacional de Meteorología e Hidrología del Perú (SENAMHI): Datos hidrometeorológicos a nivel nacional: estaciones meteorológicas        | Precipitation | manual      |
 | [`limites-inei-ign`](#limites-inei-ign)         | Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX: Peru administrative boundaries: departments and provinces                 | Territory     | automatable |
 | [`open-meteo-glofas`](#open-meteo-glofas)       | Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service: Flood API, GloFAS v4 (continuous history and forecast) | Rivers        | automatable |
 | [`noaa-ersst`](#noaa-ersst)                     | NOAA National Centers for Environmental Information (NCEI): ERSSTv5 monthly Niño-region indices                                                 | History       | automatable |
@@ -351,6 +352,35 @@ Notes:
   month.
 - Open-Meteo is an intermediary. If its terms change, the original source is the
   Copernicus CDS, which needs an account.
+
+### senamhi-estaciones
+
+Reviewed on 2026-10-04.
+[Official page](https://www.senamhi.gob.pe/servicios/?p=estaciones).
+
+| Field               | Value                                                                           |
+| ------------------- | ------------------------------------------------------------------------------- |
+| Institution         | Servicio Nacional de Meteorología e Hidrología del Perú (SENAMHI)               |
+| Product             | Datos hidrometeorológicos a nivel nacional: estaciones meteorológicas           |
+| Variable            | Lluvia, temperatura y otras variables, según la estación                        |
+| Unit                | mm; °C                                                                          |
+| Data type           | observed                                                                        |
+| Update              | manual                                                                          |
+| Spatial resolution  | Punto de estación                                                               |
+| Temporal resolution | Mensual                                                                         |
+| History             | Manual snapshot taken 2026-10-04; most station series end between 2013 and 2015 |
+| License             | Unconfirmed; outreach pending                                                   |
+| Access              | Web viewer and download                                                         |
+| Download URL        | https://www.senamhi.gob.pe/site/descarga-datos/map_hist_data.php                |
+| Authentication      | Cloudflare Turnstile bot check                                                  |
+
+Notes:
+
+- Snapshot taken 2026-10-04 from the public histogram pages, with no login and
+  no bot-check bypass.
+- The licence is unconfirmed; only derived monthly aggregates are published.
+- Shown on /historico. Most station series end between 2013 and 2015, so the
+  2017 coastal El Niño is not covered.
 
 ### limites-inei-ign
 

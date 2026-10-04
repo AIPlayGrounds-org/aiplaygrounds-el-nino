@@ -3,22 +3,22 @@ from wawapacha_pipeline import catalog, cli, registry
 
 def test_docs_sources_is_up_to_date_with_the_registry():
     """If this fails, run `uv run wawapacha-pipeline sources` and commit the change."""
-    expected = catalog.render(registry.load(), cli.SOURCES)
+    expected = catalog.render(registry.load(), cli.CATALOG_SOURCES)
 
     assert catalog.CATALOG_PATH.read_text(encoding="utf-8") == expected
 
 
 def test_web_source_catalog_is_up_to_date_with_the_registry():
-    expected = catalog.render_web(registry.load(), cli.SOURCES)
+    expected = catalog.render_web(registry.load(), cli.CATALOG_SOURCES)
 
     assert catalog.WEB_CATALOG_PATH.read_text(encoding="utf-8") == expected
 
 
 def test_there_is_one_section_per_source_the_pipeline_reads_and_none_for_the_rest():
-    text = catalog.render(registry.load(), cli.SOURCES)
+    text = catalog.render(registry.load(), cli.CATALOG_SOURCES)
 
     for source_id in registry.load():
-        assert (f"### {source_id}\n" in text) == (source_id in cli.SOURCES)
+        assert (f"### {source_id}\n" in text) == (source_id in cli.CATALOG_SOURCES)
 
 
 def test_sources_command_writes_the_catalog(tmp_path, monkeypatch, capsys):
@@ -30,10 +30,10 @@ def test_sources_command_writes_the_catalog(tmp_path, monkeypatch, capsys):
     assert cli.main(["sources"]) == 0
 
     assert target.read_text(encoding="utf-8") == catalog.render(
-        registry.load(), cli.SOURCES
+        registry.load(), cli.CATALOG_SOURCES
     )
     assert web_target.read_text(encoding="utf-8") == catalog.render_web(
-        registry.load(), cli.SOURCES
+        registry.load(), cli.CATALOG_SOURCES
     )
     assert "Wrote" in capsys.readouterr().out
 
