@@ -119,7 +119,7 @@ export interface DatasetRecord {
   /**
    * End of the period: YYYY-MM or YYYY-MM-DD.
    */
-  end: string
+  end?: string
   [k: string]: unknown
 }
 /**
@@ -463,7 +463,6 @@ export interface SenamhiEstacionesRecord {
   lat: number
   lon: number
   start: Month
-  end: Month
   precipitation_mm: number | null
   precipitation_days: number
   tmax_c: number | null
