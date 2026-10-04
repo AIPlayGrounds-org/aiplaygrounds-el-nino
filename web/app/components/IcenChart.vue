@@ -64,7 +64,6 @@ const chartOption = computed(() => {
 <template>
   <ChartShell :dataset="dataset" :summary="summary">
     <template v-if="dataset.records.length">
-      <h3>{{ messages.historico.icenTitle }}</h3>
       <p class="icen-note">{{ messages.historico.icenNote }}</p>
       <NuxtErrorBoundary>
         <ClientOnly>
@@ -104,10 +103,6 @@ const chartOption = computed(() => {
 </template>
 
 <style scoped>
-h3 {
-  margin: 0 0 12px;
-  font-size: 1.25rem;
-}
 .icen-note {
   margin: 0 0 16px;
   color: var(--muted);
