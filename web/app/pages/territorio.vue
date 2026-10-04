@@ -161,6 +161,8 @@ useSeoMeta({ title: territory.seoTitle, description: territory.seoDescription })
       <NuxtLink class="brand" to="/">{{ messages.page.brand }}</NuxtLink>
       <span class="section-label">{{ territory.sectionLabel }}</span>
       <NuxtLink to="/rios">{{ messages.rios.sectionLabel }}</NuxtLink>
+      <NuxtLink to="/aprende">{{ messages.page.learnLink }}</NuxtLink>
+      <NuxtLink to="/metodologia">{{ messages.page.methodologyLink }}</NuxtLink>
     </header>
 
     <section class="intro" aria-labelledby="territory-title">

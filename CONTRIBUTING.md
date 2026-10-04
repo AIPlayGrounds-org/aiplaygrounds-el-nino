@@ -27,6 +27,7 @@ uv run ruff check .
 uv run pytest
 uv run wawapacha-pipeline sources
 git diff --exit-code ../docs/sources.md
+git diff --exit-code ../web/app/data/source-catalog.json
 
 cd ../web
 bun install --frozen-lockfile
@@ -38,10 +39,11 @@ bun run generate
 
 If a `git diff` fails, a generated file is stale. Commit it with your change:
 
-| Generated file                                         | Regenerate with                                     | From                                                       |
-| ------------------------------------------------------ | --------------------------------------------------- | ---------------------------------------------------------- |
-| [`docs/sources.md`](docs/sources.md)                   | `uv run wawapacha-pipeline sources`, in `pipeline/` | [`sources.toml`](sources.toml)                             |
-| [`web/app/types/dataset.ts`](web/app/types/dataset.ts) | `bun run types`, in `web/`                          | [`schema/dataset.schema.json`](schema/dataset.schema.json) |
+| Generated file                                                         | Regenerate with                                     | From                                                       |
+| ---------------------------------------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------- |
+| [`docs/sources.md`](docs/sources.md)                                   | `uv run wawapacha-pipeline sources`, in `pipeline/` | [`sources.toml`](sources.toml)                             |
+| [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) | `uv run wawapacha-pipeline sources`, in `pipeline/` | [`sources.toml`](sources.toml)                             |
+| [`web/app/types/dataset.ts`](web/app/types/dataset.ts)                 | `bun run types`, in `web/`                          | [`schema/dataset.schema.json`](schema/dataset.schema.json) |
 
 ## Language
 

@@ -1,6 +1,13 @@
 import type { Dataset } from '~/types/dataset'
 import { formatDay } from '~/utils/format'
 
+const dataTypeDescriptions = {
+  observed: 'la fuente publica una observación o un índice derivado de observaciones.',
+  estimated: 'la fuente publica un valor calculado, interpolado o producido por un modelo.',
+  forecast: 'la fuente publica un valor para una fecha futura.',
+  official: 'la fuente publica un estado institucional.',
+} satisfies Record<Dataset['data_type'], string>
+
 export const messages = {
   dataType: {
     observed: 'Observado',
@@ -92,6 +99,8 @@ export const messages = {
     territoryLink: 'Territorio',
     observedUntil: (period: string) => `observados hasta ${period}`,
     signoff: 'WawaPacha · Monitoreando el Fenómeno El Niño en el Perú',
+    learnLink: 'Aprende',
+    methodologyLink: 'Metodología',
     peruBody:
       'Todo lo que viste se mide en el Pacífico central, a más de 4000 km de nuestra costa. Para el mar frente al Perú, el índice oficial es otro: el ICEN de ENFEN, que se mide en la región Niño 1+2, junto a la costa.',
     peruWarning:
@@ -148,6 +157,72 @@ export const messages = {
       'open-meteo-era5': 'Contiene datos ERA5 del Copernicus Climate Change Service (C3S) y ECMWF.',
       'open-meteo-glofas': 'Contiene datos GloFAS del Copernicus Emergency Management Service.',
     } as Record<string, string>,
+  },
+  metodologia: {
+    seoTitle: 'Cómo lo hicimos · WawaPacha',
+    seoDescription:
+      'Qué mide cada fuente de WawaPacha, de dónde viene, cómo se clasifica y cuándo se actualizó.',
+    sectionLabel: 'Metodología',
+    title: 'Cómo lo hicimos',
+    lead: 'Estas fichas salen del registro de fuentes y de los archivos de datos que publica el sitio. No copiamos aquí los detalles a mano: la página se reconstruye en cada generación.',
+    provider: 'Proveedor',
+    variable: 'Variable',
+    unit: 'Unidad',
+    resolution: 'Resolución',
+    spatialResolution: 'Espacial',
+    temporalResolution: 'Temporal',
+    referencePeriod: 'Periodo de referencia',
+    noReferencePeriod: 'No declarado en el registro.',
+    license: 'Licencia o atribución',
+    noLicense: 'El registro no declara una licencia o atribución.',
+    lastUpdate: 'Última actualización del archivo',
+    dataLink: 'Archivo o servicio consultado',
+    dataTypeTitle: 'Qué significa cada tipo de dato',
+    dataTypeLead:
+      'La etiqueta viene del registro. WawaPacha la conserva para separar observaciones, estimaciones, pronósticos y estados oficiales.',
+    dataTypeDescription: (type: Dataset['data_type']) => dataTypeDescriptions[type],
+    modelTitle: 'Observado y estimado no son lo mismo',
+    modelBody: (estimatedSources: string, forecastSources: string) =>
+      `Estas fuentes aparecen como estimadas en el registro: ${estimatedSources || 'ninguna'}. Las fuentes marcadas como pronóstico son: ${forecastSources || 'ninguna'}. El sitio conserva esas etiquetas y no las convierte en mediciones.`,
+    limitsTitle: 'Lo que este sitio no hace',
+    limits: [
+      'No produce pronósticos propios.',
+      'No transforma un índice en una alerta.',
+      'No afirma impactos en personas, actividades o lugares.',
+    ],
+    sourceHeading: 'Fuente',
+  },
+  aprende: {
+    seoTitle: 'Aprende sobre El Niño y La Niña · WawaPacha',
+    seoDescription:
+      'Una explicación breve de El Niño, La Niña, las regiones Niño, el ONI y la costa del Perú.',
+    sectionLabel: 'Aprende',
+    title: 'El Niño, La Niña y el mar frente al Perú',
+    lead: 'Una guía breve para leer los índices del océano sin confundir una región del Pacífico con otra.',
+    phenomenonTitle: 'El Niño y La Niña',
+    phenomenonBody:
+      'Son las fases cálida y fría de una variación del sistema océano-atmósfera del Pacífico tropical. NOAA las explica dentro de ENSO, la Oscilación del Sur de El Niño.',
+    regionsTitle: 'Las regiones Niño',
+    regionsLead:
+      'Son zonas del Pacífico que se usan para resumir la temperatura superficial del mar. NOAA publica estas delimitaciones:',
+    regions: [
+      ['Niño 1+2', '0–10°S, 90–80°O'],
+      ['Niño 3', '5°N–5°S, 150–90°O'],
+      ['Niño 3.4', '5°N–5°S, 170–120°O'],
+      ['Niño 4', '5°N–5°S, 160°E–150°O'],
+    ],
+    oniTitle: 'El ONI',
+    oniBody:
+      'El Índice Oceánico El Niño es la media móvil de tres meses de la anomalía de la temperatura superficial del mar en la región Niño 3.4. NOAA usa sus umbrales y su regla de persistencia para describir episodios históricos de El Niño y La Niña.',
+    coastTitle: 'Por qué importa la costa del Perú',
+    coastBody:
+      'Niño 1+2 está junto a la costa oriental del Pacífico, mientras que Niño 3.4 está en el Pacífico central. Por eso el ONI no es el índice costero peruano: ENFEN define y comunica por separado El Niño Costero y La Niña Costera.',
+    sourcesTitle: 'Fuentes para seguir leyendo',
+    noaaIndices: 'Regiones e índices de NOAA',
+    noaaOni: 'Definición del ONI de NOAA',
+    noaaExplainer: 'Explicación de ENSO de NOAA',
+    enfenDefinitions: 'Notas técnicas de ENFEN',
+    sourceNote: 'Los umbrales y las regiones de esta página enlazan a esas definiciones.',
   },
   territory: {
     seoTitle: 'Lluvia por departamento · WawaPacha',

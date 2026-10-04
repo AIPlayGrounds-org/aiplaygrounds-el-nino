@@ -8,6 +8,12 @@ def test_docs_sources_is_up_to_date_with_the_registry():
     assert catalog.CATALOG_PATH.read_text(encoding="utf-8") == expected
 
 
+def test_web_source_catalog_is_up_to_date_with_the_registry():
+    expected = catalog.render_web(registry.load(), cli.SOURCES)
+
+    assert catalog.WEB_CATALOG_PATH.read_text(encoding="utf-8") == expected
+
+
 def test_there_is_one_section_per_source_the_pipeline_reads_and_none_for_the_rest():
     text = catalog.render(registry.load(), cli.SOURCES)
 
@@ -17,11 +23,16 @@ def test_there_is_one_section_per_source_the_pipeline_reads_and_none_for_the_res
 
 def test_sources_command_writes_the_catalog(tmp_path, monkeypatch, capsys):
     target = tmp_path / "sources.md"
+    web_target = tmp_path / "source-catalog.json"
     monkeypatch.setattr(catalog, "CATALOG_PATH", target)
+    monkeypatch.setattr(catalog, "WEB_CATALOG_PATH", web_target)
 
     assert cli.main(["sources"]) == 0
 
     assert target.read_text(encoding="utf-8") == catalog.render(
+        registry.load(), cli.SOURCES
+    )
+    assert web_target.read_text(encoding="utf-8") == catalog.render_web(
         registry.load(), cli.SOURCES
     )
     assert "Wrote" in capsys.readouterr().out

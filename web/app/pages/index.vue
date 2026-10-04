@@ -118,6 +118,8 @@ useSeoMeta({
             <NuxtLink to="/territorio">{{ messages.page.territoryLink }}</NuxtLink>
             <NuxtLink to="/historico">{{ messages.historico.historyNav }}</NuxtLink>
             <NuxtLink to="/rios">{{ messages.rios.sectionLabel }}</NuxtLink>
+            <NuxtLink to="/aprende">{{ messages.page.learnLink }}</NuxtLink>
+            <NuxtLink to="/metodologia">{{ messages.page.methodologyLink }}</NuxtLink>
           </header>
           <section class="hero" aria-labelledby="oni-title">
             <h1 id="oni-title">{{ messages.page.title }}</h1>

@@ -1,0 +1,173 @@
+{
+  "routes": {
+    "/": "Inicio",
+    "/territorio": "Territorio",
+    "/rios": "Ríos",
+    "/historico": "Histórico"
+  },
+  "sources": [
+    {
+      "id": "noaa-cpc-oni",
+      "name": "Oceanic Niño Index (ONI)",
+      "provider": "NOAA Climate Prediction Center (CPC)",
+      "variable": "Anomalía de la temperatura superficial del mar en Niño 3.4, media móvil de tres meses",
+      "unit": "°C",
+      "data_type": "observed",
+      "spatial_resolution": "Región Niño 3.4 (5°N–5°S, 170°W–120°W)",
+      "temporal_resolution": "Trimestral móvil",
+      "provider_url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/",
+      "data_url": "https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt",
+      "site_pages": [
+        "/",
+        "/historico"
+      ],
+      "reference_period": "Periodos de 30 años que CPC actualiza cada 5 años"
+    },
+    {
+      "id": "noaa-cpc-nino-weekly",
+      "name": "Weekly SST indices (file `wksst9120.for`)",
+      "provider": "NOAA Climate Prediction Center (CPC)",
+      "variable": "Temperatura superficial del mar y su anomalía en las regiones Niño",
+      "unit": "°C",
+      "data_type": "observed",
+      "spatial_resolution": "Un valor por región Niño: Niño 1+2, 3, 3.4 y 4",
+      "temporal_resolution": "Semanal",
+      "provider_url": "https://www.cpc.ncep.noaa.gov/data/indices/",
+      "data_url": "https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for",
+      "site_pages": [
+        "/"
+      ],
+      "reference_period": "1991–2020"
+    },
+    {
+      "id": "enfen-communique",
+      "name": "Comunicado Oficial ENFEN",
+      "provider": "Comisión Multisectorial ENFEN",
+      "variable": "Estado del sistema de alerta de El Niño Costero",
+      "unit": "Estado oficial",
+      "data_type": "official",
+      "spatial_resolution": "Costa del Perú",
+      "temporal_resolution": "Por comunicado, cada dos semanas aproximadamente",
+      "provider_url": "https://enfen.imarpe.gob.pe/downloads/comunicados/",
+      "data_url": "https://enfen.imarpe.gob.pe/downloads/comunicados/",
+      "site_pages": [
+        "/"
+      ]
+    },
+    {
+      "id": "noaa-oisst",
+      "name": "Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1",
+      "provider": "NOAA NCEI, distributed by NOAA PSL",
+      "variable": "Anomalía de la temperatura superficial del mar respecto a la climatología 1991–2020",
+      "unit": "°C",
+      "data_type": "estimated",
+      "spatial_resolution": "Malla de 0,5° × 0,5° entre 20°N–25°S y 120°W–60°W",
+      "temporal_resolution": "Diaria",
+      "provider_url": "https://www.ncei.noaa.gov/products/optimum-interpolation-sst",
+      "data_url": "https://psl.noaa.gov/thredds/ncss/grid/Datasets/noaa.oisst.v2.highres",
+      "site_pages": [
+        "/"
+      ],
+      "reference_period": "1991–2020",
+      "license": "The ERDDAP metadata allow free use and redistribution, with a disclaimer. They do not name a formal license."
+    },
+    {
+      "id": "noaa-cpc-outlook",
+      "name": "Official NOAA CPC ENSO Strength Probabilities",
+      "provider": "NOAA Climate Prediction Center (CPC)",
+      "variable": "Probabilidad de cada categoría de intensidad ENSO, por temporada",
+      "unit": "%",
+      "data_type": "forecast",
+      "spatial_resolution": "Un valor por categoría de intensidad y temporada",
+      "temporal_resolution": "Nueve temporadas móviles de tres meses",
+      "provider_url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/",
+      "data_url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/",
+      "site_pages": [
+        "/"
+      ],
+      "reference_period": "1991–2020 (RONI)"
+    },
+    {
+      "id": "chirps",
+      "name": "CHIRPS v3 (CHC Infrared Precipitation with Stations)",
+      "provider": "Climate Hazards Center (CHC), University of California Santa Barbara",
+      "variable": "Precipitación",
+      "unit": "mm por intervalo de acumulación",
+      "data_type": "estimated",
+      "spatial_resolution": "0,05°",
+      "temporal_resolution": "Pentadal (P = 1–6; P6 va del día 26 al fin de mes)",
+      "provider_url": "https://chc.ucsb.edu/data/chirps3",
+      "data_url": "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/prelim/pentads/latam/tifs/",
+      "site_pages": [
+        "/territorio"
+      ],
+      "reference_period": "1991–2020",
+      "license": "CC BY 4.0. Attribution: CHIRPS v3, Climate Hazards Center, UC Santa Barbara, in collaboration with FEWS NET and USGS EROS; CC BY 4.0."
+    },
+    {
+      "id": "open-meteo-era5",
+      "name": "Historical Weather API, model `era5`",
+      "provider": "Open-Meteo (intermediary); ERA5 data from the Copernicus Climate Change Service (C3S) and ECMWF",
+      "variable": "Precipitación diaria acumulada (`precipitation_sum`)",
+      "unit": "mm",
+      "data_type": "estimated",
+      "spatial_resolution": "0,25° (unos 28 km)",
+      "temporal_resolution": "Diaria; también horaria",
+      "provider_url": "https://open-meteo.com/en/docs/historical-weather-api",
+      "data_url": "https://archive-api.open-meteo.com/v1/archive",
+      "site_pages": [
+        "/territorio"
+      ],
+      "license": "CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content."
+    },
+    {
+      "id": "limites-inei-ign",
+      "name": "Peru administrative boundaries: departments and provinces",
+      "provider": "Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX",
+      "variable": "Geometría, código y nombre de la unidad administrativa",
+      "unit": "No aplica (geometría)",
+      "data_type": "official",
+      "spatial_resolution": "Polígonos por departamento y provincia",
+      "temporal_resolution": "Versión cartográfica, no es una serie",
+      "provider_url": "https://data.humdata.org/dataset/cod-ab-per",
+      "data_url": "https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/63647792-0951-40d2-a30e-4a0e60f7a176/download/per_admin_boundaries.geojson.zip",
+      "site_pages": [
+        "/territorio"
+      ],
+      "license": "CC BY 3.0 IGO"
+    },
+    {
+      "id": "open-meteo-glofas",
+      "name": "Flood API, GloFAS v4 (continuous history and forecast)",
+      "provider": "Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service",
+      "variable": "Caudal diario (`river_discharge`); para fechas futuras, también media, mediana, máximo, mínimo y percentiles del conjunto",
+      "unit": "m³/s",
+      "data_type": "estimated",
+      "spatial_resolution": "0,05° (unos 5 km)",
+      "temporal_resolution": "Diaria",
+      "provider_url": "https://open-meteo.com/en/docs/flood-api",
+      "data_url": "https://flood-api.open-meteo.com/v1/flood?latitude=-5.19,-3.57,-4.90,-11.99,-8.99,-11.83,-12.90,-14.07,-13.71,-16.23,-12.07&longitude=-80.63,-80.45,-80.70,-76.84,-78.61,-77.03,-76.30,-75.73,-76.20,-72.47,-75.20&daily=river_discharge,river_discharge_mean,river_discharge_median,river_discharge_max,river_discharge_min,river_discharge_p25,river_discharge_p75&past_days=7&forecast_days=210&timezone=GMT",
+      "site_pages": [
+        "/rios"
+      ],
+      "license": "CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content."
+    },
+    {
+      "id": "noaa-ersst",
+      "name": "ERSSTv5 monthly Niño-region indices",
+      "provider": "NOAA National Centers for Environmental Information (NCEI)",
+      "variable": "Anomalía mensual de la temperatura superficial del mar en Niño 1+2, Niño 3, Niño 3.4 y Niño 4",
+      "unit": "°C",
+      "data_type": "estimated",
+      "spatial_resolution": "Regiones Niño 1+2, Niño 3, Niño 3.4 y Niño 4",
+      "temporal_resolution": "Mensual",
+      "provider_url": "https://www.ncei.noaa.gov/products/extended-reconstructed-sst",
+      "data_url": "https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.el_nino.dat",
+      "site_pages": [
+        "/historico"
+      ],
+      "reference_period": "1971–2000",
+      "license": "No access or use restrictions according to the NCEI ERDDAP metadata, with a disclaimer."
+    }
+  ]
+}
