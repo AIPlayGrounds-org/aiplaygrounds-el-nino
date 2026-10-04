@@ -2,12 +2,14 @@
 import { messages } from '~/messages'
 import { useDataset } from '~/composables/useDataset'
 import HistoricoChart from '~/components/HistoricoChart.vue'
+import IcenChart from '~/components/IcenChart.vue'
 import { shapeHistoricoDataset, shapeHistoricoOniDataset } from '~/utils/historico'
 
 const ersst = await useDataset('noaa-ersst', shapeHistoricoDataset)
 const oni = await useDataset('noaa-cpc-oni', (dataset) =>
   shapeHistoricoOniDataset(dataset, ersst.records),
 )
+const icen = await useDataset('enfen-icen')
 
 useSeoMeta({
   title: messages.historico.seoTitle,
@@ -34,6 +36,10 @@ useSeoMeta({
       <section class="figure" aria-labelledby="comparison-title" data-dataset="noaa-ersst">
         <h2 id="comparison-title">{{ messages.historico.comparisonTitle }}</h2>
         <HistoricoChart :dataset="ersst" :oni="oni" />
+      </section>
+      <section class="figure" aria-labelledby="icen-title" data-dataset="enfen-icen">
+        <h2 id="icen-title">{{ messages.historico.icenTitle }}</h2>
+        <IcenChart :dataset="icen" />
       </section>
     </main>
   </div>

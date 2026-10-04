@@ -11,6 +11,7 @@ const datasetLoaders: { [Id in DatasetId]: () => Promise<unknown> } = {
     import('#data/noaa-cpc-outlook.json').then(({ default: value }) => value),
   'enfen-communique': () =>
     import('#data/enfen-communique.json').then(({ default: value }) => value),
+  'enfen-icen': () => import('#data/enfen-icen.json').then(({ default: value }) => value),
   'limites-inei-ign': () =>
     import('#data/limites-inei-ign.json').then(({ default: value }) => value),
   chirps: () => import('#data/chirps.json').then(({ default: value }) => value),

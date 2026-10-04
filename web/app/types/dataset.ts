@@ -365,6 +365,20 @@ export interface EnfenRecord {
   stale: boolean
 }
 /**
+ * One monthly official ICEN anomaly in Niño 1+2.
+ *
+ * This interface was referenced by `undefined`'s JSON-Schema
+ * via the `definition` "icenRecord".
+ */
+export interface IcenRecord {
+  start: Month
+  end: Month
+  /**
+   * Official ICEN anomaly in Niño 1+2, in °C.
+   */
+  icen: number
+}
+/**
  * One day of a regular lat/lon grid. anomaly[i][j] is the cell at lat[i] and lon[j], in °C and rounded to 2 decimals, or null where there is no value (land).
  *
  * This interface was referenced by `undefined`'s JSON-Schema
