@@ -16,7 +16,7 @@ export type RiosDataset = Omit<DatasetFor<'open-meteo-glofas'>, 'records'> & {
   records: [RiosRecord, ...RiosRecord[]]
 }
 
-/** Keep the source point order, then make each point's daily series chronological. */
+/** Keep points in a stable order, then make each point's daily series chronological. */
 export const shapeRiosDataset = (dataset: DatasetFor<'open-meteo-glofas'>): RiosDataset => {
   const points = riverPoints(dataset.records)
   const pointOrder = new Map(points.map((point, index) => [point, index]))
@@ -49,22 +49,23 @@ export const shapeRiosDataset = (dataset: DatasetFor<'open-meteo-glofas'>): Rios
   return { ...dataset, records: [records[0]!, ...records.slice(1)] }
 }
 
-/** Return points in the order supplied by the source, for a stable selector. */
-export const riverPoints = (records: readonly Pick<GlofasRecord, 'point'>[]) => [
-  ...new Set(records.map((record) => record.point)),
-]
+/** Return points alphabetically, so selector order does not depend on record order. */
+export const riverPoints = (records: readonly Pick<GlofasRecord, 'point'>[]) =>
+  [...new Set(records.map((record) => record.point))].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
 
-/** Select one point without changing its chronological order. */
+/** Select one point from the already shaped chronological dataset. */
 export const recordsForRiver = (records: readonly RiosRecord[], point: string) =>
-  records.filter((record) => record.point === point).sort((a, b) => a.start.localeCompare(b.start))
+  records.filter((record) => record.point === point)
 
-export const latestAvailableRiverRecord = (records: readonly RiosRecord[]) =>
-  [...records].reverse().find((record) => record.river_discharge !== null)
+export const latestEstimatedRiverRecord = (records: readonly RiosRecord[]) =>
+  [...records]
+    .reverse()
+    .find((record) => record.data_type === 'estimated' && record.river_discharge !== null)
 
 export const firstForecastRiverRecord = (records: readonly RiosRecord[]) =>
   records.find((record) => record.data_type === 'forecast')
 
-export const riverRangeLabel = (record: RiosRecord) =>
+export const riverRange = (record: RiosRecord): [number, number] | null =>
   record.river_discharge_p25 !== null && record.river_discharge_p75 !== null
     ? [record.river_discharge_p25, record.river_discharge_p75]
     : null

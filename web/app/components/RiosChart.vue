@@ -18,10 +18,10 @@ import { messages } from '~/messages'
 import { formatDay, formatDischarge } from '~/utils/format'
 import {
   firstForecastRiverRecord,
-  latestAvailableRiverRecord,
+  latestEstimatedRiverRecord,
   recordsForRiver,
   riverPoints,
-  riverRangeLabel,
+  riverRange,
   type RiosDataset,
   type RiosRecord,
 } from '~/utils/rios'
@@ -41,14 +41,15 @@ const rios = messages.rios
 const points = riverPoints(props.dataset.records)
 const selectedPoint = ref(points[0] ?? '')
 const records = computed(() => recordsForRiver(props.dataset.records, selectedPoint.value))
-const latest = computed(() => latestAvailableRiverRecord(records.value))
+const latest = computed(() => latestEstimatedRiverRecord(records.value))
 const firstForecast = computed(() => firstForecastRiverRecord(records.value))
 const theme = useChartTheme()
 
 const displayValue = (value: number | null) =>
   value === null ? rios.noData : `${formatDischarge(value)} ${props.dataset.unit}`
 const displayRange = (record: RiosRecord) => {
-  const range = riverRangeLabel(record)
+  if (record.data_type !== 'forecast') return rios.notApplicable
+  const range = riverRange(record)
   return range
     ? `${formatDischarge(range[0]!)}–${formatDischarge(range[1]!)} ${props.dataset.unit}`
     : rios.noData
@@ -61,7 +62,7 @@ const summary = computed(() => {
     formatDay(latest.value.end),
     formatDischarge(latest.value.river_discharge!),
     props.dataset.unit,
-    firstForecast.value ? formatDay(firstForecast.value.start) : rios.noData,
+    firstForecast.value ? formatDay(firstForecast.value.start) : null,
   )
 })
 
@@ -69,11 +70,11 @@ const option = computed(() => {
   const t = theme.value
   const series = records.value
   const rangeBase = series.map((record) => {
-    const range = record.data_type === 'forecast' ? riverRangeLabel(record) : null
+    const range = record.data_type === 'forecast' ? riverRange(record) : null
     return [record.start, range?.[0] ?? null]
   })
   const rangeWidth = series.map((record) => {
-    const range = record.data_type === 'forecast' ? riverRangeLabel(record) : null
+    const range = record.data_type === 'forecast' ? riverRange(record) : null
     return [record.start, range ? range[1]! - range[0]! : null]
   })
 
