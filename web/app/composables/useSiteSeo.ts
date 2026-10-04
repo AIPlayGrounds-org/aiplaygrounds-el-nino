@@ -1,4 +1,4 @@
-import { siteUrl, socialImagePath } from '#shared/site'
+import { resolveSiteConfig, siteUrl, socialImagePath } from '#shared/site'
 import { useHead, useRoute, useRuntimeConfig, useSeoMeta } from '#imports'
 
 type SiteSeo = {
@@ -9,12 +9,7 @@ type SiteSeo = {
 
 export function useSiteSeo({ title, description, ogDescription = description }: SiteSeo) {
   const route = useRoute()
-  const config = useRuntimeConfig()
-  const publicConfig = config.public as { siteOrigin?: string }
-  const appConfig = config.app as { baseURL?: string }
-  const origin = publicConfig.siteOrigin
-  if (!origin) throw new Error('runtimeConfig.public.siteOrigin is required')
-  const baseURL = appConfig.baseURL || '/'
+  const { origin, baseURL } = resolveSiteConfig(useRuntimeConfig())
   const canonical = siteUrl(origin, baseURL, route.path)
   const image = siteUrl(origin, baseURL, socialImagePath)
 
@@ -28,7 +23,7 @@ export function useSiteSeo({ title, description, ogDescription = description }: 
     ogImage: image,
     twitterCard: 'summary_large_image',
     twitterTitle: title,
-    twitterDescription: description,
+    twitterDescription: ogDescription,
     twitterImage: image,
   })
   useHead({
