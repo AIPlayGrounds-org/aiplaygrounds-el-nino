@@ -1,0 +1,34 @@
+# Reports stale published data without blocking the deploy workflow.
+name: Data freshness
+
+on:
+  schedule:
+    - cron: "47 14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - name: Overlay the published data branch
+        working-directory: .
+        run: |
+          if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
+            git fetch origin data
+            mkdir -p data
+            git archive FETCH_HEAD --format=tar -- '*.json' | tar -x -C data
+          else
+            echo "No data branch yet; checking the seed snapshot on main."
+          fi
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - name: Check published dataset freshness
+        run: uv run wawapacha-pipeline freshness

@@ -4,12 +4,18 @@ import argparse
 import json
 import sys
 from datetime import UTC, datetime, timedelta
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 from wawapacha_pipeline import catalog, registry
 from wawapacha_pipeline.contract import DATA_DIR, ValidationError, relative_path
 
 SOURCES = registry.discover()
+DUE_AGES = {
+    "daily": timedelta(hours=20),
+    "weekly": timedelta(days=6),
+    "monthly": timedelta(days=27),
+}
 
 
 def run(source_id: str) -> str:
@@ -27,15 +33,35 @@ def _ingestion_time(path: Path) -> datetime | None:
     return ingestion if ingestion.tzinfo else ingestion.replace(tzinfo=UTC)
 
 
+def _parse_update_time(value: object) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        try:
+            parsed = parsedate_to_datetime(value)
+        except (TypeError, ValueError, IndexError, OverflowError):
+            return None
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+
+
+def _published_update_times(path: Path) -> list[datetime]:
+    try:
+        dataset = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    times = [_parse_update_time(dataset.get("ingestion_time"))]
+    revision = dataset.get("source_revision")
+    if isinstance(revision, dict):
+        times.append(_parse_update_time(revision.get("last_modified")))
+    return [time for time in times if time is not None]
+
+
 def _is_due(update: str, ingestion: datetime, now: datetime) -> bool:
     if update == "manual":
         return False
-    minimum_age = {
-        "daily": timedelta(hours=20),
-        "weekly": timedelta(days=6),
-        "monthly": timedelta(days=27),
-    }[update]
-    return now - ingestion >= minimum_age
+    return now - ingestion >= DUE_AGES[update]
 
 
 def due_source_ids(
@@ -59,6 +85,39 @@ def due_source_ids(
     ]
 
 
+def freshness_issues(
+    now: datetime | None = None, data_dir: Path | None = None
+) -> list[str]:
+    """Return stale or missing published datasets using the due selector's ages.
+
+    Ingestion is the publication timestamp. When an HTTP Last-Modified value is
+    present, the newest of those two timestamps is used so a source revision is
+    not reported stale merely because the file was checked later.
+    """
+    now = now or datetime.now(UTC)
+    now = now if now.tzinfo else now.replace(tzinfo=UTC)
+    data_dir = data_dir or DATA_DIR
+    sources = registry.load()
+    issues = []
+    for source_id in SOURCES:
+        update = sources[source_id]["update"]
+        if update == "manual":
+            continue
+        path = data_dir / f"{source_id}.json"
+        times = _published_update_times(path)
+        if not times:
+            issues.append(f"{source_id}: missing or invalid ingestion/update timestamp")
+            continue
+        latest = max(times)
+        if _is_due(update, latest, now):
+            age = now - latest
+            issues.append(
+                f"{source_id}: last update {latest.isoformat()} is {age} old; "
+                f"{update} cadence allows {DUE_AGES[update]}"
+            )
+    return issues
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="wawapacha-pipeline")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -74,6 +133,18 @@ def main(argv: list[str] | None = None) -> int:
     )
     due_parser.add_argument("--as-of", help="evaluate due dates at this ISO 8601 time")
     due_parser.add_argument(
+        "--data-dir",
+        type=Path,
+        default=DATA_DIR,
+        help="directory containing published source JSON",
+    )
+    freshness_parser = commands.add_parser(
+        "freshness", help="fail when published datasets exceed their registry cadence"
+    )
+    freshness_parser.add_argument(
+        "--as-of", help="evaluate freshness at this ISO 8601 time"
+    )
+    freshness_parser.add_argument(
         "--data-dir",
         type=Path,
         default=DATA_DIR,
@@ -101,6 +172,20 @@ def main(argv: list[str] | None = None) -> int:
         except (ValueError, registry.RegistryError) as error:
             print(f"cannot select due sources. {error}", file=sys.stderr)
             return 1
+        return 0
+
+    if args.command == "freshness":
+        try:
+            as_of = datetime.fromisoformat(args.as_of) if args.as_of else None
+            issues = freshness_issues(as_of, args.data_dir)
+        except (ValueError, registry.RegistryError) as error:
+            print(f"cannot check data freshness. {error}", file=sys.stderr)
+            return 1
+        if issues:
+            for issue in issues:
+                print(f"::error title=data freshness::{issue}", file=sys.stderr)
+            return 1
+        print("Published datasets are within their registry cadence.")
         return 0
 
     try:
