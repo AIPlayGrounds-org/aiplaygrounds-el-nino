@@ -105,8 +105,17 @@ def test_due_command_honours_an_explicit_data_dir(tmp_path, capsys):
     )
 
 
-@pytest.mark.parametrize("update", ["daily", "weekly", "monthly"])
-def test_freshness_tolerance_is_independent_from_due_threshold(update, tmp_path):
+@pytest.mark.parametrize(
+    ("update", "tolerance"),
+    [
+        ("daily", timedelta(hours=52)),
+        ("weekly", timedelta(days=15)),
+        ("monthly", timedelta(days=63)),
+    ],
+)
+def test_freshness_tolerance_is_independent_from_due_threshold(
+    update, tolerance, tmp_path
+):
     now = datetime(2026, 10, 4, 12, tzinfo=UTC)
     source_id = next(
         source_id
@@ -116,7 +125,6 @@ def test_freshness_tolerance_is_independent_from_due_threshold(update, tmp_path)
     for candidate in cli.SOURCES:
         write_published_data(tmp_path / f"{candidate}.json", now.isoformat())
 
-    tolerance = cli._freshness_tolerance(update)
     write_published_data(tmp_path / f"{source_id}.json", (now - tolerance).isoformat())
     assert not any(
         issue.startswith(f"{source_id}:")
