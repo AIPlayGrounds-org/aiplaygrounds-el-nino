@@ -2,6 +2,7 @@ import { nextTick, defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import RiosChart from '~/components/RiosChart.vue'
+import { messages } from '~/messages'
 import {
   latestEstimatedRiverRecord,
   recordsForRiver,
@@ -50,6 +51,20 @@ describe('rivers data shaping', () => {
 })
 
 describe('RiosChart', () => {
+  it('shows a Spanish empty state without rendering a chart or empty table', async () => {
+    const dataset = shapeRiosDataset(await loadDataset('open-meteo-glofas'))
+    const empty = { ...dataset, records: [] } as unknown as typeof dataset
+    const wrapper = mount(RiosChart, {
+      props: { dataset: empty },
+      global: { stubs: { ClientOnly: passthrough, NuxtErrorBoundary: passthrough } },
+    })
+
+    expect(wrapper.text()).toContain(messages.rios.emptySummary(''))
+    expect(wrapper.find('.chart').exists()).toBe(false)
+    expect(wrapper.find('table').exists()).toBe(false)
+    expect(wrapper.text()).not.toMatch(/NaN|undefined/)
+  })
+
   it('renders the point selector and updates the chart and table with real data', async () => {
     const dataset = shapeRiosDataset(await loadDataset('open-meteo-glofas'))
     const options: { series: { name: string }[] }[] = []

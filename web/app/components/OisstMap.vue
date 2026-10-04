@@ -10,6 +10,7 @@ import {
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import { computed } from 'vue'
+import TableFallback from '~/components/TableFallback.vue'
 import { messages } from '~/messages'
 import { useChartTheme } from '~/composables/useChartTheme'
 import { formatAnomaly } from '~/utils/enso'
@@ -26,10 +27,12 @@ use([
 ])
 
 const props = defineProps<{ dataset: DatasetFor<'noaa-oisst'> }>()
-const record = props.dataset.records[props.dataset.records.length - 1]!
-const mapData = buildOisstMap(record)
-const date = record.end
-const summary = summarizeOisst(mapData, date, props.dataset.unit)
+const record = props.dataset.records[0]
+const mapData = record
+  ? buildOisstMap(record)
+  : { latitudes: [], longitudes: [], points: [], bands: [], warmest: null, valueMax: 0.01 }
+const date = record?.end ?? ''
+const summary = summarizeOisst(mapData, date || messages.oisst.emptyPeriod, props.dataset.unit)
 const theme = useChartTheme()
 const chartPoints = mapData.points.map(
   (point) =>
@@ -114,32 +117,29 @@ const option = computed(() => {
           <div class="map-placeholder" aria-hidden="true" />
         </template>
       </ClientOnly>
-      <details v-if="mapData.bands.length" class="table-fallback">
-        <summary>{{ messages.oisst.tableSummary }}</summary>
-        <div class="table-wrap">
-          <table>
-            <caption>
-              {{
-                messages.oisst.tableCaption(date)
-              }}
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">{{ messages.oisst.latitudeBand }}</th>
-                <th scope="col">{{ messages.oisst.mean }}</th>
-                <th scope="col">{{ messages.oisst.maximum }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="band in mapData.bands" :key="band.start">
-                <th scope="row">{{ formatBand(band) }}</th>
-                <td>{{ formatAnomaly(band.mean) }} {{ dataset.unit }}</td>
-                <td>{{ formatAnomaly(band.maximum) }} {{ dataset.unit }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
+      <TableFallback v-if="mapData.bands.length" :label="messages.oisst.tableSummary">
+        <table>
+          <caption>
+            {{
+              messages.oisst.tableCaption(date)
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ messages.oisst.latitudeBand }}</th>
+              <th scope="col">{{ messages.oisst.mean }}</th>
+              <th scope="col">{{ messages.oisst.maximum }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="band in mapData.bands" :key="band.start">
+              <th scope="row">{{ formatBand(band) }}</th>
+              <td>{{ formatAnomaly(band.mean) }} {{ dataset.unit }}</td>
+              <td>{{ formatAnomaly(band.maximum) }} {{ dataset.unit }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </TableFallback>
     </div>
   </ChartShell>
 </template>
@@ -155,21 +155,6 @@ const option = computed(() => {
   max-width: 640px;
   margin: 0 auto;
   aspect-ratio: 640 / 740;
-}
-.table-fallback {
-  margin-top: 12px;
-  border-top: 1px solid var(--border);
-  padding-top: 10px;
-}
-.table-fallback summary {
-  cursor: pointer;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-.table-wrap {
-  max-width: 100%;
-  overflow: auto;
-  margin-top: 12px;
 }
 table {
   border-collapse: collapse;

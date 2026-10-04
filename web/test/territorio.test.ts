@@ -76,6 +76,25 @@ describe('territory data transformations', () => {
     expect(rows.find((row) => row.code === 'PE15')?.era5?.total).toBeNull()
   })
 
+  it('keeps empty dataset shapes empty instead of manufacturing undefined records', () => {
+    const emptyGeometry = {
+      ...territoryGeometryFixture,
+      records: [],
+    } as unknown as typeof territoryGeometryFixture
+    const emptyChirps = {
+      ...territoryChirpsDatasetFixture,
+      records: [],
+    } as unknown as typeof territoryChirpsDatasetFixture
+    const emptyEra5 = {
+      ...territoryEra5DatasetFixture,
+      records: [],
+    } as unknown as typeof territoryEra5DatasetFixture
+
+    expect(shapeDepartmentGeometry(emptyGeometry).records).toEqual([])
+    expect(shapeLatestChirps(emptyChirps).records).toEqual([])
+    expect(shapeEra5Summary([])(emptyEra5).records).toEqual([])
+  })
+
   it('keeps only the latest CHIRPS pentad per department, oldest first', () => {
     const shaped = shapeLatestChirps(territoryChirpsDatasetFixture)
 
@@ -110,7 +129,7 @@ describe('territory data transformations', () => {
     const geometry = await loadDataset('limites-inei-ign')
     const chirps = await loadDataset('chirps')
     const era5 = await loadDataset('open-meteo-era5')
-    const departments = geometry.records.at(-1)!.departamentos.features
+    const departments = geometry.records[0]!.departamentos.features
 
     const shapedGeometry = shapeDepartmentGeometry(geometry)
     const shapedChirps = shapeLatestChirps(chirps)

@@ -13,7 +13,7 @@ export type RiosRecord = Pick<
 >
 
 export type RiosDataset = Omit<DatasetFor<'open-meteo-glofas'>, 'records'> & {
-  records: [RiosRecord, ...RiosRecord[]]
+  records: RiosRecord[]
 }
 
 /** Keep points in a stable order, then make each point's daily series chronological. */
@@ -46,7 +46,7 @@ export const shapeRiosDataset = (dataset: DatasetFor<'open-meteo-glofas'>): Rios
           (pointOrder.get(b.point) ?? Number.MAX_SAFE_INTEGER) || a.start.localeCompare(b.start),
     )
 
-  return { ...dataset, records: [records[0]!, ...records.slice(1)] }
+  return { ...dataset, records }
 }
 
 /** Return points alphabetically, so selector order does not depend on record order. */

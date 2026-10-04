@@ -5,6 +5,7 @@ import { AriaComponent, GridComponent, TooltipComponent } from 'echarts/componen
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import { computed } from 'vue'
+import TableFallback from '~/components/TableFallback.vue'
 import { useChartTheme } from '~/composables/useChartTheme'
 import { messages, outlookCategoryKey, outlookCategoryLabel } from '~/messages'
 import { formatMonth } from '~/utils/format'
@@ -18,13 +19,17 @@ const props = defineProps<{
 
 const records = props.dataset.records
 // Frío a cálido, sea cual sea el orden en que cada registro traiga las categorías.
-const categories = [...records[0]!.categories].sort(
+const categories = [...(records[0]?.categories ?? [])].sort(
   (a, b) => (a.lower_bound ?? -Infinity) - (b.lower_bound ?? -Infinity),
 )
 const probability = (record: (typeof records)[number], key: string) =>
   record.categories.find((category) => outlookCategoryKey(category) === key)?.probability ?? null
-const issueDate = formatMonth(records[0]!.issue_date)
-const summary = computed(() => messages.panels.outlook.summary(records.length, issueDate))
+const issueDate = records[0] ? formatMonth(records[0].issue_date) : ''
+const summary = computed(() =>
+  records.length
+    ? messages.panels.outlook.summary(records.length, issueDate)
+    : messages.panels.outlook.empty,
+)
 const theme = useChartTheme()
 
 const option = computed(() => {
@@ -76,25 +81,53 @@ const option = computed(() => {
     </div>
     <div class="figure">
       <ChartShell :dataset="dataset" :summary="summary">
-        <div class="outlook-meta">
+        <div v-if="records.length" class="outlook-meta">
           <span>{{ messages.panels.outlook.issueDate }}: {{ issueDate }}</span>
         </div>
-        <NuxtErrorBoundary>
-          <ClientOnly>
-            <VChart
-              class="chart"
-              :option="option"
-              autoresize
-              :aria-label="messages.panels.outlook.chartAria"
-            />
-            <template #fallback>
-              <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+        <template v-if="records.length">
+          <NuxtErrorBoundary>
+            <ClientOnly>
+              <VChart
+                class="chart"
+                :option="option"
+                autoresize
+                :aria-label="messages.panels.outlook.chartAria"
+              />
+              <template #fallback>
+                <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+              </template>
+            </ClientOnly>
+            <template #error>
+              <div class="chart-placeholder">{{ messages.page.chartError }}</div>
             </template>
-          </ClientOnly>
-          <template #error>
-            <div class="chart-placeholder">{{ messages.page.chartError }}</div>
-          </template>
-        </NuxtErrorBoundary>
+          </NuxtErrorBoundary>
+        </template>
+        <p v-else class="empty-state" role="status">{{ messages.panels.outlook.empty }}</p>
+        <TableFallback v-if="records.length" :label="messages.panels.outlook.tableSummary">
+          <table>
+            <caption>
+              {{
+                messages.panels.outlook.tableCaption(issueDate)
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ messages.panels.outlook.season }}</th>
+                <th v-for="category in categories" :key="category.category" scope="col">
+                  {{ outlookCategoryLabel(category) }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="record in records" :key="record.season">
+                <th scope="row">{{ record.season }}</th>
+                <td v-for="category in categories" :key="category.category">
+                  {{ probability(record, outlookCategoryKey(category)) ?? '—' }} %
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </TableFallback>
         <ul class="category-key" :aria-label="messages.panels.outlook.probability">
           <li v-for="(category, index) in categories" :key="category.category">
             <span
@@ -154,6 +187,11 @@ h2 {
   height: 430px;
   display: grid;
   place-items: center;
+  color: var(--muted);
+}
+.empty-state {
+  margin: 0;
+  padding: 32px 0;
   color: var(--muted);
 }
 .category-key {

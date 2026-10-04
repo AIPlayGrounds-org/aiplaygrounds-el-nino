@@ -37,6 +37,11 @@ const mountChart = (component: Component, dataset: unknown) => {
 }
 
 const mountOutlook = (dataset: typeof outlookFixture) => mountChart(OutlookPanel, dataset)
+const emptyRecords = <T extends { records: unknown[] }>(dataset: T) =>
+  ({
+    ...dataset,
+    records: [],
+  }) as unknown as T
 
 const rampOf = (css: string) => [...css.matchAll(/--ramp-\d: (#[0-9a-f]{6});/g)].map((m) => m[1]!)
 const luminance = (hex: string) => {
@@ -78,6 +83,25 @@ describe('outlook palette', () => {
 })
 
 describe('OutlookPanel', () => {
+  it('shows a Spanish empty state without rendering an empty chart', () => {
+    const { wrapper } = mountOutlook(emptyRecords(outlookFixture))
+
+    expect(wrapper.text()).toContain(messages.panels.outlook.empty)
+    expect(wrapper.find('.chart').exists()).toBe(false)
+    expect(wrapper.text()).not.toMatch(/NaN|undefined/)
+  })
+
+  it('provides a usable table fallback for the weekly series', async () => {
+    const weekly = await loadDataset('noaa-cpc-nino-weekly')
+    const { wrapper } = mountChart(NinoWeeklyPanel, weekly)
+
+    expect(wrapper.get('details').text()).toContain(messages.panels.weekly.tableSummary)
+    expect(wrapper.get('[role="region"]').attributes('aria-label')).toBe(
+      messages.panels.weekly.tableSummary,
+    )
+    expect(wrapper.get('tbody tr').text()).toContain('°C')
+  })
+
   it('draws each series from its own category even when a record orders them differently', () => {
     const [first, ...rest] = outlookFixture.records
     const reversed = { ...first!, categories: [...first!.categories].reverse() }
@@ -99,6 +123,16 @@ describe('OutlookPanel', () => {
 
     expect(wrapper.get('.outlook-meta').text()).toBe('Emisión: septiembre de 2026')
     expect(wrapper.text()).not.toMatch(/\b1 de septiembre/)
+  })
+
+  it('provides a usable table fallback for forecast probabilities', () => {
+    const { wrapper } = mountOutlook(outlookFixture)
+
+    expect(wrapper.get('details').text()).toContain(messages.panels.outlook.tableSummary)
+    expect(wrapper.get('[role="region"]').attributes('aria-label')).toBe(
+      messages.panels.outlook.tableSummary,
+    )
+    expect(wrapper.findAll('tbody tr')).toHaveLength(outlookFixture.records.length)
   })
 
   it('puts the first season on top of the inverted category axis', () => {
@@ -142,12 +176,12 @@ describe('outlookCategoryLabel', () => {
 })
 
 describe('EnfenPanel', () => {
-  const mountEnfen = (stale: boolean) =>
+  const mountEnfen = (stale: boolean, dataset = enfenFixture) =>
     mount(EnfenPanel, {
       props: {
         dataset: {
-          ...enfenFixture,
-          records: [{ ...enfenFixture.records[0]!, stale }],
+          ...dataset,
+          records: dataset.records.length ? [{ ...dataset.records[0]!, stale }] : dataset.records,
         },
       },
       global: { components: { ChartShell } },
@@ -176,9 +210,44 @@ describe('EnfenPanel', () => {
     expect(wrapper.text()).toContain('Último estado oficial')
     expect(wrapper.get('.status').text()).toBe('Alerta de El Niño Costero')
   })
+
+  it('shows a Spanish empty state without dereferencing a missing communique', () => {
+    const wrapper = mountEnfen(false, emptyRecords(enfenFixture))
+
+    expect(wrapper.text()).toContain(messages.panels.enfen.empty)
+    expect(wrapper.find('.status-card').exists()).toBe(false)
+    expect(wrapper.text()).not.toMatch(/NaN|undefined/)
+  })
 })
 
 describe('NinoWeeklyPanel', () => {
+  it('shows a Spanish empty state without rendering an empty chart', () => {
+    const weekly = emptyRecords({
+      id: 'noaa-cpc-nino-weekly',
+      source: enfenFixture.source,
+      variable: 'Anomalías semanales',
+      unit: '°C',
+      data_type: 'observed',
+      spatial_resolution: 'Regiones Niño',
+      temporal_resolution: 'Semanal',
+      ingestion_time: enfenFixture.ingestion_time,
+      processing_version: 'test',
+      records: enfenFixture.records.map((record) => ({
+        start: record.start,
+        end: record.end,
+        nino_1_2_sst: null,
+        nino_1_2_anomaly: null,
+        nino_3_4_sst: null,
+        nino_3_4_anomaly: null,
+      })),
+    })
+    const { wrapper } = mountChart(NinoWeeklyPanel, weekly)
+
+    expect(wrapper.text()).toContain(messages.panels.weekly.empty)
+    expect(wrapper.find('.chart').exists()).toBe(false)
+    expect(wrapper.text()).not.toMatch(/NaN|undefined/)
+  })
+
   it('keeps every record in the chart and opens on the last 104 weeks', async () => {
     const weekly = await loadDataset('noaa-cpc-nino-weekly')
     const { option } = mountChart(NinoWeeklyPanel, weekly)

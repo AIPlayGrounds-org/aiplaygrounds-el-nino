@@ -1,5 +1,8 @@
 import type { ErsstRecord, OniRecord } from '~/types/dataset'
-import type { DatasetFor } from '~/types/datasets'
+import type { DatasetFor, DatasetWithRecords } from '~/types/datasets'
+
+export type HistoricoDataset = DatasetWithRecords<'noaa-ersst'>
+export type HistoricoOniDataset = DatasetWithRecords<'noaa-cpc-oni'>
 
 export const HISTORICAL_EVENT_IDS = ['1982-83', '1997-98', '2017'] as const
 export const CURRENT_EVENT_ID = 'current' as const
@@ -40,12 +43,14 @@ const fieldFor = (
   region === 'nino34' ? 'nino34_anomaly' : 'nino12_anomaly'
 
 /** Keep only the ERSST records used by the historical comparison page. */
-export const shapeHistoricoDataset = (dataset: DatasetFor<'noaa-ersst'>) => {
-  const currentYear = yearOf(dataset.records.at(-1)!.start)
+export const shapeHistoricoDataset = (dataset: DatasetFor<'noaa-ersst'>): HistoricoDataset => {
+  const latest = dataset.records.at(-1)
+  if (!latest) return { ...dataset, records: [] }
+  const currentYear = yearOf(latest.start)
   const records = dataset.records.filter(
     (record) => record.event !== undefined || yearOf(record.start) === currentYear,
   )
-  return { ...dataset, records } as DatasetFor<'noaa-ersst'>
+  return { ...dataset, records }
 }
 
 const oniMonth = (record: OniRecord) => monthAt(monthIndex(record.start) + 1)
@@ -96,9 +101,11 @@ export const peakOfHistoryPoints = (points: readonly AlignedHistoryPoint[]) =>
 export const shapeHistoricoOniDataset = (
   dataset: DatasetFor<'noaa-cpc-oni'>,
   ersstRecords: readonly ErsstRecord[],
-) => {
+): HistoricoOniDataset => {
+  const latest = dataset.records.at(-1)
+  if (!latest) return { ...dataset, records: [] }
   const windows = historyWindowsFromErsst(ersstRecords)
-  const currentYear = yearOf(oniMonth(dataset.records.at(-1)!))
+  const currentYear = yearOf(oniMonth(latest))
   const records = dataset.records.filter((record) => {
     const month = oniMonth(record)
     return (
@@ -112,7 +119,7 @@ export const shapeHistoricoOniDataset = (
       })
     )
   })
-  return { ...dataset, records } as DatasetFor<'noaa-cpc-oni'>
+  return { ...dataset, records }
 }
 
 /** Return selector ids that have records in the shaped or full ERSST dataset. */

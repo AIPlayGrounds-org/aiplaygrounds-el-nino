@@ -103,4 +103,13 @@ describe('OisstMap component', () => {
     expect(wrapper.text()).toContain(messages.oisst.empty('2026-10-01'))
     expect(wrapper.find('table').exists()).toBe(false)
   })
+
+  it('shows the empty state instead of rendering a frame when the dataset has no records', () => {
+    const empty = { ...gridFixture, records: [] } as unknown as DatasetFor<'noaa-oisst'>
+    const wrapper = mountMap(empty)
+
+    expect(wrapper.text()).toContain(messages.oisst.empty(messages.oisst.emptyPeriod))
+    expect(wrapper.find('.map').exists()).toBe(false)
+    expect(wrapper.text()).not.toMatch(/NaN|undefined/)
+  })
 })

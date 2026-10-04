@@ -110,7 +110,7 @@ useSeoMeta({
 
 <template>
   <div class="site">
-    <main>
+    <main id="main-content">
       <template v-if="last && answer">
         <div class="cover">
           <header class="topbar">
@@ -227,7 +227,12 @@ useSeoMeta({
 
           <details class="prose">
             <summary>{{ messages.page.tableSummary }}</summary>
-            <div class="table-wrap">
+            <div
+              class="table-wrap"
+              role="region"
+              :aria-label="messages.page.tableSummary"
+              tabindex="0"
+            >
               <table>
                 <thead>
                   <tr>
@@ -295,6 +300,11 @@ useSeoMeta({
   gap: 24px;
   justify-content: center;
   padding: 18px 16px 0;
+  background: var(--deep);
+  color: var(--on-deep);
+}
+.topbar a {
+  color: var(--on-deep);
 }
 .brand {
   font-family: var(--hand);
@@ -452,6 +462,14 @@ h2 {
   color: var(--muted);
 }
 @media (max-width: 599px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 12px 16px;
+  }
+  .topbar .brand {
+    flex-basis: 100%;
+    text-align: center;
+  }
   .chart-placeholder {
     height: 360px;
   }
@@ -499,6 +517,7 @@ summary::marker {
   color: var(--text);
 }
 .table-wrap {
+  max-width: 100%;
   overflow-x: auto;
   margin-top: 12px;
   scrollbar-width: thin;

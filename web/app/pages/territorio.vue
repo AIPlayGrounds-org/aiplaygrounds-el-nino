@@ -28,16 +28,18 @@ const geometry = await useDataset('limites-inei-ign', shapeDepartmentGeometry)
 const geometryRecord = geometry.records[0]
 const [chirps, era5] = await Promise.all([
   useDataset('chirps', shapeLatestChirps),
-  useDataset('open-meteo-era5', shapeEra5Summary(geometryRecord.departamentos.features)),
+  useDataset('open-meteo-era5', shapeEra5Summary(geometryRecord?.departamentos.features ?? [])),
 ])
 
 const territory = messages.territory
 const metric = ref<TerritoryMetric>('precipitation')
 const mapName = 'wawapacha-peru-departamentos'
 
-registerMap(mapName, geometryRecord.departamentos)
+if (geometryRecord) registerMap(mapName, geometryRecord.departamentos)
 
-const territoryRows = joinTerritoryRows(geometryRecord, chirps.records, era5.departments)
+const territoryRows = geometryRecord
+  ? joinTerritoryRows(geometryRecord, chirps.records, era5.departments)
+  : []
 const latestChirps = territoryRows.flatMap((row) => (row.chirps ? [row.chirps] : []))
 const latestByCode = new Map(latestChirps.map((record) => [record.code, record]))
 const regionByCode = new Map(territoryRows.map((row) => [row.code, row.region]))
@@ -143,20 +145,29 @@ const option = computed(() => {
 })
 
 const chirpsSummary = computed(() =>
-  territory.chirpsSummary(metricLabel.value, latestChirpsDate, latestChirps.length),
+  latestChirpsDate
+    ? territory.chirpsSummary(metricLabel.value, latestChirpsDate, latestChirps.length)
+    : territory.tableEmpty,
 )
-const era5Summary = territory.era5Summary(
-  era5.window.days,
-  era5.window.start,
-  era5.window.end,
-  era5Records.length,
+const mapSummary = computed(() =>
+  latestChirpsDate ? territory.mapSummary(metricLabel.value, latestChirpsDate) : territory.mapEmpty,
+)
+const era5Summary = computed(() =>
+  era5.window.start
+    ? territory.era5Summary(
+        era5.window.days,
+        era5.window.start,
+        era5.window.end,
+        era5Records.length,
+      )
+    : territory.era5Empty,
 )
 
 useSeoMeta({ title: territory.seoTitle, description: territory.seoDescription })
 </script>
 
 <template>
-  <main class="territory-page">
+  <main id="main-content" class="territory-page">
     <header class="topbar">
       <NuxtLink class="brand" to="/">{{ messages.page.brand }}</NuxtLink>
       <span class="section-label">{{ territory.sectionLabel }}</span>
@@ -182,37 +193,43 @@ useSeoMeta({ title: territory.seoTitle, description: territory.seoDescription })
       </div>
     </section>
 
-    <section class="map-section" aria-labelledby="territory-title">
-      <ChartShell :dataset="chirps" :summary="territory.mapSummary(metricLabel, latestChirpsDate)">
-        <NuxtErrorBoundary>
-          <ClientOnly>
-            <VChart class="map" :option="option" autoresize />
-            <template #fallback>
-              <div class="chart-placeholder">{{ territory.loading }}</div>
+    <section class="map-section" aria-labelledby="map-title">
+      <h2 id="map-title" class="sr-only">{{ territory.mapHeading }}</h2>
+      <ChartShell :dataset="chirps" :summary="mapSummary">
+        <template v-if="geometryRecord && latestChirps.length">
+          <NuxtErrorBoundary>
+            <ClientOnly>
+              <VChart class="map" :option="option" autoresize />
+              <template #fallback>
+                <div class="chart-placeholder">{{ territory.loading }}</div>
+              </template>
+            </ClientOnly>
+            <template #error>
+              <div class="chart-placeholder">{{ territory.chartError }}</div>
             </template>
-          </ClientOnly>
-          <template #error>
-            <div class="chart-placeholder">{{ territory.chartError }}</div>
-          </template>
-        </NuxtErrorBoundary>
+          </NuxtErrorBoundary>
+        </template>
+        <p v-else class="empty-state" role="status">{{ territory.mapEmpty }}</p>
         <p class="secondary-provenance">
           {{ territory.boundaryProvenance }}
-          <a :href="geometry.source.url" target="_blank" rel="noopener">
+          <a v-if="geometryRecord" :href="geometry.source.url" target="_blank" rel="noopener">
             {{ geometry.source.institution }}<span class="sr-only">{{ messages.page.newTab }}</span>
           </a>
-          · {{ geometryRecord.attribution }}
-          <a :href="geometryRecord.license_url" target="_blank" rel="noopener">
-            {{ territory.boundaryLicense }}<span class="sr-only">{{ messages.page.newTab }}</span>
-          </a>
+          <template v-if="geometryRecord">
+            · {{ geometryRecord.attribution }}
+            <a :href="geometryRecord.license_url" target="_blank" rel="noopener">
+              {{ territory.boundaryLicense }}<span class="sr-only">{{ messages.page.newTab }}</span>
+            </a>
+          </template>
         </p>
       </ChartShell>
     </section>
 
     <section class="tables" :aria-label="territory.tableSection">
       <ChartShell :dataset="chirps" :summary="chirpsSummary">
-        <details open>
+        <details v-if="latestChirps.length" open>
           <summary>{{ territory.tableSummary }}</summary>
-          <div class="table-wrap">
+          <div class="table-wrap" role="region" :aria-label="territory.tableSummary" tabindex="0">
             <table>
               <caption>
                 {{
@@ -238,15 +255,21 @@ useSeoMeta({ title: territory.seoTitle, description: territory.seoDescription })
             </table>
           </div>
         </details>
+        <p v-else class="empty-state" role="status">{{ territory.tableEmpty }}</p>
       </ChartShell>
 
       <ChartShell :dataset="era5" :summary="era5Summary">
-        <div class="cross-check">
+        <div v-if="era5Records.length" class="cross-check">
           <h2>{{ territory.crossCheckTitle }}</h2>
           <p>
             {{ territory.crossCheckLead(era5.window.days, era5.window.start, era5.window.end) }}
           </p>
-          <div class="table-wrap">
+          <div
+            class="table-wrap"
+            role="region"
+            :aria-label="territory.crossCheckCaption"
+            tabindex="0"
+          >
             <table>
               <caption>
                 {{
@@ -275,6 +298,7 @@ useSeoMeta({ title: territory.seoTitle, description: territory.seoDescription })
           </div>
           <DatasetAttribution :dataset="era5" />
         </div>
+        <p v-else class="empty-state" role="status">{{ territory.era5Empty }}</p>
       </ChartShell>
     </section>
   </main>
@@ -339,7 +363,7 @@ h1 {
   margin-top: 24px;
 }
 .metric-toggle button {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 16px;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -378,6 +402,9 @@ h1 {
 .tables {
   display: grid;
   gap: 32px;
+}
+.tables > * {
+  min-width: 0;
 }
 details {
   padding: 16px;
@@ -428,6 +455,11 @@ h2 {
 }
 .cross-check p {
   margin: 10px 0 0;
+  color: var(--muted);
+}
+.empty-state {
+  margin: 0;
+  padding: 32px 16px;
   color: var(--muted);
 }
 @media (max-width: 599px) {

@@ -7,18 +7,13 @@ import type { DatasetFor } from '~/types/datasets'
 const props = defineProps<{ dataset: DatasetFor<'noaa-cpc-oni'> }>()
 const records = props.dataset.records
 
-// Escala divergente: frío (−2,5) → neutro (0) → cálido (+2,6), interpolada en RGB entre tres paradas.
-const COLD = [42, 95, 168]
-const NEUTRAL = [214, 222, 220]
-const WARM = [217, 84, 26]
-const mix = (a: number[], b: number[], k: number) =>
-  a.map((v, i) => Math.round(v + (b[i]! - v) * k))
 const colorFor = (anomaly: number) => {
-  const c =
+  const amount =
     anomaly < 0
-      ? mix(NEUTRAL, COLD, Math.min(1, -anomaly / 2.5))
-      : mix(NEUTRAL, WARM, Math.min(1, anomaly / 2.6))
-  return `rgb(${c.join(',')})`
+      ? Math.round(Math.min(1, -anomaly / 2.5) * 100)
+      : Math.round(Math.min(1, anomaly / 2.6) * 100)
+  const color = anomaly < 0 ? 'var(--cold)' : 'var(--warm)'
+  return `color-mix(in srgb, var(--neutral-data) ${100 - amount}%, ${color})`
 }
 const stripes = records.map((r, i) => ({ x: i, fill: colorFor(r.anomaly) }))
 // El año de cada trimestre es el de su mes central, como en la tabla de NOAA (DJF 1950 empieza en diciembre de 1949).

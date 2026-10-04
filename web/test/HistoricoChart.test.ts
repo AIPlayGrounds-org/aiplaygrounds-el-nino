@@ -9,6 +9,24 @@ import { loadDataset } from '../server/utils/loadDataset'
 const passthrough = { template: '<div><slot /></div>' }
 
 describe('HistoricoChart', () => {
+  it('shows a Spanish empty state for both missing series without empty chart frames', async () => {
+    const [ersst, oni] = await Promise.all([loadDataset('noaa-ersst'), loadDataset('noaa-cpc-oni')])
+    const emptyErsst = { ...ersst, records: [] }
+    const emptyOni = { ...oni, records: [] }
+    const wrapper = mount(HistoricoChart, {
+      props: { dataset: emptyErsst, oni: emptyOni },
+      global: {
+        components: { ChartShell },
+        stubs: { ClientOnly: passthrough, NuxtErrorBoundary: passthrough, VChart: passthrough },
+      },
+    })
+
+    expect(wrapper.findAll('.empty-state')).toHaveLength(2)
+    expect(wrapper.text()).toContain(messages.historico.empty)
+    expect(wrapper.find('.chart').exists()).toBe(false)
+    expect(wrapper.text()).not.toMatch(/NaN|undefined/)
+  })
+
   it('renders selectors, the ONI series, and the ERSST table fallback', async () => {
     const [fullErsst, fullOni] = await Promise.all([
       loadDataset('noaa-ersst'),

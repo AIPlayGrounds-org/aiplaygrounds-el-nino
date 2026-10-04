@@ -21,16 +21,16 @@ useSeoMeta({ title: messages.rios.seoTitle, description: messages.rios.seoDescri
       <NuxtLink to="/metodologia">{{ messages.page.methodologyLink }}</NuxtLink>
     </header>
 
-    <main>
+    <main id="main-content">
       <section class="intro" aria-labelledby="rios-title">
         <p class="eyebrow">{{ messages.page.brand }}</p>
         <h1 id="rios-title">{{ messages.rios.title }}</h1>
         <p>{{ messages.rios.lead }}</p>
       </section>
 
-      <section class="figure" aria-labelledby="rios-title">
+      <div class="figure">
         <RiosChart :dataset="rios" />
-      </section>
+      </div>
 
       <section class="alerts" aria-labelledby="alerts-title">
         <h2 id="alerts-title">{{ messages.rios.alertsTitle }}</h2>

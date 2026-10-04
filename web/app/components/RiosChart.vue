@@ -13,6 +13,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import ChartShell from '~/components/ChartShell.vue'
 import DatasetAttribution from '~/components/DatasetAttribution.vue'
+import TableFallback from '~/components/TableFallback.vue'
 import { useChartTheme } from '~/composables/useChartTheme'
 import { messages } from '~/messages'
 import { formatDay, formatDischarge } from '~/utils/format'
@@ -165,32 +166,31 @@ const option = computed(() => {
 
 <template>
   <ChartShell :dataset="dataset" :summary="summary">
-    <div class="controls">
+    <div v-if="points.length" class="controls">
       <label for="river-point">{{ rios.pointLabel }}</label>
       <select id="river-point" v-model="selectedPoint">
         <option v-for="point in points" :key="point" :value="point">{{ point }}</option>
       </select>
     </div>
-    <p class="model-note">{{ rios.modelNote }}</p>
-    <NuxtErrorBoundary>
-      <ClientOnly>
-        <VChart
-          class="chart"
-          :option="option"
-          autoresize
-          :aria-label="rios.chartAria(selectedPoint)"
-        />
-        <template #fallback>
-          <div class="chart-placeholder">{{ rios.chartLoading }}</div>
+    <p v-if="points.length" class="model-note">{{ rios.modelNote }}</p>
+    <template v-if="records.length">
+      <NuxtErrorBoundary>
+        <ClientOnly>
+          <VChart
+            class="chart"
+            :option="option"
+            autoresize
+            :aria-label="rios.chartAria(selectedPoint)"
+          />
+          <template #fallback>
+            <div class="chart-placeholder">{{ rios.chartLoading }}</div>
+          </template>
+        </ClientOnly>
+        <template #error>
+          <div class="chart-placeholder">{{ rios.chartError }}</div>
         </template>
-      </ClientOnly>
-      <template #error>
-        <div class="chart-placeholder">{{ rios.chartError }}</div>
-      </template>
-    </NuxtErrorBoundary>
-    <details class="table-fallback">
-      <summary>{{ rios.tableSummary }}</summary>
-      <div class="table-wrap">
+      </NuxtErrorBoundary>
+      <TableFallback :label="rios.tableSummary">
         <table>
           <caption>
             {{
@@ -214,8 +214,9 @@ const option = computed(() => {
             </tr>
           </tbody>
         </table>
-      </div>
-    </details>
+      </TableFallback>
+    </template>
+    <p v-else class="empty-state" role="status">{{ rios.emptySummary(selectedPoint) }}</p>
     <DatasetAttribution :dataset="dataset" />
   </ChartShell>
 </template>
@@ -234,7 +235,7 @@ const option = computed(() => {
   font-weight: 650;
 }
 select {
-  min-height: 40px;
+  min-height: 44px;
   padding: 4px 30px 4px 10px;
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -252,25 +253,16 @@ select {
   width: 100%;
   height: 430px;
 }
+.empty-state {
+  margin: 0;
+  padding: 32px 0;
+  color: var(--muted);
+}
 .chart-placeholder {
   display: grid;
   place-items: center;
   color: var(--muted);
   text-align: center;
-}
-.table-fallback {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-.table-fallback summary {
-  color: var(--text);
-  cursor: pointer;
-  font-weight: 650;
-}
-.table-wrap {
-  overflow-x: auto;
-  margin-top: 12px;
 }
 table {
   width: 100%;

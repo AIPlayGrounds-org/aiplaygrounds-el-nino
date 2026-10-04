@@ -49,7 +49,7 @@ const periodDetails = [
 </script>
 
 <template>
-  <section class="chart-shell" :aria-label="`${dataset.variable} · ${dataset.unit}`">
+  <div class="chart-shell" role="group" :aria-label="`${dataset.variable} · ${dataset.unit}`">
     <div class="chart-region">
       <slot />
     </div>
@@ -99,11 +99,12 @@ const periodDetails = [
         <span class="sr-only">{{ messages.page.newTab }}</span>
       </a>
     </p>
-  </section>
+  </div>
 </template>
 
 <style scoped>
 .chart-shell {
+  min-width: 0;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);

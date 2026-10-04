@@ -10,6 +10,7 @@ import {
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import { computed } from 'vue'
+import TableFallback from '~/components/TableFallback.vue'
 import { useChartTheme } from '~/composables/useChartTheme'
 import { messages } from '~/messages'
 import type { DatasetFor } from '~/types/datasets'
@@ -22,16 +23,18 @@ const props = defineProps<{
 }>()
 
 const records = props.dataset.records
-const last = records.at(-1)!
+const last = records.at(-1)
 // El gráfico guarda toda la serie y abre en los últimos dos años.
-const initialStart = records[Math.max(0, records.length - 104)]!.start
+const initialStart = records[Math.max(0, records.length - 104)]?.start ?? ''
 
 const summary = computed(() =>
-  messages.panels.weekly.summary(
-    formatDay(last.end),
-    formatValue(last.nino_1_2_anomaly),
-    formatValue(last.nino_3_4_anomaly),
-  ),
+  last
+    ? messages.panels.weekly.summary(
+        formatDay(last.end),
+        formatValue(last.nino_1_2_anomaly),
+        formatValue(last.nino_3_4_anomaly),
+      )
+    : messages.panels.weekly.empty,
 )
 const theme = useChartTheme()
 
@@ -97,7 +100,7 @@ const option = computed(() => {
     </div>
     <figure class="figure">
       <ChartShell :dataset="dataset" :summary="summary">
-        <div class="latest-grid" :aria-label="messages.panels.weekly.latestValues">
+        <div v-if="last" class="latest-grid" :aria-label="messages.panels.weekly.latestValues">
           <div>
             <span class="latest-label"
               >{{ messages.panels.weekly.latest }} · {{ messages.panels.weekly.nino12 }}</span
@@ -114,22 +117,48 @@ const option = computed(() => {
             >{{ messages.panels.weekly.date }} {{ formatDay(last.end) }}</time
           >
         </div>
-        <NuxtErrorBoundary>
-          <ClientOnly>
-            <VChart
-              class="chart"
-              :option="option"
-              autoresize
-              :aria-label="messages.panels.weekly.chartAria"
-            />
-            <template #fallback>
-              <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+        <template v-if="last">
+          <NuxtErrorBoundary>
+            <ClientOnly>
+              <VChart
+                class="chart"
+                :option="option"
+                autoresize
+                :aria-label="messages.panels.weekly.chartAria"
+              />
+              <template #fallback>
+                <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+              </template>
+            </ClientOnly>
+            <template #error>
+              <div class="chart-placeholder">{{ messages.page.chartError }}</div>
             </template>
-          </ClientOnly>
-          <template #error>
-            <div class="chart-placeholder">{{ messages.page.chartError }}</div>
-          </template>
-        </NuxtErrorBoundary>
+          </NuxtErrorBoundary>
+        </template>
+        <p v-else class="empty-state" role="status">{{ messages.panels.weekly.empty }}</p>
+        <TableFallback v-if="records.length" :label="messages.panels.weekly.tableSummary">
+          <table>
+            <caption>
+              {{
+                messages.panels.weekly.tableCaption
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ messages.panels.weekly.date }}</th>
+                <th scope="col">{{ messages.panels.weekly.nino12 }}</th>
+                <th scope="col">{{ messages.panels.weekly.nino34 }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="record in records" :key="record.start">
+                <th scope="row">{{ formatDay(record.end) }}</th>
+                <td>{{ formatValue(record.nino_1_2_anomaly) }} {{ dataset.unit }}</td>
+                <td>{{ formatValue(record.nino_3_4_anomaly) }} {{ dataset.unit }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </TableFallback>
       </ChartShell>
       <figcaption>
         <ul class="key" :aria-label="messages.panels.weekly.chartDescription">
@@ -197,6 +226,11 @@ h2 {
   height: 380px;
   display: grid;
   place-items: center;
+  color: var(--muted);
+}
+.empty-state {
+  margin: 0;
+  padding: 32px 0;
   color: var(--muted);
 }
 figcaption {
