@@ -1,7 +1,5 @@
-import { normalizeBasePath, publicRoutes, siteUrl, socialImagePath } from '#shared/site'
+import { siteUrl } from '#shared/site'
 import { useRuntimeConfig } from '#imports'
-
-export { normalizeBasePath, publicRoutes, siteUrl, socialImagePath }
 
 export function configuredSiteUrl(path: string): string {
   const config = useRuntimeConfig()

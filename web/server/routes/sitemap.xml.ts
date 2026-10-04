@@ -1,4 +1,5 @@
-import { configuredSiteUrl, publicRoutes } from '../utils/site'
+import { publicRoutes } from '#shared/site'
+import { configuredSiteUrl } from '../utils/site'
 
 export default defineEventHandler((event) => {
   const urls = publicRoutes
