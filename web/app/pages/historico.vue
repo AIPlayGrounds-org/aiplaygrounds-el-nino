@@ -3,7 +3,9 @@ import { messages } from '~/messages'
 import { useDataset } from '~/composables/useDataset'
 import HistoricoChart from '~/components/HistoricoChart.vue'
 import IcenChart from '~/components/IcenChart.vue'
+import SenamhiRainChart from '~/components/SenamhiRainChart.vue'
 import { shapeHistoricoDataset, shapeHistoricoOniDataset } from '~/utils/historico'
+import { shapeSenamhiDataset } from '~/utils/senamhi'
 import { useSiteSeo } from '~/composables/useSiteSeo'
 
 const ersst = await useDataset('noaa-ersst', shapeHistoricoDataset)
@@ -11,6 +13,7 @@ const oni = await useDataset('noaa-cpc-oni', (dataset) =>
   shapeHistoricoOniDataset(dataset, ersst.records),
 )
 const icen = await useDataset('enfen-icen')
+const senamhi = await useDataset('senamhi-estaciones', shapeSenamhiDataset)
 
 useSiteSeo({
   title: messages.historico.seoTitle,
@@ -41,6 +44,15 @@ useSiteSeo({
       <section class="figure" aria-labelledby="icen-title" data-dataset="enfen-icen">
         <h2 id="icen-title">{{ messages.historico.icenTitle }}</h2>
         <IcenChart :dataset="icen" />
+      </section>
+      <section
+        class="figure"
+        aria-labelledby="station-rain-title"
+        data-dataset="senamhi-estaciones"
+      >
+        <h2 id="station-rain-title">{{ messages.historico.stations.title }}</h2>
+        <p class="section-lead">{{ messages.historico.stations.lead }}</p>
+        <SenamhiRainChart :dataset="senamhi" />
       </section>
     </main>
   </div>
@@ -101,6 +113,14 @@ h1 {
 h2 {
   margin: 0 0 16px;
   font-size: clamp(1.5rem, 3vw, 2rem);
+}
+.section-lead {
+  max-width: 48rem;
+  margin: -4px 0 16px;
+  color: var(--muted);
+}
+.figure + .figure {
+  margin-top: 56px;
 }
 @media (max-width: 599px) {
   .header {

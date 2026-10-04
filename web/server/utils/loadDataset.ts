@@ -20,6 +20,8 @@ const datasetLoaders: { [Id in DatasetId]: () => Promise<unknown> } = {
   'open-meteo-glofas': () =>
     import('#data/open-meteo-glofas.json').then(({ default: value }) => value),
   'noaa-ersst': () => import('#data/noaa-ersst.json').then(({ default: value }) => value),
+  'senamhi-estaciones': () =>
+    import('#data/senamhi-estaciones.json').then(({ default: value }) => value),
 }
 
 export const isDatasetId = (id: string): id is DatasetId => Object.hasOwn(datasetLoaders, id)
