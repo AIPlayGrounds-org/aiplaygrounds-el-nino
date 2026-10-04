@@ -21,9 +21,15 @@ export const SENAMHI_EVENT_YEARS: Record<SenamhiEvent, readonly number[]> = {
   '1997-98': [1997, 1998],
 }
 
+const senamhiEventYears = Object.values(SENAMHI_EVENT_YEARS).flat()
+
 const eventForYear = (year: number): SenamhiEvent | null => {
-  if (year === 1982 || year === 1983) return '1982-83'
-  if (year === 1997 || year === 1998) return '1997-98'
+  for (const [event, years] of Object.entries(SENAMHI_EVENT_YEARS) as [
+    SenamhiEvent,
+    readonly number[],
+  ][]) {
+    if (years.includes(year)) return event
+  }
   return null
 }
 
@@ -70,8 +76,7 @@ export const shapeSenamhiDataset = (dataset: DatasetFor<'senamhi-estaciones'>): 
   }
 }
 
-const eventOffset = (year: number, month: number) =>
-  (year === 1982 ? 0 : year === 1983 ? 12 : year === 1997 ? 24 : 36) + month
+const eventOffset = (year: number, month: number) => senamhiEventYears.indexOf(year) * 12 + month
 
 export const stationOptions = (stations: readonly SenamhiStation[]) =>
   stations.map((station) => ({
@@ -104,7 +109,7 @@ export const stationChartSeries = (
       Array.from({ length: 12 }, (_, monthIndex) => {
         const month = String(year) + '-' + String(monthIndex + 1).padStart(2, '0')
         const precipitation =
-          selected?.precipitation[(event === '1982-83' ? 0 : 24) + yearIndex * 12 + monthIndex]
+          selected?.precipitation[senamhiEventYears.indexOf(year) * 12 + monthIndex]
         return {
           offset: yearIndex * 12 + monthIndex + 1,
           month,
