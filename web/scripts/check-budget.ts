@@ -1,4 +1,5 @@
 import { resolve } from 'node:path'
+import { normalizeBasePath } from '../shared/site'
 
 type RouteBudget = {
   payloadBytes: number
@@ -11,6 +12,7 @@ type Budget = {
 }
 
 const root = resolve(import.meta.dir, '../.output/public')
+const basePath = normalizeBasePath(process.env.PAGES_BASE_URL || '/')
 const budget = (await Bun.file(
   resolve(import.meta.dir, '../performance-budget.json'),
 ).json()) as Budget
@@ -26,11 +28,17 @@ async function size(path: string): Promise<number> {
 }
 
 async function entryJsBytes(html: string): Promise<number> {
-  const sources = [...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map((match) => match[1]!)
+  const sources = [...html.matchAll(/<script\b[^>]*\s+src\s*=\s*["']([^"']+)["']/gi)].map(
+    (match) => match[1]!,
+  )
   const files = new Set<string>()
   for (const source of sources) {
-    const path = source.split('?')[0]!.replace(/^\//, '')
-    const file = resolve(root, path)
+    const assetPath = new URL(source, 'https://wawapacha.invalid').pathname
+    if (!assetPath.startsWith(basePath)) {
+      throw new Error(`Generated asset is outside PAGES_BASE_URL: ${source}`)
+    }
+    const relativePath = assetPath.slice(basePath.length)
+    const file = resolve(root, relativePath)
     if (!(await Bun.file(file).exists())) {
       throw new Error(`Missing generated JavaScript asset referenced by HTML: ${source}`)
     }
