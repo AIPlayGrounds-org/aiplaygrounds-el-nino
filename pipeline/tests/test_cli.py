@@ -13,6 +13,16 @@ def write_published_data(path, ingestion_time: str) -> None:
     path.write_text(json.dumps({"ingestion_time": ingestion_time}), encoding="utf-8")
 
 
+def test_scheduled_sources_match_automatable_registry_entries():
+    sources = registry.load()
+
+    assert set(cli.SOURCES) == {
+        source_id
+        for source_id, entry in sources.items()
+        if entry["verdict"] == "automatable"
+    }
+
+
 def test_due_selection_uses_the_registry_update_schedule(tmp_path):
     after_monthly_threshold = datetime(2026, 10, 28, 12, tzinfo=UTC)
     for source_id in cli.SOURCES:
