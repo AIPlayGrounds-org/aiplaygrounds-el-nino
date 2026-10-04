@@ -452,6 +452,7 @@ cadence = "Every half hour in the operational products"
 notes = [
   "Three versions of the same moment, according to the V07 documentation: Early (about 4 h later), Late (about 14 h) and Final (about 3.5 months, calibrated with rain gauges). They can give different values.",
   "Access to NASA PPS data needs a free registration. The download was not tested.",
+  "Probed 2026-10-04: GES DISC data files redirect to urs.earthdata.nasa.gov. Access needs a free Earthdata account and token. Not registered; the captain decides. CHIRPS already covers rainfall.",
 ]
 
 [source.access]
@@ -480,6 +481,7 @@ cadence = "Monthly"
 notes = [
   "No public download file was found. The SENAMHI page mentions GeoTIFF.",
   "The documentation describes one specific version. Whether it is still current was not confirmed.",
+  "Probed 2026-10-04: the IRI Data Library copy redirects to a login. No anonymous programmatic access found.",
 ]
 
 [source.access]
