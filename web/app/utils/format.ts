@@ -9,9 +9,15 @@ const monthFormat = new Intl.DateTimeFormat('es', {
   year: 'numeric',
   timeZone: 'America/Lima',
 })
+const dischargeFormat = new Intl.NumberFormat('es-PE', {
+  maximumFractionDigits: 2,
+})
 
 /** «+0,5» o «−0,5»: un decimal y el signo menos tipográfico. */
 export const formatValue = (value: number) => valueFormat.format(value).replace('-', '−')
+
+/** A discharge value keeps two decimals so small modeled flows do not become «0,0». */
+export const formatDischarge = (value: number) => dischargeFormat.format(value)
 
 /** «28 de septiembre de 2026», a partir de AAAA-MM-DD. */
 export const formatDay = (date: string) => dayFormat.format(new Date(`${date}T12:00:00Z`))

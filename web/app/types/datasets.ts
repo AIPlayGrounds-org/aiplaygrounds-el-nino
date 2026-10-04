@@ -34,4 +34,7 @@ export type DatasetFor<Id extends DatasetId> = Omit<Dataset, 'id' | 'records'> &
 
 export type AnyDataset = DatasetFor<DatasetId>
 
-export type DatasetLike = AnyDataset
+/** Provenance and period shape accepted by shared shells after server-side shaping. */
+export type DatasetLike = Omit<Dataset, 'records'> & {
+  records: [{ start: string; end: string }, ...{ start: string; end: string }[]]
+}

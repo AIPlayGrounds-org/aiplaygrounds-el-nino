@@ -21,6 +21,7 @@ useSeoMeta({
       <NuxtLink class="brand" to="/">{{ messages.page.brand }}</NuxtLink>
       <NuxtLink to="/territorio">{{ messages.page.territoryLink }}</NuxtLink>
       <NuxtLink to="/historico">{{ messages.historico.historyNav }}</NuxtLink>
+      <NuxtLink to="/rios">{{ messages.rios.sectionLabel }}</NuxtLink>
     </header>
     <main>
       <section class="intro" aria-labelledby="history-title">
