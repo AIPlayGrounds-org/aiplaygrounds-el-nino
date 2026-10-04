@@ -11,6 +11,7 @@ import gzip
 import json
 import math
 from calendar import monthrange
+from collections.abc import Callable
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from statistics import median
@@ -73,7 +74,7 @@ def validate_snapshot(payload: object) -> None:
             f"SENAMHI snapshot taken date is invalid: {snapshot['taken']!r}."
         ) from None
     for code, station in stations.items():
-        if not isinstance(code, str) or not code:
+        if not code:
             raise ValidationError("SENAMHI station codes must be non-empty strings.")
         _validate_station(code, station)
 
@@ -170,8 +171,8 @@ def _is_leap(year: int) -> bool:
 def _daily_values(station: dict, key: str) -> list[tuple[date, float | None]]:
     result: list[tuple[date, float | None]] = []
     offset = 0
-    for year_text, days in station["years"]:
-        first = date(int(year_text), 1, 1)
+    for position, (year_text, days) in enumerate(station["years"]):
+        first = _year_start(int(year_text), days, position)
         values = station[key][offset : offset + days]
         result.extend(
             (first + timedelta(days=day_offset), value)
@@ -182,16 +183,16 @@ def _daily_values(station: dict, key: str) -> list[tuple[date, float | None]]:
 
 
 def _monthly_value(
-    values: dict[tuple[int, int], list[float | None]], month: date, kind: str
+    values: dict[tuple[int, int], list[float | None]],
+    month: date,
+    reducer: Callable[[list[float]], float],
 ) -> tuple[float | None, int]:
     month_days = monthrange(month.year, month.month)[1]
     in_month = values.get((month.year, month.month), [])
     observed = [value for value in in_month if value is not None]
     if len(observed) / month_days < 1 - MISSING_FRACTION:
         return None, len(observed)
-    if kind == "sum":
-        return round(sum(observed), 1), len(observed)
-    return round(sum(observed) / len(observed), 1), len(observed)
+    return round(reducer(observed), 1), len(observed)
 
 
 def _monthly_buckets(
@@ -204,13 +205,28 @@ def _monthly_buckets(
 
 
 def _month_range(station: dict) -> list[date]:
-    first_year = int(station["years"][0][0])
-    last_year = int(station["years"][-1][0])
+    years = station["years"]
+    first_year, first_days = int(years[0][0]), years[0][1]
+    last_year, last_days = int(years[-1][0]), years[-1][1]
+    first_day = _year_start(first_year, first_days, 0)
+    last_day = _year_start(last_year, last_days, len(years) - 1) + timedelta(
+        days=last_days - 1
+    )
+    first_month = first_day.year * 12 + first_day.month - 1
+    last_month = last_day.year * 12 + last_day.month - 1
     return [
-        date(year, month, 1)
-        for year in range(first_year, last_year + 1)
-        for month in range(1, 13)
+        date(month_index // 12, month_index % 12 + 1, 1)
+        for month_index in range(first_month, last_month + 1)
     ]
+
+
+def _year_start(year: int, days: int, position: int) -> date:
+    # No dates are shown: 27/33 first tails end Dec 31; all 32/32 last heads start Jan 1.
+    first = date(year, 1, 1)
+    calendar_days = 366 if _is_leap(year) else 365
+    if position == 0 and days < calendar_days:
+        return first + timedelta(days=calendar_days - days)
+    return first
 
 
 def aggregate_station(code: str, station: dict) -> list[dict]:
@@ -220,11 +236,13 @@ def aggregate_station(code: str, station: dict) -> list[dict]:
     tmin = _monthly_buckets(_daily_values(station, "tmin_c"))
     rows = []
     for month in _month_range(station):
-        precipitation_mm, precipitation_days = _monthly_value(
-            precipitation, month, "sum"
+        precipitation_mm, precipitation_days = _monthly_value(precipitation, month, sum)
+        tmax_c, tmax_days = _monthly_value(
+            tmax, month, lambda values: sum(values) / len(values)
         )
-        tmax_c, tmax_days = _monthly_value(tmax, month, "mean")
-        tmin_c, tmin_days = _monthly_value(tmin, month, "mean")
+        tmin_c, tmin_days = _monthly_value(
+            tmin, month, lambda values: sum(values) / len(values)
+        )
         rows.append(
             {
                 "station": code,
@@ -233,7 +251,6 @@ def aggregate_station(code: str, station: dict) -> list[dict]:
                 "lat": round(station["lat"], 5),
                 "lon": round(station["lon"], 5),
                 "start": month.strftime("%Y-%m"),
-                "end": month.strftime("%Y-%m"),
                 "precipitation_mm": precipitation_mm,
                 "precipitation_days": precipitation_days,
                 "tmax_c": tmax_c,
