@@ -29,6 +29,39 @@ the previous published JSON intact.
 The test suite validates the seed files, registry provenance and source-specific
 failure cases. It runs without network access by using checked-in samples.
 
+## Validation rules
+
+Source parsers preserve missing values as `null`. They never turn a missing
+value into `0` or leave the upstream sentinel in the published record. A real
+zero is still a value. The behavior is covered by
+[`test_parse_keeps_input_missing_as_null`](../pipeline/tests/test_chirps.py),
+[`test_preserves_zero_and_null_values`](../pipeline/tests/test_open_meteo_era5.py)
+and the corresponding
+[`test_preserves_zero_and_null_values`](../pipeline/tests/test_open_meteo_glofas.py).
+
+Time-series validators require records in order with no gaps or duplicates.
+Examples include
+[`test_rejects_a_missing_month`](../pipeline/tests/test_noaa_ersst.py) and
+[`test_rejects_a_duplicated_month`](../pipeline/tests/test_noaa_ersst.py), the
+ONI parser's
+[`test_rejects_a_missing_season`](../pipeline/tests/test_noaa_cpc_oni.py) and
+[`test_rejects_a_duplicated_season`](../pipeline/tests/test_noaa_cpc_oni.py),
+and the daily gap checks in the linked ERA5 and GloFAS source tests above.
+
+## Transformation
+
+Source values are not silently modified. A source module may change the file
+format or add an explicitly derived field, but the method must be visible in the
+source notes. If the upstream publishes an anomaly, use that anomaly as
+published rather than recomputing it. When a value is computed here, its method
+and base period belong in the registry `notes`; `reference_period` carries the
+base period into the published contract when applicable. Registry provenance and
+published values are checked by
+[`test_reads_the_whole_real_file_and_maps_columns`](../pipeline/tests/test_noaa_ersst.py),
+[`test_build_adds_provenance_metadata`](../pipeline/tests/test_noaa_cpc_oni.py)
+and
+[`test_parse_builds_records_and_calculates_anomaly`](../pipeline/tests/test_chirps.py).
+
 ## Published format
 
 Each published file contains one source's provenance and at least one record:

@@ -6,6 +6,7 @@ WawaPacha is a public web observatory for signals of El Niño in Peru. It is a
 static site built with [Nuxt 4](https://nuxt.com/) and Bun, fed by a Python
 pipeline managed with uv. The browser receives published JSON from this
 repository; there is no runtime backend, account system or upstream API call.
+Live at <https://aiplaygrounds-org.github.io/wawapacha/>.
 
 ## Boundary
 

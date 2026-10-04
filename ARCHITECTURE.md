@@ -98,6 +98,10 @@ payload limits; their current values are in the generated
 - **Automatable source discovery is registry-driven.** A source id maps to
   `sources/<id with hyphens replaced by underscores>.py`; discovery requires
   `ID`, `fetch`, `parse` and `run`.
+- **Notebooks hold no pipeline logic.** They import the source modules and show
+  their steps. [`test_notebooks.py`](pipeline/tests/test_notebooks.py) rejects
+  functions and classes outside marimo cells and checks that a notebook can run
+  without publishing data.
 - **Invalid data is not published.** Schema validation runs before the atomic
   replacement, so a failed run leaves the previous JSON in place.
 - **The web has one dataset entry point.** Pages call `useDataset`; components
@@ -115,9 +119,14 @@ payload limits; their current values are in the generated
 
 ## Verification
 
-CI runs the pipeline checks from `pipeline/`: `uv run ruff format --check .`,
-`uv run ruff check .`, `uv run pytest`, source-catalog generation and its clean
-diff. From `web/`, it runs `bun run format:check`, regenerates the schema types,
+CI runs these pipeline commands from `pipeline`:
+
+- Ruff format check: `uv run ruff format --check .`
+- Ruff lint: `uv run ruff check .`
+- Tests: `uv run pytest`
+
+It then generates the source catalog and checks its clean diff. From `web/`, the
+oxfmt check is `oxfmt --check .`, also exposed to contributors as the exact
+script command `bun run format:check`. CI then regenerates the schema types,
 checks their clean diff and runs `bun run generate`. The contributor-facing
-commands and working-directory details are in
-[`CONTRIBUTING.md`](CONTRIBUTING.md#checks).
+working-directory details are in [`CONTRIBUTING.md`](CONTRIBUTING.md#checks).

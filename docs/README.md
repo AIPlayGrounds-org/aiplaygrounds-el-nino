@@ -17,3 +17,5 @@ architecture, staged work and non-goals are in [`ROADMAP.md`](../ROADMAP.md).
 Contributor branches, checks and merges are in
 [`CONTRIBUTING.md`](../CONTRIBUTING.md). The source catalog is generated with
 `uv run wawapacha-pipeline sources` from `pipeline/`; do not edit it by hand.
+Product audience, principles and constraints are in
+[`PRODUCT.md`](../PRODUCT.md).

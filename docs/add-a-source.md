@@ -17,9 +17,14 @@ sample, tests and a notebook. The contract and generated-file rules are in
    `bun run types` from `web/` to regenerate the TypeScript types.
 4. Save a real copy of the original input in `pipeline/tests/samples/`.
 5. Add behavior tests in `pipeline/tests/` that read the sample and cover the
-   parser's rejection cases.
+   parser's rejection cases. Use
+   [`test_noaa_cpc_oni.py`](../pipeline/tests/test_noaa_cpc_oni.py) as the
+   example.
 6. Add a notebook in `notebooks/` that imports the module and shows its steps.
    Open it with `uv run marimo edit ../notebooks/<module>.py` from `pipeline/`.
+   [`test_notebooks.py`](../pipeline/tests/test_notebooks.py) checks that
+   notebooks define no pipeline functions or classes and that the example runs
+   to completion without publishing.
 7. From `pipeline/`, run `uv run wawapacha-pipeline sources` to regenerate
    [`docs/sources.md`](sources.md). Run `uv run wawapacha-pipeline run <id>` to
    publish the first seed JSON. The scheduled workflow later publishes newer
@@ -52,8 +57,10 @@ for checked format quirks and source-specific processing facts.
 | `reference_period`                                              | optional    | Text, in Spanish. Published as written.                                                    |
 | `notes`                                                         | optional    | A list of checked facts.                                                                   |
 
-The five fields that the site prints (`variable`, `unit`, both resolutions and
-`reference_period`) remain in Spanish. Other registry prose is in English.
+The fields that the site prints (`variable`, `unit`, `temporal_resolution` and
+`reference_period`) remain in Spanish. `spatial_resolution` is part of the
+published contract but is not printed by `ChartShell`. Other registry prose is
+in English.
 
 An automatable entry must have its discovered module and receives a section in
 the generated [source catalog](sources.md). Manual, discarded and pending
