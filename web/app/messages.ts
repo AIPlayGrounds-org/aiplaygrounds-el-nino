@@ -34,6 +34,7 @@ export const messages = {
     lead: 'La anomalía diaria de la temperatura superficial del mar frente a la costa del Perú, comparada con 1991–2020.',
     summary: (date: string, value: string, unit: string, location: string) =>
       `La celda más cálida del ${date} registra ${value} ${unit} (${location}).`,
+    emptyPeriod: 'este periodo',
     empty: (date: string) => `No hay celdas con datos disponibles para el ${date}.`,
     tableSummary: 'Ver resumen por franjas de latitud',
     tableCaption: (date: string) => `Resumen por franjas de latitud del ${date}.`,
@@ -271,7 +272,6 @@ export const messages = {
     pointSample: 'Punto de celda de 0,25°',
     era5Summary: (days: number, start: string, end: string, count: number) =>
       `Cruce ERA5 de precipitación diaria: suma de los ${days} días disponibles, del ${formatDay(start)} al ${formatDay(end)}, para ${count} puntos departamentales. Cada valor es una muestra puntual de una celda de 0,25°.`,
-    empty: 'No hay datos territoriales disponibles ahora.',
     mapEmpty: 'No hay datos de precipitación disponibles para el mapa.',
     tableEmpty: 'No hay registros de CHIRPS disponibles ahora.',
     era5Empty: 'No hay datos de ERA5 disponibles para este periodo.',
@@ -331,6 +331,8 @@ export const messages = {
       chartAxis: 'Anomalía (°C)',
       chartDescription: 'Anomalías semanales de la temperatura superficial del mar.',
       chartAria: 'Anomalías semanales',
+      tableSummary: 'Ver la tabla de datos semanales',
+      tableCaption: 'Anomalías semanales de las regiones Niño 1+2 y Niño 3.4.',
       empty: 'No hay datos semanales del mar disponibles ahora.',
     },
     enfen: {
@@ -356,6 +358,8 @@ export const messages = {
       probability: 'Probabilidad',
       chartDescription: 'Barras apiladas con las probabilidades por categoría ENSO.',
       chartAria: 'Probabilidades del pronóstico',
+      tableSummary: 'Ver la tabla de probabilidades',
+      tableCaption: (issueDate: string) => `Probabilidades por temporada, emisión de ${issueDate}.`,
       empty: 'No hay probabilidades del pronóstico disponibles ahora.',
       categoryLabels: {
         '..-2': 'Índice ≤ −2,0 °C',

@@ -109,11 +109,9 @@ import '@fontsource/patrick-hand/latin-ext.css'
 }
 html {
   -webkit-text-size-adjust: 100%;
-  overflow-x: clip;
 }
 body {
   margin: 0;
-  overflow-x: clip;
   background: var(--paper);
   color: var(--text);
   font-family: var(--font);
@@ -145,10 +143,20 @@ a:hover {
   white-space: nowrap;
   border: 0;
 }
-:where(button, select, summary, a:not(.sr-only)) {
+:where(button, select, summary) {
   min-height: 44px;
 }
-a:not(.sr-only) {
+:where(
+  .topbar a,
+  .header a,
+  .links a,
+  .alerts a,
+  .source-links a,
+  .detail-link,
+  .skip-link,
+  li > a
+) {
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   padding-inline: 4px;
@@ -174,5 +182,15 @@ summary {
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
+}
+@media (max-width: 599px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 12px 20px;
+  }
+  .header .brand {
+    flex-basis: 100%;
+    text-align: center;
+  }
 }
 </style>

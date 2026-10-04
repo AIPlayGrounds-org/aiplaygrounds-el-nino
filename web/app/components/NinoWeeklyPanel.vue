@@ -10,6 +10,7 @@ import {
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import { computed } from 'vue'
+import TableFallback from '~/components/TableFallback.vue'
 import { useChartTheme } from '~/composables/useChartTheme'
 import { messages } from '~/messages'
 import type { DatasetFor } from '~/types/datasets'
@@ -135,6 +136,29 @@ const option = computed(() => {
           </NuxtErrorBoundary>
         </template>
         <p v-else class="empty-state" role="status">{{ messages.panels.weekly.empty }}</p>
+        <TableFallback v-if="records.length" :label="messages.panels.weekly.tableSummary">
+          <table>
+            <caption>
+              {{
+                messages.panels.weekly.tableCaption
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ messages.panels.weekly.date }}</th>
+                <th scope="col">{{ messages.panels.weekly.nino12 }}</th>
+                <th scope="col">{{ messages.panels.weekly.nino34 }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="record in records" :key="record.start">
+                <th scope="row">{{ formatDay(record.end) }}</th>
+                <td>{{ formatValue(record.nino_1_2_anomaly) }} {{ dataset.unit }}</td>
+                <td>{{ formatValue(record.nino_3_4_anomaly) }} {{ dataset.unit }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </TableFallback>
       </ChartShell>
       <figcaption>
         <ul class="key" :aria-label="messages.panels.weekly.chartDescription">

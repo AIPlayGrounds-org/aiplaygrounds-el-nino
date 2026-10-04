@@ -4,6 +4,7 @@ import { LineChart } from 'echarts/charts'
 import { AriaComponent, GridComponent, TooltipComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
+import TableFallback from '~/components/TableFallback.vue'
 import { computed, ref } from 'vue'
 import { useChartTheme } from '~/composables/useChartTheme'
 import { messages } from '~/messages'
@@ -19,13 +20,13 @@ import {
   type HistoryEventId,
   type HistoryRegion,
 } from '~/utils/historico'
-import type { DatasetFor } from '~/types/datasets'
+import type { HistoricoDataset, HistoricoOniDataset } from '~/utils/historico'
 
 use([LineChart, AriaComponent, GridComponent, TooltipComponent, CanvasRenderer])
 
 const props = defineProps<{
-  dataset: DatasetFor<'noaa-ersst'>
-  oni: DatasetFor<'noaa-cpc-oni'>
+  dataset: HistoricoDataset
+  oni: HistoricoOniDataset
 }>()
 const region = ref<HistoryRegion>('nino34')
 const availableEvents = historyEventSelectorData(props.dataset.records)
@@ -210,39 +211,31 @@ const oniChartOption = computed(() =>
         </li>
       </ul>
 
-      <details class="table-details">
-        <summary>{{ messages.historico.tableSummary }}</summary>
-        <div
-          class="table-wrap"
-          role="region"
-          :aria-label="messages.historico.tableSummary"
-          tabindex="0"
-        >
-          <table>
-            <caption>
-              {{
-                messages.historico.tableCaption
-              }}
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">{{ messages.historico.months }}</th>
-                <th v-for="series in selectedSeries" :key="series.event" scope="col">
-                  {{ labelFor(series.event, series.region, series.peak) }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in tableRows" :key="row.offset">
-                <th scope="row">{{ row.offset }}</th>
-                <td v-for="(value, index) in row.values" :key="selectedSeries[index]?.event">
-                  {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
+      <TableFallback :label="messages.historico.tableSummary">
+        <table>
+          <caption>
+            {{
+              messages.historico.tableCaption
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ messages.historico.months }}</th>
+              <th v-for="series in selectedSeries" :key="series.event" scope="col">
+                {{ labelFor(series.event, series.region, series.peak) }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in tableRows" :key="row.offset">
+              <th scope="row">{{ row.offset }}</th>
+              <td v-for="(value, index) in row.values" :key="selectedSeries[index]?.event">
+                {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </TableFallback>
     </template>
     <p v-else class="empty-state" role="status">{{ messages.historico.empty }}</p>
   </ChartShell>
@@ -272,39 +265,31 @@ const oniChartOption = computed(() =>
           {{ labelFor(series.event, series.region, series.peak) }}
         </li>
       </ul>
-      <details class="table-details">
-        <summary>{{ messages.historico.oniTableSummary }}</summary>
-        <div
-          class="table-wrap"
-          role="region"
-          :aria-label="messages.historico.oniTableSummary"
-          tabindex="0"
-        >
-          <table>
-            <caption>
-              {{
-                messages.historico.oniTableCaption
-              }}
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">{{ messages.historico.months }}</th>
-                <th v-for="series in selectedOniSeries" :key="series.event" scope="col">
-                  {{ labelFor(series.event, series.region, series.peak) }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in oniTableRows" :key="row.offset">
-                <th scope="row">{{ row.offset }}</th>
-                <td v-for="(value, index) in row.values" :key="selectedOniSeries[index]?.event">
-                  {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
+      <TableFallback :label="messages.historico.oniTableSummary">
+        <table>
+          <caption>
+            {{
+              messages.historico.oniTableCaption
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ messages.historico.months }}</th>
+              <th v-for="series in selectedOniSeries" :key="series.event" scope="col">
+                {{ labelFor(series.event, series.region, series.peak) }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in oniTableRows" :key="row.offset">
+              <th scope="row">{{ row.offset }}</th>
+              <td v-for="(value, index) in row.values" :key="selectedOniSeries[index]?.event">
+                {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </TableFallback>
     </template>
     <p v-else class="empty-state" role="status">{{ messages.historico.empty }}</p>
   </ChartShell>
@@ -418,19 +403,6 @@ input:focus-visible {
   height: 0.75em;
   margin-right: 0.35em;
   border-radius: 50%;
-}
-.table-details {
-  margin-top: 20px;
-  border-top: 1px solid var(--border);
-  padding-top: 14px;
-}
-.table-details summary {
-  cursor: pointer;
-  color: var(--link);
-}
-.table-wrap {
-  overflow-x: auto;
-  margin-top: 12px;
 }
 table {
   width: 100%;

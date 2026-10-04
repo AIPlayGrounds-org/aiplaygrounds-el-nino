@@ -13,6 +13,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import ChartShell from '~/components/ChartShell.vue'
 import DatasetAttribution from '~/components/DatasetAttribution.vue'
+import TableFallback from '~/components/TableFallback.vue'
 import { useChartTheme } from '~/composables/useChartTheme'
 import { messages } from '~/messages'
 import { formatDay, formatDischarge } from '~/utils/format'
@@ -189,34 +190,31 @@ const option = computed(() => {
           <div class="chart-placeholder">{{ rios.chartError }}</div>
         </template>
       </NuxtErrorBoundary>
-      <details class="table-fallback">
-        <summary>{{ rios.tableSummary }}</summary>
-        <div class="table-wrap" role="region" :aria-label="rios.tableSummary" tabindex="0">
-          <table>
-            <caption>
-              {{
-                rios.tableCaption(selectedPoint)
-              }}
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">{{ rios.date }}</th>
-                <th scope="col">{{ rios.dataType }}</th>
-                <th scope="col" class="num">{{ rios.discharge }} ({{ dataset.unit }})</th>
-                <th scope="col" class="num">{{ rios.forecastRange }} ({{ dataset.unit }})</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="record in records" :key="`${record.point}-${record.start}`">
-                <th scope="row">{{ formatDay(record.end) }}</th>
-                <td>{{ record.data_type === 'forecast' ? rios.forecast : rios.estimated }}</td>
-                <td class="num">{{ displayValue(record.river_discharge) }}</td>
-                <td class="num">{{ displayRange(record) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
+      <TableFallback :label="rios.tableSummary">
+        <table>
+          <caption>
+            {{
+              rios.tableCaption(selectedPoint)
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ rios.date }}</th>
+              <th scope="col">{{ rios.dataType }}</th>
+              <th scope="col" class="num">{{ rios.discharge }} ({{ dataset.unit }})</th>
+              <th scope="col" class="num">{{ rios.forecastRange }} ({{ dataset.unit }})</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="record in records" :key="`${record.point}-${record.start}`">
+              <th scope="row">{{ formatDay(record.end) }}</th>
+              <td>{{ record.data_type === 'forecast' ? rios.forecast : rios.estimated }}</td>
+              <td class="num">{{ displayValue(record.river_discharge) }}</td>
+              <td class="num">{{ displayRange(record) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </TableFallback>
     </template>
     <p v-else class="empty-state" role="status">{{ rios.emptySummary(selectedPoint) }}</p>
     <DatasetAttribution :dataset="dataset" />
@@ -265,20 +263,6 @@ select {
   place-items: center;
   color: var(--muted);
   text-align: center;
-}
-.table-fallback {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-.table-fallback summary {
-  color: var(--text);
-  cursor: pointer;
-  font-weight: 650;
-}
-.table-wrap {
-  overflow-x: auto;
-  margin-top: 12px;
 }
 table {
   width: 100%;

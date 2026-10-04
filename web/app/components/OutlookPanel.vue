@@ -5,6 +5,7 @@ import { AriaComponent, GridComponent, TooltipComponent } from 'echarts/componen
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 import { computed } from 'vue'
+import TableFallback from '~/components/TableFallback.vue'
 import { useChartTheme } from '~/composables/useChartTheme'
 import { messages, outlookCategoryKey, outlookCategoryLabel } from '~/messages'
 import { formatMonth } from '~/utils/format'
@@ -102,6 +103,31 @@ const option = computed(() => {
           </NuxtErrorBoundary>
         </template>
         <p v-else class="empty-state" role="status">{{ messages.panels.outlook.empty }}</p>
+        <TableFallback v-if="records.length" :label="messages.panels.outlook.tableSummary">
+          <table>
+            <caption>
+              {{
+                messages.panels.outlook.tableCaption(issueDate)
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ messages.panels.outlook.season }}</th>
+                <th v-for="category in categories" :key="category.category" scope="col">
+                  {{ outlookCategoryLabel(category) }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="record in records" :key="record.season">
+                <th scope="row">{{ record.season }}</th>
+                <td v-for="category in categories" :key="category.category">
+                  {{ probability(record, outlookCategoryKey(category)) ?? '—' }} %
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </TableFallback>
         <ul class="category-key" :aria-label="messages.panels.outlook.probability">
           <li v-for="(category, index) in categories" :key="category.category">
             <span
