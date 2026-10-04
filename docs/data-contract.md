@@ -104,7 +104,7 @@ Each published file contains one source's provenance and at least one record:
 | `ingestion_time`                            | The UTC or offset-aware ISO 8601 download time.                                                                                                                                                             |
 | `processing_version`                        | The code version that produced the file.                                                                                                                                                                    |
 | `source_revision`                           | Optional object with the upstream SHA-256 and required `last_modified` key; `last_modified` is the HTTP `Last-Modified` value or `null` when the upstream supplies no header.                               |
-| `records`                                   | A non-empty array. Every record has `start` and `end`; fields beyond those depend on the dataset id.                                                                                                        |
+| `records`                                   | A non-empty array. Every record has `start`; interval records also have `end`. Fields beyond those depend on the dataset id.                                                                                |
 
 Record dates use ISO 8601 strings: `YYYY-MM` for months and `YYYY-MM-DD` for
 days. The schema adds the record fields for each current dataset id, including

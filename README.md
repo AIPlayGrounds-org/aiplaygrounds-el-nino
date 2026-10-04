@@ -20,7 +20,7 @@ site for GitHub Pages. The architecture map is
 
 You need [Git](https://git-scm.com/) and
 [mise](https://mise.jdx.dev/getting-started). mise installs the Bun and uv
-versions pinned in [`mise.toml`](mise.toml).
+versions selected in [`mise.toml`](mise.toml).
 
 ```sh
 mise install
@@ -32,18 +32,23 @@ mise exec -- bun run dev
 Open <http://localhost:3100>. If mise is active in your shell, omit
 `mise exec --`.
 
-To run the pipeline against a source and publish its JSON, use `pipeline/`:
+To generate the source catalogues, use `pipeline/`:
+
+```sh
+cd pipeline
+uv run wawapacha-pipeline sources
+```
+
+To run one source and publish its JSON, use `pipeline/`:
 
 ```sh
 cd pipeline
 uv run wawapacha-pipeline run noaa-cpc-oni
 ```
 
-```text
-Published noaa-cpc-oni: 919 records in data/noaa-cpc-oni.json
-```
-
-The seed file is [`data/noaa-cpc-oni.json`](data/noaa-cpc-oni.json).
+The seed file is [`data/noaa-cpc-oni.json`](data/noaa-cpc-oni.json). The
+scheduled data workflow publishes newer files to the `data` branch; see the
+[`data workflow`](docs/data-workflow.md) for the branch and failure behavior.
 
 If validation fails, the previous JSON remains in place.
 
@@ -70,7 +75,7 @@ current page shapes.
 - `/territorio` maps recent CHIRPS rainfall and anomalies by department, with an
   ERA5 cross-check.
 - `/historico` compares the current year with tagged 1982–83, 1997–98 and 2017
-  events.
+  events, the official ICEN series and a SENAMHI station snapshot.
 - `/rios` shows modeled discharge for selected Peruvian basins and links to
   official alerts.
 - Every chart exposes its variable, unit, period, data type, source and update
@@ -96,3 +101,5 @@ also outside the current product boundary. The staged scope is in
 - [Chart rules](docs/chart-rules.md)
 - [Source catalog](docs/sources.md)
 - [Concepts](docs/concepts.md)
+- [Manual snapshots](docs/manual-snapshots.md)
+- [Contributing workflow and checks](CONTRIBUTING.md)

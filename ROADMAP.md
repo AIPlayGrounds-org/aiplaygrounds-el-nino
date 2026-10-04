@@ -49,39 +49,38 @@ sources.toml → source module → schema validation → data branch/<id>.json
 
 ## Stages
 
-| Stage                         | Scope                                                                                                                                                                                                                                                                        | Exit criteria                                                            | Target            |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ----------------- |
-| 0 Foundations                 | Layout, registry, schema, CI, deploy, scheduled ingestion, contract v2                                                                                                                                                                                                       | On `main`                                                                | Done (2026-10-02) |
-| 1 Sources wave 1              | `noaa-cpc-nino-weekly`, `noaa-cpc-outlook`, `enfen-communique`, `noaa-oisst`, `noaa-ersst`, `limites-inei-ign`, `open-meteo-glofas`: module, notebook, tests with samples, one real committed `data/<id>.json`, registry entry set to `automatable`                          | Each merged; `update-data.yml` run by hand once with the new sources     | 2026-10-09        |
-| 2 Web foundation              | Typed dataset loader, shared chart shell with provenance, label map and messages module, test fixtures for every dataset kind                                                                                                                                                | `/` renders the ONI through the shell; no panel reads JSON any other way | 2026-10-09        |
-| 3 v0.1 panels                 | Panels 2 to 5 and 7 from the panel table                                                                                                                                                                                                                                     | All seven panels on real data; every number shows its provenance         | 2026-10-16        |
-| 4 v0.2 rainfall and territory | `chirps` by department using the boundaries; `open-meteo-era5` as the cross-check; Territorio page with a department choropleth                                                                                                                                              | Page live; both sources scheduled                                        | 2026-10-21        |
-| 5 v0.3 rivers and alerts      | GloFAS panel marked model-estimated; alerts as links to SENAMHI and ENFEN (no scraping of avisos unless terms allow it); `senamhi-avisos` stays out                                                                                                                          | Page live                                                                | 2026-10-24        |
-| 6 v0.4 history                | Histórico page with the 1982–83, 1997–98 and 2017 events from `noaa-ersst`                                                                                                                                                                                                   | Page live                                                                | 2026-10-24        |
-| 7 Content and compliance      | Attribution and reviewed terms for every source; Aprende and Metodología; emails to IGP/ENFEN, SENAMHI, ANA, DHN and INAIGEM; AI summary only if a person reviews it. Open-Meteo says “Weather data by Open-Meteo.com”, credits Copernicus, and remains non-commercial only. | Every published source has attribution on the page                       | 2026-10-27        |
-| 8 Hardening and release       | Accessibility, mobile and dark mode, performance, SEO, error and empty states, freshness check, final docs pass                                                                                                                                                              | Freeze 2026-10-28; release 2026-10-31                                    | 2026-10-31        |
+| Stage                         | Scope                                                                                                                                                                                                                                                                        | Exit criteria                                                            | State                                                                                      | Target            |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ----------------- |
+| 0 Foundations                 | Layout, registry, schema, CI, deploy, scheduled ingestion, contract v2                                                                                                                                                                                                       | On `main`                                                                | Done                                                                                       | Done (2026-10-02) |
+| 1 Sources wave 1              | `noaa-cpc-nino-weekly`, `noaa-cpc-outlook`, `enfen-communique`, `noaa-oisst`, `noaa-ersst`, `limites-inei-ign`, `open-meteo-glofas`: module, notebook, tests with samples, one real committed `data/<id>.json`, registry entry set to `automatable`                          | Each merged; `update-data.yml` run by hand once with the new sources     | Implemented on `main`; a live scheduled run is not evidenced in this tree                  | 2026-10-09        |
+| 2 Web foundation              | Typed dataset loader, shared chart shell with provenance, label map and messages module, test fixtures for every dataset kind                                                                                                                                                | `/` renders the ONI through the shell; no panel reads JSON any other way | Done                                                                                       | 2026-10-09        |
+| 3 v0.1 panels                 | Panels 2 to 5 and 7 from the panel table                                                                                                                                                                                                                                     | All seven panels on real data; every number shows its provenance         | Done                                                                                       | 2026-10-16        |
+| 4 v0.2 rainfall and territory | `chirps` by department using the boundaries; `open-meteo-era5` as the cross-check; Territorio page with a department choropleth                                                                                                                                              | Page live; both sources scheduled                                        | Done                                                                                       | 2026-10-21        |
+| 5 v0.3 rivers and alerts      | GloFAS panel marked model-estimated; alerts as links to SENAMHI and ENFEN (no scraping of avisos unless terms allow it); `senamhi-avisos` stays out                                                                                                                          | Page live                                                                | Done                                                                                       | 2026-10-24        |
+| 6 v0.4 history                | Histórico page with the 1982–83, 1997–98 and 2017 events from `noaa-ersst`                                                                                                                                                                                                   | Page live                                                                | Done                                                                                       | 2026-10-24        |
+| 7 Content and compliance      | Attribution and reviewed terms for every source; Aprende and Metodología; emails to IGP/ENFEN, SENAMHI, ANA, DHN and INAIGEM; AI summary only if a person reviews it. Open-Meteo says “Weather data by Open-Meteo.com”, credits Copernicus, and remains non-commercial only. | Every published source has attribution on the page                       | Partial: page attribution is implemented; outreach and license confirmation remain pending | 2026-10-27        |
+| 8 Hardening and release       | Accessibility, mobile and dark mode, performance, SEO, error and empty states, freshness check, final docs pass                                                                                                                                                              | Freeze 2026-10-28; release 2026-10-31                                    | In progress: gates are implemented; freeze and release are still ahead                     | 2026-10-31        |
 
 ### v0.1 panel table
 
 The page `/` keeps asking the seven questions below. Each panel has one dataset
 and prints that dataset's provenance.
 
-| Panel | Question                              | Dataset id                                     | Status  |
-| ----- | ------------------------------------- | ---------------------------------------------- | ------- |
-| 1     | ¿Llegó El Niño?                       | [`noaa-cpc-oni`](docs/sources.md#noaa-cpc-oni) | Built   |
-| 2     | ¿Cómo está el mar frente al Perú?     | `noaa-cpc-nino-weekly`                         | Stage 1 |
-| 3     | ¿Qué dice el estado oficial del Perú? | `enfen-communique`                             | Stage 1 |
-| 4     | ¿Qué esperan los pronósticos?         | `noaa-cpc-outlook`                             | Stage 1 |
-| 5     | ¿Dónde está más caliente el mar?      | `noaa-oisst`                                   | Stage 1 |
-| 6     | Explora la serie histórica            | [`noaa-cpc-oni`](docs/sources.md#noaa-cpc-oni) | Built   |
-| 7     | Cómo lo hicimos                       | Provenance of each dataset                     | Stage 3 |
+| Panel | Question                              | Dataset id                                     | Status |
+| ----- | ------------------------------------- | ---------------------------------------------- | ------ |
+| 1     | ¿Llegó El Niño?                       | [`noaa-cpc-oni`](docs/sources.md#noaa-cpc-oni) | Built  |
+| 2     | ¿Cómo está el mar frente al Perú?     | `noaa-cpc-nino-weekly`                         | Built  |
+| 3     | ¿Qué dice el estado oficial del Perú? | `enfen-communique`                             | Built  |
+| 4     | ¿Qué esperan los pronósticos?         | `noaa-cpc-outlook`                             | Built  |
+| 5     | ¿Dónde está más caliente el mar?      | `noaa-oisst`                                   | Built  |
+| 6     | Explora la serie histórica            | [`noaa-cpc-oni`](docs/sources.md#noaa-cpc-oni) | Built  |
+| 7     | Cómo lo hicimos                       | Provenance of each dataset                     | Built  |
 
-### Later sources
+### Held sources
 
-These entries remain in `sources.toml` but are not assigned to a stage:
+These entries remain in `sources.toml` but are not published on a site page or
+are still waiting for a verified access decision:
 
-- `enfen-icen` and `enfen-icen-history`: the SIOFEN request returned 403, the
-  IGP table timed out, and the historical entry may duplicate ICEN.
 - `copernicus-ostia`: programmatic access needs a Copernicus Marine account and
   the product has no anomaly, so it is not comparable with OISST.
 - `ecmwf-seas5`: the dataset, variable and region are not set, and access needs
@@ -90,8 +89,6 @@ These entries remain in `sources.toml` but are not assigned to a stage:
   period must be read from each edition.
 - `iri-enso-pluma` (retired): the page no longer provides forecast values, only
   charts.
-- `senamhi-estaciones`: access requires a request form and no series was
-  obtained.
 - `senamhi-pisco`: the product is manual GeoTIFF precipitation data; its
   geographic aggregation and delivery path are not yet verified.
 - `nasa-imerg`: NASA PPS access needs registration and the Early, Late and Final
@@ -103,6 +100,9 @@ These entries remain in `sources.toml` but are not assigned to a stage:
   download was not confirmed.
 - `indeci-coen`: the source is manual narrative reports, mostly PDFs, whose
   figures change between preliminary and complementary reports.
+
+The registry also keeps `bom-enso` and `enfen-forecast` as discarded entries.
+Their reasons are in the generated [source catalog](docs/sources.md).
 
 ## Merge plan
 

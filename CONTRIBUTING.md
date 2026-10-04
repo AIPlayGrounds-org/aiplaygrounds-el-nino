@@ -8,6 +8,13 @@
 - A PR does one thing. If it depends on another open PR, branch from that one
   and say so in the description.
 - To add a source, follow [`docs/add-a-source.md`](docs/add-a-source.md).
+- The data branch and deployment overlay are in
+  [`docs/data-workflow.md`](docs/data-workflow.md).
+- Manual inputs and their refresh boundaries are in
+  [`docs/manual-snapshots.md`](docs/manual-snapshots.md).
+- The freshness, SEO and performance gates are in
+  [`docs/freshness.md`](docs/freshness.md), [`docs/seo.md`](docs/seo.md) and
+  [`docs/performance.md`](docs/performance.md).
 - Read [`ROADMAP.md`](ROADMAP.md) before choosing work; it owns the target
   architecture, stages and merge plan.
 - Follow the [merge plan](ROADMAP.md#merge-plan): merge commits only, signed,
@@ -17,8 +24,7 @@
 
 [`ci.yml`](.github/workflows/ci.yml) runs these on every PR. Run them first:
 
-The write commands are `uv run ruff format .` from `pipeline/` and
-`bun run format` from `web/`; the checks below leave the tree unchanged.
+Ruff and oxfmt own formatting; the checks below leave the tree unchanged.
 
 ```sh
 cd pipeline
@@ -35,6 +41,8 @@ bun run format:check
 bun run types
 git diff --exit-code app/types/dataset.ts
 bun run generate
+bun run check:seo
+bun run check:budget
 ```
 
 If a `git diff` fails, a generated file is stale. Commit it with your change:
