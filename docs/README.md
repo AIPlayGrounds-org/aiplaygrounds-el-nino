@@ -11,6 +11,7 @@ rule into another document.
 | [`add-a-source.md`](add-a-source.md)   | The contributor workflow for adding a registry source.                          |
 | [`concepts.md`](concepts.md)           | The domain glossary for interpreting the data.                                  |
 | [`sources.md`](sources.md)             | The generated catalog of automatable sources, their cadence and access details. |
+| [`performance.md`](performance.md)     | The generated web payload and entry-JavaScript budget and its check command.    |
 
 The repository map is [`ARCHITECTURE.md`](../ARCHITECTURE.md). The target
 architecture, staged work and non-goals are in [`ROADMAP.md`](../ROADMAP.md).

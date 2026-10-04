@@ -36,7 +36,7 @@ public source
 | [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                             |
 | [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset.                                          |
 | [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry. |
-| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due` and `sources`. `due` applies the registry update class to the published JSON timestamps.                             |
+| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due`, `freshness` and `sources`. `due` and `freshness` apply the registry update class to published JSON timestamps.      |
 
 The scheduled [`update-data.yml`](.github/workflows/update-data.yml) runs once a
 day. It asks `due` for missing or old daily, weekly and monthly datasets, skips
@@ -46,6 +46,13 @@ workflow dispatch [`deploy.yml`](.github/workflows/deploy.yml). The registry's
 `update` field and the generated [source catalog](docs/sources.md) own each
 source's cadence and cadence notes.
 
+The scheduled [`freshness.yml`](.github/workflows/freshness.yml) runs the
+`wawapacha-pipeline freshness` command against the published files. It reuses
+the due selector's registry cadence thresholds and compares each file's
+`ingestion_time` with its optional `source_revision.last_modified`; a stale
+result is a visible workflow error, but the job is allowed to fail so deploys
+are not blocked.
+
 ### Web
 
 | Path                                                                             | Owns                                                                                                                              |
@@ -54,12 +61,18 @@ source's cadence and cadence notes.
 | [`pages/territorio.vue`](web/app/pages/territorio.vue)                           | The department rainfall map and its ERA5 cross-check.                                                                             |
 | [`pages/historico.vue`](web/app/pages/historico.vue)                             | The comparison of current and tagged historical events.                                                                           |
 | [`pages/rios.vue`](web/app/pages/rios.vue)                                       | The modeled river-discharge series and official alert links.                                                                      |
+| [`pages/aprende.vue`](web/app/pages/aprende.vue)                                 | The Spanish explainer for ENSO, Niño regions, ONI and the Peruvian coast.                                                         |
+| [`pages/metodologia.vue`](web/app/pages/metodologia.vue)                         | The generated source catalogue and data-type explanations.                                                                        |
 | [`server/utils/loadDataset.ts`](web/server/utils/loadDataset.ts)                 | The static dataset catalog and server-side schema validation.                                                                     |
 | [`composables/useDataset.ts`](web/app/composables/useDataset.ts)                 | The page-facing loader. `useDataset(id, shape?)` hydrates from the Nuxt payload; `shape` runs on the server before serialization. |
 | [`composables/useSourceCatalog.ts`](web/app/composables/useSourceCatalog.ts)     | Reads the generated source catalogue and gets each source's `ingestion_time` through the dataset loader.                          |
 | [`data/source-catalog.json`](web/app/data/source-catalog.json)                   | Generated registry facts and labelled page ownership for the methodology catalogue.                                               |
 | [`composables/useChartTheme.ts`](web/app/composables/useChartTheme.ts)           | Reads chart colors and font from CSS variables and refreshes them when the system color scheme changes.                           |
 | [`utils/format.ts`](web/app/utils/format.ts)                                     | Shared Spanish number and date formatting, including Lima time and river-discharge precision.                                     |
+| [`utils/sourceCatalog.ts`](web/app/utils/sourceCatalog.ts)                       | Validates and shapes the generated source catalogue used by Metodología.                                                          |
+| [`composables/useSiteSeo.ts`](web/app/composables/useSiteSeo.ts)                 | Shared canonical, Open Graph and Twitter metadata, using page copy from `messages.ts`.                                            |
+| [`server/routes/sitemap.xml.ts`](web/server/routes/sitemap.xml.ts)               | Generates the sitemap from the public route list during static generation.                                                        |
+| [`server/routes/robots.txt.ts`](web/server/routes/robots.txt.ts)                 | Generates crawler rules and links the generated sitemap.                                                                          |
 | [`components/ChartShell.vue`](web/app/components/ChartShell.vue)                 | The shared chart frame, accessible summary, provenance fields, data age and stale-source notice.                                  |
 | [`components/DatasetAttribution.vue`](web/app/components/DatasetAttribution.vue) | The Open-Meteo credit and the required ERA5 or GloFAS attribution.                                                                |
 | [`messages.ts`](web/app/messages.ts)                                             | Spanish product copy and the single `data_type` label map.                                                                        |
@@ -82,8 +95,10 @@ then `useDataset` optionally reduces the returned value before hydration.
 | `/rios`       | Keeps the river fields used by the chart and orders records by point and date.                                                         |
 
 The route's shaped return value is what Nuxt serializes into its
-`_payload.json`. The repository has no absolute byte budget or generated payload
-size check. It does have relative shaping assertions in
+`_payload.json`. The route byte budget and generated-output check live in
+[`docs/performance.md`](docs/performance.md) and
+[`web/performance-budget.json`](web/performance-budget.json). It also has
+relative shaping assertions in
 [`web/test/territorio.test.ts`](web/test/territorio.test.ts) and
 [`web/test/rios.test.ts`](web/test/rios.test.ts). The separate 200 KiB gzip
 limits enforced by some pipeline sources are source-payload limits, not route
