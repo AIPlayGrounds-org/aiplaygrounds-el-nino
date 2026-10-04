@@ -239,7 +239,7 @@ Reviewed on 2026-10-03. [Official page](https://chc.ucsb.edu/data/chirps3).
 | Variable            | Precipitación                                                                                                                         |
 | Unit                | mm por intervalo de acumulación                                                                                                       |
 | Data type           | estimated                                                                                                                             |
-| Update              | daily                                                                                                                                 |
+| Update              | weekly                                                                                                                                |
 | Spatial resolution  | 0,05°                                                                                                                                 |
 | Temporal resolution | Pentadal (P = 1–6; P6 va del día 26 al fin de mes)                                                                                    |
 | History             | More than 40 years                                                                                                                    |
