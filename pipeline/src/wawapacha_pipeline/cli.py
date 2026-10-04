@@ -66,7 +66,9 @@ def main(argv: list[str] | None = None) -> int:
         "run", help="download, validate and publish a source"
     )
     run_parser.add_argument("source", choices=sorted(SOURCES))
-    commands.add_parser("sources", help="generate docs/sources.md from sources.toml")
+    commands.add_parser(
+        "sources", help="generate the source catalogues from sources.toml"
+    )
     due_parser = commands.add_parser(
         "due", help="list automatable sources due for an update"
     )
@@ -81,7 +83,11 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "sources":
         try:
-            print(f"Wrote {relative_path(catalog.write(SOURCES))}")
+            catalog.write(SOURCES)
+            print(
+                f"Wrote {relative_path(catalog.CATALOG_PATH)} and "
+                f"{relative_path(catalog.WEB_CATALOG_PATH)}"
+            )
         except registry.RegistryError as error:
             print(f"sources.toml is not valid. {error}", file=sys.stderr)
             return 1

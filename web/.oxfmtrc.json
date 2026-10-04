@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["app/types/dataset.ts", "bun.lock"],
+  "ignorePatterns": ["app/types/dataset.ts", "app/data/source-catalog.json", "bun.lock"],
   "singleQuote": true,
   "semi": false,
   "printWidth": 100

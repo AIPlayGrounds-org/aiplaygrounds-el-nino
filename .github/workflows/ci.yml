@@ -28,6 +28,7 @@ jobs:
       # Fails if docs/sources.md is stale: run the command and commit the result.
       - run: uv run wawapacha-pipeline sources
       - run: git diff --exit-code ../docs/sources.md
+      - run: git diff --exit-code ../web/app/data/source-catalog.json
 
   web:
     runs-on: ubuntu-latest

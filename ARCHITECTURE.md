@@ -18,7 +18,7 @@ public source
 
 | Path                                                       | Owns                                                                                                                         |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| [`sources.toml`](sources.toml)                             | The source registry: identity, provenance, update class, delivery stage and source notes.                                    |
+| [`sources.toml`](sources.toml)                             | The source registry: identity, provenance, update class, delivery stage, source notes and site-page ownership.               |
 | [`schema/dataset.schema.json`](schema/dataset.schema.json) | The published JSON contract. The pipeline validates against it and the web generates TypeScript types from it.               |
 | [`pipeline/`](pipeline/)                                   | The uv package that discovers source modules, downloads or reads inputs, validates source-specific rules and publishes JSON. |
 | [`notebooks/`](notebooks/)                                 | One inspection notebook per automatable source. Notebooks import the pipeline and do not publish data themselves.            |
@@ -30,13 +30,13 @@ public source
 
 ### Pipeline
 
-| Path                                                         | Owns                                                                                                           |
-| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                    |
-| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds. |
-| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset.              |
-| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) from the registry.                                                |
-| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due` and `sources`. `due` applies the registry update class to the published JSON timestamps. |
+| Path                                                         | Owns                                                                                                                                       |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                                                |
+| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                             |
+| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset.                                          |
+| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry. |
+| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due` and `sources`. `due` applies the registry update class to the published JSON timestamps.                             |
 
 The scheduled [`update-data.yml`](.github/workflows/update-data.yml) runs once a
 day. It asks `due` for missing or old daily, weekly and monthly datasets, skips
@@ -56,6 +56,8 @@ source's cadence and cadence notes.
 | [`pages/rios.vue`](web/app/pages/rios.vue)                                       | The modeled river-discharge series and official alert links.                                                                      |
 | [`server/utils/loadDataset.ts`](web/server/utils/loadDataset.ts)                 | The static dataset catalog and server-side schema validation.                                                                     |
 | [`composables/useDataset.ts`](web/app/composables/useDataset.ts)                 | The page-facing loader. `useDataset(id, shape?)` hydrates from the Nuxt payload; `shape` runs on the server before serialization. |
+| [`composables/useSourceCatalog.ts`](web/app/composables/useSourceCatalog.ts)     | Reads the generated source catalogue and gets each source's `ingestion_time` through the dataset loader.                          |
+| [`data/source-catalog.json`](web/app/data/source-catalog.json)                   | Generated registry facts and labelled page ownership for the methodology catalogue.                                               |
 | [`composables/useChartTheme.ts`](web/app/composables/useChartTheme.ts)           | Reads chart colors and font from CSS variables and refreshes them when the system color scheme changes.                           |
 | [`utils/format.ts`](web/app/utils/format.ts)                                     | Shared Spanish number and date formatting, including Lima time and river-discharge precision.                                     |
 | [`components/ChartShell.vue`](web/app/components/ChartShell.vue)                 | The shared chart frame, accessible summary, provenance fields, data age and stale-source notice.                                  |
@@ -94,7 +96,8 @@ payload limits; their current values are in the generated
   imports the other. Deploy overlays the `data` branch before `nuxt generate`.
 - **Source facts have one home.** `sources.toml` owns registry facts. Source
   modules read them through `registry.get()` and add only source-specific
-  parsing and validation.
+  parsing and validation. Its top-level `[routes]` table owns the label for each
+  site route used by `site_pages`.
 - **Automatable source discovery is registry-driven.** A source id maps to
   `sources/<id with hyphens replaced by underscores>.py`; discovery requires
   `ID`, `fetch`, `parse` and `run`.
@@ -104,6 +107,10 @@ payload limits; their current values are in the generated
   without publishing data.
 - **Invalid data is not published.** Schema validation runs before the atomic
   replacement, so a failed run leaves the previous JSON in place.
+- **The methodology catalogue is generated.** `catalog.py` writes the registry
+  facts and labelled page ownership to `web/app/data/source-catalog.json`; the
+  web validates it and reads each published dataset through `loadDataset` for
+  its last update.
 - **The web has one dataset entry point.** Pages call `useDataset`; components
   receive datasets as props and do not import `data/` directly.
 - **Charts use one provenance frame.** `ChartShell` owns the variable, unit,
@@ -125,8 +132,9 @@ CI runs these pipeline commands from `pipeline`:
 - Ruff lint: `uv run ruff check .`
 - Tests: `uv run pytest`
 
-It then generates the source catalog and checks its clean diff. From `web/`, the
-oxfmt check is `oxfmt --check .`, also exposed to contributors as the exact
-script command `bun run format:check`. CI then regenerates the schema types,
-checks their clean diff and runs `bun run generate`. The contributor-facing
-working-directory details are in [`CONTRIBUTING.md`](CONTRIBUTING.md#checks).
+It then generates `docs/sources.md` and `web/app/data/source-catalog.json` and
+checks their clean diff. From `web/`, the oxfmt check is `oxfmt --check .`, also
+exposed to contributors as the exact script command `bun run format:check`. CI
+then regenerates the schema types, checks their clean diff and runs
+`bun run generate`. The contributor-facing working-directory details are in
+[`CONTRIBUTING.md`](CONTRIBUTING.md#checks).

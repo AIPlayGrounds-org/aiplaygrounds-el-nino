@@ -2,7 +2,7 @@
 import { messages } from '~/messages'
 import type { DatasetLike } from '~/types/datasets'
 
-const props = defineProps<{ dataset: DatasetLike }>()
+const props = defineProps<{ dataset: Pick<DatasetLike, 'id'> }>()
 
 // Only Open-Meteo datasets carry the link; their institution and product are already in ChartShell.
 const credit = messages.attribution.credits[props.dataset.id]

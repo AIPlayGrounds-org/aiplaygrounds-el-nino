@@ -21,6 +21,8 @@ const datasetLoaders: { [Id in DatasetId]: () => Promise<unknown> } = {
   'noaa-ersst': () => import('#data/noaa-ersst.json').then(({ default: value }) => value),
 }
 
+export const isDatasetId = (id: string): id is DatasetId => Object.hasOwn(datasetLoaders, id)
+
 const ajv = new Ajv2020({ allErrors: true, strict: false })
 const validateSchema = ajv.compile<Dataset>(datasetSchema)
 

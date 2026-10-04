@@ -1,6 +1,6 @@
-"""Generates docs/sources.md from the registry. The text is already in prettier's format
-(80 columns, aligned tables), so formatting the file does not change it."""
+"""Generates the source catalogues from the registry."""
 
+import json
 import re
 from collections.abc import Iterable
 from pathlib import Path
@@ -9,6 +9,7 @@ from wawapacha_pipeline import registry
 from wawapacha_pipeline.contract import REPO_ROOT
 
 CATALOG_PATH = REPO_ROOT / "docs" / "sources.md"
+WEB_CATALOG_PATH = REPO_ROOT / "web" / "app" / "data" / "source-catalog.json"
 WIDTH = 80
 LIST_MARKER = re.compile(r"\d+[.)]$")
 
@@ -116,7 +117,47 @@ def render(sources: dict[str, dict], built: Iterable[str]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def write(built: Iterable[str], path: Path | None = None) -> Path:
+def render_web(
+    sources: dict[str, dict], built: Iterable[str], routes: dict[str, str] | None = None
+) -> str:
+    """Render the registry facts the web needs as a static JSON catalogue."""
+    routes = routes or registry.load_routes()
+    built_ids = set(built)
+    entries = []
+    for entry in sources.values():
+        if entry["id"] not in built_ids:
+            continue
+        source = {
+            "id": entry["id"],
+            "name": entry["product"],
+            "provider": entry["institution"],
+            "variable": entry["variable"],
+            "unit": entry["unit"],
+            "data_type": entry["data_type"],
+            "spatial_resolution": entry["spatial_resolution"],
+            "temporal_resolution": entry["temporal_resolution"],
+            "provider_url": entry["page"],
+            "data_url": entry["access"]["url"],
+            "site_pages": entry["site_pages"],
+        }
+        for key in ("reference_period", "license"):
+            if key in entry:
+                source[key] = entry[key]
+        entries.append(source)
+    return (
+        json.dumps({"routes": routes, "sources": entries}, ensure_ascii=False, indent=2)
+        + "\n"
+    )
+
+
+def write(
+    built: Iterable[str], path: Path | None = None, web_path: Path | None = None
+) -> Path:
     path = path or CATALOG_PATH
+    web_path = web_path or WEB_CATALOG_PATH
     path.write_text(render(registry.load(), built), encoding="utf-8", newline="\n")
+    web_path.parent.mkdir(parents=True, exist_ok=True)
+    web_path.write_text(
+        render_web(registry.load(), built), encoding="utf-8", newline="\n"
+    )
     return path

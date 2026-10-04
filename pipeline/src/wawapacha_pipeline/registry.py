@@ -41,6 +41,7 @@ REQUIRED_AUTOMATED = (
     "data_type",
     "spatial_resolution",
     "temporal_resolution",
+    "site_pages",
 )
 OPTIONAL = ("history", "cadence", "license", "reference_period", "notes")
 ACCESS = ("kind", "url", "format", "auth")
@@ -54,14 +55,25 @@ class RegistryError(Exception):
 def load(path: Path = REGISTRY_PATH) -> dict[str, dict]:
     """Return the sources by id, in file order."""
     with open(path, "rb") as f:
-        entries = tomllib.load(f).get("source", [])
+        document = tomllib.load(f)
+    routes = document.get("routes", {})
+    check_routes(routes)
+    entries = document.get("source", [])
     sources = {}
     for entry in entries:
-        check(entry)
+        check(entry, routes)
         if entry["id"] in sources:
             raise RegistryError(f"{entry['id']}: duplicate id.")
         sources[entry["id"]] = entry
     return sources
+
+
+def load_routes(path: Path = REGISTRY_PATH) -> dict[str, str]:
+    """Return the labelled site routes from the registry."""
+    with open(path, "rb") as f:
+        routes = tomllib.load(f).get("routes", {})
+    check_routes(routes)
+    return routes
 
 
 def get(source_id: str) -> dict:
@@ -112,7 +124,24 @@ def discover(path: Path = REGISTRY_PATH) -> dict[str, object]:
     return modules
 
 
-def check(entry: dict) -> None:
+def check_routes(routes: object) -> None:
+    if (
+        not isinstance(routes, dict)
+        or not routes
+        or not all(
+            isinstance(route, str)
+            and route.startswith("/")
+            and isinstance(label, str)
+            and label
+            for route, label in routes.items()
+        )
+    ):
+        raise RegistryError("routes must map non-empty paths to labels.")
+
+
+def check(entry: dict, routes: dict[str, str] | None = None) -> None:
+    if routes is None:
+        routes = load_routes()
     name = entry.get("id", "(no id)")
     access = entry.get("access", {})
 
@@ -159,3 +188,22 @@ def check(entry: dict) -> None:
     notes = entry.get("notes", [])
     if not isinstance(notes, list) or not all(isinstance(note, str) for note in notes):
         raise RegistryError(f"{name}: notes must be a list of strings.")
+    if "site_pages" in entry:
+        site_pages = entry["site_pages"]
+        if (
+            not isinstance(site_pages, list)
+            or not site_pages
+            or not all(
+                isinstance(page, str) and page.startswith("/") for page in site_pages
+            )
+        ):
+            raise RegistryError(
+                f"{name}: site_pages must be a non-empty list of paths."
+            )
+        if len(set(site_pages)) != len(site_pages):
+            raise RegistryError(f"{name}: site_pages must not repeat a path.")
+        unknown_pages = set(site_pages) - set(routes)
+        if unknown_pages:
+            raise RegistryError(
+                f"{name}: site_pages has no label for route(s): {sorted(unknown_pages)}."
+            )

@@ -1,2 +1,6 @@
 export const ENFEN_COMUNICADOS = 'https://enfen.imarpe.gob.pe/downloads/comunicados/'
 export const SENAMHI_AVISOS = 'https://www.senamhi.gob.pe/?p=aviso-meteorologico'
+export const NOAA_ONI = 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/'
+export const NOAA_NINO_INDICES = 'https://www.cpc.ncep.noaa.gov/data/indices/'
+export const NOAA_ENSO_EXPLAINER = 'https://www.noaa.gov/jetstream/tropical/enso'
+export const ENFEN_NOTAS_TECNICAS = 'https://enfen.imarpe.gob.pe/notas-tecnicas/'

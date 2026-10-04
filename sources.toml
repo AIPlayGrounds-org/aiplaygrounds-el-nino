@@ -4,12 +4,19 @@
 # reference_period as published, so those five stay in Spanish. The contract
 # fields and registry keys stay in English.
 
+[routes]
+"/" = "Inicio"
+"/territorio" = "Territorio"
+"/rios" = "Ríos"
+"/historico" = "Histórico"
+
 # --- v0.1 -------------------------------------------------------------------
 
 [[source]]
 id = "noaa-cpc-oni"
 institution = "NOAA Climate Prediction Center (CPC)"
 product = "Oceanic Niño Index (ONI)"
+site_pages = ["/", "/historico"]
 block = "ENSO"
 verdict = "automatable"
 update = "monthly"
@@ -42,6 +49,7 @@ auth = "none"
 id = "noaa-cpc-nino-weekly"
 institution = "NOAA Climate Prediction Center (CPC)"
 product = "Weekly SST indices (file `wksst9120.for`)"
+site_pages = ["/"]
 block = "ENSO"
 verdict = "automatable"
 update = "weekly"
@@ -103,6 +111,7 @@ format = "HTML table"
 id = "enfen-communique"
 institution = "Comisión Multisectorial ENFEN"
 product = "Comunicado Oficial ENFEN"
+site_pages = ["/"]
 block = "Alerts"
 verdict = "automatable"
 update = "manual"
@@ -134,6 +143,7 @@ auth = "none"
 id = "noaa-oisst"
 institution = "NOAA NCEI, distributed by NOAA PSL"
 product = "Daily Optimum Interpolation Sea Surface Temperature (OISST), version 2.1"
+site_pages = ["/"]
 block = "SST"
 verdict = "automatable"
 update = "daily"
@@ -254,6 +264,7 @@ auth = "none"
 id = "noaa-cpc-outlook"
 institution = "NOAA Climate Prediction Center (CPC)"
 product = "Official NOAA CPC ENSO Strength Probabilities"
+site_pages = ["/"]
 block = "Forecasts"
 verdict = "automatable"
 update = "monthly"
@@ -349,6 +360,7 @@ auth = "none"
 id = "chirps"
 institution = "Climate Hazards Center (CHC), University of California Santa Barbara"
 product = "CHIRPS v3 (CHC Infrared Precipitation with Stations)"
+site_pages = ["/territorio"]
 block = "Precipitation"
 verdict = "automatable"
 update = "weekly"
@@ -384,6 +396,7 @@ auth = "none"
 id = "open-meteo-era5"
 institution = "Open-Meteo (intermediary); ERA5 data from the Copernicus Climate Change Service (C3S) and ECMWF"
 product = "Historical Weather API, model `era5`"
+site_pages = ["/territorio"]
 block = "Precipitation"
 verdict = "automatable"
 update = "daily"
@@ -497,6 +510,7 @@ auth = "request form"
 id = "limites-inei-ign"
 institution = "Instituto Geográfico Nacional (IGN), via OCHA ROLAC/OCHA FIS and HDX"
 product = "Peru administrative boundaries: departments and provinces"
+site_pages = ["/territorio"]
 block = "Territory"
 verdict = "automatable"
 update = "manual"
@@ -530,6 +544,7 @@ auth = "none"
 id = "open-meteo-glofas"
 institution = "Open-Meteo (intermediary); GloFAS data from the Copernicus Emergency Management Service"
 product = "Flood API, GloFAS v4 (continuous history and forecast)"
+site_pages = ["/rios"]
 block = "Rivers"
 verdict = "automatable"
 update = "daily"
@@ -713,6 +728,7 @@ auth = "none"
 id = "noaa-ersst"
 institution = "NOAA National Centers for Environmental Information (NCEI)"
 product = "ERSSTv5 monthly Niño-region indices"
+site_pages = ["/historico"]
 block = "History"
 verdict = "automatable"
 update = "monthly"
