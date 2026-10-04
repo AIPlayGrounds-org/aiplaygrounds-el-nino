@@ -51,9 +51,9 @@ The scheduled [`freshness.yml`](.github/workflows/freshness.yml) runs the
 the registry cadence schedule, but its independent tolerance is two nominal
 cadence intervals plus slack: 52 hours for daily, 15 days for weekly, and 63
 days for monthly. Those values live with the due thresholds in
-`pipeline/src/wawapacha_pipeline/cli.py`. It compares each file's
-`ingestion_time` with its optional `source_revision.last_modified`; a stale
-result fails this separate workflow and therefore does not block deploys.
+`pipeline/src/wawapacha_pipeline/cli.py`. It compares the published file's
+`ingestion_time`; a stale result fails this separate workflow and
+therefore does not block deploys.
 
 ### Web
 
