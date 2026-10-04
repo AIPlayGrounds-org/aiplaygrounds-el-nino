@@ -1,5 +1,7 @@
 import json
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+
+import pytest
 
 from wawapacha_pipeline import cli, registry
 
@@ -122,9 +124,37 @@ def test_freshness_uses_the_newest_ingestion_or_source_update(tmp_path):
     assert cli.freshness_issues(datetime(2026, 10, 4, 12, tzinfo=UTC), tmp_path) == []
 
 
+@pytest.mark.parametrize("update", ["daily", "weekly", "monthly"])
+def test_freshness_tolerance_is_independent_from_due_threshold(update, tmp_path):
+    now = datetime(2026, 10, 4, 12, tzinfo=UTC)
+    source_id = next(
+        source_id
+        for source_id in cli.SOURCES
+        if registry.load()[source_id]["update"] == update
+    )
+    for candidate in cli.SOURCES:
+        write_published_data(tmp_path / f"{candidate}.json", now.isoformat())
+
+    tolerance = cli._freshness_tolerance(update)
+    write_published_data(tmp_path / f"{source_id}.json", (now - tolerance).isoformat())
+    assert not any(
+        issue.startswith(f"{source_id}:")
+        for issue in cli.freshness_issues(now, tmp_path)
+    )
+
+    write_published_data(
+        tmp_path / f"{source_id}.json",
+        (now - tolerance - timedelta(seconds=1)).isoformat(),
+    )
+    assert any(
+        issue.startswith(f"{source_id}: last update")
+        for issue in cli.freshness_issues(now, tmp_path)
+    )
+
+
 def test_freshness_reports_stale_missing_and_invalid_data(tmp_path):
     write_published_data(
-        tmp_path / "noaa-cpc-nino-weekly.json", "2026-09-20T12:00:00+00:00"
+        tmp_path / "noaa-cpc-nino-weekly.json", "2026-09-19T11:59:59+00:00"
     )
     issues = cli.freshness_issues(datetime(2026, 10, 4, 12, tzinfo=UTC), tmp_path)
 
