@@ -10,6 +10,23 @@ from wawapacha_pipeline import catalog, registry
 from wawapacha_pipeline.contract import DATA_DIR, ValidationError, relative_path
 
 SOURCES = registry.discover()
+CADENCE_RULES = {
+    "daily": {
+        "interval": timedelta(days=1),
+        "due_after": timedelta(hours=20),
+        "slack": timedelta(hours=4),
+    },
+    "weekly": {
+        "interval": timedelta(days=7),
+        "due_after": timedelta(days=6),
+        "slack": timedelta(days=1),
+    },
+    "monthly": {
+        "interval": timedelta(days=31),
+        "due_after": timedelta(days=27),
+        "slack": timedelta(days=1),
+    },
+}
 
 
 def run(source_id: str) -> str:
@@ -30,12 +47,18 @@ def _ingestion_time(path: Path) -> datetime | None:
 def _is_due(update: str, ingestion: datetime, now: datetime) -> bool:
     if update == "manual":
         return False
-    minimum_age = {
-        "daily": timedelta(hours=20),
-        "weekly": timedelta(days=6),
-        "monthly": timedelta(days=27),
-    }[update]
-    return now - ingestion >= minimum_age
+    return now - ingestion >= CADENCE_RULES[update]["due_after"]
+
+
+def _is_stale(update: str, last_update: datetime, now: datetime) -> bool:
+    if update == "manual":
+        return False
+    return now - last_update > _freshness_tolerance(update)
+
+
+def _freshness_tolerance(update: str) -> timedelta:
+    rule = CADENCE_RULES[update]
+    return rule["interval"] * 2 + rule["slack"]
 
 
 def due_source_ids(
@@ -59,6 +82,34 @@ def due_source_ids(
     ]
 
 
+def freshness_issues(
+    now: datetime | None = None, data_dir: Path | None = None
+) -> list[str]:
+    """Return stale or missing published datasets using cadence tolerances."""
+    now = now or datetime.now(UTC)
+    now = now if now.tzinfo else now.replace(tzinfo=UTC)
+    data_dir = data_dir or DATA_DIR
+    sources = registry.load()
+    issues = []
+    for source_id in SOURCES:
+        update = sources[source_id]["update"]
+        if update == "manual":
+            continue
+        path = data_dir / f"{source_id}.json"
+        last_update = _ingestion_time(path)
+        if last_update is None:
+            issues.append(f"{source_id}: missing or invalid ingestion/update timestamp")
+            continue
+        if _is_stale(update, last_update, now):
+            age = now - last_update
+            issues.append(
+                f"{source_id}: last update {last_update.isoformat()} is {age} old; "
+                f"{update} freshness tolerance is "
+                f"{_freshness_tolerance(update)}"
+            )
+    return issues
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="wawapacha-pipeline")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -74,6 +125,18 @@ def main(argv: list[str] | None = None) -> int:
     )
     due_parser.add_argument("--as-of", help="evaluate due dates at this ISO 8601 time")
     due_parser.add_argument(
+        "--data-dir",
+        type=Path,
+        default=DATA_DIR,
+        help="directory containing published source JSON",
+    )
+    freshness_parser = commands.add_parser(
+        "freshness", help="fail when published datasets exceed their registry cadence"
+    )
+    freshness_parser.add_argument(
+        "--as-of", help="evaluate freshness at this ISO 8601 time"
+    )
+    freshness_parser.add_argument(
         "--data-dir",
         type=Path,
         default=DATA_DIR,
@@ -101,6 +164,20 @@ def main(argv: list[str] | None = None) -> int:
         except (ValueError, registry.RegistryError) as error:
             print(f"cannot select due sources. {error}", file=sys.stderr)
             return 1
+        return 0
+
+    if args.command == "freshness":
+        try:
+            as_of = datetime.fromisoformat(args.as_of) if args.as_of else None
+            issues = freshness_issues(as_of, args.data_dir)
+        except (ValueError, registry.RegistryError) as error:
+            print(f"cannot check data freshness. {error}", file=sys.stderr)
+            return 1
+        if issues:
+            for issue in issues:
+                print(f"::error title=data freshness::{issue}", file=sys.stderr)
+            return 1
+        print("Published datasets are within their registry cadence.")
         return 0
 
     try:

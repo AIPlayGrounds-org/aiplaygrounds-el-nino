@@ -46,3 +46,15 @@ jobs:
       - run: bun run types
       - run: git diff --exit-code app/types/dataset.ts
       - run: bun run generate
+      - run: bun run check:seo
+      - run: bun run check:budget
+      # The deploy workflow supplies the repository subpath used by GitHub Pages.
+      - run: bun run generate
+        env:
+          PAGES_BASE_URL: /wawapacha/
+      - run: bun run check:seo
+        env:
+          PAGES_BASE_URL: /wawapacha/
+      - run: bun run check:budget
+        env:
+          PAGES_BASE_URL: /wawapacha/

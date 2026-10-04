@@ -4,6 +4,7 @@ import { useDataset } from '~/composables/useDataset'
 import HistoricoChart from '~/components/HistoricoChart.vue'
 import IcenChart from '~/components/IcenChart.vue'
 import { shapeHistoricoDataset, shapeHistoricoOniDataset } from '~/utils/historico'
+import { useSiteSeo } from '~/composables/useSiteSeo'
 
 const ersst = await useDataset('noaa-ersst', shapeHistoricoDataset)
 const oni = await useDataset('noaa-cpc-oni', (dataset) =>
@@ -11,7 +12,7 @@ const oni = await useDataset('noaa-cpc-oni', (dataset) =>
 )
 const icen = await useDataset('enfen-icen')
 
-useSeoMeta({
+useSiteSeo({
   title: messages.historico.seoTitle,
   description: messages.historico.seoDescription,
 })

@@ -3,6 +3,11 @@ import { fileURLToPath } from 'node:url'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      siteOrigin: 'https://aiplaygrounds-org.github.io',
+    },
+  },
   // Pipeline JSON files live in the repository's data/ directory, outside web/.
   alias: { '#data': fileURLToPath(new URL('../data', import.meta.url)) },
   // Obsidian's presentation plugin uses port 3000.
@@ -14,6 +19,11 @@ export default defineNuxtConfig({
     baseURL: process.env.PAGES_BASE_URL || '/',
     head: {
       htmlAttrs: { lang: 'es' },
+    },
+  },
+  nitro: {
+    prerender: {
+      routes: ['/sitemap.xml', '/robots.txt'],
     },
   },
 })

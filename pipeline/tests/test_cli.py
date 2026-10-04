@@ -1,5 +1,7 @@
 import json
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+
+import pytest
 
 from wawapacha_pipeline import cli, registry
 
@@ -101,3 +103,72 @@ def test_due_command_honours_an_explicit_data_dir(tmp_path, capsys):
     assert capsys.readouterr().out == "".join(
         f"{i}\n" for i in scheduled_ids("daily", "weekly", "monthly")
     )
+
+
+@pytest.mark.parametrize(
+    ("update", "tolerance"),
+    [
+        ("daily", timedelta(hours=52)),
+        ("weekly", timedelta(days=15)),
+        ("monthly", timedelta(days=63)),
+    ],
+)
+def test_freshness_tolerance_is_independent_from_due_threshold(
+    update, tolerance, tmp_path
+):
+    now = datetime(2026, 10, 4, 12, tzinfo=UTC)
+    source_id = next(
+        source_id
+        for source_id in cli.SOURCES
+        if registry.load()[source_id]["update"] == update
+    )
+    for candidate in cli.SOURCES:
+        write_published_data(tmp_path / f"{candidate}.json", now.isoformat())
+
+    write_published_data(tmp_path / f"{source_id}.json", (now - tolerance).isoformat())
+    assert not any(
+        issue.startswith(f"{source_id}:")
+        for issue in cli.freshness_issues(now, tmp_path)
+    )
+
+    write_published_data(
+        tmp_path / f"{source_id}.json",
+        (now - tolerance - timedelta(seconds=1)).isoformat(),
+    )
+    assert any(
+        issue.startswith(f"{source_id}: last update")
+        for issue in cli.freshness_issues(now, tmp_path)
+    )
+
+
+def test_freshness_reports_stale_missing_and_invalid_data(tmp_path):
+    write_published_data(
+        tmp_path / "noaa-cpc-nino-weekly.json", "2026-09-19T11:59:59+00:00"
+    )
+    issues = cli.freshness_issues(datetime(2026, 10, 4, 12, tzinfo=UTC), tmp_path)
+
+    assert any(
+        issue.startswith("noaa-cpc-nino-weekly: last update") for issue in issues
+    )
+    assert any(issue.startswith("noaa-cpc-oni: missing or invalid") for issue in issues)
+    assert any(issue.startswith("noaa-oisst: missing or invalid") for issue in issues)
+
+
+def test_freshness_command_returns_failure_with_visible_errors(tmp_path, capsys):
+    write_published_data(
+        tmp_path / "noaa-cpc-nino-weekly.json", "2026-09-19T11:59:59+00:00"
+    )
+
+    assert (
+        cli.main(
+            [
+                "freshness",
+                "--data-dir",
+                str(tmp_path),
+                "--as-of",
+                "2026-10-04T12:00:00+00:00",
+            ]
+        )
+        == 1
+    )
+    assert "data freshness" in capsys.readouterr().err

@@ -3,6 +3,7 @@ import { messages } from '~/messages'
 import { useDataset } from '~/composables/useDataset'
 import { cropOisst } from '~/utils/oisstMap'
 import { ENFEN_COMUNICADOS, SENAMHI_AVISOS } from '~/links'
+import { useSiteSeo } from '~/composables/useSiteSeo'
 
 const oni = await useDataset('noaa-cpc-oni')
 const oisst = await useDataset('noaa-oisst', cropOisst)
@@ -98,13 +99,12 @@ const phaseLabel = {
   cold: messages.oni.rangeLabel('cold'),
 } as const
 
-useSeoMeta({
+useSiteSeo({
   title: messages.page.seoTitle,
   description: messages.page.seoDescription,
-  ogTitle: messages.page.seoTitle,
   ogDescription: last
     ? `${seasonLabel(last)}: ${formatAnomaly(last.anomaly)} °C. ${status.value.title}.`
-    : messages.page.seoTitle,
+    : messages.page.seoDescription,
 })
 </script>
 

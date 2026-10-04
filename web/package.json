@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "check:budget": "bun scripts/check-budget.ts",
+    "check:seo": "bun scripts/check-seo.ts",
     "dev": "nuxt dev",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",

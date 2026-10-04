@@ -1,0 +1,11 @@
+{
+  "margin": 0.15,
+  "routes": {
+    "/": { "payloadBytes": 585921, "entryJsBytes": 923433, "cssBytes": 935 },
+    "/territorio": { "payloadBytes": 140503, "entryJsBytes": 795772, "cssBytes": 1025 },
+    "/historico": { "payloadBytes": 82284, "entryJsBytes": 769731, "cssBytes": 935 },
+    "/rios": { "payloadBytes": 322057, "entryJsBytes": 822793, "cssBytes": 1025 },
+    "/aprende": { "payloadBytes": 69, "entryJsBytes": 231464, "cssBytes": 0 },
+    "/metodologia": { "payloadBytes": 7982, "entryJsBytes": 249871, "cssBytes": 90 }
+  }
+}
