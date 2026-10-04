@@ -49,8 +49,13 @@ describe('historical ERSST comparison', () => {
       CURRENT_EVENT_ID,
     ])
     expect(dataset.records.length).toBeLessThan(full.records.length)
+    const currentYears = new Set(
+      dataset.records.filter((record) => !record.event).map((record) => record.start.slice(0, 4)),
+    )
+    expect(currentYears.size).toBe(1)
+    const currentYear = [...currentYears][0]!
     expect(
-      dataset.records.every((record) => record.event || record.start.startsWith('2026-')),
+      dataset.records.every((record) => record.event || record.start.startsWith(`${currentYear}-`)),
     ).toBe(true)
   })
 
