@@ -125,7 +125,9 @@ export type Era5Summary = DatasetFor<'open-meteo-era5'> & {
 export const shapeDepartmentGeometry = (
   dataset: DatasetFor<'limites-inei-ign'>,
 ): DepartmentGeometry => {
-  const { start, end, version, departamentos, attribution, license_url } = dataset.records.at(-1)!
+  const latest = dataset.records.at(-1)
+  if (!latest) return dataset as unknown as DepartmentGeometry
+  const { start, end, version, departamentos, attribution, license_url } = latest
   return { ...dataset, records: [{ start, end, version, departamentos, attribution, license_url }] }
 }
 
@@ -134,6 +136,7 @@ export const shapeDepartmentGeometry = (
  * period that ChartShell prints.
  */
 export const shapeLatestChirps = (dataset: DatasetFor<'chirps'>): DatasetFor<'chirps'> => {
+  if (!dataset.records.length) return dataset
   const [first, ...rest] = latestChirpsPerDepartment(dataset.records).sort(
     (a, b) => a.end.localeCompare(b.end) || a.region.localeCompare(b.region),
   )
@@ -149,5 +152,7 @@ export const shapeEra5Summary =
   (dataset: DatasetFor<'open-meteo-era5'>): Era5Summary => {
     const { window, departments } = aggregateEra5(dataset.records, boundaries)
     const ordered = [...dataset.records].sort((a, b) => a.start.localeCompare(b.start))
-    return { ...dataset, records: [ordered[0]!, ordered.at(-1)!], window, departments }
+    return ordered.length
+      ? { ...dataset, records: [ordered[0]!, ordered.at(-1)!], window, departments }
+      : { ...dataset, window, departments }
   }

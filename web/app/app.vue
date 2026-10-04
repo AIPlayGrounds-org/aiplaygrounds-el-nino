@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { messages } from '~/messages'
 // Serif de lectura con eje de tamaño óptico: fina para leer, pesada y apretada para el titular.
 // Letra manuscrita solo para anotar los gráficos, como una nota al margen.
 import '@fontsource-variable/source-serif-4/opsz.css'
@@ -9,6 +10,7 @@ import '@fontsource/patrick-hand/latin-ext.css'
 
 <template>
   <div>
+    <a class="skip-link" href="#main-content">{{ messages.page.skipLink }}</a>
     <NuxtRouteAnnouncer />
     <NuxtPage />
   </div>
@@ -107,9 +109,11 @@ import '@fontsource/patrick-hand/latin-ext.css'
 }
 html {
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
 }
 body {
   margin: 0;
+  overflow-x: clip;
   background: var(--paper);
   color: var(--text);
   font-family: var(--font);
@@ -140,6 +144,32 @@ a:hover {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+:where(button, select, summary, a:not(.sr-only)) {
+  min-height: 44px;
+}
+a:not(.sr-only) {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: 4px;
+  margin-inline: -4px;
+}
+summary {
+  align-items: center;
+}
+.skip-link {
+  position: fixed;
+  z-index: 10;
+  top: 8px;
+  left: 8px;
+  padding: 8px 12px;
+  transform: translateY(-150%);
+  background: var(--text);
+  color: var(--paper);
+  text-decoration: none;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 :focus-visible {
   outline: 2px solid var(--focus);

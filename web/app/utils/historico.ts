@@ -41,7 +41,9 @@ const fieldFor = (
 
 /** Keep only the ERSST records used by the historical comparison page. */
 export const shapeHistoricoDataset = (dataset: DatasetFor<'noaa-ersst'>) => {
-  const currentYear = yearOf(dataset.records.at(-1)!.start)
+  const latest = dataset.records.at(-1)
+  if (!latest) return dataset
+  const currentYear = yearOf(latest.start)
   const records = dataset.records.filter(
     (record) => record.event !== undefined || yearOf(record.start) === currentYear,
   )
@@ -97,8 +99,10 @@ export const shapeHistoricoOniDataset = (
   dataset: DatasetFor<'noaa-cpc-oni'>,
   ersstRecords: readonly ErsstRecord[],
 ) => {
+  const latest = dataset.records.at(-1)
+  if (!latest) return dataset
   const windows = historyWindowsFromErsst(ersstRecords)
-  const currentYear = yearOf(oniMonth(dataset.records.at(-1)!))
+  const currentYear = yearOf(oniMonth(latest))
   const records = dataset.records.filter((record) => {
     const month = oniMonth(record)
     return (

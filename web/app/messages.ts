@@ -69,6 +69,7 @@ export const messages = {
   },
   page: {
     brand: 'WawaPacha',
+    skipLink: 'Saltar al contenido principal',
     seoTitle: 'Índice Oceánico El Niño (ONI) · WawaPacha',
     seoDescription:
       'Cuánto más caliente o más frío de lo normal está el Pacífico central, con el último dato de NOAA, su fecha y qué significa para el Perú.',
@@ -149,6 +150,7 @@ export const messages = {
     tableCaption: 'Valores por mes desde el inicio de cada serie.',
     oniTableSummary: 'Ver la tabla del ONI',
     oniTableCaption: 'Valores del ONI por mes desde el inicio de cada serie.',
+    empty: 'No hay datos históricos disponibles ahora.',
   },
   attribution: {
     openMeteoLabel: 'Weather data by Open-Meteo.com',
@@ -237,6 +239,7 @@ export const messages = {
     precipitationUnit: 'mm',
     anomalyUnit: 'mm',
     mapAria: (metric: string) => `Mapa de departamentos del Perú: ${metric}.`,
+    mapHeading: 'Mapa de precipitación por departamento',
     mapSummary: (metric: string, date: string) =>
       `Mapa de la ${metric.toLowerCase()} más reciente por departamento, con datos CHIRPS hasta el ${formatDay(date)}.`,
     boundaryProvenance: 'Límites departamentales:',
@@ -268,6 +271,10 @@ export const messages = {
     pointSample: 'Punto de celda de 0,25°',
     era5Summary: (days: number, start: string, end: string, count: number) =>
       `Cruce ERA5 de precipitación diaria: suma de los ${days} días disponibles, del ${formatDay(start)} al ${formatDay(end)}, para ${count} puntos departamentales. Cada valor es una muestra puntual de una celda de 0,25°.`,
+    empty: 'No hay datos territoriales disponibles ahora.',
+    mapEmpty: 'No hay datos de precipitación disponibles para el mapa.',
+    tableEmpty: 'No hay registros de CHIRPS disponibles ahora.',
+    era5Empty: 'No hay datos de ERA5 disponibles para este periodo.',
   },
   rios: {
     seoTitle: 'Caudal de ríos · WawaPacha',
@@ -324,6 +331,7 @@ export const messages = {
       chartAxis: 'Anomalía (°C)',
       chartDescription: 'Anomalías semanales de la temperatura superficial del mar.',
       chartAria: 'Anomalías semanales',
+      empty: 'No hay datos semanales del mar disponibles ahora.',
     },
     enfen: {
       title: '¿Qué dice el estado oficial del Perú?',
@@ -336,6 +344,7 @@ export const messages = {
       nextDue: 'Próxima fecha prevista',
       nextDueStale: (date: string) => `Próximo comunicado previsto el ${date}; aún no publicado`,
       detail: 'Ver el comunicado oficial',
+      empty: 'No hay comunicados de ENFEN disponibles ahora.',
     },
     outlook: {
       title: '¿Qué esperan los pronósticos?',
@@ -347,6 +356,7 @@ export const messages = {
       probability: 'Probabilidad',
       chartDescription: 'Barras apiladas con las probabilidades por categoría ENSO.',
       chartAria: 'Probabilidades del pronóstico',
+      empty: 'No hay probabilidades del pronóstico disponibles ahora.',
       categoryLabels: {
         '..-2': 'Índice ≤ −2,0 °C',
         '-2..-1.5': '−2,0 °C < índice ≤ −1,5 °C',

@@ -628,7 +628,7 @@ svg {
   inset: 0;
   width: 100%;
   height: 100%;
-  overflow: visible;
+  overflow: hidden;
 }
 .steps {
   grid-area: 1 / 1;
@@ -656,7 +656,7 @@ svg {
   transition: opacity 0.3s ease-out;
 }
 .step:not(.active) p {
-  opacity: 0.55;
+  opacity: 1;
 }
 .step :deep(strong) {
   font-weight: 650;
@@ -696,7 +696,7 @@ svg {
     font-size: 1.1875rem;
   }
   .step:not(.active) p {
-    opacity: 0.3;
+    opacity: 1;
   }
 }
 

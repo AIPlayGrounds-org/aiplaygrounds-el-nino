@@ -210,7 +210,7 @@ const option = computed(() => {
 .ranges button {
   font: inherit;
   font-size: 0.9375rem;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 16px;
   border: 1px solid var(--border);
   border-radius: 999px;

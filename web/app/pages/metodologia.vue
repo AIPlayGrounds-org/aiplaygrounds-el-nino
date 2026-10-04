@@ -33,7 +33,7 @@ useSeoMeta({ title: methodology.seoTitle, description: methodology.seoDescriptio
       <NuxtLink to="/metodologia">{{ messages.page.methodologyLink }}</NuxtLink>
     </header>
 
-    <main>
+    <main id="main-content">
       <section class="intro" aria-labelledby="methodology-title">
         <p class="eyebrow">{{ methodology.sectionLabel }}</p>
         <h1 id="methodology-title">{{ methodology.title }}</h1>

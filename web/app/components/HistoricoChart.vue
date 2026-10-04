@@ -31,7 +31,7 @@ const region = ref<HistoryRegion>('nino34')
 const availableEvents = historyEventSelectorData(props.dataset.records)
 const selectedEvents = ref<HistoryEventId[]>([...availableEvents])
 const theme = useChartTheme()
-const currentYear = Number(props.dataset.records.at(-1)!.start.slice(0, 4))
+const currentYear = Number(props.dataset.records.at(-1)?.start.slice(0, 4) ?? '')
 const eventWindows = historyWindowsFromErsst(props.dataset.records)
 const EVENT_COLORS = {
   '1982-83': { css: 'warm', theme: 'warm' },
@@ -163,7 +163,7 @@ const oniChartOption = computed(() =>
 </script>
 
 <template>
-  <div class="controls">
+  <div v-if="dataset.records.length || oni.records.length" class="controls">
     <label>
       {{ messages.historico.regionLabel }}
       <select v-model="region">
@@ -179,116 +179,134 @@ const oniChartOption = computed(() =>
       </label>
     </fieldset>
   </div>
-  <p class="coastal-note">{{ messages.historico.coastalNote }}</p>
+  <p v-if="dataset.records.length || oni.records.length" class="coastal-note">
+    {{ messages.historico.coastalNote }}
+  </p>
 
   <ChartShell :dataset="dataset" :summary="summary">
-    <h3>{{ messages.historico.ersstTitle }}</h3>
+    <template v-if="dataset.records.length">
+      <h3>{{ messages.historico.ersstTitle }}</h3>
 
-    <NuxtErrorBoundary>
-      <ClientOnly>
-        <VChart class="chart" :option="chartOption" autoresize />
-        <template #fallback>
-          <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+      <NuxtErrorBoundary>
+        <ClientOnly>
+          <VChart class="chart" :option="chartOption" autoresize />
+          <template #fallback>
+            <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+          </template>
+        </ClientOnly>
+        <template #error>
+          <div class="chart-placeholder">{{ messages.page.chartError }}</div>
         </template>
-      </ClientOnly>
-      <template #error>
-        <div class="chart-placeholder">{{ messages.page.chartError }}</div>
-      </template>
-    </NuxtErrorBoundary>
+      </NuxtErrorBoundary>
 
-    <ul class="key" :aria-label="messages.historico.eventsLabel">
-      <li v-for="series in selectedSeries" :key="series.event">
-        <span
-          class="swatch"
-          :style="{ backgroundColor: eventColor(series.event) }"
-          aria-hidden="true"
-        />
-        {{ labelFor(series.event, series.region, series.peak) }}
-      </li>
-    </ul>
+      <ul class="key" :aria-label="messages.historico.eventsLabel">
+        <li v-for="series in selectedSeries" :key="series.event">
+          <span
+            class="swatch"
+            :style="{ backgroundColor: eventColor(series.event) }"
+            aria-hidden="true"
+          />
+          {{ labelFor(series.event, series.region, series.peak) }}
+        </li>
+      </ul>
 
-    <details class="table-details">
-      <summary>{{ messages.historico.tableSummary }}</summary>
-      <div class="table-wrap">
-        <table>
-          <caption>
-            {{
-              messages.historico.tableCaption
-            }}
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">{{ messages.historico.months }}</th>
-              <th v-for="series in selectedSeries" :key="series.event" scope="col">
-                {{ labelFor(series.event, series.region, series.peak) }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="row in tableRows" :key="row.offset">
-              <th scope="row">{{ row.offset }}</th>
-              <td v-for="(value, index) in row.values" :key="selectedSeries[index]?.event">
-                {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </details>
+      <details class="table-details">
+        <summary>{{ messages.historico.tableSummary }}</summary>
+        <div
+          class="table-wrap"
+          role="region"
+          :aria-label="messages.historico.tableSummary"
+          tabindex="0"
+        >
+          <table>
+            <caption>
+              {{
+                messages.historico.tableCaption
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ messages.historico.months }}</th>
+                <th v-for="series in selectedSeries" :key="series.event" scope="col">
+                  {{ labelFor(series.event, series.region, series.peak) }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in tableRows" :key="row.offset">
+                <th scope="row">{{ row.offset }}</th>
+                <td v-for="(value, index) in row.values" :key="selectedSeries[index]?.event">
+                  {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </template>
+    <p v-else class="empty-state" role="status">{{ messages.historico.empty }}</p>
   </ChartShell>
 
   <ChartShell :dataset="oni" :summary="oniSummary">
-    <h3>{{ messages.historico.oniTitle }}</h3>
-    <p class="oni-note">{{ messages.historico.oniNote }}</p>
-    <NuxtErrorBoundary>
-      <ClientOnly>
-        <VChart class="chart" :option="oniChartOption" autoresize />
-        <template #fallback>
-          <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+    <template v-if="oni.records.length">
+      <h3>{{ messages.historico.oniTitle }}</h3>
+      <p class="oni-note">{{ messages.historico.oniNote }}</p>
+      <NuxtErrorBoundary>
+        <ClientOnly>
+          <VChart class="chart" :option="oniChartOption" autoresize />
+          <template #fallback>
+            <div class="chart-placeholder">{{ messages.page.chartLoading }}</div>
+          </template>
+        </ClientOnly>
+        <template #error>
+          <div class="chart-placeholder">{{ messages.page.chartError }}</div>
         </template>
-      </ClientOnly>
-      <template #error>
-        <div class="chart-placeholder">{{ messages.page.chartError }}</div>
-      </template>
-    </NuxtErrorBoundary>
-    <ul class="key" :aria-label="messages.historico.eventsLabel">
-      <li v-for="series in selectedOniSeries" :key="series.event">
-        <span
-          class="swatch"
-          :style="{ backgroundColor: eventColor(series.event) }"
-          aria-hidden="true"
-        />
-        {{ labelFor(series.event, series.region, series.peak) }}
-      </li>
-    </ul>
-    <details class="table-details">
-      <summary>{{ messages.historico.oniTableSummary }}</summary>
-      <div class="table-wrap">
-        <table>
-          <caption>
-            {{
-              messages.historico.oniTableCaption
-            }}
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">{{ messages.historico.months }}</th>
-              <th v-for="series in selectedOniSeries" :key="series.event" scope="col">
-                {{ labelFor(series.event, series.region, series.peak) }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="row in oniTableRows" :key="row.offset">
-              <th scope="row">{{ row.offset }}</th>
-              <td v-for="(value, index) in row.values" :key="selectedOniSeries[index]?.event">
-                {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </details>
+      </NuxtErrorBoundary>
+      <ul class="key" :aria-label="messages.historico.eventsLabel">
+        <li v-for="series in selectedOniSeries" :key="series.event">
+          <span
+            class="swatch"
+            :style="{ backgroundColor: eventColor(series.event) }"
+            aria-hidden="true"
+          />
+          {{ labelFor(series.event, series.region, series.peak) }}
+        </li>
+      </ul>
+      <details class="table-details">
+        <summary>{{ messages.historico.oniTableSummary }}</summary>
+        <div
+          class="table-wrap"
+          role="region"
+          :aria-label="messages.historico.oniTableSummary"
+          tabindex="0"
+        >
+          <table>
+            <caption>
+              {{
+                messages.historico.oniTableCaption
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ messages.historico.months }}</th>
+                <th v-for="series in selectedOniSeries" :key="series.event" scope="col">
+                  {{ labelFor(series.event, series.region, series.peak) }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in oniTableRows" :key="row.offset">
+                <th scope="row">{{ row.offset }}</th>
+                <td v-for="(value, index) in row.values" :key="selectedOniSeries[index]?.event">
+                  {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </template>
+    <p v-else class="empty-state" role="status">{{ messages.historico.empty }}</p>
   </ChartShell>
 </template>
 
@@ -319,7 +337,7 @@ fieldset {
   justify-content: space-between;
 }
 select {
-  min-height: 40px;
+  min-height: 44px;
   padding: 4px 28px 4px 10px;
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -340,10 +358,35 @@ legend {
   font-weight: 650;
 }
 fieldset label {
+  min-height: 44px;
   white-space: nowrap;
 }
 input {
-  accent-color: var(--accent);
+  appearance: none;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  place-content: center;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--accent);
+}
+input::after {
+  width: 10px;
+  height: 5px;
+  transform: rotate(-45deg) scale(0);
+  border-bottom: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+  content: '';
+}
+input:checked::after {
+  transform: rotate(-45deg) scale(1);
+}
+input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
 }
 .chart {
   width: 100%;
@@ -353,6 +396,11 @@ input {
   display: grid;
   min-height: 260px;
   place-items: center;
+  color: var(--muted);
+}
+.empty-state {
+  margin: 0;
+  padding: 32px 0;
   color: var(--muted);
 }
 .key {

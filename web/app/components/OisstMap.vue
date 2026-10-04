@@ -26,10 +26,12 @@ use([
 ])
 
 const props = defineProps<{ dataset: DatasetFor<'noaa-oisst'> }>()
-const record = props.dataset.records[props.dataset.records.length - 1]!
-const mapData = buildOisstMap(record)
-const date = record.end
-const summary = summarizeOisst(mapData, date, props.dataset.unit)
+const record = props.dataset.records.at(-1)
+const mapData = record
+  ? buildOisstMap(record)
+  : { latitudes: [], longitudes: [], points: [], bands: [], warmest: null, valueMax: 0.01 }
+const date = record?.end ?? ''
+const summary = summarizeOisst(mapData, date || 'este periodo', props.dataset.unit)
 const theme = useChartTheme()
 const chartPoints = mapData.points.map(
   (point) =>
@@ -116,7 +118,12 @@ const option = computed(() => {
       </ClientOnly>
       <details v-if="mapData.bands.length" class="table-fallback">
         <summary>{{ messages.oisst.tableSummary }}</summary>
-        <div class="table-wrap">
+        <div
+          class="table-wrap"
+          role="region"
+          :aria-label="messages.oisst.tableSummary"
+          tabindex="0"
+        >
           <table>
             <caption>
               {{

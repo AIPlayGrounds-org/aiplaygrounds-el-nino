@@ -165,57 +165,60 @@ const option = computed(() => {
 
 <template>
   <ChartShell :dataset="dataset" :summary="summary">
-    <div class="controls">
+    <div v-if="points.length" class="controls">
       <label for="river-point">{{ rios.pointLabel }}</label>
       <select id="river-point" v-model="selectedPoint">
         <option v-for="point in points" :key="point" :value="point">{{ point }}</option>
       </select>
     </div>
-    <p class="model-note">{{ rios.modelNote }}</p>
-    <NuxtErrorBoundary>
-      <ClientOnly>
-        <VChart
-          class="chart"
-          :option="option"
-          autoresize
-          :aria-label="rios.chartAria(selectedPoint)"
-        />
-        <template #fallback>
-          <div class="chart-placeholder">{{ rios.chartLoading }}</div>
+    <p v-if="points.length" class="model-note">{{ rios.modelNote }}</p>
+    <template v-if="records.length">
+      <NuxtErrorBoundary>
+        <ClientOnly>
+          <VChart
+            class="chart"
+            :option="option"
+            autoresize
+            :aria-label="rios.chartAria(selectedPoint)"
+          />
+          <template #fallback>
+            <div class="chart-placeholder">{{ rios.chartLoading }}</div>
+          </template>
+        </ClientOnly>
+        <template #error>
+          <div class="chart-placeholder">{{ rios.chartError }}</div>
         </template>
-      </ClientOnly>
-      <template #error>
-        <div class="chart-placeholder">{{ rios.chartError }}</div>
-      </template>
-    </NuxtErrorBoundary>
-    <details class="table-fallback">
-      <summary>{{ rios.tableSummary }}</summary>
-      <div class="table-wrap">
-        <table>
-          <caption>
-            {{
-              rios.tableCaption(selectedPoint)
-            }}
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">{{ rios.date }}</th>
-              <th scope="col">{{ rios.dataType }}</th>
-              <th scope="col" class="num">{{ rios.discharge }} ({{ dataset.unit }})</th>
-              <th scope="col" class="num">{{ rios.forecastRange }} ({{ dataset.unit }})</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="record in records" :key="`${record.point}-${record.start}`">
-              <th scope="row">{{ formatDay(record.end) }}</th>
-              <td>{{ record.data_type === 'forecast' ? rios.forecast : rios.estimated }}</td>
-              <td class="num">{{ displayValue(record.river_discharge) }}</td>
-              <td class="num">{{ displayRange(record) }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </details>
+      </NuxtErrorBoundary>
+      <details class="table-fallback">
+        <summary>{{ rios.tableSummary }}</summary>
+        <div class="table-wrap" role="region" :aria-label="rios.tableSummary" tabindex="0">
+          <table>
+            <caption>
+              {{
+                rios.tableCaption(selectedPoint)
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ rios.date }}</th>
+                <th scope="col">{{ rios.dataType }}</th>
+                <th scope="col" class="num">{{ rios.discharge }} ({{ dataset.unit }})</th>
+                <th scope="col" class="num">{{ rios.forecastRange }} ({{ dataset.unit }})</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="record in records" :key="`${record.point}-${record.start}`">
+                <th scope="row">{{ formatDay(record.end) }}</th>
+                <td>{{ record.data_type === 'forecast' ? rios.forecast : rios.estimated }}</td>
+                <td class="num">{{ displayValue(record.river_discharge) }}</td>
+                <td class="num">{{ displayRange(record) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </template>
+    <p v-else class="empty-state" role="status">{{ rios.emptySummary(selectedPoint) }}</p>
     <DatasetAttribution :dataset="dataset" />
   </ChartShell>
 </template>
@@ -234,7 +237,7 @@ const option = computed(() => {
   font-weight: 650;
 }
 select {
-  min-height: 40px;
+  min-height: 44px;
   padding: 4px 30px 4px 10px;
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -251,6 +254,11 @@ select {
 .chart-placeholder {
   width: 100%;
   height: 430px;
+}
+.empty-state {
+  margin: 0;
+  padding: 32px 0;
+  color: var(--muted);
 }
 .chart-placeholder {
   display: grid;

@@ -8,9 +8,11 @@ const props = defineProps<{
   dataset: DatasetFor<'enfen-communique'>
 }>()
 
-const record = props.dataset.records.at(-1)!
+const record = props.dataset.records.at(-1)
 const summary = computed(() =>
-  messages.panels.enfen.summary(record.status, formatDay(record.start)),
+  record
+    ? messages.panels.enfen.summary(record.status, formatDay(record.start))
+    : messages.panels.enfen.empty,
 )
 </script>
 
@@ -21,7 +23,7 @@ const summary = computed(() =>
     </div>
     <div class="figure">
       <ChartShell :dataset="dataset" :summary="summary">
-        <article class="status-card">
+        <article v-if="record" class="status-card">
           <p class="number">{{ messages.panels.enfen.number(record.number, record.year) }}</p>
           <dl>
             <div>
@@ -53,6 +55,7 @@ const summary = computed(() =>
             <span class="sr-only">{{ messages.page.newTab }}</span>
           </a>
         </article>
+        <p v-else class="empty-state" role="status">{{ messages.panels.enfen.empty }}</p>
       </ChartShell>
     </div>
   </section>
@@ -85,6 +88,11 @@ h2 {
   padding: 20px 16px 16px;
   border-left: 5px solid var(--accent);
   background: var(--band);
+}
+.empty-state {
+  margin: 0;
+  padding: 32px 0;
+  color: var(--muted);
 }
 .number {
   margin: 0;

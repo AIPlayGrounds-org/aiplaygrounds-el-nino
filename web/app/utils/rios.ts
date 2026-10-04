@@ -18,6 +18,7 @@ export type RiosDataset = Omit<DatasetFor<'open-meteo-glofas'>, 'records'> & {
 
 /** Keep points in a stable order, then make each point's daily series chronological. */
 export const shapeRiosDataset = (dataset: DatasetFor<'open-meteo-glofas'>): RiosDataset => {
+  if (!dataset.records.length) return dataset as RiosDataset
   const points = riverPoints(dataset.records)
   const pointOrder = new Map(points.map((point, index) => [point, index]))
   const records = dataset.records

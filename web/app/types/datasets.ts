@@ -36,5 +36,5 @@ export type AnyDataset = DatasetFor<DatasetId>
 
 /** Provenance and period shape accepted by shared shells after server-side shaping. */
 export type DatasetLike = Omit<Dataset, 'records'> & {
-  records: [{ start: string; end: string }, ...{ start: string; end: string }[]]
+  records: { start: string; end: string }[]
 }
