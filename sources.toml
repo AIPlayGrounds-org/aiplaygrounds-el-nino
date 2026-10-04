@@ -81,12 +81,13 @@ auth = "none"
 [[source]]
 id = "enfen-icen"
 institution = "Comisión Multisectorial ENFEN"
-product = "Índice Costero El Niño (ICEN) and temporary ICEN (ICENtmp)"
+product = "Índice Costero El Niño (ICEN)"
+site_pages = ["/historico"]
 block = "ENSO"
-verdict = "pending"
-update = "manual"
+verdict = "automatable"
+update = "daily"
 delivery = "v0.1"
-reviewed = "2026-09-27"
+reviewed = "2026-10-04"
 page = "https://enfen.imarpe.gob.pe/"
 variable = "Anomalía de la temperatura superficial del mar en Niño 1+2"
 unit = "°C"
@@ -94,18 +95,20 @@ data_type = "observed"
 spatial_resolution = "Región Niño 1+2"
 temporal_resolution = "Mensual, media móvil de tres meses"
 history = "IGP numeric table from 1950"
-reference_period = "1991–2020 según SIOFEN"
+reference_period = "1991–2020 según ENFEN (2024)"
+cadence = "Daily check; the upstream update lag is unconfirmed."
 notes = [
-  "The numeric table is at https://met.igp.gob.pe/elnino/lista_eventos.html. The direct request timed out and SIOFEN returned 403 on 2026-09-27, so the last row was not read.",
-  "SIOFEN describes a three-month moving average of monthly anomalies in Niño 1+2, computed with ERSSTv5.",
-  "The temporary ICEN fills the recent months with weekly observations and forecasts. It is not the final value.",
-  "The methodology changed with the 2024 technical note and the operational index announced in April 2026.",
+  "The official table header cites ENFEN (2024) and says `Versión oficial`.",
+  "The update lag is unconfirmed; outreach email is pending.",
+  "Terms for automated access and reuse are unconfirmed; outreach email is pending.",
+  "The ICENtmp.txt path at the same host returned 404; this source uses the official ICEN.txt table only.",
 ]
 
 [source.access]
-kind = "HTML table at the IGP and the “Descargar datos” section of SIOFEN"
-url = "https://met.igp.gob.pe/elnino/lista_eventos.html"
-format = "HTML table"
+kind = "HTTP text file"
+url = "http://met.igp.gob.pe/datos/ICEN.txt"
+format = "Whitespace-delimited text: `yy mm ICEN`, with `%` comment lines"
+auth = "none"
 
 [[source]]
 id = "enfen-communique"
@@ -497,14 +500,14 @@ variable = "Lluvia, temperatura y otras variables, según la estación"
 data_type = "observed"
 spatial_resolution = "Punto de estación"
 notes = [
-  "The request form asks for identification and purpose and allows for a payment receipt. No request was sent.",
-  "No series was obtained. The portal shows embedded viewers and a download tutorial.",
+  "The earlier request-form claim was wrong in kind: the download sits behind a Cloudflare Turnstile bot check.",
+  "No series was obtained from the portal.",
 ]
 
 [source.access]
-kind = "Web viewer and information request"
+kind = "Web viewer and download"
 url = "https://www.senamhi.gob.pe/site/descarga-datos/map_hist_data.php"
-auth = "request form"
+auth = "Cloudflare Turnstile bot check"
 
 [[source]]
 id = "limites-inei-ign"
@@ -757,29 +760,3 @@ kind = "HTTP text file"
 url = "https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.el_nino.dat"
 format = "Six-column whitespace-delimited text: year, month, NINO3, NINO4, NINO3.4, NINO1.2"
 auth = "none"
-
-[[source]]
-id = "enfen-icen-history"
-institution = "Comisión Multisectorial ENFEN"
-product = "Historical ICEN and chronology of coastal events"
-block = "History"
-verdict = "pending"
-update = "manual"
-delivery = "v0.4"
-reviewed = "2026-09-27"
-page = "https://enfen.imarpe.gob.pe/"
-variable = "ICEN mensual: anomalía de la temperatura superficial del mar en Niño 1+2"
-unit = "°C"
-spatial_resolution = "Región Niño 1+2"
-temporal_resolution = "Mensual, con promedios móviles"
-history = "IGP numeric table from 1950. The ENFEN figure covers 1950–2024."
-notes = [
-  "ENFEN Technical Note 01-2024 replaces the earlier definition of the events and presents the 1950–2024 chronology.",
-  "The last row of the IGP table was not checked, nor was its equivalence with the SIOFEN methodology (ERSSTv5, 1991–2020 climatology).",
-  "It may duplicate `enfen-icen`.",
-]
-
-[source.access]
-kind = "HTML table at the IGP"
-url = "https://met.igp.gob.pe/elnino/lista_eventos.html"
-format = "HTML table"

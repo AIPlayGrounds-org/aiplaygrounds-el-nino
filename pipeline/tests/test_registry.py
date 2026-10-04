@@ -76,7 +76,7 @@ def test_discovery_rejects_an_automatable_entry_without_a_module(tmp_path):
 def test_the_real_registry_loads_and_has_unique_ids():
     sources = registry.load()
 
-    assert len(sources) == 27
+    assert len(sources) == 26
     assert all(entry["id"] == source_id for source_id, entry in sources.items())
 
 

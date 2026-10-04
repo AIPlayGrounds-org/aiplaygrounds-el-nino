@@ -7,6 +7,7 @@ import type {
   GlofasRecord,
   GeometryRecord,
   GridRecord,
+  IcenRecord,
   OniRecord,
   OutlookRecord,
   WeeklyNinoRecord,
@@ -17,6 +18,7 @@ export type DatasetRecordMap = {
   'noaa-cpc-nino-weekly': WeeklyNinoRecord
   'noaa-cpc-outlook': OutlookRecord
   'enfen-communique': EnfenRecord
+  'enfen-icen': IcenRecord
   'limites-inei-ign': GeometryRecord
   chirps: ChirpsRecord
   'open-meteo-era5': Era5Record

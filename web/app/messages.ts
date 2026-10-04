@@ -123,6 +123,14 @@ export const messages = {
     ersstTitle: 'ERSSTv5 mensual',
     oniTitle: 'ONI oficial',
     oniNote: 'El ONI es la media móvil oficial de tres meses de la anomalía en Niño 3.4.',
+    icenTitle: 'ICEN oficial',
+    icenNote:
+      'El ICEN es el índice mensual oficial de la costa peruana. Los comunicados de ENFEN son la referencia para conocer el estado y las alertas; esta serie no declara una alerta.',
+    icenSummary: 'Serie mensual del Índice Costero El Niño (ICEN) oficial en Niño 1+2.',
+    icenTableSummary: 'Ver la tabla del ICEN',
+    icenTableCaption: 'Valores mensuales del ICEN oficial.',
+    icenMonth: 'Mes',
+    icenValue: 'ICEN (°C)',
     coastalNote:
       'Para 2017, la línea costera usa solo ERSST en Niño 1+2; el ONI no corresponde a esa región.',
     regionLabel: 'Región',

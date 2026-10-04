@@ -40,6 +40,22 @@
       "reference_period": "1991–2020"
     },
     {
+      "id": "enfen-icen",
+      "name": "Índice Costero El Niño (ICEN)",
+      "provider": "Comisión Multisectorial ENFEN",
+      "variable": "Anomalía de la temperatura superficial del mar en Niño 1+2",
+      "unit": "°C",
+      "data_type": "observed",
+      "spatial_resolution": "Región Niño 1+2",
+      "temporal_resolution": "Mensual, media móvil de tres meses",
+      "provider_url": "https://enfen.imarpe.gob.pe/",
+      "data_url": "http://met.igp.gob.pe/datos/ICEN.txt",
+      "site_pages": [
+        "/historico"
+      ],
+      "reference_period": "1991–2020 según ENFEN (2024)"
+    },
+    {
       "id": "enfen-communique",
       "name": "Comunicado Oficial ENFEN",
       "provider": "Comisión Multisectorial ENFEN",

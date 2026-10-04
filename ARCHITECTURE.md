@@ -34,7 +34,7 @@ public source
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                                                |
 | [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                             |
-| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset.                                          |
+| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset; [`enfen_icen.py`](pipeline/src/wawapacha_pipeline/sources/enfen_icen.py) publishes the official monthly ICEN table. |
 | [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry. |
 | [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due` and `sources`. `due` applies the registry update class to the published JSON timestamps.                             |
 
