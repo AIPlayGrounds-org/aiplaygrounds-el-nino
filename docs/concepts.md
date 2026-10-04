@@ -54,8 +54,10 @@ It is also called the **climatology**.
 | Source                                            | Base period                          |
 | ------------------------------------------------- | ------------------------------------ |
 | NOAA CPC weekly indices, CPC probabilities (RONI) | 1991–2020                            |
-| OISST (NOAA PSL), ERSST v5                        | 1971–2000                            |
+| OISST (NOAA PSL)                                  | 1991–2020                            |
+| ERSST v5                                          | 1971–2000                            |
 | ONI                                               | 30-year bases, updated every 5 years |
+| ICEN                                              | 1991–2020 según ENFEN (2024)         |
 
 Two anomalies with different base periods cannot be compared or subtracted
 directly, because the normal of 1971–2000 is colder than the normal of

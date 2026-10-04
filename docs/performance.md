@@ -9,6 +9,9 @@ values in [`web/performance-budget.json`](../web/performance-budget.json) plus
 its 15% margin. That hand-maintained JSON is the single source of budget
 numbers.
 
+The SEO output gate is separate. Its route, metadata and crawler checks are in
+[`seo.md`](seo.md).
+
 Run the check after generation:
 
 ```sh
@@ -30,13 +33,5 @@ the check again. Do not change the 15% margin to hide an unplanned regression.
 ## Social image
 
 Social metadata uses the committed `web/public/og-image.png`, a 1200x630 PNG
-because crawlers do not reliably render SVG images. It was rasterized from the
-source artwork with Google Chrome, without adding a build dependency:
-
-```sh
-mkdir -p /tmp/wawapacha-chrome
-google-chrome --headless=new --disable-gpu --hide-scrollbars --no-sandbox \
-  --user-data-dir=/tmp/wawapacha-chrome --window-size=1200,630 \
-  --screenshot=web/public/og-image.png \
-  file://$PWD/web/public/og-image.svg
-```
+because crawlers do not reliably render SVG images. The source artwork is
+`web/public/og-image.svg`. The SEO document owns the generated-output check.

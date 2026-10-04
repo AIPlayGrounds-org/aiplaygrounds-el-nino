@@ -1,7 +1,7 @@
 # Architecture
 
 WawaPacha is a Python ingestion pipeline and a Nuxt static site. There is no
-runtime backend. The target architecture and work that is not built yet live in
+runtime backend. The target architecture and the state of each stage live in
 [`ROADMAP.md`](ROADMAP.md).
 
 ```text
@@ -26,17 +26,40 @@ public source
 | [`web/`](web/)                                             | The Nuxt 4 static site, its server-side dataset loader, page-specific shaping, charts and accessible fallbacks.              |
 | [`docs/`](docs/README.md)                                  | The documentation set. The generated source catalog is the source-specific reference.                                        |
 | [`.github/workflows/`](.github/workflows/)                 | CI, the daily data update, and the GitHub Pages deployment.                                                                  |
-| [`mise.toml`](mise.toml)                                   | The pinned Bun and uv versions used by contributors.                                                                         |
+| [`mise.toml`](mise.toml)                                   | The Bun and uv versions selected for contributors.                                                                           |
 
 ### Pipeline
 
-| Path                                                         | Owns                                                                                                                                                                                                                  |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                                                                                                                           |
-| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                                                                                                        |
-| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset; [`enfen_icen.py`](pipeline/src/wawapacha_pipeline/sources/enfen_icen.py) publishes the official monthly ICEN table. |
-| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry.                                                                            |
-| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due`, `freshness` and `sources`. `due` and `freshness` apply the registry update class to published JSON timestamps.                                                                                 |
+| Path                                                         | Owns                                                                                                                                                                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                                                                                                             |
+| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                                                                                          |
+| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset. The ICEN module publishes the official monthly table. The SENAMHI module reads a checked-in snapshot. |
+| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry.                                                              |
+| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due`, `freshness` and `sources`. `due` and `freshness` apply the registry update class to published JSON timestamps.                                                                   |
+
+The source package has one module for each published source:
+
+| Module                                                                                       | Source                         |
+| -------------------------------------------------------------------------------------------- | ------------------------------ |
+| [`noaa_cpc_oni.py`](pipeline/src/wawapacha_pipeline/sources/noaa_cpc_oni.py)                 | NOAA CPC ONI                   |
+| [`noaa_cpc_nino_weekly.py`](pipeline/src/wawapacha_pipeline/sources/noaa_cpc_nino_weekly.py) | NOAA CPC weekly Niño indices   |
+| [`enfen_icen.py`](pipeline/src/wawapacha_pipeline/sources/enfen_icen.py)                     | ENFEN ICEN                     |
+| [`enfen_communique.py`](pipeline/src/wawapacha_pipeline/sources/enfen_communique.py)         | ENFEN communiqué               |
+| [`noaa_oisst.py`](pipeline/src/wawapacha_pipeline/sources/noaa_oisst.py)                     | NOAA OISST                     |
+| [`noaa_cpc_outlook.py`](pipeline/src/wawapacha_pipeline/sources/noaa_cpc_outlook.py)         | NOAA CPC outlook               |
+| [`chirps.py`](pipeline/src/wawapacha_pipeline/sources/chirps.py)                             | CHIRPS rainfall                |
+| [`open_meteo_era5.py`](pipeline/src/wawapacha_pipeline/sources/open_meteo_era5.py)           | ERA5 rainfall cross-check      |
+| [`senamhi_estaciones.py`](pipeline/src/wawapacha_pipeline/sources/senamhi_estaciones.py)     | SENAMHI station snapshot       |
+| [`limites_inei_ign.py`](pipeline/src/wawapacha_pipeline/sources/limites_inei_ign.py)         | Peru administrative boundaries |
+| [`open_meteo_glofas.py`](pipeline/src/wawapacha_pipeline/sources/open_meteo_glofas.py)       | GloFAS river discharge         |
+| [`noaa_ersst.py`](pipeline/src/wawapacha_pipeline/sources/noaa_ersst.py)                     | NOAA ERSST history             |
+
+[`pipeline/tests/`](pipeline/tests/) covers source behavior with checked-in
+samples. [`notebooks/`](notebooks/) contains one marimo inspection notebook per
+automatable source.
+[`build_chirps_baseline.py`](pipeline/scripts/build_chirps_baseline.py) builds
+the checked-in CHIRPS climatology used by the source module.
 
 The scheduled [`update-data.yml`](.github/workflows/update-data.yml) runs once a
 day. It asks `due` for missing or old daily, weekly and monthly datasets, skips
@@ -47,13 +70,10 @@ workflow dispatch [`deploy.yml`](.github/workflows/deploy.yml). The registry's
 source's cadence and cadence notes.
 
 The scheduled [`freshness.yml`](.github/workflows/freshness.yml) runs the
-`wawapacha-pipeline freshness` command against the published files. It reuses
-the registry cadence schedule, but its independent tolerance is two nominal
-cadence intervals plus slack: 52 hours for daily, 15 days for weekly, and 63
-days for monthly. Those values live with the due thresholds in
-`pipeline/src/wawapacha_pipeline/cli.py`. It compares the published file's
-`ingestion_time`; a stale result fails this separate workflow and therefore does
-not block deploys.
+`wawapacha-pipeline freshness` command against the published files. Its
+thresholds and timestamp rules are implemented in
+[`cli.py`](pipeline/src/wawapacha_pipeline/cli.py). The workflow is independent
+from deployment. See the [freshness check](docs/freshness.md).
 
 ### Web
 
@@ -72,6 +92,8 @@ not block deploys.
 | [`composables/useChartTheme.ts`](web/app/composables/useChartTheme.ts)           | Reads chart colors and font from CSS variables and refreshes them when the system color scheme changes.                           |
 | [`utils/format.ts`](web/app/utils/format.ts)                                     | Shared Spanish number and date formatting, including Lima time and river-discharge precision.                                     |
 | [`utils/sourceCatalog.ts`](web/app/utils/sourceCatalog.ts)                       | Validates and shapes the generated source catalogue used by Metodología.                                                          |
+| [`scripts/check-seo.ts`](web/scripts/check-seo.ts)                               | Checks generated routes, language, metadata, canonical URLs, the sitemap and robots file.                                         |
+| [`scripts/check-budget.ts`](web/scripts/check-budget.ts)                         | Checks generated route payload, entry-JavaScript and linked-CSS sizes against the budget file.                                    |
 | [`composables/useSiteSeo.ts`](web/app/composables/useSiteSeo.ts)                 | Shared canonical, Open Graph and Twitter metadata, using page copy from `messages.ts`.                                            |
 | [`server/routes/sitemap.xml.ts`](web/server/routes/sitemap.xml.ts)               | Generates the sitemap from the public route list during static generation.                                                        |
 | [`server/routes/robots.txt.ts`](web/server/routes/robots.txt.ts)                 | Generates crawler rules and links the generated sitemap.                                                                          |
@@ -98,10 +120,10 @@ then `useDataset` optionally reduces the returned value before hydration.
 | `/rios`       | Keeps the river fields used by the chart and orders records by point and date.                                                                  |
 
 The route's shaped return value is what Nuxt serializes into its
-`_payload.json`. The route byte budget and generated-output check live in
-[`docs/performance.md`](docs/performance.md) and
-[`web/performance-budget.json`](web/performance-budget.json). It also has
-relative shaping assertions in
+`_payload.json`. The route byte budget lives in
+[`web/performance-budget.json`](web/performance-budget.json), and its check is
+documented in [`docs/performance.md`](docs/performance.md). It also has relative
+shaping assertions in
 [`web/test/territorio.test.ts`](web/test/territorio.test.ts) and
 [`web/test/rios.test.ts`](web/test/rios.test.ts). The separate 200 KiB gzip
 limits enforced by some pipeline sources are source-payload limits, not route
@@ -134,17 +156,10 @@ payload limits; their current values are in the generated
 - **Charts use one provenance frame.** `ChartShell` owns the variable, unit,
   period, data type, source and update age. Chart-specific controls and
   explanations stay in the page or panel.
-- **SENAMHI station rain is a manual snapshot.** The source module reads
-  `pipeline/inputs/senamhi-estaciones-*.json.gz` without network access,
-  validates run-length year coverage, publishes monthly aggregates only, and
-  keeps the daily arrays out of `data/`. A refresh takes a new operator snapshot
-  from the public histogram map and station pages, adds the new gzip to the
-  input directory unchanged (the module reads the newest by filename), reruns
-  the module, and verifies the aggregate tests and generated site. The module
-  reads the date and source pages from the snapshot metadata, so a refresh needs
-  no code edit. Access must use the public pages only: no login and no bot-check
-  bypass. The licence remains unconfirmed, so derived monthly aggregates are the
-  publication boundary.
+- **SENAMHI station rain is a manual snapshot.** The source module reads the
+  newest checked-in gzip without network access and publishes monthly aggregates
+  only. The refresh procedure and access boundary live in the
+  [manual snapshot workflow](docs/manual-snapshots.md).
 - **Stale data remains visible.** The shell shows the latest valid record and
   its age, then links to the source when its update or record age crosses the
   current stale threshold.
@@ -164,6 +179,7 @@ CI runs these pipeline commands from `pipeline`:
 It then generates `docs/sources.md` and `web/app/data/source-catalog.json` and
 checks their clean diff. From `web/`, the oxfmt check is `oxfmt --check .`, also
 exposed to contributors as the exact script command `bun run format:check`. CI
-then regenerates the schema types, checks their clean diff and runs
-`bun run generate`. The contributor-facing working-directory details are in
+then regenerates the schema types, checks their clean diff, runs
+`bun run generate`, checks SEO output and checks the performance budget. The
+contributor-facing working-directory details are in
 [`CONTRIBUTING.md`](CONTRIBUTING.md#checks).
