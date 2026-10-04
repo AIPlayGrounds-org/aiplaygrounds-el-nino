@@ -23,3 +23,17 @@ To re-measure after an intentional build change, run `bun run generate` and then
 route's output into the matching `payloadBytes` and `entryJsBytes` fields in
 `web/performance-budget.json`, review the resulting limits, and run the check
 again. Do not change the 15% margin to hide an unplanned regression.
+
+## Social image
+
+Social metadata uses the committed `web/public/og-image.png`, a 1200x630 PNG
+because crawlers do not reliably render SVG images. It was rasterized from the
+source artwork with Google Chrome, without adding a build dependency:
+
+```sh
+mkdir -p /tmp/wawapacha-chrome
+google-chrome --headless=new --disable-gpu --hide-scrollbars --no-sandbox \
+  --user-data-dir=/tmp/wawapacha-chrome --window-size=1200,630 \
+  --screenshot=web/public/og-image.png \
+  file://$PWD/web/public/og-image.svg
+```
