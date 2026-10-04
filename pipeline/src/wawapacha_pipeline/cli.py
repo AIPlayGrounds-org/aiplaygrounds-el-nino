@@ -10,6 +10,12 @@ from wawapacha_pipeline import catalog, registry
 from wawapacha_pipeline.contract import DATA_DIR, ValidationError, relative_path
 
 SOURCES = registry.discover()
+CATALOG_SOURCES = tuple(SOURCES) + tuple(
+    source_id
+    for source_id, entry in registry.load().items()
+    if entry["verdict"] == "manual" and entry.get("site_pages")
+)
+
 CADENCE_RULES = {
     "daily": {
         "interval": timedelta(days=1),
@@ -146,7 +152,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "sources":
         try:
-            catalog.write(SOURCES)
+            catalog.write(CATALOG_SOURCES)
             print(
                 f"Wrote {relative_path(catalog.CATALOG_PATH)} and "
                 f"{relative_path(catalog.WEB_CATALOG_PATH)}"

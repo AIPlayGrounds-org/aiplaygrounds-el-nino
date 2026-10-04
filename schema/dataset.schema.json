@@ -121,6 +121,10 @@
     {
       "if": { "properties": { "id": { "const": "chirps" } } },
       "then": { "properties": { "records": { "items": { "$ref": "#/$defs/chirpsRecord" } } } }
+    },
+    {
+      "if": { "properties": { "id": { "const": "senamhi-estaciones" } } },
+      "then": { "properties": { "records": { "items": { "$ref": "#/$defs/senamhiEstacionesRecord" } } } }
     }
   ],
   "$defs": {
@@ -483,6 +487,44 @@
         "end": { "$ref": "#/$defs/day" },
         "precipitation_mm": { "type": ["number", "null"], "minimum": 0, "maximum": 5000 },
         "anomaly_mm": { "type": ["number", "null"], "minimum": -5000, "maximum": 5000 }
+      }
+    },
+    "senamhiEstacionesRecord": {
+      "title": "SenamhiEstacionesRecord",
+      "description": "One monthly precipitation and temperature aggregate for a SENAMHI station.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "station",
+        "region",
+        "department",
+        "lat",
+        "lon",
+        "start",
+        "end",
+        "precipitation_mm",
+        "precipitation_days",
+        "tmax_c",
+        "tmax_days",
+        "tmin_c",
+        "tmin_days",
+        "precipitation_median_mm"
+      ],
+      "properties": {
+        "station": { "type": "string", "minLength": 1 },
+        "region": { "type": "string", "minLength": 1 },
+        "department": { "type": "string", "minLength": 1 },
+        "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lon": { "type": "number", "minimum": -180, "maximum": 180 },
+        "start": { "$ref": "#/$defs/month" },
+        "end": { "$ref": "#/$defs/month" },
+        "precipitation_mm": { "type": ["number", "null"], "minimum": 0 },
+        "precipitation_days": { "type": "integer", "minimum": 0, "maximum": 31 },
+        "tmax_c": { "type": ["number", "null"] },
+        "tmax_days": { "type": "integer", "minimum": 0, "maximum": 31 },
+        "tmin_c": { "type": ["number", "null"] },
+        "tmin_days": { "type": "integer", "minimum": 0, "maximum": 31 },
+        "precipitation_median_mm": { "type": ["number", "null"], "minimum": 0 }
       }
     }
   }
