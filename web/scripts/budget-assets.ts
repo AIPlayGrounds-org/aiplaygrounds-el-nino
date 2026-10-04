@@ -12,6 +12,10 @@ type ManifestEntry = {
 
 export type ClientManifest = Record<string, ManifestEntry>
 
+export function manifestPageKey(route: string): string {
+  return route === '/' ? 'pages/index.vue' : `pages${route}.vue`
+}
+
 function attribute(tag: string, name: string): string | undefined {
   const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   return tag.match(new RegExp(`(?:^|\\s)${escapedName}\\s*=\\s*["']([^"']*)["']`, 'i'))?.[1]
@@ -34,10 +38,11 @@ export function htmlAssetReferences(html: string): AssetReferences {
     const href = attribute(tag, 'href')
     if (!href) continue
     if (rel.includes('stylesheet')) css.add(href)
-    if (
-      attribute(tag, 'as')?.toLowerCase() === 'script' &&
-      (rel.includes('modulepreload') || rel.includes('prefetch'))
-    ) {
+    const as = attribute(tag, 'as')?.toLowerCase()
+    const isModulePreload = rel.includes('modulepreload')
+    const isScriptPrefetch =
+      rel.includes('prefetch') && (as === 'script' || (!as && /\.(?:js|mjs)(?:[?#]|$)/i.test(href)))
+    if (isModulePreload || isScriptPrefetch) {
       js.add(href)
     }
   }
@@ -46,7 +51,7 @@ export function htmlAssetReferences(html: string): AssetReferences {
 }
 
 export function manifestJavaScriptFiles(route: string, manifest: ClientManifest): string[] {
-  const page = route === '/' ? 'pages/index.vue' : `pages${route}.vue`
+  const page = manifestPageKey(route)
   const files = new Set<string>()
   const visited = new Set<string>()
 

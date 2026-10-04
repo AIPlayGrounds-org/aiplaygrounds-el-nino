@@ -1,7 +1,12 @@
 import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { normalizeBasePath } from '../shared/site'
-import { htmlAssetReferences, manifestJavaScriptFiles } from './budget-assets'
+import {
+  htmlAssetReferences,
+  manifestJavaScriptFiles,
+  manifestPageKey,
+  type ClientManifest,
+} from './budget-assets'
 
 type RouteBudget = {
   payloadBytes: number
@@ -42,7 +47,7 @@ async function manifestPath(): Promise<string> {
 }
 
 const clientManifest = (await import(pathToFileURL(await manifestPath()).href))
-  .default as Parameters<typeof manifestJavaScriptFiles>[1]
+  .default as ClientManifest
 
 function outputPath(source: string): string {
   const assetPath = new URL(source, 'https://wawapacha.invalid').pathname
@@ -57,12 +62,12 @@ function manifestSource(file: string): string {
   return `${basePath}_nuxt/${file}`
 }
 
-async function assetBytes(sources: string[], kind: string): Promise<number> {
+async function assetBytes(sources: string[], description: string): Promise<number> {
   const files = new Set<string>()
   for (const source of sources) {
     const file = outputPath(source)
     if (!(await Bun.file(file).exists())) {
-      throw new Error(`Missing generated ${kind} asset referenced by HTML: ${source}`)
+      throw new Error(`Missing generated ${description} asset: ${source}`)
     }
     files.add(file)
   }
@@ -71,10 +76,14 @@ async function assetBytes(sources: string[], kind: string): Promise<number> {
 
 async function routeAssetBytes(route: string, html: string) {
   const references = htmlAssetReferences(html)
+  const pageKey = manifestPageKey(route)
+  const pageEntry = clientManifest[pageKey]
+  if (!pageEntry?.file) throw new Error(`Build manifest entry has no file: ${pageKey}`)
+  await assetBytes([manifestSource(pageEntry.file)], 'manifest entry JavaScript')
   const manifestJs = manifestJavaScriptFiles(route, clientManifest).map(manifestSource)
   return {
     js: await assetBytes([...references.js, ...manifestJs], 'JavaScript'),
-    css: await assetBytes(references.css, 'CSS'),
+    css: await assetBytes(references.css, 'CSS linked by HTML'),
   }
 }
 
