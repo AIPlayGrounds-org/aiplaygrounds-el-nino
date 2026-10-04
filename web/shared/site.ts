@@ -7,7 +7,7 @@ export const publicRoutes = [
   '/metodologia',
 ] as const
 
-export const socialImagePath = '/og-image.svg'
+export const socialImagePath = '/og-image.png'
 
 export function normalizeBasePath(baseURL: string): string {
   if (!baseURL || baseURL === '/') return '/'

@@ -28,7 +28,7 @@ function assertEqual(actual: string, expected: string, label: string) {
   if (actual !== expected) throw new Error(`${label}: expected ${expected}, got ${actual}`)
 }
 
-for (const asset of ['og-image.svg', 'sitemap.xml', 'robots.txt']) {
+for (const asset of ['og-image.png', 'sitemap.xml', 'robots.txt']) {
   if (!(await Bun.file(resolve(output, asset)).exists())) {
     throw new Error(`Missing generated static SEO asset: ${asset}`)
   }
@@ -74,7 +74,7 @@ for (const route of publicRoutes) {
   )
   assertEqual(
     urlPath(image, 'Open Graph image'),
-    routePath('/og-image.svg'),
+    routePath('/og-image.png'),
     `${route} Open Graph image path`,
   )
   attribute(html, /<meta name="twitter:card" content="([^"]+)"/, 'Twitter card', route)
@@ -85,7 +85,17 @@ for (const route of publicRoutes) {
     'Twitter description',
     route,
   )
-  attribute(html, /<meta name="twitter:image" content="([^"]+)"/, 'Twitter image', route)
+  const twitterImage = attribute(
+    html,
+    /<meta name="twitter:image" content="([^"]+)"/,
+    'Twitter image',
+    route,
+  )
+  assertEqual(
+    urlPath(twitterImage, 'Twitter image'),
+    routePath('/og-image.png'),
+    `${route} Twitter image path`,
+  )
   const canonical = attribute(html, /<link rel="canonical" href="([^"]+)"/, 'canonical URL', route)
   assertEqual(urlPath(canonical, 'canonical'), routePath(route), `${route} canonical path`)
   console.log(`${route} SEO metadata ok`)
