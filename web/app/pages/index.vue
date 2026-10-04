@@ -2,6 +2,7 @@
 import { messages } from '~/messages'
 import { useDataset } from '~/composables/useDataset'
 import { cropOisst } from '~/utils/oisstMap'
+import { ENFEN_COMUNICADOS, SENAMHI_AVISOS } from '~/links'
 
 const oni = await useDataset('noaa-cpc-oni')
 const oisst = await useDataset('noaa-oisst', cropOisst)
@@ -12,9 +13,6 @@ const records = oni.records
 const last = records.at(-1)
 
 const CPC_ONI_PAGE = 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/'
-const ENFEN_COMUNICADOS = 'https://enfen.imarpe.gob.pe/downloads/comunicados/'
-const SENAMHI_AVISOS = 'https://www.senamhi.gob.pe/?p=aviso-meteorologico'
-
 const phase = last ? ensoPhase(last.anomaly) : 'neutral'
 const streak = phaseStreak(records)
 
@@ -119,6 +117,7 @@ useSeoMeta({
             <span class="brand">{{ messages.page.brand }}</span>
             <NuxtLink to="/territorio">{{ messages.page.territoryLink }}</NuxtLink>
             <NuxtLink to="/historico">{{ messages.historico.historyNav }}</NuxtLink>
+            <NuxtLink to="/rios">{{ messages.rios.sectionLabel }}</NuxtLink>
           </header>
           <section class="hero" aria-labelledby="oni-title">
             <h1 id="oni-title">{{ messages.page.title }}</h1>

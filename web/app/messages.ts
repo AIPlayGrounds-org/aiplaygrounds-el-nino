@@ -194,6 +194,41 @@ export const messages = {
     era5Summary: (days: number, start: string, end: string, count: number) =>
       `Cruce ERA5 de precipitación diaria: suma de los ${days} días disponibles, del ${formatDay(start)} al ${formatDay(end)}, para ${count} puntos departamentales. Cada valor es una muestra puntual de una celda de 0,25°.`,
   },
+  rios: {
+    seoTitle: 'Caudal de ríos · WawaPacha',
+    seoDescription:
+      'Consulta el caudal diario estimado y pronosticado por punto de cuenca en el modelo GloFAS.',
+    sectionLabel: 'Ríos',
+    title: '¿Cómo viene el caudal?',
+    lead: 'Explora el caudal diario estimado por GloFAS en puntos representativos de cuencas del Perú. La serie separa los días recientes del pronóstico del modelo.',
+    modelNote:
+      'GloFAS es un modelo hidrológico: estos valores no son mediciones de un caudalímetro. El rango sombreado muestra los percentiles 25–75 del conjunto del pronóstico, cuando están disponibles.',
+    pointLabel: 'Punto de cuenca',
+    estimatedSeries: 'Estimación del modelo',
+    forecastSeries: 'Pronóstico del modelo',
+    rangeSeries: 'Rango p25–p75 del pronóstico',
+    chartDescription: 'Caudal diario estimado y pronosticado por punto de cuenca.',
+    chartAria: (point: string) => `Caudal diario en ${point}.`,
+    chartLoading: 'Cargando el gráfico…',
+    chartError: 'No se pudo dibujar el gráfico. La tabla de abajo conserva los datos.',
+    summary: (point: string, date: string, value: string, unit: string, forecastDate: string) =>
+      `En ${point}, el último caudal disponible del modelo es ${value} ${unit} (${date}). El pronóstico comienza el ${forecastDate}.`,
+    emptySummary: (point: string) => `No hay valores de caudal disponibles para ${point}.`,
+    tableSummary: 'Ver la tabla de datos',
+    tableCaption: (point: string) => `Caudal diario del modelo para ${point}.`,
+    date: 'Fecha',
+    dataType: 'Tipo de dato',
+    discharge: 'Caudal',
+    forecastRange: 'Rango pronosticado (p25–p75)',
+    noData: 'Sin dato',
+    estimated: 'Estimado',
+    forecast: 'Pronóstico',
+    alertsTitle: 'Fuentes oficiales de alertas',
+    alertsLead:
+      'Para comunicados oficiales y avisos meteorológicos, consulta directamente a las instituciones responsables:',
+    enfenLink: 'Comunicados oficiales de ENFEN',
+    senamhiLink: 'Avisos meteorológicos de SENAMHI',
+  },
   panels: {
     weekly: {
       title: '¿Cómo está el mar frente al Perú?',
