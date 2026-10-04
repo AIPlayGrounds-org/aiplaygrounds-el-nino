@@ -43,6 +43,8 @@ uv run wawapacha-pipeline run noaa-cpc-oni
 Published noaa-cpc-oni: 919 records in data/noaa-cpc-oni.json
 ```
 
+The seed file is [`data/noaa-cpc-oni.json`](data/noaa-cpc-oni.json).
+
 If validation fails, the previous JSON remains in place.
 
 ## Smallest example

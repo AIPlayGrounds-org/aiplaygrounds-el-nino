@@ -46,7 +46,34 @@ Examples include
 ONI parser's
 [`test_rejects_a_missing_season`](../pipeline/tests/test_noaa_cpc_oni.py) and
 [`test_rejects_a_duplicated_season`](../pipeline/tests/test_noaa_cpc_oni.py),
-and the daily gap checks in the linked ERA5 and GloFAS source tests above.
+the ERA5
+[`test_rejects_each_structural_coordinate_date_or_value_rule`](../pipeline/tests/test_open_meteo_era5.py),
+and the GloFAS
+[`test_rejects_each_structural_or_value_rule`](../pipeline/tests/test_open_meteo_glofas.py).
+Daily OISST checks include
+[`test_rejects_days_with_a_gap`](../pipeline/tests/test_noaa_oisst.py),
+[`test_rejects_a_duplicated_day`](../pipeline/tests/test_noaa_oisst.py) and
+[`test_rejects_days_out_of_order`](../pipeline/tests/test_noaa_oisst.py). The
+weekly Niño parser checks the same rules with
+[`test_rejects_a_gap`](../pipeline/tests/test_noaa_cpc_nino_weekly.py) and
+[`test_rejects_a_duplicated_week`](../pipeline/tests/test_noaa_cpc_nino_weekly.py).
+
+Every non-null value must stay within the physically possible range for its
+source. The source validators reject out-of-range ONI anomalies in
+[`test_rejects_an_anomaly_out_of_range`](../pipeline/tests/test_noaa_cpc_oni.py),
+ERSST anomalies in
+[`test_rejects_an_anomaly_outside_the_conservative_range`](../pipeline/tests/test_noaa_ersst.py),
+OISST SST, climatology and anomaly values in
+[`test_rejects_an_sst_out_of_range`](../pipeline/tests/test_noaa_oisst.py),
+[`test_rejects_a_climatology_out_of_range`](../pipeline/tests/test_noaa_oisst.py)
+and
+[`test_rejects_an_anomaly_out_of_range`](../pipeline/tests/test_noaa_oisst.py),
+weekly Niño SST and anomalies in
+[`test_rejects_an_sst_out_of_range`](../pipeline/tests/test_noaa_cpc_nino_weekly.py)
+and
+[`test_rejects_an_anomaly_out_of_range`](../pipeline/tests/test_noaa_cpc_nino_weekly.py),
+and rainfall in
+[`test_aggregate_rejects_out_of_range_rainfall`](../pipeline/tests/test_chirps.py).
 
 ## Transformation
 
@@ -66,18 +93,18 @@ and
 
 Each published file contains one source's provenance and at least one record:
 
-| Field                                       | Meaning                                                                                              |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `id`                                        | The lowercase hyphenated id from `sources.toml`.                                                     |
-| `source`                                    | Institution, product and download URL.                                                               |
-| `variable`, `unit`                          | What the data measures and its unit.                                                                 |
-| `data_type`                                 | `observed`, `estimated`, `forecast` or `official`.                                                   |
-| `spatial_resolution`, `temporal_resolution` | The source's spatial and temporal resolution.                                                        |
-| `reference_period`                          | The anomaly base period, when applicable.                                                            |
-| `ingestion_time`                            | The UTC or offset-aware ISO 8601 download time.                                                      |
-| `processing_version`                        | The code version that produced the file.                                                             |
-| `source_revision`                           | The upstream SHA-256 and optional `Last-Modified` value, when supplied.                              |
-| `records`                                   | A non-empty array. Every record has `start` and `end`; fields beyond those depend on the dataset id. |
+| Field                                       | Meaning                                                                                                                                                                                                     |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                                        | The lowercase hyphenated id from `sources.toml`.                                                                                                                                                            |
+| `source`                                    | Institution, product and download URL.                                                                                                                                                                      |
+| `variable`, `unit`                          | What the data measures and its unit.                                                                                                                                                                        |
+| `data_type`                                 | One of `observed` (measured or reported observation), `estimated` (model or analysis estimate), `forecast` (prediction of a future period) or `official` (an institution's official status or declaration). |
+| `spatial_resolution`, `temporal_resolution` | The source's spatial and temporal resolution.                                                                                                                                                               |
+| `reference_period`                          | The anomaly base period, when applicable.                                                                                                                                                                   |
+| `ingestion_time`                            | The UTC or offset-aware ISO 8601 download time.                                                                                                                                                             |
+| `processing_version`                        | The code version that produced the file.                                                                                                                                                                    |
+| `source_revision`                           | Optional object with the upstream SHA-256 and required `last_modified` key; `last_modified` is the HTTP `Last-Modified` value or `null` when the upstream supplies no header.                               |
+| `records`                                   | A non-empty array. Every record has `start` and `end`; fields beyond those depend on the dataset id.                                                                                                        |
 
 Record dates use ISO 8601 strings: `YYYY-MM` for months and `YYYY-MM-DD` for
 days. The schema adds the record fields for each current dataset id, including

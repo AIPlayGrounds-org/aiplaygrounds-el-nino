@@ -41,10 +41,10 @@ public source
 The scheduled [`update-data.yml`](.github/workflows/update-data.yml) runs once a
 day. It asks `due` for missing or old daily, weekly and monthly datasets, skips
 manual entries, runs selected sources independently, and publishes changed JSON
-to the `data` branch. A successful data update dispatches
-[`deploy.yml`](.github/workflows/deploy.yml). The registry's `update` field and
-the generated [source catalog](docs/sources.md) own each source's cadence and
-cadence notes.
+to the `data` branch. Only when changed JSON is committed and pushed does the
+workflow dispatch [`deploy.yml`](.github/workflows/deploy.yml). The registry's
+`update` field and the generated [source catalog](docs/sources.md) own each
+source's cadence and cadence notes.
 
 ### Web
 
