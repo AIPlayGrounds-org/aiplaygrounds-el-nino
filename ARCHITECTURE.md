@@ -48,10 +48,12 @@ source's cadence and cadence notes.
 
 The scheduled [`freshness.yml`](.github/workflows/freshness.yml) runs the
 `wawapacha-pipeline freshness` command against the published files. It reuses
-the due selector's registry cadence thresholds and compares each file's
+the registry cadence schedule, but its independent tolerance is two nominal
+cadence intervals plus slack: 52 hours for daily, 15 days for weekly, and 63
+days for monthly. Those values live with the due thresholds in
+`pipeline/src/wawapacha_pipeline/cli.py`. It compares each file's
 `ingestion_time` with its optional `source_revision.last_modified`; a stale
-result is a visible workflow error, but the job is allowed to fail so deploys
-are not blocked.
+result fails this separate workflow and therefore does not block deploys.
 
 ### Web
 
