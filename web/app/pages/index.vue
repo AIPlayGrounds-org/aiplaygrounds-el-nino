@@ -102,6 +102,9 @@ const phaseLabel = {
 useSiteSeo({
   title: messages.page.seoTitle,
   description: messages.page.seoDescription,
+  ogDescription: last
+    ? `${seasonLabel(last)}: ${formatAnomaly(last.anomaly)} °C. ${status.value.title}.`
+    : messages.page.seoDescription,
 })
 </script>
 

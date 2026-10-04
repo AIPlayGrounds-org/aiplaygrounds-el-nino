@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      siteOrigin: process.env.SITE_ORIGIN || 'https://aiplaygrounds-org.github.io',
+      siteOrigin: 'https://aiplaygrounds-org.github.io',
     },
   },
   // Pipeline JSON files live in the repository's data/ directory, outside web/.

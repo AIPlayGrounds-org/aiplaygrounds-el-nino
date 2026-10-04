@@ -4,14 +4,16 @@ import { useHead, useRoute, useRuntimeConfig, useSeoMeta } from '#imports'
 type SiteSeo = {
   title: string
   description: string
+  ogDescription?: string
 }
 
-export function useSiteSeo({ title, description }: SiteSeo) {
+export function useSiteSeo({ title, description, ogDescription = description }: SiteSeo) {
   const route = useRoute()
   const config = useRuntimeConfig()
   const publicConfig = config.public as { siteOrigin?: string }
   const appConfig = config.app as { baseURL?: string }
-  const origin = publicConfig.siteOrigin || 'https://aiplaygrounds-org.github.io'
+  const origin = publicConfig.siteOrigin
+  if (!origin) throw new Error('runtimeConfig.public.siteOrigin is required')
   const baseURL = appConfig.baseURL || '/'
   const canonical = siteUrl(origin, baseURL, route.path)
   const image = siteUrl(origin, baseURL, socialImagePath)
@@ -20,7 +22,7 @@ export function useSiteSeo({ title, description }: SiteSeo) {
     title,
     description,
     ogTitle: title,
-    ogDescription: description,
+    ogDescription,
     ogType: 'website',
     ogUrl: canonical,
     ogImage: image,

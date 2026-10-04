@@ -31,7 +31,10 @@ async function entryJsBytes(html: string): Promise<number> {
   for (const source of sources) {
     const path = source.split('?')[0]!.replace(/^\//, '')
     const file = resolve(root, path)
-    if (await Bun.file(file).exists()) files.add(file)
+    if (!(await Bun.file(file).exists())) {
+      throw new Error(`Missing generated JavaScript asset referenced by HTML: ${source}`)
+    }
+    files.add(file)
   }
   return (await Promise.all([...files].map(size))).reduce((total, bytes) => total + bytes, 0)
 }
