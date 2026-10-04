@@ -2,12 +2,21 @@
 
 ![The home page: "¿Llegó El Niño?" with the latest ONI reading and the stripes of the series since 1950](docs/assets/site.png)
 
-WawaPacha is a public web observatory for the signals of El Niño in Peru. It is
-a static site ([Nuxt 4](https://nuxt.com/) with Bun) fed by a Python data
-pipeline (uv), with no backend and no accounts. Live at
-<https://aiplaygrounds-org.github.io/wawapacha/>.
+WawaPacha is a public web observatory for signals of El Niño in Peru. It is a
+static site built with [Nuxt 4](https://nuxt.com/) and Bun, fed by a Python
+pipeline managed with uv. The browser receives published JSON from this
+repository; there is no runtime backend, account system or upstream API call.
+Live at <https://aiplaygrounds-org.github.io/wawapacha/>.
 
-## Run it
+## Boundary
+
+The pipeline reads registered public sources, validates each dataset and
+publishes `data/<id>.json`. Deployment overlays newer JSON from the `data`
+branch onto the seed files on `main`, then `nuxt generate` builds the static
+site for GitHub Pages. The architecture map is
+[`ARCHITECTURE.md`](ARCHITECTURE.md).
+
+## Install and run
 
 You need [Git](https://git-scm.com/) and
 [mise](https://mise.jdx.dev/getting-started). mise installs the Bun and uv
@@ -20,12 +29,13 @@ mise exec -- bun install
 mise exec -- bun run dev
 ```
 
-Open <http://localhost:3100>. If mise is activated in your shell, drop
+Open <http://localhost:3100>. If mise is active in your shell, omit
 `mise exec --`.
 
-To download a dataset and publish it to `data/`, run this from `pipeline/`:
+To run the pipeline against a source and publish its JSON, use `pipeline/`:
 
 ```sh
+cd pipeline
 uv run wawapacha-pipeline run noaa-cpc-oni
 ```
 
@@ -33,38 +43,56 @@ uv run wawapacha-pipeline run noaa-cpc-oni
 Published noaa-cpc-oni: 919 records in data/noaa-cpc-oni.json
 ```
 
-If the download fails validation, nothing is published and the previous JSON
-stays.
+The seed file is [`data/noaa-cpc-oni.json`](data/noaa-cpc-oni.json).
 
-## What the site shows today
+If validation fails, the previous JSON remains in place.
 
-The `/` page uses NOAA's [ONI](docs/sources.md#noaa-cpc-oni) since 1950. It
-answers “¿Llegó El Niño?”, explains what the central-Pacific signal means for
-Peru, shows the history as an interactive ECharts chart and a recent-data table,
-and describes the method. The page also links to ENFEN's official communiqués
-and SENAMHI's meteorological notices. The ONI page shows its source, data type,
-period and last ingestion time from the published JSON.
+## Smallest example
 
-## What is where
+The web loads a typed dataset by id. A page can pass a server-side shaping
+function when it needs only part of the published records:
 
-| Folder                         | Holds                                                                                            |
-| ------------------------------ | ------------------------------------------------------------------------------------------------ |
-| [`web/`](web/)                 | The web app.                                                                                     |
-| [`pipeline/`](pipeline/)       | Downloads, validates and publishes the data.                                                     |
-| [`data/`](data/)               | Main's seed JSON; deploy overlays the published data branch ([contract](docs/data-contract.md)). |
-| [`notebooks/`](notebooks/)     | [marimo](https://marimo.io) notebooks that walk through the pipeline.                            |
-| [`sources.toml`](sources.toml) | The source registry.                                                                             |
-| [`schema/`](schema/)           | The contract of the published JSON.                                                              |
-| [`docs/`](docs/README.md)      | Chart rules, data contract, concepts, source workflow and catalog.                               |
+```ts
+const oni = await useDataset("noaa-cpc-oni");
+const oisst = await useDataset("noaa-oisst", cropOisst);
+```
 
-## Not in the product
+`useDataset` validates on the server and hydrates the shaped result from the
+Nuxt payload. See [`chart-rules.md`](docs/chart-rules.md) for the display
+contract and
+[`ARCHITECTURE.md`](ARCHITECTURE.md#dataset-loading-and-page-payloads) for the
+current page shapes.
 
-The site has no accounts, no notifications, no public API, no downloads of its
-own, no models of its own and no model consensus.
+## Features
 
-## More
+- `/` explains the current ONI signal with a history chart, weekly Niño indices,
+  the ENFEN status, CPC probabilities and an OISST anomaly map.
+- `/territorio` maps recent CHIRPS rainfall and anomalies by department, with an
+  ERA5 cross-check.
+- `/historico` compares the current year with tagged 1982–83, 1997–98 and 2017
+  events.
+- `/rios` shows modeled discharge for selected Peruvian basins and links to
+  official alerts.
+- Every chart exposes its variable, unit, period, data type, source and update
+  age. The UI keeps observed, estimated, forecast and official data distinct.
+- The pipeline keeps source facts in one registry and generates the source
+  catalog and schema-derived TypeScript types.
 
-[`ARCHITECTURE.md`](ARCHITECTURE.md) maps the code.
-[`CONTRIBUTING.md`](CONTRIBUTING.md) covers branches, checks and merges.
-[`docs/add-a-source.md`](docs/add-a-source.md) adds a source.
-[`ROADMAP.md`](ROADMAP.md) lists what is not built.
+## Non-goals
+
+WawaPacha does not provide accounts, notifications, a public API, first-party
+downloads, global search, district-level data, its own predictive models or a
+model consensus. Agriculture, fishing, health and infrastructure modules are
+also outside the current product boundary. The staged scope is in
+[`ROADMAP.md`](ROADMAP.md).
+
+## Links
+
+- [Documentation index](docs/README.md)
+- [Architecture](ARCHITECTURE.md)
+- [Contributor workflow and checks](CONTRIBUTING.md)
+- [Add a source](docs/add-a-source.md)
+- [Data contract](docs/data-contract.md)
+- [Chart rules](docs/chart-rules.md)
+- [Source catalog](docs/sources.md)
+- [Concepts](docs/concepts.md)

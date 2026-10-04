@@ -1,100 +1,132 @@
 # Architecture
 
-A data pipeline and a static site. There is no backend. This document is the
-code map: what each directory does and which boundaries the code keeps. The
-target architecture and unbuilt work live in [`ROADMAP.md`](ROADMAP.md).
+WawaPacha is a Python ingestion pipeline and a Nuxt static site. There is no
+runtime backend. The target architecture and work that is not built yet live in
+[`ROADMAP.md`](ROADMAP.md).
 
 ```text
 public source
-  → pipeline/        downloads, validates and publishes (wawapacha-pipeline run <id>)
+  → pipeline source module
+  → schema validation
   → data branch/<id>.json
-  → deploy overlay   copies published JSON into main's data/
-  → web/             nuxt generate reads data/ at build time
+  → deploy overlay
+  → web/ Nuxt generate
   → GitHub Pages
 ```
 
 ## Code map
 
-| Path                                                       | Job                                                                                                                                                   |
-| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`sources.toml`](sources.toml)                             | The registry. Holds the facts about each source: institution, URL, variable, unit, verdict. It is the only place they live.                           |
-| [`schema/dataset.schema.json`](schema/dataset.schema.json) | The contract of the published JSON. The pipeline validates against it and the web generates its types from it.                                        |
-| [`pipeline/`](pipeline/)                                   | A Python package (uv). Downloads, validates and publishes.                                                                                            |
-| [`notebooks/`](notebooks/)                                 | One marimo notebook per source. Imports the package and shows each step. Never writes to `data/`.                                                     |
-| [`data/`](data/)                                           | Seed JSON on main for CI and tests; deploy overlays it with the published data branch.                                                                |
-| [`web/`](web/)                                             | The web app: Nuxt 4 and Vue, with Bun. Datasets enter through one typed build-time loader and charts render inside one ECharts shell (`vue-echarts`). |
-| [`docs/`](docs/README.md)                                  | Chart rules, data contract, concepts, source workflow and the source catalog.                                                                         |
-| [`.github/workflows/`](.github/workflows/)                 | `ci.yml` checks every PR. `update-data.yml` publishes JSON to `data`; `deploy.yml` overlays it and publishes `web/` to GitHub Pages.                  |
-| [`mise.toml`](mise.toml)                                   | Pins the Bun and uv versions.                                                                                                                         |
+| Path                                                       | Owns                                                                                                                         |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| [`sources.toml`](sources.toml)                             | The source registry: identity, provenance, update class, delivery stage and source notes.                                    |
+| [`schema/dataset.schema.json`](schema/dataset.schema.json) | The published JSON contract. The pipeline validates against it and the web generates TypeScript types from it.               |
+| [`pipeline/`](pipeline/)                                   | The uv package that discovers source modules, downloads or reads inputs, validates source-specific rules and publishes JSON. |
+| [`notebooks/`](notebooks/)                                 | One inspection notebook per automatable source. Notebooks import the pipeline and do not publish data themselves.            |
+| [`data/`](data/)                                           | Seed JSON on `main`. Deploy overlays it with the latest JSON from the `data` branch when that branch exists.                 |
+| [`web/`](web/)                                             | The Nuxt 4 static site, its server-side dataset loader, page-specific shaping, charts and accessible fallbacks.              |
+| [`docs/`](docs/README.md)                                  | The documentation set. The generated source catalog is the source-specific reference.                                        |
+| [`.github/workflows/`](.github/workflows/)                 | CI, the daily data update, and the GitHub Pages deployment.                                                                  |
+| [`mise.toml`](mise.toml)                                   | The pinned Bun and uv versions used by contributors.                                                                         |
 
-### `pipeline/src/wawapacha_pipeline/`
+### Pipeline
 
-| Module                                                       | Job                                                                                                  |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`. The only loader of the registry.                                 |
-| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and publishes it atomically to the configured data directory. |
-| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per source. Downloads, parses and builds the dataset from registry facts.                 |
-| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Generates [`docs/sources.md`](docs/sources.md) from the registry.                                    |
-| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | `wawapacha-pipeline run <id>`, `due` and `sources`.                                                  |
+| Path                                                         | Owns                                                                                                           |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                    |
+| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds. |
+| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset.              |
+| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) from the registry.                                                |
+| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due` and `sources`. `due` applies the registry update class to the published JSON timestamps. |
 
-### `web/app/`
+The scheduled [`update-data.yml`](.github/workflows/update-data.yml) runs once a
+day. It asks `due` for missing or old daily, weekly and monthly datasets, skips
+manual entries, runs selected sources independently, and publishes changed JSON
+to the `data` branch. Only when changed JSON is committed and pushed does the
+workflow dispatch [`deploy.yml`](.github/workflows/deploy.yml). The registry's
+`update` field and the generated [source catalog](docs/sources.md) own each
+source's cadence and cadence notes.
 
-| Path                                                             | Job                                                                                                          |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [`pages/index.vue`](web/app/pages/index.vue)                     | The `/` page. Loads ONI once and passes the typed dataset to the panel components.                           |
-| [`composables/useDataset.ts`](web/app/composables/useDataset.ts) | The only web loader for `data/<id>.json`; it validates the static catalog and narrows records by dataset id. |
-| [`components/ChartShell.vue`](web/app/components/ChartShell.vue) | Shared chart wrapper. It renders the accessible summary and provenance block for every chart.                |
-| [`components/`](web/app/components/)                             | The ONI charts. Components receive the dataset from the loader and do not import JSON.                       |
-| [`messages.ts`](web/app/messages.ts)                             | Flat Spanish UI messages and the single `data_type` label map, ready for i18n.                               |
-| [`utils/enso.ts`](web/app/utils/enso.ts)                         | ENSO phases and ONI dates.                                                                                   |
-| [`types/dataset.ts`](web/app/types/dataset.ts)                   | Schema-generated JSON types. **Generated**: do not edit.                                                     |
-| [`types/datasets.ts`](web/app/types/datasets.ts)                 | Id-to-record type map built from the generated types.                                                        |
-| [`test/`](web/test/)                                             | Behavior tests for the shell fixtures and loader type contract.                                              |
+### Web
+
+| Path                                                                             | Owns                                                                                                                              |
+| -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| [`pages/index.vue`](web/app/pages/index.vue)                                     | The home page: ONI, weekly Niño indices, the ENFEN communiqué, CPC probabilities and the OISST map.                               |
+| [`pages/territorio.vue`](web/app/pages/territorio.vue)                           | The department rainfall map and its ERA5 cross-check.                                                                             |
+| [`pages/historico.vue`](web/app/pages/historico.vue)                             | The comparison of current and tagged historical events.                                                                           |
+| [`pages/rios.vue`](web/app/pages/rios.vue)                                       | The modeled river-discharge series and official alert links.                                                                      |
+| [`server/utils/loadDataset.ts`](web/server/utils/loadDataset.ts)                 | The static dataset catalog and server-side schema validation.                                                                     |
+| [`composables/useDataset.ts`](web/app/composables/useDataset.ts)                 | The page-facing loader. `useDataset(id, shape?)` hydrates from the Nuxt payload; `shape` runs on the server before serialization. |
+| [`composables/useChartTheme.ts`](web/app/composables/useChartTheme.ts)           | Reads chart colors and font from CSS variables and refreshes them when the system color scheme changes.                           |
+| [`utils/format.ts`](web/app/utils/format.ts)                                     | Shared Spanish number and date formatting, including Lima time and river-discharge precision.                                     |
+| [`components/ChartShell.vue`](web/app/components/ChartShell.vue)                 | The shared chart frame, accessible summary, provenance fields, data age and stale-source notice.                                  |
+| [`components/DatasetAttribution.vue`](web/app/components/DatasetAttribution.vue) | The Open-Meteo credit and the required ERA5 or GloFAS attribution.                                                                |
+| [`messages.ts`](web/app/messages.ts)                                             | Spanish product copy and the single `data_type` label map.                                                                        |
+| [`types/dataset.ts`](web/app/types/dataset.ts)                                   | Schema-generated TypeScript types. **Generated:** run `bun run types` in `web/`; do not edit by hand.                             |
+| [`types/datasets.ts`](web/app/types/datasets.ts)                                 | The id-to-record type map used by the loader and page shapes.                                                                     |
+| [`test/`](web/test/)                                                             | Behavior and type tests for the loader, shaping functions, chart shell and page data.                                             |
+
+## Dataset loading and page payloads
+
+The browser receives only the static JSON that Nuxt puts in the page payload. It
+does not call an upstream source. The server loader imports one dataset by id,
+validates it against [`dataset.schema.json`](schema/dataset.schema.json), and
+then `useDataset` optionally reduces the returned value before hydration.
+
+| Route         | Server-side shaping                                                                                                                    |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`           | Crops the OISST grid to the map window. The ONI, weekly indices, communiqué and outlook use the records their panels read.             |
+| `/territorio` | Keeps department geometry, the latest CHIRPS record per department, and ERA5 department totals plus the first and last source records. |
+| `/historico`  | Keeps tagged ERSST event records and the current year, then keeps the matching ONI windows.                                            |
+| `/rios`       | Keeps the river fields used by the chart and orders records by point and date.                                                         |
+
+The route's shaped return value is what Nuxt serializes into its
+`_payload.json`. The repository has no absolute byte budget or generated payload
+size check. It does have relative shaping assertions in
+[`web/test/territorio.test.ts`](web/test/territorio.test.ts) and
+[`web/test/rios.test.ts`](web/test/rios.test.ts). The separate 200 KiB gzip
+limits enforced by some pipeline sources are source-payload limits, not route
+payload limits; their current values are in the generated
+[source catalog](docs/sources.md).
 
 ## Boundaries
 
-- **`pipeline/` and `web/` meet only at published JSON and the schema.** The
-  pipeline writes the data branch during scheduled runs; deploy overlays those
-  files into main's seed `data/` before the web build. Neither side imports the
-  other, so the Data and Web workstreams move independently.
-- **A source's facts live only in `sources.toml`.** A module in `sources/` reads
-  them from the registry and does not repeat them. A test checks that the
-  published JSON matches its entry.
-- **One module per automatable source.** Discovery maps each automatable
-  registry id to `sources/<id with hyphens replaced by underscores>.py`. A
-  registry check fails when the module is missing or does not expose `ID`,
-  `fetch`, `parse` and `run`. Discovery keeps source work isolated and avoids a
-  shared dispatcher that every source branch must edit.
-- **Nothing is published without passing the schema.** `contract.publish()`
-  validates before it writes. If validation fails, the previous JSON stays in
-  the configured data directory.
-- **Notebooks hold no logic.** They import the package. A test fails if a
-  notebook defines a function or a class. Production does not depend on marimo,
-  while contributors can still inspect each pipeline step.
-- **Two files are generated, and CI fails when they are stale:**
-  `docs/sources.md` (`uv run wawapacha-pipeline sources`, from `pipeline/`) and
-  `web/app/types/dataset.ts` (`bun run types`, from `web/`).
-- **A failing source does not hide its data.** The previous JSON stays on the
-  data branch, with its ingestion time, and the page shows its age
-  ([`web/app/pages/index.vue`](web/app/pages/index.vue)).
-- **No backend.** There are no accounts, no public API and no downloads of our
-  own. Static JSON keeps visitor traffic independent of upstream availability
-  and rate limits.
-- **The web reads JSON through one path.** `useDataset(id)` reads the static
-  catalog at build time, validates each dataset against
-  `schema/dataset.schema.json`, and returns the record type bound to that id.
-  Pages and components do not import `data/` directly.
-- **The browser loads only our JSON.** Scheduled ingestion fetches upstream
-  sources and publishes due datasets to the data branch before the static site
-  build overlays them, so visitor traffic never calls an upstream API. If the
-  branch does not exist yet, deploy uses the seed snapshot on main. A missing or
-  invalid dataset throws an error naming `data/<id>.json` during the build.
-- **Every chart uses the shell.** `ChartShell` owns the accessible text summary,
-  variable, unit, period, Spanish data type, source and update age. It keeps the
-  latest record visible when the source is stale. Chart-specific controls and
-  technical explanation remain in the panel.
-- **Copy has one home.** Spanish product copy and the data-type label map live
-  in `web/app/messages.ts`; components reference message keys rather than
-  embedding UI copy. The module's flat keys are the handoff point for i18n.
-- **ECharts is the current chart renderer.** The planned v0.1 map's grid and
-  serving rules are in [`ROADMAP.md`](ROADMAP.md), not duplicated here.
+- **Pipeline and web meet at published JSON and the schema.** Neither package
+  imports the other. Deploy overlays the `data` branch before `nuxt generate`.
+- **Source facts have one home.** `sources.toml` owns registry facts. Source
+  modules read them through `registry.get()` and add only source-specific
+  parsing and validation.
+- **Automatable source discovery is registry-driven.** A source id maps to
+  `sources/<id with hyphens replaced by underscores>.py`; discovery requires
+  `ID`, `fetch`, `parse` and `run`.
+- **Notebooks hold no pipeline logic.** They import the source modules and show
+  their steps. [`test_notebooks.py`](pipeline/tests/test_notebooks.py) rejects
+  functions and classes outside marimo cells and checks that a notebook can run
+  without publishing data.
+- **Invalid data is not published.** Schema validation runs before the atomic
+  replacement, so a failed run leaves the previous JSON in place.
+- **The web has one dataset entry point.** Pages call `useDataset`; components
+  receive datasets as props and do not import `data/` directly.
+- **Charts use one provenance frame.** `ChartShell` owns the variable, unit,
+  period, data type, source and update age. Chart-specific controls and
+  explanations stay in the page or panel.
+- **Stale data remains visible.** The shell shows the latest valid record and
+  its age, then links to the source when its update or record age crosses the
+  current stale threshold.
+- **There is no backend.** Static JSON makes visitor traffic independent of
+  upstream availability and rate limits. Accounts, a public API and first-party
+  downloads are outside the product boundary; the complete non-goals list is in
+  [`README.md`](README.md#non-goals).
+
+## Verification
+
+CI runs these pipeline commands from `pipeline`:
+
+- Ruff format check: `uv run ruff format --check .`
+- Ruff lint: `uv run ruff check .`
+- Tests: `uv run pytest`
+
+It then generates the source catalog and checks its clean diff. From `web/`, the
+oxfmt check is `oxfmt --check .`, also exposed to contributors as the exact
+script command `bun run format:check`. CI then regenerates the schema types,
+checks their clean diff and runs `bun run generate`. The contributor-facing
+working-directory details are in [`CONTRIBUTING.md`](CONTRIBUTING.md#checks).

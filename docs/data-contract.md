@@ -1,91 +1,130 @@
 # Data contract
 
-The rules every WawaPacha dataset follows, from download to the page. The
-concepts (anomaly, base period…) are in [`concepts.md`](concepts.md). The code
-that applies them is mapped in [`ARCHITECTURE.md`](../ARCHITECTURE.md).
+This document owns the shape and publication boundary of `data/<id>.json`.
+Source-specific access and transformation notes live in the generated
+[`sources.md`](sources.md). Domain terms are in [`concepts.md`](concepts.md).
 
-## 1. Origin
+## Registry and provenance
 
-- A source is automated only if it has an entry in
-  [`sources.toml`](../sources.toml) with the verdict `automatable`.
-- The pipeline downloads from the `access.url` of that entry, never from copies
-  or intermediate pages.
-- A source module does not repeat what the registry says. It reads the
-  institution, product, URL, variable and unit from it.
+An automatable dataset has a matching entry in [`sources.toml`](../sources.toml)
+and a discovered module under
+[`pipeline/src/wawapacha_pipeline/sources/`](../pipeline/src/wawapacha_pipeline/sources/).
+The module reads registry provenance through `registry.get()` and the published
+dataset copies the institution, product, access URL, variable, unit, data type
+and resolutions from that entry.
 
-## 2. Validation
+The registry's `update` value is one of `daily`, `weekly`, `monthly` or
+`manual`. The daily workflow uses it to select due automatable datasets. The
+current cadence text belongs in the generated [source catalog](sources.md).
 
-Every download is checked before it is published. **If anything fails, nothing
-is published and the previous JSON stays.** The site keeps showing the last
-valid data, with its date.
+## Validation and publication
 
-Each source checks at least:
+Source modules validate the format and domain rules that are specific to their
+upstream input. The shared `contract.publish()` then validates the complete
+dataset against [`schema/dataset.schema.json`](../schema/dataset.schema.json),
+writes a temporary file in the destination directory and atomically replaces
+`data/<id>.json` only after validation succeeds. A failed run therefore leaves
+the previous published JSON intact.
 
-| Check                                                        | Why                                     |
-| ------------------------------------------------------------ | --------------------------------------- |
-| The file has the expected structure (header, columns)        | Catches format changes in the source.   |
-| Every value is inside a physically possible range            | Catches read errors and corrupt values. |
-| Dates are in order, with no gaps and no duplicates           | Catches truncated or misread downloads. |
-| The resulting JSON matches the [schema](#4-published-format) | Catches data the web could not read.    |
+The test suite validates the seed files, registry provenance and source-specific
+failure cases. It runs without network access by using checked-in samples.
 
-Missing values are stored as `null`, never as `0` and never as the source's own
-code (for example `-99.9`).
+## Validation rules
 
-## 3. Transformation
+Source parsers preserve missing values as `null`. They never turn a missing
+value into `0` or leave the upstream sentinel in the published record. A real
+zero is still a value. The behavior is covered by
+[`test_parse_keeps_input_missing_as_null`](../pipeline/tests/test_chirps.py),
+[`test_preserves_zero_and_null_values`](../pipeline/tests/test_open_meteo_era5.py)
+and the corresponding
+[`test_preserves_zero_and_null_values`](../pipeline/tests/test_open_meteo_glofas.py).
 
-- **Source values are not modified.** Only their format changes.
-- If the source publishes the anomaly, use theirs. Do not recompute it.
-- If something has to be computed (an average, an anomaly), the method and the
-  base period go in the `notes` of the source's registry entry.
+Time-series validators require records in order with no gaps or duplicates.
+Examples include
+[`test_rejects_a_missing_month`](../pipeline/tests/test_noaa_ersst.py) and
+[`test_rejects_a_duplicated_month`](../pipeline/tests/test_noaa_ersst.py), the
+ONI parser's
+[`test_rejects_a_missing_season`](../pipeline/tests/test_noaa_cpc_oni.py) and
+[`test_rejects_a_duplicated_season`](../pipeline/tests/test_noaa_cpc_oni.py),
+the ERA5
+[`test_rejects_each_structural_coordinate_date_or_value_rule`](../pipeline/tests/test_open_meteo_era5.py),
+and the GloFAS
+[`test_rejects_each_structural_or_value_rule`](../pipeline/tests/test_open_meteo_glofas.py).
+Daily OISST checks include
+[`test_rejects_days_with_a_gap`](../pipeline/tests/test_noaa_oisst.py),
+[`test_rejects_a_duplicated_day`](../pipeline/tests/test_noaa_oisst.py) and
+[`test_rejects_days_out_of_order`](../pipeline/tests/test_noaa_oisst.py). The
+weekly Niño parser checks the same rules with
+[`test_rejects_a_gap`](../pipeline/tests/test_noaa_cpc_nino_weekly.py) and
+[`test_rejects_a_duplicated_week`](../pipeline/tests/test_noaa_cpc_nino_weekly.py).
 
-## 4. Published format
+Every non-null value must stay within the physically possible range for its
+source. The source validators reject out-of-range ONI anomalies in
+[`test_rejects_an_anomaly_out_of_range`](../pipeline/tests/test_noaa_cpc_oni.py),
+ERSST anomalies in
+[`test_rejects_an_anomaly_outside_the_conservative_range`](../pipeline/tests/test_noaa_ersst.py),
+OISST SST, climatology and anomaly values in
+[`test_rejects_an_sst_out_of_range`](../pipeline/tests/test_noaa_oisst.py),
+[`test_rejects_a_climatology_out_of_range`](../pipeline/tests/test_noaa_oisst.py)
+and
+[`test_rejects_an_anomaly_out_of_range`](../pipeline/tests/test_noaa_oisst.py),
+weekly Niño SST and anomalies in
+[`test_rejects_an_sst_out_of_range`](../pipeline/tests/test_noaa_cpc_nino_weekly.py)
+and
+[`test_rejects_an_anomaly_out_of_range`](../pipeline/tests/test_noaa_cpc_nino_weekly.py),
+and rainfall in
+[`test_aggregate_rejects_out_of_range_rainfall`](../pipeline/tests/test_chirps.py).
 
-One JSON file per source, at `data/<id>.json` in the seed snapshot on `main` and
-at the root of the `data` branch when published by the scheduled workflow. It
-carries the provenance of the data (institution, product and URL; what is
-measured and in which unit; whether it is observed, estimated, forecast or
-official; its resolution and base period), when it was downloaded, the version
-of the code that produced it, and the records. Deploy overlays the branch copy
-into `data/` before the static site build.
+## Transformation
 
-The contract is [`schema/dataset.schema.json`](../schema/dataset.schema.json).
-It is the only definition of the fields:
+Source values are not silently modified. A source module may change the file
+format or add an explicitly derived field, but the method must be visible in the
+source notes. If the upstream publishes an anomaly, use that anomaly as
+published rather than recomputing it. When a value is computed here, its method
+and base period belong in the registry `notes`; `reference_period` carries the
+base period into the published contract when applicable. Registry provenance and
+published values are checked by
+[`test_reads_the_whole_real_file_and_maps_columns`](../pipeline/tests/test_noaa_ersst.py),
+[`test_build_adds_provenance_metadata`](../pipeline/tests/test_noaa_cpc_oni.py)
+and
+[`test_parse_builds_records_and_calculates_anomaly`](../pipeline/tests/test_chirps.py).
 
-- `contract.publish()` validates every JSON against it before writing.
-- `bun run types`, in `web/`, generates the web's TypeScript types from it.
+## Published format
 
-The fields of a record depend on the source. Every record states the period it
-describes (`start`, `end`). Dates follow ISO 8601: `2026-08` for a month,
-`2026-08-31` for a day.
+Each published file contains one source's provenance and at least one record:
 
-`data_type` takes one of four English values. The product translates them into
-Spanish labels at the UI boundary:
+| Field                                       | Meaning                                                                                                                                                                                                     |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                                        | The lowercase hyphenated id from `sources.toml`.                                                                                                                                                            |
+| `source`                                    | Institution, product and download URL.                                                                                                                                                                      |
+| `variable`, `unit`                          | What the data measures and its unit.                                                                                                                                                                        |
+| `data_type`                                 | One of `observed` (measured or reported observation), `estimated` (model or analysis estimate), `forecast` (prediction of a future period) or `official` (an institution's official status or declaration). |
+| `spatial_resolution`, `temporal_resolution` | The source's spatial and temporal resolution.                                                                                                                                                               |
+| `reference_period`                          | The anomaly base period, when applicable.                                                                                                                                                                   |
+| `ingestion_time`                            | The UTC or offset-aware ISO 8601 download time.                                                                                                                                                             |
+| `processing_version`                        | The code version that produced the file.                                                                                                                                                                    |
+| `source_revision`                           | Optional object with the upstream SHA-256 and required `last_modified` key; `last_modified` is the HTTP `Last-Modified` value or `null` when the upstream supplies no header.                               |
+| `records`                                   | A non-empty array. Every record has `start` and `end`; fields beyond those depend on the dataset id.                                                                                                        |
 
-| Value       | Meaning                                           |
-| ----------- | ------------------------------------------------- |
-| `observed`  | Measured directly, or computed from measurements. |
-| `estimated` | Modeled from satellites and measurements.         |
-| `forecast`  | What is expected to happen.                       |
-| `official`  | A statement or status issued by an institution.   |
+Record dates use ISO 8601 strings: `YYYY-MM` for months and `YYYY-MM-DD` for
+days. The schema adds the record fields for each current dataset id, including
+time series, grids, boundaries and forecast records. A new record kind requires
+a schema extension in the same change as its first source.
 
-The text fields the site prints (`variable`, `unit`, both resolutions and
-`reference_period`) come from the registry as written, so they are in Spanish.
-[`add-a-source.md`](add-a-source.md#the-registry) lists them.
+The product translates the four `data_type` values into Spanish labels at the UI
+boundary. Registry text fields printed by the site remain Spanish; code, schema
+keys and contract values remain English.
 
-A real example: [`data/noaa-cpc-oni.json`](../data/noaa-cpc-oni.json).
+## Comparability
 
-## 5. Comparability
+Do not combine anomalies with different base periods without naming the
+difference. Do not combine observed, estimated, forecast and official values
+without labeling their types. The chart presentation rules live in
+[`chart-rules.md`](chart-rules.md).
 
-- Never mix anomalies with different base periods in one chart without saying
-  so.
-- Never mix observed, estimated, forecast and official data without telling them
-  apart.
+## Generated consumers
 
-## 6. Tests
-
-Each source has a test that reads a real copy of the original file, kept in the
-repository. If the source changes its format, the sample still shows what it
-used to look like. The samples are in `pipeline/tests/samples/`.
-
-Other tests check that the published JSON matches its registry entry and that
-every JSON in `data/` matches the schema.
+The pipeline generates [`docs/sources.md`](sources.md) from the registry. The
+web generates [`web/app/types/dataset.ts`](../web/app/types/dataset.ts) from the
+schema with `bun run types` in `web/`. CI fails when either generated file is
+stale.
