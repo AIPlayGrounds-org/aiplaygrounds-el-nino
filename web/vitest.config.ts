@@ -6,7 +6,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '~': new URL('./app', import.meta.url).pathname,
-      '#data': new URL('../data', import.meta.url).pathname,
     },
   },
   test: {
