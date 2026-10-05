@@ -30,13 +30,13 @@ public source
 
 ### Pipeline
 
-| Path                                                         | Owns                                                                                                                                                                                                    |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                                                                                                             |
-| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                                                                                          |
-| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per automatable source. Each module fetches, parses, builds and publishes its dataset. The ICEN module publishes the official monthly table. The SENAMHI module reads a checked-in snapshot. |
-| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry.                                                              |
-| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due`, `freshness` and `sources`. `due` and `freshness` apply the registry update class to published JSON timestamps.                                                                   |
+| Path                                                         | Owns                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`registry.py`](pipeline/src/wawapacha_pipeline/registry.py) | Loads and validates `sources.toml`, then discovers the module named by each automatable id.                                                                                                                                            |
+| [`contract.py`](pipeline/src/wawapacha_pipeline/contract.py) | Validates a dataset against the schema and replaces the destination JSON atomically after validation succeeds.                                                                                                                         |
+| [`sources/`](pipeline/src/wawapacha_pipeline/sources/)       | One module per published source. Most modules fetch, parse, build and publish their dataset. The ICEN module publishes the official monthly table. The ENFEN communiqué and SENAMHI modules do not fetch: they read checked-in inputs. |
+| [`catalog.py`](pipeline/src/wawapacha_pipeline/catalog.py)   | Renders [`docs/sources.md`](docs/sources.md) and [`web/app/data/source-catalog.json`](web/app/data/source-catalog.json) from the registry.                                                                                             |
+| [`cli.py`](pipeline/src/wawapacha_pipeline/cli.py)           | Provides `run`, `due`, `freshness` and `sources`. `due` and `freshness` apply the registry update class to published JSON timestamps.                                                                                                  |
 
 The source package has one module for each published source:
 

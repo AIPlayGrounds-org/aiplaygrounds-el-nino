@@ -1,6 +1,7 @@
 """Production entry point: `wawapacha-pipeline run <id>` and `wawapacha-pipeline sources`."""
 
 import argparse
+import importlib
 import json
 import sys
 from datetime import UTC, datetime, timedelta
@@ -10,11 +11,17 @@ from wawapacha_pipeline import catalog, registry
 from wawapacha_pipeline.contract import DATA_DIR, ValidationError, relative_path
 
 SOURCES = registry.discover()
-CATALOG_SOURCES = tuple(SOURCES) + tuple(
+SNAPSHOT_IDS = tuple(
     source_id
     for source_id, entry in registry.load().items()
     if entry["verdict"] == "manual" and entry.get("site_pages")
 )
+# Snapshot sources publish from a checked-in file, so due selection never sees them.
+SNAPSHOTS = {
+    source_id: importlib.import_module(registry.source_module_name(source_id))
+    for source_id in SNAPSHOT_IDS
+}
+CATALOG_SOURCES = tuple(SOURCES) + SNAPSHOT_IDS
 
 CADENCE_RULES = {
     "daily": {
@@ -36,8 +43,11 @@ CADENCE_RULES = {
 
 
 def run(source_id: str) -> str:
-    """Download, validate and publish a source. Returns a line that says what was published."""
-    count, path = SOURCES[source_id].run(datetime.now(UTC))
+    """Download or read, validate and publish a source. Returns a line that says what was published."""
+    if source_id in SNAPSHOTS:
+        count, path = SNAPSHOTS[source_id].run()
+    else:
+        count, path = SOURCES[source_id].run(datetime.now(UTC))
     return f"Published {source_id}: {count} records in {relative_path(path)}"
 
 
@@ -120,9 +130,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="wawapacha-pipeline")
     commands = parser.add_subparsers(dest="command", required=True)
     run_parser = commands.add_parser(
-        "run", help="download, validate and publish a source"
+        "run", help="download or read, validate and publish a source"
     )
-    run_parser.add_argument("source", choices=sorted(SOURCES))
+    run_parser.add_argument("source", choices=sorted((*SOURCES, *SNAPSHOTS)))
     commands.add_parser(
         "sources", help="generate the source catalogues from sources.toml"
     )

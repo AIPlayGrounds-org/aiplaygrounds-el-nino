@@ -1,7 +1,7 @@
 import Ajv2020 from 'ajv/dist/2020'
 import datasetSchema from '../../../schema/dataset.schema.json'
 import type { Dataset } from '~/types/dataset'
-import type { DatasetFor, DatasetId } from '~/types/datasets'
+import type { DatasetFor, DatasetId, DatasetRecordMap } from '~/types/datasets'
 
 const datasetLoaders: { [Id in DatasetId]: () => Promise<unknown> } = {
   'noaa-cpc-oni': () => import('#data/noaa-cpc-oni.json').then(({ default: value }) => value),
@@ -46,10 +46,34 @@ export const validateDataset = <Id extends DatasetId>(id: Id, value: unknown): D
   return value as DatasetFor<Id>
 }
 
-export const loadDataset = async <Id extends DatasetId>(id: Id): Promise<DatasetFor<Id>> => {
+// ENFEN publishes in Lima, which has no daylight saving time.
+const limaDay = (now: Date) =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Lima' }).format(now)
+
+/** The published `stale` flag dates from the last pipeline run; a build compares `end` with its own Lima day. */
+export const recomputeEnfenStale = (
+  dataset: DatasetFor<'enfen-communique'>,
+  now: Date,
+): DatasetFor<'enfen-communique'> => {
+  const today = limaDay(now)
+  const refresh = (record: DatasetRecordMap['enfen-communique']) => ({
+    ...record,
+    stale: today > record.end,
+  })
+  const [first, ...rest] = dataset.records
+  return { ...dataset, records: [refresh(first), ...rest.map(refresh)] }
+}
+
+export const loadDataset = async <Id extends DatasetId>(
+  id: Id,
+  now: Date = new Date(),
+): Promise<DatasetFor<Id>> => {
   const loader = datasetLoaders[id]
   if (!loader) {
     throw new Error(`[useDataset] data/${id}.json was not found in the static dataset catalog`)
   }
-  return validateDataset(id, await loader())
+  const dataset = validateDataset(id, await loader())
+  return id === 'enfen-communique'
+    ? (recomputeEnfenStale(dataset as DatasetFor<'enfen-communique'>, now) as DatasetFor<Id>)
+    : dataset
 }

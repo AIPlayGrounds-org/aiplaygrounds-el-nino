@@ -1,9 +1,16 @@
 import json
+import os
+import subprocess
+import sys
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import pytest
 
 from wawapacha_pipeline import cli, registry
+from wawapacha_pipeline.contract import validate
+
+PIPELINE_DIR = Path(__file__).parents[1]
 
 
 def scheduled_ids(*updates: str) -> list[str]:
@@ -172,3 +179,32 @@ def test_freshness_command_returns_failure_with_visible_errors(tmp_path, capsys)
         == 1
     )
     assert "data freshness" in capsys.readouterr().err
+
+
+def test_run_publishes_the_manual_senamhi_snapshot(tmp_path):
+    result = subprocess.run(
+        [sys.executable, "-m", "wawapacha_pipeline", "run", "senamhi-estaciones"],
+        cwd=PIPELINE_DIR,
+        env=os.environ | {"WAWAPACHA_DATA_DIR": str(tmp_path)},
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+
+    assert result.returncode == 0, result.stderr
+    published = json.loads(
+        (tmp_path / "senamhi-estaciones.json").read_text(encoding="utf-8")
+    )
+    validate(published)
+    assert published["id"] == "senamhi-estaciones"
+    assert published["ingestion_time"] == "2026-10-04T00:00:00+00:00"
+    assert f"Published senamhi-estaciones: {len(published['records'])} records" in (
+        result.stdout
+    )
+
+
+def test_snapshot_sources_are_never_due(tmp_path):
+    assert "senamhi-estaciones" in cli.SNAPSHOTS
+    assert "senamhi-estaciones" not in cli.due_source_ids(
+        datetime(2030, 1, 1, tzinfo=UTC), tmp_path
+    )
