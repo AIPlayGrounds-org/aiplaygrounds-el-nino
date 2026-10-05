@@ -1,8 +1,8 @@
 # Chart rules
 
 These rules apply to every chart and data table. The product's scope and
-non-goals are in [`README.md`](../README.md). Product audience and principles
-are in [`PRODUCT.md`](../PRODUCT.md). This document owns chart behavior.
+non-goals are in [`README.md`](../README.md). This document owns chart
+behavior.
 
 ## Provenance
 

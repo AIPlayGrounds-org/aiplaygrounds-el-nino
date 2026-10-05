@@ -88,18 +88,9 @@ current page shapes.
 WawaPacha does not provide accounts, notifications, a public API, first-party
 downloads, global search, district-level data, its own predictive models or a
 model consensus. Agriculture, fishing, health and infrastructure modules are
-also outside the current product boundary. The staged scope is in
-[`ROADMAP.md`](ROADMAP.md).
+also outside the current product boundary.
 
 ## Links
 
 - [Documentation index](docs/README.md)
-- [Architecture](ARCHITECTURE.md)
-- [Contributor workflow and checks](CONTRIBUTING.md)
-- [Add a source](docs/add-a-source.md)
-- [Data contract](docs/data-contract.md)
-- [Chart rules](docs/chart-rules.md)
-- [Source catalog](docs/sources.md)
-- [Concepts](docs/concepts.md)
-- [Manual snapshots](docs/manual-snapshots.md)
-- [Contributing workflow and checks](CONTRIBUTING.md)
+- [Contributing](CONTRIBUTING.md)

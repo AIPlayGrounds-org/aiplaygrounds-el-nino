@@ -1,8 +1,7 @@
 # Architecture
 
 WawaPacha is a Python ingestion pipeline and a Nuxt static site. There is no
-runtime backend. The target architecture and the state of each stage live in
-[`ROADMAP.md`](ROADMAP.md).
+runtime backend.
 
 ```text
 public source
