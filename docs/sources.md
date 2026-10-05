@@ -164,9 +164,9 @@ Notes:
 - Computed: the record's `start` is the communiqué date and its `end` is the
   next-due date the communiqué states, because the status holds until the next
   communiqué. `stale` is true when the ingestion date, in Lima time, is after
-  `end`. A stale record means nobody has refreshed the YAML in time. It is
-  recomputed only when the pipeline runs, so the site should also compare `end`
-  with its own build date.
+  `end`. A stale record means nobody has refreshed the YAML in time. The
+  pipeline sets it when it runs, and each web build recomputes it from the
+  build's Lima date.
 - Each communiqué has an HTML page and one PDF. Communiqué No. 17-2026, of
   2026-09-28, states `Alerta de El Niño Costero` in the HTML and says the next
   one is due on 2026-10-15.
@@ -379,6 +379,9 @@ Notes:
 - Snapshot taken 2026-10-04 from the public histogram pages, with no login and
   no bot-check bypass.
 - The licence is unconfirmed; only derived monthly aggregates are published.
+- Publish the newest snapshot with
+  `uv run wawapacha-pipeline run senamhi-estaciones` from `pipeline/`; due
+  selection never runs it.
 - Shown on /historico. Most station series end between 2013 and 2015, so the
   2017 coastal El Niño is not covered.
 

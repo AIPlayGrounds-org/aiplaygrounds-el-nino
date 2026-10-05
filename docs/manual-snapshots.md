@@ -21,9 +21,10 @@ uv run wawapacha-pipeline run enfen-communique
 ```
 
 The published record ends on the stated next due date. The parser computes its
-`stale` field using Lima time when the source runs. The page displays that field
-and keeps an old record visible with a clear notice; it does not recompute the
-field during a later build.
+`stale` field using Lima time when the source runs. Each web build recomputes
+the field from the build's Lima date and the record's `end`, so an old record
+turns stale without a new pipeline run. The page keeps it visible with a clear
+notice.
 
 ## SENAMHI station snapshot
 
@@ -40,13 +41,14 @@ fewer than 80% of its calendar days are present. Daily arrays never cross into
 `data/`. The source license is unconfirmed, so the monthly aggregates are the
 publication boundary.
 
-The manual source is not selected by the CLI's automatable-source choices. From
-`pipeline`, call its checked-in module and then run its behavior tests:
+Due selection never runs this source. From `pipeline`, publish the newest
+snapshot and run its behavior tests:
 
 ```sh
-uv run python -c 'from wawapacha_pipeline.sources import senamhi_estaciones; print(senamhi_estaciones.run())'
+uv run wawapacha-pipeline run senamhi-estaciones
 uv run pytest tests/test_senamhi_estaciones.py
 ```
 
-The refresh needs no code edit. After publication, run the web generation and
-the checks in [`CONTRIBUTING.md`](../CONTRIBUTING.md#checks).
+The refresh needs no code edit. The published `ingestion_time` is the snapshot's
+date, not the time of the run. After publication, run the web generation and the
+checks in [`CONTRIBUTING.md`](../CONTRIBUTING.md#checks).
