@@ -26,6 +26,7 @@ public source
 | [`docs/`](docs/README.md)                                  | The documentation set. The generated source catalog is the source-specific reference.                                        |
 | [`.github/workflows/`](.github/workflows/)                 | CI, the daily data update, and the GitHub Pages deployment.                                                                  |
 | [`mise.toml`](mise.toml)                                   | The Bun and uv versions selected for contributors.                                                                           |
+| [`tools/papers/`](tools/papers/README.md)                  | A separate uv package that fetches open-access PDFs by DOI and reads them as Markdown. Nothing else depends on it.           |
 
 ### Pipeline
 
