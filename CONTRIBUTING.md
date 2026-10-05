@@ -15,10 +15,11 @@
 - The freshness, SEO and performance gates are in
   [`docs/freshness.md`](docs/freshness.md), [`docs/seo.md`](docs/seo.md) and
   [`docs/performance.md`](docs/performance.md).
-- Read [`ROADMAP.md`](ROADMAP.md) before choosing work; it owns the target
-  architecture, stages and merge plan.
-- Follow the [merge plan](ROADMAP.md#merge-plan): merge commits only, signed,
-  never squash.
+- Before a PR is ready, rebase it on `main`, regenerate generated files (never
+  hand-merge them: take `main`'s version, then run the generator) and get CI
+  green.
+- `main` needs one approving review. Merge with merge commits only, signed,
+  never squash, so every stacked commit keeps its signature.
 
 ## Checks
 

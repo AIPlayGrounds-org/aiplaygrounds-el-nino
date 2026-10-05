@@ -17,11 +17,8 @@ rule into another document.
 | [`freshness.md`](freshness.md)               | The independent published-data freshness check.                              |
 | [`seo.md`](seo.md)                           | Generated metadata, sitemap, robots file and their check.                    |
 
-The repository map is [`ARCHITECTURE.md`](../ARCHITECTURE.md). The target
-architecture, staged work and non-goals are in [`ROADMAP.md`](../ROADMAP.md).
-Contributor branches, checks and merges are in
-[`CONTRIBUTING.md`](../CONTRIBUTING.md). The source catalog is generated with
-`uv run wawapacha-pipeline sources` from `pipeline/`; do not edit it by hand.
-Product audience, principles and constraints are in
-[`PRODUCT.md`](../PRODUCT.md). Edit [`sources.toml`](../sources.toml) and
+The repository map is [`ARCHITECTURE.md`](../ARCHITECTURE.md). Contributor
+branches, checks and merges are in [`CONTRIBUTING.md`](../CONTRIBUTING.md). The
+source catalog is generated with `uv run wawapacha-pipeline sources` from
+`pipeline/`; do not edit it by hand. Edit [`sources.toml`](../sources.toml) and
 regenerate the catalog when source facts change.

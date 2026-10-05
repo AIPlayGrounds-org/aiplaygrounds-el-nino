@@ -1,8 +1,5 @@
 # Agent instructions
 
-Read the North star at the top of [`ROADMAP.md`](ROADMAP.md) before choosing
-work.
-
 - Touch only the files owned by the task; report a needed change outside that
   scope instead of making it.
 - Do not infer permission to edit a file from convenience or proximity.
