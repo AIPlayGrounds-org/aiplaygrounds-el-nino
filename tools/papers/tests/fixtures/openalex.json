@@ -1,0 +1,33 @@
+{
+  "title": "Forcings and Evolution of the 2017 Coastal El Niño Off Northern Peru and Ecuador",
+  "best_oa_location": {
+    "is_oa": true,
+    "landing_page_url": "https://doi.org/10.3389/fmars.2018.00367",
+    "pdf_url": "https://www.frontiersin.org/articles/10.3389/fmars.2018.00367/pdf",
+    "license": "cc-by",
+    "version": "publishedVersion"
+  },
+  "locations": [
+    {
+      "is_oa": true,
+      "landing_page_url": "https://doi.org/10.3389/fmars.2018.00367",
+      "pdf_url": "https://www.frontiersin.org/articles/10.3389/fmars.2018.00367/pdf",
+      "license": "cc-by",
+      "version": "publishedVersion"
+    },
+    {
+      "is_oa": true,
+      "landing_page_url": "https://hal.sorbonne-universite.fr/hal-02021154",
+      "pdf_url": "https://hal.sorbonne-universite.fr/hal-02021154v1/file/fmars-05-00367.pdf",
+      "license": null,
+      "version": "submittedVersion"
+    },
+    {
+      "is_oa": true,
+      "landing_page_url": "https://doaj.org/article/d02cf450862e4cfdbe15cd5c3fda3903",
+      "pdf_url": null,
+      "license": "cc-by-sa",
+      "version": "submittedVersion"
+    }
+  ]
+}
