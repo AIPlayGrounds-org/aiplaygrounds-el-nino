@@ -1,8 +1,7 @@
 # Chart rules
 
-These rules apply to every chart and data table. The product's scope and
-non-goals are in [`README.md`](../README.md). This document owns chart
-behavior.
+These rules apply to every chart and data table. The product's scope is in
+[`README.md`](../README.md). This document owns chart behavior.
 
 ## Provenance
 

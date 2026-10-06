@@ -163,9 +163,7 @@ payload limits; their current values are in the generated
   its age, then links to the source when its update or record age crosses the
   current stale threshold.
 - **There is no backend.** Static JSON makes visitor traffic independent of
-  upstream availability and rate limits. Accounts, a public API and first-party
-  downloads are outside the product boundary; the complete non-goals list is in
-  [`README.md`](README.md#non-goals).
+  upstream availability and rate limits.
 
 ## Verification
 
