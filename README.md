@@ -83,13 +83,6 @@ current page shapes.
 - The pipeline keeps source facts in one registry and generates the source
   catalog and schema-derived TypeScript types.
 
-## Non-goals
-
-WawaPacha does not provide accounts, notifications, a public API, first-party
-downloads, global search, district-level data, its own predictive models or a
-model consensus. Agriculture, fishing, health and infrastructure modules are
-also outside the current product boundary.
-
 ## Links
 
 - [Documentation index](docs/README.md)
