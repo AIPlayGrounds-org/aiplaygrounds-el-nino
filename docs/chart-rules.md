@@ -33,10 +33,8 @@ The dataset contract that supplies its fields is
 - Render the update date and data period in static HTML. Add the current age
   after mount.
 - Give empty and error states a useful next action.
-- Link alerts to the official source. WawaPacha does not invent a threshold,
-  index or traffic light.
-- Link to the original dataset. WawaPacha does not offer a first-party data
-  download.
+- Link alerts to the official source.
+- Link to the original dataset.
 
 ## Attribution
 
