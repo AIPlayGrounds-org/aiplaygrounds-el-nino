@@ -1,6 +1,5 @@
 """Peru administrative boundaries from the IGN dataset published by HDX."""
 
-import gzip
 import io
 import json
 import math
@@ -16,13 +15,7 @@ from shapely.geometry import mapping, shape
 from shapely.validation import explain_validity
 
 from wawapacha_pipeline import registry
-from wawapacha_pipeline.contract import (
-    DATA_DIR,
-    ValidationError,
-)
-from wawapacha_pipeline.contract import (
-    publish as contract_publish,
-)
+from wawapacha_pipeline.contract import MAX_GZIP_BYTES, ValidationError, publish
 
 VERSION = "0.2.0"
 ID = "limites-inei-ign"
@@ -37,7 +30,6 @@ CODE_PATTERNS = {
 }
 LICENSE_URL = "https://creativecommons.org/licenses/by/3.0/igo/legalcode"
 SIMPLIFICATION_TOLERANCE = 0.02
-MAX_GZIP_BYTES = 200 * 1024
 
 
 def fetch(url: str = URL, timeout: int = 60) -> bytes:
@@ -61,18 +53,7 @@ def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     """Validate, simplify and publish the one geometry record."""
     parsed = parse(fetch())
     dataset = build(parsed, ingestion_time or datetime.now(UTC))
-    return len(dataset["records"]), publish(dataset)
-
-
-def publish(dataset: dict, data_dir: Path = DATA_DIR) -> Path:
-    """Reject oversized compressed payloads before delegating to contract.publish."""
-    encoded = (json.dumps(dataset, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
-    compressed_size = len(gzip.compress(encoded, compresslevel=9, mtime=0))
-    if compressed_size > MAX_GZIP_BYTES:
-        raise ValidationError(
-            f"The published JSON is {compressed_size} gzip bytes; the limit is {MAX_GZIP_BYTES}."
-        )
-    return contract_publish(dataset, data_dir)
+    return len(dataset["records"]), publish(dataset, max_gzip_bytes=MAX_GZIP_BYTES)
 
 
 def parse(payload: bytes) -> dict:

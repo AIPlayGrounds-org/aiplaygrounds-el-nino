@@ -1,5 +1,6 @@
 """Lo que comparten todas las fuentes: el error de validación y la publicación del JSON."""
 
+import gzip
 import json
 import os
 import tempfile
@@ -17,6 +18,8 @@ _VALIDATOR = Draft202012Validator(SCHEMA)
 # Carpeta donde se publican los JSON: data/ en la raíz del repositorio.
 # WAWAPACHA_DATA_DIR permite usar otra carpeta (por ejemplo, en los tests).
 DATA_DIR = Path(os.environ.get("WAWAPACHA_DATA_DIR", REPO_ROOT / "data"))
+# Maximum gzip size for JSON that the site loads in full.
+MAX_GZIP_BYTES = 200 * 1024
 
 
 class ValidationError(Exception):
@@ -33,20 +36,30 @@ def validate(dataset: dict) -> None:
         )
 
 
-def publish(dataset: dict, data_dir: Path = DATA_DIR) -> Path:
-    """Valida el dataset y lo guarda en data/<id>.json.
+def publish(
+    dataset: dict, data_dir: Path | None = None, *, max_gzip_bytes: int | None = None
+) -> Path:
+    """Validate the dataset and save it as data/<id>.json or under `data_dir`.
 
-    Escribe primero en un archivo temporal y luego lo renombra. Así, si algo
-    falla a mitad de camino, el JSON anterior queda intacto.
+    With `max_gzip_bytes`, reject a JSON whose gzip size exceeds it. The file
+    is written to a temporary file and then renamed, so a failure halfway
+    leaves the previous JSON intact.
     """
     validate(dataset)
+    data_dir = data_dir or DATA_DIR
+    encoded = (json.dumps(dataset, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+    if max_gzip_bytes is not None:
+        compressed_size = len(gzip.compress(encoded, compresslevel=9, mtime=0))
+        if compressed_size > max_gzip_bytes:
+            raise ValidationError(
+                f"The published JSON is {compressed_size} gzip bytes; the limit is {max_gzip_bytes}."
+            )
     data_dir.mkdir(parents=True, exist_ok=True)
     target = data_dir / f"{dataset['id']}.json"
     fd, tmp = tempfile.mkstemp(dir=data_dir, suffix=".tmp")
     try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
-            json.dump(dataset, f, ensure_ascii=False, indent=2)
-            f.write("\n")
+        with os.fdopen(fd, "wb") as f:
+            f.write(encoded)
         os.replace(tmp, target)
     except BaseException:
         os.unlink(tmp)
