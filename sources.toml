@@ -1,5 +1,5 @@
 # Source registry. A field that is not known is not written.
-# docs/add-a-source.md lists the fields and their values. docs/sources.md is generated from this file.
+# docs/source-registry.md lists the fields and their values. docs/sources.md is generated from this file.
 # The site shows variable, unit, spatial_resolution, temporal_resolution and
 # reference_period as published, so those five stay in Spanish. The contract
 # fields and registry keys stay in English.
