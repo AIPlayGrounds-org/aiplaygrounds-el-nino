@@ -1,24 +1,23 @@
 # Documentation
 
-This directory is the reference set for the repository. Each document owns one
-kind of rule. Start with the map below, then follow links instead of copying a
-rule into another document.
+Read in this order. Each document owns one subject and links to the others
+instead of repeating them.
 
-| Document                                     | Owns                                                                         |
-| -------------------------------------------- | ---------------------------------------------------------------------------- |
-| [`chart-rules.md`](chart-rules.md)           | Chart provenance, attribution and display behavior.                          |
-| [`data-contract.md`](data-contract.md)       | The published dataset shape and validation boundary.                         |
-| [`add-a-source.md`](add-a-source.md)         | The contributor workflow for adding a registry source.                       |
-| [`concepts.md`](concepts.md)                 | The domain glossary for interpreting the data.                               |
-| [`sources.md`](sources.md)                   | The generated catalog of automatable and snapshot sources shown on the site. |
-| [`performance.md`](performance.md)           | The web payload and entry-JavaScript budget and its check command.           |
-| [`data-workflow.md`](data-workflow.md)       | Due selection, data-branch publication and the static deployment overlay.    |
-| [`manual-snapshots.md`](manual-snapshots.md) | Human-maintained inputs and their publication boundary.                      |
-| [`freshness.md`](freshness.md)               | The independent published-data freshness check.                              |
-| [`seo.md`](seo.md)                           | Generated metadata, sitemap, robots file and their check.                    |
+1. [`architecture.md`](architecture.md): the code map, the data flow and the
+   boundaries between packages.
+2. [`data-workflow.md`](data-workflow.md): due selection, the `data` branch and
+   the static deployment.
+3. [`data-contract.md`](data-contract.md): the shape of `data/<id>.json` and the
+   rules that gate publication.
+4. [`source-registry.md`](source-registry.md): the fields of `sources.toml` and
+   the steps to add a source.
+5. [`sources.md`](sources.md): the generated catalog of every source.
+6. [`manual-snapshots.md`](manual-snapshots.md): the inputs a person refreshes.
+7. [`freshness.md`](freshness.md): the check that reports stale published data.
+8. [`chart-rules.md`](chart-rules.md): provenance, attribution and display rules
+   for every chart.
+9. [`seo.md`](seo.md): page metadata, sitemap, robots file and their check.
+10. [`performance.md`](performance.md): the per-route size budget and its check.
+11. [`concepts.md`](concepts.md): the climate terms the data uses.
 
-The repository map is [`ARCHITECTURE.md`](../ARCHITECTURE.md). Contributor
-branches, checks and merges are in [`CONTRIBUTING.md`](../CONTRIBUTING.md). The
-source catalog is generated with `uv run wawapacha-pipeline sources` from
-`pipeline/`; do not edit it by hand. Edit [`sources.toml`](../sources.toml) and
-regenerate the catalog when source facts change.
+To change code, start with [`CONTRIBUTING.md`](../.github/CONTRIBUTING.md).
