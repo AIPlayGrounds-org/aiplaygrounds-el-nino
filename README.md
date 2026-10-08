@@ -2,21 +2,17 @@
 
 ![The home page: "¿Llegó El Niño?" with the latest ONI reading and the stripes of the series since 1950](docs/assets/site.png)
 
-WawaPacha is a public web observatory for signals of El Niño in Peru. It is a
-static site built with [Nuxt 4](https://nuxt.com/) and Bun, fed by a Python
-pipeline managed with uv. The browser receives published JSON from this
-repository; there is no runtime backend, account system, public API or upstream
-API call. Live at <https://aiplaygrounds-org.github.io/wawapacha/>.
+WawaPacha is a public web observatory for El Niño signals in Peru. It shows sea
+temperature, rainfall, river discharge and the official ENFEN status, and every
+chart names its source, unit, period and update age. The site is in Spanish.
+Live at <https://aiplaygrounds-org.github.io/wawapacha/>.
 
-## Boundary
+The site is static. A Python pipeline reads registered public sources, validates
+each dataset and publishes it as `data/<id>.json`. A [Nuxt 4](https://nuxt.com/)
+build turns that JSON into pages for GitHub Pages. There is no runtime backend,
+account system or public API, and the browser never calls an upstream source.
 
-The pipeline reads registered public sources, validates each dataset and
-publishes `data/<id>.json`. Deployment overlays newer JSON from the `data`
-branch onto the seed files on `main`, then `nuxt generate` builds the static
-site for GitHub Pages. The architecture map is
-[`ARCHITECTURE.md`](ARCHITECTURE.md).
-
-## Install and run
+## Get started
 
 You need [Git](https://git-scm.com/) and
 [mise](https://mise.jdx.dev/getting-started). mise installs the Bun and uv
@@ -32,41 +28,16 @@ mise exec -- bun run dev
 Open <http://localhost:3100>. If mise is active in your shell, omit
 `mise exec --`.
 
-To generate the source catalogues, use `pipeline/`:
-
-```sh
-cd pipeline
-uv run wawapacha-pipeline sources
-```
-
-To run one source and publish its JSON, use `pipeline/`:
+To publish one source, run it from `pipeline/`:
 
 ```sh
 cd pipeline
 uv run wawapacha-pipeline run noaa-cpc-oni
 ```
 
-The seed file is [`data/noaa-cpc-oni.json`](data/noaa-cpc-oni.json). The
-scheduled data workflow publishes newer files to the `data` branch; see the
-[`data workflow`](docs/data-workflow.md) for the branch and failure behavior.
-
-If validation fails, the previous JSON remains in place.
-
-## Smallest example
-
-The web loads a typed dataset by id. A page can pass a server-side shaping
-function when it needs only part of the published records:
-
-```ts
-const oni = await useDataset("noaa-cpc-oni");
-const oisst = await useDataset("noaa-oisst", cropOisst);
-```
-
-`useDataset` validates on the server and hydrates the shaped result from the
-Nuxt payload. See [`chart-rules.md`](docs/chart-rules.md) for the display
-contract and
-[`ARCHITECTURE.md`](ARCHITECTURE.md#dataset-loading-and-page-payloads) for the
-current page shapes.
+The command downloads the NOAA CPC table, validates it and replaces
+[`data/noaa-cpc-oni.json`](data/noaa-cpc-oni.json). If validation fails, the
+previous file stays in place.
 
 ## Features
 
@@ -78,12 +49,15 @@ current page shapes.
   events, the official ICEN series and a SENAMHI station snapshot.
 - `/rios` shows modeled discharge for selected Peruvian basins and links to
   official alerts.
-- Every chart exposes its variable, unit, period, data type, source and update
-  age. The UI keeps observed, estimated, forecast and official data distinct.
-- The pipeline keeps source facts in one registry and generates the source
-  catalog and schema-derived TypeScript types.
+- `/aprende` explains ENSO, the Niño regions, the ONI and the Peruvian coast.
+- `/metodologia` lists every source with its data type and last update.
+- Observed, estimated, forecast and official data stay visibly distinct.
+- One registry, [`sources.toml`](sources.toml), holds the facts about each
+  source. The source catalog is generated from it. The TypeScript types are
+  generated from [`schema/dataset.schema.json`](schema/dataset.schema.json).
 
-## Links
+## Learn more
 
-- [Documentation index](docs/README.md)
-- [Contributing](CONTRIBUTING.md)
+- [Documentation](docs/README.md): architecture, data workflow, contract and
+  per-subsystem guides.
+- [Contributing](.github/CONTRIBUTING.md): branches, checks and pull requests.

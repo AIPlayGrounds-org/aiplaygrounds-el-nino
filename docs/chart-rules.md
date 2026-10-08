@@ -1,14 +1,15 @@
 # Chart rules
 
-These rules apply to every chart and data table. The product's scope is in
-[`README.md`](../README.md). This document owns chart behavior.
+Rules for every chart and data table on the site. Product copy is in Spanish.
 
 ## Provenance
 
-Every chart receives a dataset from `useDataset(id, shape?)`. The server loader
-validates the source JSON against the shared schema, and an optional shape
-function can reduce it before the page payload is serialized. The chart shell
-prints the provenance block from the returned dataset.
+Every chart gets its dataset from `useDataset(id, shape?)`. The server loader
+validates the JSON against the schema, an optional `shape` function reduces it
+before the page payload is serialized, and
+[`ChartShell.vue`](../web/app/components/ChartShell.vue) prints the provenance
+block from the result. The fields come from the
+[data contract](data-contract.md).
 
 | Question                                         | Dataset fields                                                   |
 | ------------------------------------------------ | ---------------------------------------------------------------- |
@@ -18,10 +19,10 @@ prints the provenance block from the returned dataset.
 | Where does it come from?                         | `source.institution`, `source.product`, `source.url`             |
 | When was it last updated?                        | `ingestion_time` and the last record's date                      |
 
-[`ChartShell.vue`](../web/app/components/ChartShell.vue) owns the common
-provenance block, accessible summary, latest-data age and stale-source notice.
-The dataset contract that supplies its fields is
-[`data-contract.md`](data-contract.md).
+`ChartShell` also prints the accessible summary and the age of the data. It
+shows a stale-source notice when `ingestion_time` is older than the source's
+limit from the [freshness check](freshness.md#on-the-site) or the newest record
+ended 90 days ago or more.
 
 ## Display
 
@@ -38,8 +39,8 @@ The dataset contract that supplies its fields is
 
 ## Attribution
 
-`DatasetAttribution.vue` adds the required Open-Meteo credit for the ERA5 and
-GloFAS pages and names their Copernicus products. Territory also prints the
-boundary dataset's attribution and license from its geometry record. The
-source-specific facts and license notes live in the generated
-[`sources.md`](sources.md).
+[`DatasetAttribution.vue`](../web/app/components/DatasetAttribution.vue) adds
+the Open-Meteo credit that the ERA5 and GloFAS pages require and names their
+Copernicus products. `/territorio` also prints the attribution and license of
+the boundary dataset from its geometry record. Source-specific facts and license
+notes are in [`sources.md`](sources.md).

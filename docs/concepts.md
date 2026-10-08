@@ -57,7 +57,7 @@ It is also called the **climatology**.
 | OISST (NOAA PSL)                                  | 1991–2020                            |
 | ERSST v5                                          | 1971–2000                            |
 | ONI                                               | 30-year bases, updated every 5 years |
-| ICEN                                              | 1991–2020 según ENFEN (2024)         |
+| ICEN                                              | 1991–2020 (ENFEN, 2024)              |
 
 Two anomalies with different base periods cannot be compared or subtracted
 directly, because the normal of 1971–2000 is colder than the normal of
@@ -74,8 +74,8 @@ known until August ends.
 
 ## Threshold
 
-An official value above which a condition is declared. **WawaPacha does not
-invent thresholds.** It uses only those each institution publishes.
+An official value above which a condition is declared. WawaPacha shows only the
+thresholds that each institution publishes.
 
 For NOAA, El Niño conditions exist when the ONI is **≥ +0.5 °C for at least five
 consecutive seasons**. Being over the threshold for fewer seasons does not
@@ -164,7 +164,7 @@ small one.
 
 ## Notice, alert and emergency
 
-Three different things that must not be confused:
+Three different things:
 
 | Term                                           | What it is                                                                               | When                       | Example                            |
 | ---------------------------------------------- | ---------------------------------------------------------------------------------------- | -------------------------- | ---------------------------------- |

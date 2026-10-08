@@ -1,43 +1,63 @@
 # Data workflow
 
-The registry selects sources, the pipeline publishes validated JSON, and the web
-deploy reads that JSON at build time. The registry's `update` field is the
-source of truth for cadence. Source facts and the generated catalog are
-documented in [`sources.md`](sources.md).
+How a source's data gets from its upstream to the site. The registry selects the
+sources, the pipeline publishes validated JSON to the `data` branch, and the
+deploy builds the site from that JSON. The `update` field of each entry in
+[`sources.toml`](../sources.toml) sets the cadence. The shape of the JSON is in
+[`data-contract.md`](data-contract.md).
 
-## Local commands
+## Run a source locally
 
-From `pipeline`, list sources that are due in a data directory:
+Run these from `pipeline/`. List the sources that are due:
 
 ```sh
 uv run wawapacha-pipeline due --data-dir ../data
 ```
 
-Run a selected source with `uv run wawapacha-pipeline run <id>`. The command
-validates the source-specific input and the shared schema before it replaces
-`data/<id>.json`. A failed run leaves the previous file in place. The
-publication boundary and schema are in [`data-contract.md`](data-contract.md).
+A source is due when its `data/<id>.json` is missing or has no readable
+`ingestion_time`, or when that `ingestion_time` is at least this old:
+
+| `update`  | Due after |
+| --------- | --------- |
+| `daily`   | 20 hours  |
+| `weekly`  | 6 days    |
+| `monthly` | 27 days   |
+
+A `manual` source is never due. `--as-of <ISO-8601 time>` evaluates the rule at
+another time. The thresholds are `CADENCE_RULES` in
+[`registry.py`](../pipeline/src/wawapacha_pipeline/registry.py).
+
+Run one source:
+
+```sh
+uv run wawapacha-pipeline run <id>
+```
+
+The command validates the source's input and then the shared schema, and
+replaces `data/<id>.json` only if both pass. Set `WAWAPACHA_DATA_DIR` to publish
+to another directory.
 
 ## Scheduled update
 
-[`update-data.yml`](../.github/workflows/update-data.yml) runs daily. It checks
-out `main` and the `data` branch, asks `due` for missing or old automatable
-datasets, and runs each selected source independently. A manual dispatch can
-name one source. Manual registry entries are never selected by `due`.
+[`update-data.yml`](../.github/workflows/update-data.yml) runs daily at 14:17
+UTC. It checks out `main` and the `data` branch, creating the branch when it
+does not exist, asks `due` for the sources to run, and runs each one
+independently. A manual dispatch can name one source to run instead.
 
-The job commits changed JSON to the `data` branch. It dispatches
-[`deploy.yml`](../.github/workflows/deploy.yml) only after that push. A source
-failure is reported after the other selected sources finish, and the job fails
-without publishing that source's replacement.
+The job commits changed JSON to the `data` branch with the message
+`data: update <ids>`, then dispatches
+[`deploy.yml`](../.github/workflows/deploy.yml). If a source fails, the job runs
+the others, publishes their results and then fails. The failed source keeps its
+previous JSON.
+
+[`freshness.yml`](../.github/workflows/freshness.yml) checks the published files
+separately. See [`freshness.md`](freshness.md).
 
 ## Static deployment
 
-The deploy job checks out `main`. When the `data` branch exists, it overlays its
-JSON files onto the seed files in `data/`. When it does not exist, the seed
-snapshot stays in use. `bun run generate` then prerenders the Nuxt site and
-uploads `web/.output/public` to GitHub Pages. The browser never calls an
-upstream source.
-
-The generated source catalogues are refreshed from `sources.toml` with
-`uv run wawapacha-pipeline sources` from `pipeline/`. Do not edit
-[`sources.md`](sources.md) or the web catalogue by hand.
+[`deploy.yml`](../.github/workflows/deploy.yml) runs on every push to `main` and
+when dispatched. It checks out `main`. If the `data` branch exists, it copies
+that branch's `*.json` files over the seed files in `data/`. Otherwise the seed
+files stay. `bun run generate` then prerenders the Nuxt site with
+`PAGES_BASE_URL` set to the repository subpath, and the job uploads
+`web/.output/public` to GitHub Pages.
