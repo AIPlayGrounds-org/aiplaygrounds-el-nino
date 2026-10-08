@@ -1,18 +1,18 @@
 # Web performance budget
 
-The route budget is the generated static output, measured from
-`web/.output/public`. For each route, `payloadBytes` is the `_payload.json` byte
-count and `entryJsBytes` is the sum of the JavaScript assets referenced by that
-route's HTML and its page-component import closure. `cssBytes` is the sum of the
-stylesheet files linked by the route's HTML. The checked limits are the measured
-values in [`web/performance-budget.json`](../web/performance-budget.json) plus
-its 15% margin. That hand-maintained JSON is the single source of budget
-numbers.
+Each route has a size budget, measured on the generated static output in
+`web/.output/public`:
 
-The SEO output gate is separate. Its route, metadata and crawler checks are in
-[`seo.md`](seo.md).
+- `payloadBytes`: the size of the route's `_payload.json`.
+- `entryJsBytes`: the total size of the JavaScript the route loads, from its
+  HTML and its page component's import closure.
+- `cssBytes`: the total size of the stylesheets its HTML links.
 
-Run the check after generation:
+[`web/performance-budget.json`](../web/performance-budget.json) holds the
+measured values per route and a `margin` of 0.15. A route fails when a size
+exceeds its measured value plus 15%.
+
+## Check
 
 ```sh
 cd web
@@ -20,18 +20,23 @@ bun run generate
 bun run check:budget
 ```
 
-CI runs the same command, including a build under the GitHub Pages `/wawapacha/`
-base path. A route fails when its payload, loaded JavaScript, or linked CSS
-exceeds the checked limit.
+Each output line shows measured/limit for the three sizes of a route, for
+example `/ payloadBytes=585921/673810 ok`. The command exits with status 1 if
+any is over its limit. CI runs it for the root path and for the `/wawapacha/`
+subpath (`PAGES_BASE_URL=/wawapacha/`). The SEO check is separate: see
+[`seo.md`](seo.md).
 
-To re-measure after an intentional build change, run `bun run generate` and then
-`bun run check:budget`. Copy the measured values on the left side of each
-route's output into the matching `payloadBytes`, `entryJsBytes`, and `cssBytes`
-fields in `web/performance-budget.json`, review the resulting limits, and run
-the check again. Do not change the 15% margin to hide an unplanned regression.
+## Update the budget
 
-## Social image
+After an intentional change to the build, regenerate the site and write the
+measured sizes:
 
-Social metadata uses the committed `web/public/og-image.png`, a 1200x630 PNG
-because crawlers do not reliably render SVG images. The source artwork is
-`web/public/og-image.svg`. The SEO document owns the generated-output check.
+```sh
+cd web
+bun run generate
+bun run update:budget
+```
+
+The command measures every route in [`shared/site.ts`](../web/shared/site.ts)
+and rewrites `performance-budget.json`, keeping `margin`. Review the diff and
+commit it. `check:budget` fails for a route that has no entry.

@@ -1,17 +1,23 @@
 # Search metadata
 
-The web owns one public route list in [`shared/site.ts`](../web/shared/site.ts).
-Each page supplies Spanish title and description copy from
-[`messages.ts`](../web/app/messages.ts) to `useSiteSeo`. That composable emits
-the page title, description, Open Graph and Twitter metadata, and a canonical
-URL. The configured origin is in [`nuxt.config.ts`](../web/nuxt.config.ts).
+The public route list is `publicRoutes` in
+[`shared/site.ts`](../web/shared/site.ts). Each page passes Spanish title and
+description copy from [`messages.ts`](../web/app/messages.ts) to
+[`useSiteSeo`](../web/app/composables/useSiteSeo.ts), which sets the page title,
+description, Open Graph and Twitter metadata, and the canonical URL. The site
+origin is `runtimeConfig.public.siteOrigin` in
+[`nuxt.config.ts`](../web/nuxt.config.ts).
 
-Nuxt prerenders `/sitemap.xml` and `/robots.txt`. The sitemap uses the public
-route list. `robots.txt` allows crawling and points to the configured sitemap.
-The committed [`og-image.png`](../web/public/og-image.png) is the social image;
-the SVG artwork remains available beside it.
+Nuxt prerenders `/sitemap.xml` and `/robots.txt`. The sitemap lists the public
+routes. `robots.txt` allows crawling and points to the sitemap.
 
-Run the root-path check after generation:
+The social image is the committed [`og-image.png`](../web/public/og-image.png),
+1200×630, because crawlers do not reliably render SVG. Its source artwork is
+[`og-image.svg`](../web/public/og-image.svg).
+
+## Check
+
+After generation, check the root-path output:
 
 ```sh
 cd web
@@ -19,14 +25,16 @@ bun run generate
 bun run check:seo
 ```
 
-GitHub Pages supplies `PAGES_BASE_URL` during deployment. Check the repository
-subpath locally with the same generated-output gate:
+GitHub Pages serves the site from a repository subpath, which the deploy
+workflow passes as `PAGES_BASE_URL`. Check the subpath build locally the same
+way:
 
 ```sh
 PAGES_BASE_URL=/wawapacha/ bun run generate
 PAGES_BASE_URL=/wawapacha/ bun run check:seo
 ```
 
-The checker verifies every public route, `lang="es"`, page metadata, canonical
-paths, the social image, sitemap entries and the robots sitemap path. It is
-implemented in [`check-seo.ts`](../web/scripts/check-seo.ts).
+[`check-seo.ts`](../web/scripts/check-seo.ts) verifies, for every public route,
+`lang="es"`, the title, description, Open Graph and Twitter tags, the social
+image path and the canonical path. It also verifies that the sitemap lists the
+public routes and that `robots.txt` names the sitemap.
