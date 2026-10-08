@@ -21,7 +21,8 @@
         "/",
         "/historico"
       ],
-      "reference_period": "Periodos de 30 años que CPC actualiza cada 5 años"
+      "reference_period": "Periodos de 30 años que CPC actualiza cada 5 años",
+      "stale_after_hours": 1512
     },
     {
       "id": "noaa-cpc-nino-weekly",
@@ -37,7 +38,8 @@
       "site_pages": [
         "/"
       ],
-      "reference_period": "1991–2020"
+      "reference_period": "1991–2020",
+      "stale_after_hours": 360
     },
     {
       "id": "enfen-icen",
@@ -53,7 +55,8 @@
       "site_pages": [
         "/historico"
       ],
-      "reference_period": "1991–2020 según ENFEN (2024)"
+      "reference_period": "1991–2020 según ENFEN (2024)",
+      "stale_after_hours": 52
     },
     {
       "id": "enfen-communique",
@@ -85,7 +88,8 @@
         "/"
       ],
       "reference_period": "1991–2020",
-      "license": "The ERDDAP metadata allow free use and redistribution, with a disclaimer. They do not name a formal license."
+      "license": "The ERDDAP metadata allow free use and redistribution, with a disclaimer. They do not name a formal license.",
+      "stale_after_hours": 52
     },
     {
       "id": "noaa-cpc-outlook",
@@ -101,7 +105,8 @@
       "site_pages": [
         "/"
       ],
-      "reference_period": "1991–2020 (RONI)"
+      "reference_period": "1991–2020 (RONI)",
+      "stale_after_hours": 1512
     },
     {
       "id": "chirps",
@@ -118,7 +123,8 @@
         "/territorio"
       ],
       "reference_period": "1991–2020",
-      "license": "CC BY 4.0. Attribution: CHIRPS v3, Climate Hazards Center, UC Santa Barbara, in collaboration with FEWS NET and USGS EROS; CC BY 4.0."
+      "license": "CC BY 4.0. Attribution: CHIRPS v3, Climate Hazards Center, UC Santa Barbara, in collaboration with FEWS NET and USGS EROS; CC BY 4.0.",
+      "stale_after_hours": 360
     },
     {
       "id": "open-meteo-era5",
@@ -134,7 +140,8 @@
       "site_pages": [
         "/territorio"
       ],
-      "license": "CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content."
+      "license": "CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content.",
+      "stale_after_hours": 52
     },
     {
       "id": "senamhi-estaciones",
@@ -182,7 +189,8 @@
       "site_pages": [
         "/rios"
       ],
-      "license": "CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content."
+      "license": "CC BY 4.0. Free use is non-commercial only. The terms include public research and educational content.",
+      "stale_after_hours": 52
     },
     {
       "id": "noaa-ersst",
@@ -199,7 +207,8 @@
         "/historico"
       ],
       "reference_period": "1971–2000",
-      "license": "No access or use restrictions according to the NCEI ERDDAP metadata, with a disclaimer."
+      "license": "No access or use restrictions according to the NCEI ERDDAP metadata, with a disclaimer.",
+      "stale_after_hours": 1512
     }
   ]
 }

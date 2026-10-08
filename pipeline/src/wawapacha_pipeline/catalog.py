@@ -143,6 +143,9 @@ def render_web(
         for key in ("reference_period", "license"):
             if key in entry:
                 source[key] = entry[key]
+        stale_after = registry.stale_after(entry["update"])
+        if stale_after is not None:
+            source["stale_after_hours"] = int(stale_after.total_seconds() // 3600)
         entries.append(source)
     return (
         json.dumps({"routes": routes, "sources": entries}, ensure_ascii=False, indent=2)
