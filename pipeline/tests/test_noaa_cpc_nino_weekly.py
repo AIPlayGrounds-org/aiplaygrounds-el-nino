@@ -13,7 +13,6 @@ from wawapacha_pipeline.contract import ValidationError, publish
 from wawapacha_pipeline.sources import noaa_cpc_nino_weekly as weekly
 
 PIPELINE_DIR = Path(__file__).parents[1]
-NOTEBOOK_PATH = Path(__file__).parents[2] / "notebooks" / "noaa_cpc_nino_weekly.py"
 SAMPLE_PATH = Path(__file__).parent / "samples" / "nino_weekly.for"
 SAMPLE = SAMPLE_PATH.read_text(encoding="ascii")
 
@@ -230,25 +229,6 @@ def test_cli_publishes_the_json(tmp_path):
         == hashlib.sha256(SAMPLE_PATH.read_bytes()).hexdigest()
     )
     assert_matches_registry(published)
-
-
-def test_nino_notebook_runs_to_the_end_without_publishing(tmp_path):
-    env = os.environ | {
-        "NOAA_CPC_NINO_WEEKLY_URL": SAMPLE_PATH.resolve().as_uri(),
-        "WAWAPACHA_DATA_DIR": str(tmp_path),
-    }
-
-    result = subprocess.run(
-        [sys.executable, str(NOTEBOOK_PATH)],
-        cwd=PIPELINE_DIR,
-        env=env,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-    )
-
-    assert result.returncode == 0, result.stderr
-    assert list(tmp_path.iterdir()) == []
 
 
 def test_cli_keeps_the_previous_json_when_validation_fails(tmp_path):

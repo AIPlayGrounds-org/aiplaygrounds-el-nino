@@ -254,3 +254,98 @@ def test_cli_keeps_the_previous_json_when_validation_fails(tmp_path):
     assert result.returncode == 1
     assert "status" in result.stderr
     assert previous.read_text(encoding="utf-8") == '{"previous": true}'
+
+
+def test_add_writes_an_input_the_parser_reads_and_shows_the_diff(tmp_path):
+    path = tmp_path / "enfen.yaml"
+    path.write_text(SAMPLE, encoding="utf-8")
+
+    diff = enfen.add(
+        18,
+        date(2026, 10, 15),
+        "Vigilancia de El Niño Costero",
+        date(2026, 10, 29),
+        date(2026, 10, 16),
+        path,
+        today=date(2026, 10, 16),
+    )
+
+    record = enfen.parse(path.read_text(encoding="utf-8"), date(2026, 10, 16))[0]
+    assert record["number"] == 18
+    assert record["url"].endswith("comunicado-oficial-enfen-n-18-2026/")
+    assert record["end"] == "2026-10-29"
+    assert "-  number: 17" in diff
+    assert "+  number: 18" in diff
+    assert '+  status: "Vigilancia de El Niño Costero"' in diff
+
+
+def test_add_leaves_the_input_unchanged_when_the_communique_is_invalid(tmp_path):
+    path = tmp_path / "enfen.yaml"
+    path.write_text(SAMPLE, encoding="utf-8")
+
+    with pytest.raises(ValidationError, match="status"):
+        enfen.add(
+            18, date(2026, 10, 1), "red", date(2026, 10, 29), TODAY, path, today=TODAY
+        )
+    with pytest.raises(ValidationError, match="in the future"):
+        enfen.add(
+            18,
+            date(2026, 11, 15),
+            "No Activo",
+            date(2026, 11, 29),
+            TODAY,
+            path,
+            today=TODAY,
+        )
+
+    assert path.read_text(encoding="utf-8") == SAMPLE
+
+
+def test_the_committed_input_is_what_enfen_add_writes(tmp_path):
+    path = tmp_path / "enfen.yaml"
+    committed = enfen.INPUT_PATH.read_text(encoding="utf-8")
+    record = enfen.parse(committed, TODAY)[0]
+
+    enfen.add(
+        record["number"],
+        date.fromisoformat(record["start"]),
+        record["status"],
+        date.fromisoformat(record["end"]),
+        date.fromisoformat(record["checked_at"]),
+        path,
+        today=TODAY,
+    )
+
+    assert path.read_text(encoding="utf-8") == committed
+
+
+def test_enfen_add_command_records_the_communique(tmp_path):
+    path = tmp_path / "enfen.yaml"
+    env = os.environ | {"ENFEN_COMMUNIQUE_PATH": str(path)}
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "wawapacha_pipeline",
+            "enfen-add",
+            "17",
+            "--date",
+            "2026-09-28",
+            "--status",
+            "Alerta de El Niño Costero",
+            "--next-due",
+            "2026-10-15",
+            "--checked-at",
+            "2026-10-02",
+        ],
+        cwd=PIPELINE_DIR,
+        env=env,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "+  number: 17" in result.stdout
+    assert enfen.parse(path.read_text(encoding="utf-8"), TODAY)[0]["number"] == 17

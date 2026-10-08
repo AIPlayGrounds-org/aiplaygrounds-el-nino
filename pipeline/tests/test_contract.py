@@ -1,4 +1,5 @@
 import json
+import os
 
 import pytest
 
@@ -84,6 +85,24 @@ def test_publish_refuses_an_invalid_dataset_and_leaves_no_file(tmp_path):
         publish(dataset, tmp_path)
 
     assert list(tmp_path.iterdir()) == []
+
+
+def test_publish_refuses_a_json_over_the_gzip_limit_and_keeps_the_previous_one(
+    tmp_path,
+):
+    previous = tmp_path / "test-source.json"
+    previous.write_text('{"version": "previous"}', encoding="utf-8")
+    dataset = valid_dataset()
+    dataset["records"] = [
+        {"start": "2026-01", "end": "2026-01", "value": os.urandom(2).hex()}
+        for _ in range(4000)
+    ]
+
+    with pytest.raises(ValidationError, match=r"\d+ gzip bytes; the limit is 1000"):
+        publish(dataset, tmp_path, max_gzip_bytes=1000)
+
+    assert previous.read_text(encoding="utf-8") == '{"version": "previous"}'
+    assert publish(dataset, tmp_path).read_bytes() != b""
 
 
 def test_publish_keeps_the_previous_json_when_the_new_one_is_invalid(tmp_path):

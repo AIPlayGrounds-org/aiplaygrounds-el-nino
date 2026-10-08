@@ -11,8 +11,8 @@ from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
-from wawapacha_pipeline import registry
-from wawapacha_pipeline.contract import ValidationError
+from wawapacha_pipeline import contract, registry
+from wawapacha_pipeline.contract import MAX_GZIP_BYTES, ValidationError, publish
 from wawapacha_pipeline.sources import open_meteo_era5 as era5
 
 SAMPLE_PATH = Path(__file__).parent / "samples" / "era5.json"
@@ -231,13 +231,13 @@ def test_build_adds_provenance_metadata():
     assert_matches_registry(dataset)
 
 
-def test_publish_validates_and_keeps_the_compressed_payload_under_200_kib(tmp_path):
+def test_the_fixture_publishes_under_the_gzip_limit(tmp_path):
     dataset = era5.build(
         era5.parse(SAMPLE, START, END),
         datetime(2026, 10, 3, 12, 0, tzinfo=UTC),
     )
 
-    path = era5.publish(dataset, tmp_path)
+    path = publish(dataset, tmp_path, max_gzip_bytes=MAX_GZIP_BYTES)
 
     assert path == tmp_path / "open-meteo-era5.json"
     assert json.loads(path.read_text(encoding="utf-8")) == dataset
@@ -245,7 +245,7 @@ def test_publish_validates_and_keeps_the_compressed_payload_under_200_kib(tmp_pa
 
 
 def test_run_publishes_the_fixture(monkeypatch, tmp_path):
-    monkeypatch.setattr(era5, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(contract, "DATA_DIR", tmp_path)
 
     with fixture_server(SAMPLE_PAYLOAD) as (url, requests):
         monkeypatch.setattr(era5, "URL", url)
@@ -270,7 +270,7 @@ def test_run_rejects_a_shifted_response_without_publishing(monkeypatch, tmp_path
             for day in point["daily"]["time"]
         ]
 
-    monkeypatch.setattr(era5, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(contract, "DATA_DIR", tmp_path)
     with fixture_server(shifted) as (url, _requests):
         monkeypatch.setattr(era5, "URL", url)
         with pytest.raises(ValidationError, match="response starts"):
@@ -285,7 +285,7 @@ def test_run_rejects_a_shortened_response_without_publishing(monkeypatch, tmp_pa
         point["daily"]["time"].pop()
         point["daily"]["precipitation_sum"].pop()
 
-    monkeypatch.setattr(era5, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(contract, "DATA_DIR", tmp_path)
     with fixture_server(shortened) as (url, _requests):
         monkeypatch.setattr(era5, "URL", url)
         with pytest.raises(ValidationError, match="response ends"):
@@ -297,7 +297,7 @@ def test_run_rejects_a_shortened_response_without_publishing(monkeypatch, tmp_pa
 def test_run_keeps_the_previous_json_when_validation_fails(monkeypatch, tmp_path):
     previous = tmp_path / "open-meteo-era5.json"
     previous.write_text('{"version": "previous"}', encoding="utf-8")
-    monkeypatch.setattr(era5, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(contract, "DATA_DIR", tmp_path)
 
     with fixture_server(SAMPLE_PAYLOAD[:-1]) as (url, _requests):
         monkeypatch.setattr(era5, "URL", url)

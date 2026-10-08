@@ -8,7 +8,6 @@ ENTRY = {
     "product": "Product",
     "block": "ENSO",
     "verdict": "pending",
-    "delivery": "v0.1",
     "reviewed": "2026-10-01",
     "page": "https://example.org/",
     "update": "manual",
@@ -36,7 +35,7 @@ def write_registry(tmp_path, *blocks: str):
 def minimal_block(source_id: str, verdict: str) -> str:
     return (
         f'[[source]]\nid = "{source_id}"\ninstitution = "I"\nproduct = "P"\nblock = "SST"\n'
-        f'verdict = "{verdict}"\ndelivery = "v0.2"\nreviewed = "2026-10-01"\npage = "https://example.org/"\nupdate = "manual"\n'
+        f'verdict = "{verdict}"\nreviewed = "2026-10-01"\npage = "https://example.org/"\nupdate = "manual"\n'
     )
 
 
@@ -125,7 +124,7 @@ def test_check_accepts_a_pending_and_an_automated_entry():
         ({k: v for k, v in ENTRY.items() if k != "page"}, "missing fields"),
         (ENTRY | {"verdict": "maybe"}, "verdict"),
         (ENTRY | {"block": "Other"}, "block"),
-        (ENTRY | {"delivery": "v9"}, "delivery"),
+        (ENTRY | {"delivery": "v0.1"}, "unknown fields"),
         (ENTRY | {"update": "hourly"}, "update"),
         (ENTRY | {"reviewed": "yesterday"}, "YYYY-MM-DD"),
         (ENTRY | {"notes": "one text"}, "list of strings"),
