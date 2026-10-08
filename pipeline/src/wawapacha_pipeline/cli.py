@@ -4,11 +4,12 @@ import argparse
 import importlib
 import json
 import sys
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime
 from pathlib import Path
 
-from wawapacha_pipeline import catalog, registry
+from wawapacha_pipeline import catalog, registry, scaffold
 from wawapacha_pipeline.contract import DATA_DIR, ValidationError, relative_path
+from wawapacha_pipeline.sources import enfen_communique, senamhi_estaciones
 
 SOURCES = registry.discover()
 SNAPSHOT_IDS = tuple(
@@ -22,24 +23,6 @@ SNAPSHOTS = {
     for source_id in SNAPSHOT_IDS
 }
 CATALOG_SOURCES = tuple(SOURCES) + SNAPSHOT_IDS
-
-CADENCE_RULES = {
-    "daily": {
-        "interval": timedelta(days=1),
-        "due_after": timedelta(hours=20),
-        "slack": timedelta(hours=4),
-    },
-    "weekly": {
-        "interval": timedelta(days=7),
-        "due_after": timedelta(days=6),
-        "slack": timedelta(days=1),
-    },
-    "monthly": {
-        "interval": timedelta(days=31),
-        "due_after": timedelta(days=27),
-        "slack": timedelta(days=1),
-    },
-}
 
 
 def run(source_id: str) -> str:
@@ -63,18 +46,7 @@ def _ingestion_time(path: Path) -> datetime | None:
 def _is_due(update: str, ingestion: datetime, now: datetime) -> bool:
     if update == "manual":
         return False
-    return now - ingestion >= CADENCE_RULES[update]["due_after"]
-
-
-def _is_stale(update: str, last_update: datetime, now: datetime) -> bool:
-    if update == "manual":
-        return False
-    return now - last_update > _freshness_tolerance(update)
-
-
-def _freshness_tolerance(update: str) -> timedelta:
-    rule = CADENCE_RULES[update]
-    return rule["interval"] * 2 + rule["slack"]
+    return now - ingestion >= registry.CADENCE_RULES[update]["due_after"]
 
 
 def due_source_ids(
@@ -109,19 +81,18 @@ def freshness_issues(
     issues = []
     for source_id in SOURCES:
         update = sources[source_id]["update"]
-        if update == "manual":
+        tolerance = registry.stale_after(update)
+        if tolerance is None:
             continue
         path = data_dir / f"{source_id}.json"
         last_update = _ingestion_time(path)
         if last_update is None:
             issues.append(f"{source_id}: missing or invalid ingestion/update timestamp")
             continue
-        if _is_stale(update, last_update, now):
-            age = now - last_update
+        if now - last_update > tolerance:
             issues.append(
-                f"{source_id}: last update {last_update.isoformat()} is {age} old; "
-                f"{update} freshness tolerance is "
-                f"{_freshness_tolerance(update)}"
+                f"{source_id}: last update {last_update.isoformat()} is "
+                f"{now - last_update} old; {update} freshness tolerance is {tolerance}"
             )
     return issues
 
@@ -158,7 +129,79 @@ def main(argv: list[str] | None = None) -> int:
         default=DATA_DIR,
         help="directory containing published source JSON",
     )
+    new_source_parser = commands.add_parser(
+        "new-source", help="create the module and test for a new automatable source"
+    )
+    new_source_parser.add_argument("source", help="the new source id")
+    snapshot_parser = commands.add_parser(
+        "snapshot-check", help="validate a SENAMHI station snapshot before it is run"
+    )
+    snapshot_parser.add_argument("file", type=Path)
+    enfen_parser = commands.add_parser(
+        "enfen-add",
+        help="record the newest ENFEN communiqué in pipeline/inputs/enfen.yaml",
+    )
+    enfen_parser.add_argument("number", type=int, help="communiqué number")
+    enfen_parser.add_argument(
+        "--date", type=date.fromisoformat, required=True, help="communiqué date"
+    )
+    enfen_parser.add_argument(
+        "--status", choices=enfen_communique.STATUSES, required=True
+    )
+    enfen_parser.add_argument(
+        "--next-due",
+        type=date.fromisoformat,
+        required=True,
+        help="date the communiqué gives for the next one",
+    )
+    enfen_parser.add_argument(
+        "--checked-at",
+        type=date.fromisoformat,
+        help="day the ENFEN archive was read (default: today in Lima)",
+    )
     args = parser.parse_args(argv)
+
+    if args.command == "new-source":
+        try:
+            created = scaffold.new_source(args.source)
+        except (ValueError, FileExistsError, registry.RegistryError) as error:
+            print(f"cannot create the source. {error}", file=sys.stderr)
+            return 1
+        for path in created:
+            print(f"Created {relative_path(path)}")
+        return 0
+
+    if args.command == "snapshot-check":
+        try:
+            snapshot = senamhi_estaciones.load_snapshot(args.file)
+        except ValidationError as error:
+            print(f"{args.file}: fails validation. {error}", file=sys.stderr)
+            return 1
+        stations = snapshot["stations"]
+        years = [
+            int(year) for station in stations.values() for year, _ in station["years"]
+        ]
+        print(
+            f"{args.file}: {len(stations)} stations, {min(years)}-{max(years)}, "
+            f"taken {snapshot['snapshot']['taken']}"
+        )
+        return 0
+
+    if args.command == "enfen-add":
+        try:
+            print(
+                enfen_communique.add(
+                    args.number,
+                    args.date,
+                    args.status,
+                    args.next_due,
+                    args.checked_at or datetime.now(enfen_communique.LIMA).date(),
+                )
+            )
+        except ValidationError as error:
+            print(f"cannot record the communiqué. {error}", file=sys.stderr)
+            return 1
+        return 0
 
     if args.command == "sources":
         try:

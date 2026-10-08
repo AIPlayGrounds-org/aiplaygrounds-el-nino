@@ -1,5 +1,5 @@
-# Filled by hand from the newest communiqué: https://enfen.imarpe.gob.pe/downloads/comunicados/
-# Open its detail page and copy the values from the HTML, not from the PDF.
+# Written by `wawapacha-pipeline enfen-add` from the newest communiqué:
+# https://enfen.imarpe.gob.pe/downloads/comunicados/
 # Dates are unquoted YYYY-MM-DD. `status` is the exact phrase ENFEN uses.
 # `next_due` is the date the communiqué says the next one is due.
 enfen:
