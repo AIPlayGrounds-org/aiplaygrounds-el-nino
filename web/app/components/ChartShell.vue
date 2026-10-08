@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { ageDays, ageLabel, dataTypeLabel, messages } from '~/messages'
+import { staleAfterHours, type DatasetId } from '~/types/dataset'
 import type { DatasetLike } from '~/types/datasets'
 
 const props = defineProps<{
@@ -10,7 +11,8 @@ const props = defineProps<{
 
 const firstRecord = props.dataset.records[0]
 const lastRecord = props.dataset.records.at(-1)
-const STALE_UPDATE_DAYS = 40
+// The registry owns the update tolerance for each automatic source.
+const staleUpdateHours = staleAfterHours[props.dataset.id as DatasetId]
 const STALE_RECORD_DAYS = 90
 const now = ref<Date | null>(null)
 onMounted(() => (now.value = new Date()))
@@ -27,9 +29,13 @@ const dataAge = computed(() =>
 )
 const staleNotice = computed(() => {
   if (!now.value) return false
-  const updateDays = ageDays(props.dataset.ingestion_time, now.value)
+  const updateHours =
+    (now.value.getTime() - new Date(props.dataset.ingestion_time).getTime()) / 3_600_000
   const recordDays = lastRecord ? ageDays(lastRecord.end, now.value) : 0
-  return updateDays >= STALE_UPDATE_DAYS || recordDays >= STALE_RECORD_DAYS
+  return (
+    (staleUpdateHours !== undefined && updateHours > staleUpdateHours) ||
+    recordDays >= STALE_RECORD_DAYS
+  )
 })
 const period =
   firstRecord && lastRecord

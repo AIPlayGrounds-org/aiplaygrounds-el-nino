@@ -1,29 +1,22 @@
 import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { normalizeBasePath } from '../shared/site'
+import { normalizeBasePath, publicRoutes } from '../shared/site'
 import {
   htmlAssetReferences,
   manifestJavaScriptFiles,
   manifestPageKey,
+  routeCheck,
+  updatedBudget,
+  type Budget,
   type ClientManifest,
+  type RouteBudget,
 } from './budget-assets'
 
-type RouteBudget = {
-  payloadBytes: number
-  entryJsBytes: number
-  cssBytes: number
-}
-
-type Budget = {
-  margin: number
-  routes: Record<string, RouteBudget>
-}
-
 const root = resolve(import.meta.dir, '../.output/public')
+const budgetPath = resolve(import.meta.dir, '../performance-budget.json')
 const basePath = normalizeBasePath(process.env.PAGES_BASE_URL || '/')
-const budget = (await Bun.file(
-  resolve(import.meta.dir, '../performance-budget.json'),
-).json()) as Budget
+const update = process.argv.includes('--update')
+const budget = (await Bun.file(budgetPath).json()) as Budget
 
 function routeDirectory(route: string): string {
   return route === '/' ? root : resolve(root, route.slice(1))
@@ -87,24 +80,42 @@ async function routeAssetBytes(route: string, html: string) {
   }
 }
 
-let failed = false
-for (const [route, expected] of Object.entries(budget.routes)) {
+async function measure(route: string): Promise<RouteBudget> {
   const directory = routeDirectory(route)
-  const htmlPath = resolve(directory, 'index.html')
-  const html = await Bun.file(htmlPath).text()
-  const payloadBytes = await size(resolve(directory, '_payload.json'))
-  const { js: jsBytes, css: cssBytes } = await routeAssetBytes(route, html)
-  const payloadLimit = Math.ceil(expected.payloadBytes * (1 + budget.margin))
-  const jsLimit = Math.ceil(expected.entryJsBytes * (1 + budget.margin))
-  const cssLimit = Math.ceil(expected.cssBytes * (1 + budget.margin))
-  const payloadStatus = payloadBytes <= payloadLimit ? 'ok' : 'FAIL'
-  const jsStatus = jsBytes <= jsLimit ? 'ok' : 'FAIL'
-  const cssStatus = cssBytes <= cssLimit ? 'ok' : 'FAIL'
+  const html = await Bun.file(resolve(directory, 'index.html')).text()
+  const { js, css } = await routeAssetBytes(route, html)
+  return {
+    payloadBytes: await size(resolve(directory, '_payload.json')),
+    entryJsBytes: js,
+    cssBytes: css,
+  }
+}
+
+if (update) {
+  const measured: Record<string, RouteBudget> = {}
+  for (const route of publicRoutes) measured[route] = await measure(route)
+  await Bun.write(budgetPath, `${JSON.stringify(updatedBudget(budget, measured), null, 2)}\n`)
+  console.log(`Wrote ${publicRoutes.length} routes to performance-budget.json`)
+  process.exit(0)
+}
+
+let failed = false
+for (const route of publicRoutes) {
+  if (!budget.routes[route]) {
+    console.log(`${route} has no budget; run bun run check:budget --update`)
+    failed = true
+  }
+}
+for (const [route, expected] of Object.entries(budget.routes)) {
+  const measured = await measure(route)
+  const { limits, failures } = routeCheck(measured, expected, budget.margin)
+  const status = (key: keyof RouteBudget) => (failures.includes(key) ? 'FAIL' : 'ok')
   console.log(
-    `${route} payload=${payloadBytes}/${payloadLimit} ${payloadStatus} ` +
-      `entry-js=${jsBytes}/${jsLimit} ${jsStatus} css=${cssBytes}/${cssLimit} ${cssStatus}`,
+    `${route} payload=${measured.payloadBytes}/${limits.payloadBytes} ${status('payloadBytes')} ` +
+      `entry-js=${measured.entryJsBytes}/${limits.entryJsBytes} ${status('entryJsBytes')} ` +
+      `css=${measured.cssBytes}/${limits.cssBytes} ${status('cssBytes')}`,
   )
-  if (payloadStatus === 'FAIL' || jsStatus === 'FAIL' || cssStatus === 'FAIL') failed = true
+  if (failures.length) failed = true
 }
 
 if (failed) process.exit(1)

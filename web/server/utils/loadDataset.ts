@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import Ajv2020 from 'ajv/dist/2020'
 import datasetSchema from '../../../schema/dataset.schema.json'
+import { datasetIds } from '../../app/types/dataset'
 import type { Dataset } from '~/types/dataset'
 import type { DatasetFor, DatasetId, DatasetRecordMap } from '~/types/datasets'
 
@@ -9,21 +10,6 @@ import type { DatasetFor, DatasetId, DatasetRecordMap } from '~/types/datasets'
 // Reading the files keeps them out of the bundler, which turns JSON into JavaScript
 // and needs gigabytes of memory for the largest datasets.
 const dataDirectory = resolve(process.cwd(), '..', 'data')
-
-const datasetIds = [
-  'noaa-cpc-oni',
-  'noaa-cpc-nino-weekly',
-  'noaa-cpc-outlook',
-  'enfen-communique',
-  'enfen-icen',
-  'limites-inei-ign',
-  'chirps',
-  'open-meteo-era5',
-  'noaa-oisst',
-  'open-meteo-glofas',
-  'noaa-ersst',
-  'senamhi-estaciones',
-] as const satisfies readonly DatasetId[]
 
 const readDataset = async (id: DatasetId): Promise<unknown> =>
   JSON.parse(await readFile(resolve(dataDirectory, `${id}.json`), 'utf8'))

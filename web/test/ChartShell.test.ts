@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import ChartShell from '~/components/ChartShell.vue'
 import { ageDays, ageLabel, messages } from '~/messages'
+import { staleAfterHours } from '~/types/dataset'
 import { geometryFixture } from './fixtures/geometry'
 import { gridFixture } from './fixtures/grid'
 import { timeSeriesFixture } from './fixtures/time-series'
@@ -65,26 +66,64 @@ describe('ChartShell', () => {
     expect(wrapper.find('.stale-notice').exists()).toBe(false)
   })
 
-  it.each([
-    ['update', 40],
-    ['update', 41],
-    ['record', 90],
-    ['record', 91],
-  ])('shows the stale notice at and past the %s threshold', async (kind, days) => {
+  const now = new Date('2026-10-03T00:00:00Z')
+  const mountAt = async (change: (dataset: typeof timeSeriesFixture) => void) => {
     vi.useFakeTimers()
-    const now = new Date('2026-10-03T00:00:00Z')
     vi.setSystemTime(now)
     const dataset = JSON.parse(JSON.stringify(timeSeriesFixture)) as typeof timeSeriesFixture
-    const date = new Date(now.getTime() - days * 86_400_000).toISOString().slice(0, 10)
-    if (kind === 'update') dataset.ingestion_time = `${date}T00:00:00Z`
-    else dataset.records.at(-1)!.end = date
-
+    change(dataset)
     const wrapper = mount(ChartShell, {
       props: { dataset, summary: 'Resumen accesible de prueba' },
       slots: { default: '<div data-chart>chart</div>' },
     })
     await nextTick()
+    return wrapper
+  }
+  const hoursAgo = (hours: number) => new Date(now.getTime() - hours * 3_600_000).toISOString()
 
-    expect(wrapper.get('.stale-notice').text()).toContain(messages.provenance.staleSource)
+  it.each([
+    ['noaa-cpc-oni', 'monthly'],
+    ['noaa-cpc-nino-weekly', 'weekly'],
+    ['open-meteo-era5', 'daily'],
+  ] as const)('stales a %s dataset only past its registry tolerance (%s)', async (id) => {
+    const limit = staleAfterHours[id]!
+
+    const onTime = await mountAt((dataset) => {
+      dataset.id = id
+      dataset.ingestion_time = hoursAgo(limit)
+    })
+    const late = await mountAt((dataset) => {
+      dataset.id = id
+      dataset.ingestion_time = hoursAgo(limit + 1)
+    })
+
+    expect(onTime.find('.stale-notice').exists()).toBe(false)
+    expect(late.get('.stale-notice').text()).toContain(messages.provenance.staleSource)
+  })
+
+  it('has no update tolerance for a source that is updated by hand', async () => {
+    expect(staleAfterHours['enfen-communique']).toBeUndefined()
+
+    const wrapper = await mountAt((dataset) => {
+      dataset.id = 'enfen-communique'
+      dataset.ingestion_time = hoursAgo(24 * 400)
+    })
+
+    expect(wrapper.find('.stale-notice').exists()).toBe(false)
+  })
+
+  it.each([
+    [89, false],
+    [90, true],
+    [91, true],
+  ])('shows the stale notice for a record %i days old: %s', async (days, stale) => {
+    const date = new Date(now.getTime() - days * 86_400_000).toISOString().slice(0, 10)
+
+    const wrapper = await mountAt((dataset) => {
+      dataset.ingestion_time = hoursAgo(1)
+      dataset.records.at(-1)!.end = date
+    })
+
+    expect(wrapper.find('.stale-notice').exists()).toBe(stale)
   })
 })

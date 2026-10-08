@@ -12,7 +12,12 @@ from pathlib import Path
 import pytest
 
 from wawapacha_pipeline import registry
-from wawapacha_pipeline.contract import ValidationError, publish, validate
+from wawapacha_pipeline.contract import (
+    MAX_GZIP_BYTES,
+    ValidationError,
+    publish,
+    validate,
+)
 from wawapacha_pipeline.sources import limites_inei_ign as source
 
 PIPELINE_DIR = Path(__file__).parents[1]
@@ -464,7 +469,7 @@ def test_publish_rejects_a_payload_over_the_gzip_limit(tmp_path):
     )
 
     with pytest.raises(ValidationError, match="gzip bytes"):
-        source.publish(dataset, tmp_path)
+        publish(dataset, tmp_path, max_gzip_bytes=MAX_GZIP_BYTES)
 
     assert not (tmp_path / "limites-inei-ign.json").exists()
 
@@ -472,7 +477,7 @@ def test_publish_rejects_a_payload_over_the_gzip_limit(tmp_path):
 def test_run_reports_the_number_of_dataset_records(monkeypatch, tmp_path):
     monkeypatch.setattr(source, "fetch", lambda: archive_bytes())
     monkeypatch.setattr(
-        source, "publish", lambda dataset: tmp_path / "limites-inei-ign.json"
+        source, "publish", lambda dataset, **limits: tmp_path / "limites-inei-ign.json"
     )
 
     count, path = source.run(datetime(2026, 10, 2, 12, tzinfo=UTC))

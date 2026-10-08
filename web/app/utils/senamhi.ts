@@ -1,4 +1,5 @@
-import type { DatasetFor, DatasetWithRecords, SenamhiEstacionesRecord } from '~/types/datasets'
+import type { SenamhiEstacionesRecord } from '~/types/dataset'
+import type { DatasetFor, DatasetWithRecords } from '~/types/datasets'
 
 export type SenamhiEvent = '1982-83' | '1997-98'
 

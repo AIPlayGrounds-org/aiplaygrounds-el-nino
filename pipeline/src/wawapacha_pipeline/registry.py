@@ -2,7 +2,7 @@
 
 import importlib
 import tomllib
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 from wawapacha_pipeline.contract import DATA_TYPES, REPO_ROOT
@@ -19,9 +19,27 @@ BLOCKS = (
     "Alerts",
     "History",
 )
-DELIVERIES = ("v0.1", "v0.2", "v0.3", "v0.4")
 VERDICTS = ("automatable", "manual", "discard", "pending")
 UPDATES = ("daily", "weekly", "monthly", "manual")
+# `due` selects a source when its `due_after` threshold is reached.
+# Freshness checks and page notices use `stale_after` for the same source.
+CADENCE_RULES = {
+    "daily": {
+        "interval": timedelta(days=1),
+        "due_after": timedelta(hours=20),
+        "slack": timedelta(hours=4),
+    },
+    "weekly": {
+        "interval": timedelta(days=7),
+        "due_after": timedelta(days=6),
+        "slack": timedelta(days=1),
+    },
+    "monthly": {
+        "interval": timedelta(days=31),
+        "due_after": timedelta(days=27),
+        "slack": timedelta(days=1),
+    },
+}
 
 REQUIRED = (
     "id",
@@ -29,7 +47,6 @@ REQUIRED = (
     "product",
     "block",
     "verdict",
-    "delivery",
     "reviewed",
     "page",
     "update",
@@ -81,6 +98,12 @@ def get(source_id: str) -> dict:
         return load()[source_id]
     except KeyError:
         raise RegistryError(f"{source_id}: not in {REGISTRY_PATH.name}.") from None
+
+
+def stale_after(update: str) -> timedelta | None:
+    """Return the maximum age of a published file, or None for manual sources."""
+    rule = CADENCE_RULES.get(update)
+    return rule["interval"] * 2 + rule["slack"] if rule else None
 
 
 def source_module_name(source_id: str) -> str:
@@ -169,7 +192,6 @@ def check(entry: dict, routes: dict[str, str] | None = None) -> None:
 
     for key, allowed in (
         ("block", BLOCKS),
-        ("delivery", DELIVERIES),
         ("verdict", VERDICTS),
         ("update", UPDATES),
     ):

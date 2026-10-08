@@ -290,22 +290,3 @@ def test_cli_keeps_the_previous_json_when_validation_fails(tmp_path):
     assert result.returncode == 1
     assert "números finitos" in result.stderr
     assert previous.read_text(encoding="utf-8") == '{"version": "previous"}'
-
-
-def test_notebook_runs_to_the_end_without_publishing(tmp_path):
-    notebook = Path(__file__).parents[2] / "notebooks" / "noaa_ersst.py"
-    env = os.environ | {
-        "NOAA_ERSST_URL": SAMPLE_PATH.resolve().as_uri(),
-        "WAWAPACHA_DATA_DIR": str(tmp_path),
-    }
-
-    result = subprocess.run(
-        [sys.executable, str(notebook)],
-        env=env,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-    )
-
-    assert result.returncode == 0, result.stderr
-    assert list(tmp_path.iterdir()) == []

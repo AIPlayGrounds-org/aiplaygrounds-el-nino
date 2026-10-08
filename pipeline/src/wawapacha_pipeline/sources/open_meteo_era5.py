@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import gzip
 import json
 import math
 import os
@@ -16,13 +15,7 @@ from pathlib import Path
 from shapely.geometry import Point, shape
 
 from wawapacha_pipeline import registry
-from wawapacha_pipeline.contract import (
-    DATA_DIR,
-    ValidationError,
-)
-from wawapacha_pipeline.contract import (
-    publish as contract_publish,
-)
+from wawapacha_pipeline.contract import MAX_GZIP_BYTES, ValidationError, publish
 
 VERSION = "0.2.0"
 ID = "open-meteo-era5"
@@ -34,7 +27,6 @@ WINDOW_DAYS = 90
 MAX_COORDINATES_PER_REQUEST = 100
 MAX_DAILY_PRECIPITATION_MM = 2_000
 GRID_DISTANCE_EPSILON = 1e-6
-MAX_GZIP_BYTES = 200 * 1024
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 BOUNDARIES_PATH = Path(__file__).resolve().parents[4] / "data" / "limites-inei-ign.json"
 
@@ -329,17 +321,6 @@ def build(records: list[dict], ingestion_time: datetime) -> dict:
     }
 
 
-def publish(dataset: dict, data_dir: Path = DATA_DIR) -> Path:
-    """Reject an oversized compressed payload before publishing atomically."""
-    encoded = (json.dumps(dataset, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
-    compressed_size = len(gzip.compress(encoded, compresslevel=9, mtime=0))
-    if compressed_size > MAX_GZIP_BYTES:
-        raise ValidationError(
-            f"The published JSON is {compressed_size} gzip bytes; the limit is {MAX_GZIP_BYTES}."
-        )
-    return contract_publish(dataset, data_dir)
-
-
 def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     """Fetch the last 90-day window, discover its lag, and publish available days."""
     ingestion_time = ingestion_time or datetime.now(UTC)
@@ -348,4 +329,6 @@ def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     records = []
     for response in responses:
         records.extend(parse(response, start, end))
-    return len(records), publish(build(records, ingestion_time), DATA_DIR)
+    return len(records), publish(
+        build(records, ingestion_time), max_gzip_bytes=MAX_GZIP_BYTES
+    )

@@ -1,9 +1,11 @@
 """ENFEN official communiqué: the alert status. Its provenance is in sources.toml.
 
-A person copies the newest communiqué into pipeline/inputs/enfen.yaml. This module
-validates that file and publishes it; nothing is downloaded.
+A person records the newest communiqué in pipeline/inputs/enfen.yaml with
+`wawapacha-pipeline enfen-add`. This module validates that file and publishes it.
+It does not download anything.
 """
 
+import difflib
 import os
 import re
 from collections.abc import Hashable
@@ -38,6 +40,23 @@ STATUSES = (
 URL_PATTERN = re.compile(
     r"https://enfen\.imarpe\.gob\.pe/download/comunicado-oficial-enfen-n-(\d+)-(\d{4})/?"
 )
+URL_TEMPLATE = (
+    "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-{number}-{year}/"
+)
+INPUT_TEMPLATE = """\
+# Written by `wawapacha-pipeline enfen-add` from the newest communiqué:
+# https://enfen.imarpe.gob.pe/downloads/comunicados/
+# Dates are unquoted YYYY-MM-DD. `status` is the exact phrase ENFEN uses.
+# `next_due` is the date the communiqué says the next one is due.
+enfen:
+  number: {number}
+  year: {year}
+  date: {published}
+  status: "{status}"
+  url: "{url}"
+  next_due: {next_due}
+  checked_at: {checked_at}
+"""
 
 # ENFEN publishes in Lima. Peru has no daylight saving time, so a fixed offset is exact.
 LIMA = timezone(timedelta(hours=-5))
@@ -166,6 +185,43 @@ def read_date(entry: dict, key: str) -> date:
             f"{key} must be an unquoted YYYY-MM-DD date, not {value!r}."
         )
     return value
+
+
+def add(
+    number: int,
+    published: date,
+    status: str,
+    next_due: date,
+    checked_at: date,
+    path: Path | None = None,
+    today: date | None = None,
+) -> str:
+    """Validate and replace the input file for this communiqué.
+
+    Return the diff. The year and detail URL follow from the number and date.
+    """
+    path = path or PATH
+    text = INPUT_TEMPLATE.format(
+        number=number,
+        published=published.isoformat(),
+        status=status,
+        url=URL_TEMPLATE.format(number=number, year=published.year),
+        next_due=next_due.isoformat(),
+        checked_at=checked_at.isoformat(),
+        year=published.year,
+    )
+    parse(text, today)
+    previous = fetch(path) if path.exists() else ""
+    path.write_text(text, encoding="utf-8", newline="\n")
+    return "\n".join(
+        difflib.unified_diff(
+            previous.splitlines(),
+            text.splitlines(),
+            fromfile=f"a/{path.name}",
+            tofile=f"b/{path.name}",
+            lineterm="",
+        )
+    )
 
 
 def build(records: list[dict], ingestion_time: datetime) -> dict:

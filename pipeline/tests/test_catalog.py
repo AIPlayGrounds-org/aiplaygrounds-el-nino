@@ -1,3 +1,6 @@
+import json
+from datetime import timedelta
+
 from wawapacha_pipeline import catalog, cli, registry
 
 
@@ -12,6 +15,21 @@ def test_web_source_catalog_is_up_to_date_with_the_registry():
     expected = catalog.render_web(registry.load(), cli.CATALOG_SOURCES)
 
     assert catalog.WEB_CATALOG_PATH.read_text(encoding="utf-8") == expected
+
+
+def test_web_catalog_carries_the_stale_threshold_the_freshness_command_uses():
+    sources = registry.load()
+    web = json.loads(catalog.render_web(sources, cli.CATALOG_SOURCES))["sources"]
+
+    for entry in web:
+        update = sources[entry["id"]]["update"]
+        if update == "manual":
+            assert "stale_after_hours" not in entry
+        else:
+            assert timedelta(hours=entry["stale_after_hours"]) == (
+                registry.stale_after(update)
+            )
+    assert {entry["id"] for entry in web if "stale_after_hours" in entry}
 
 
 def test_there_is_one_section_per_source_the_pipeline_reads_and_none_for_the_rest():
