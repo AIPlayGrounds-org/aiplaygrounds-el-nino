@@ -69,3 +69,37 @@ export function manifestJavaScriptFiles(route: string, manifest: ClientManifest)
   visit(page)
   return [...files]
 }
+
+export type RouteBudget = {
+  payloadBytes: number
+  entryJsBytes: number
+  cssBytes: number
+}
+
+export type Budget = {
+  margin: number
+  routes: Record<string, RouteBudget>
+}
+
+export type RouteCheck = {
+  limits: RouteBudget
+  failures: (keyof RouteBudget)[]
+}
+
+/** Return the inclusive size limits and the measured fields that exceed them. */
+export function routeCheck(
+  measured: RouteBudget,
+  budgeted: RouteBudget,
+  margin: number,
+): RouteCheck {
+  const keys = Object.keys(budgeted) as (keyof RouteBudget)[]
+  const limits = Object.fromEntries(
+    keys.map((key) => [key, Math.ceil(budgeted[key] * (1 + margin))]),
+  ) as RouteBudget
+  return { limits, failures: keys.filter((key) => measured[key] > limits[key]) }
+}
+
+/** Return a budget whose routes contain the latest measured sizes. */
+export function updatedBudget(budget: Budget, measured: Record<string, RouteBudget>): Budget {
+  return { margin: budget.margin, routes: measured }
+}
