@@ -14,8 +14,8 @@ Run these from `pipeline/`. List the sources that are due:
 uv run wawapacha-pipeline due --data-dir ../data
 ```
 
-A source is due when its `data/<id>.json` is missing or invalid, or when the
-file's `ingestion_time` is at least this old:
+A source is due when its `data/<id>.json` is missing or has no readable
+`ingestion_time`, or when that `ingestion_time` is at least this old:
 
 | `update`  | Due after |
 | --------- | --------- |

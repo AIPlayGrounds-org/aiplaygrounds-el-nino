@@ -92,9 +92,10 @@ published file. `test_build_adds_provenance_metadata` in
 
 ## Comparability
 
-Anomalies with different base periods are comparable once the difference is
-named. Observed, estimated, forecast and official values are combined with their
-types labeled. [`chart-rules.md`](chart-rules.md) holds the display rules.
+Do not combine anomalies with different base periods without naming the
+difference. Do not combine observed, estimated, forecast and official values
+without labeling their types. The chart presentation rules live in
+[`chart-rules.md`](chart-rules.md).
 
 ## Generated consumers
 

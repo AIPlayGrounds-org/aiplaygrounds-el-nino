@@ -32,7 +32,8 @@ Install [mise](https://mise.jdx.dev/getting-started), then follow
 ## Checks
 
 [`ci.yml`](workflows/ci.yml) runs these on every pull request. Run them first.
-They leave the tree unchanged:
+`sources` and `types` rewrite their generated files, and the `git diff` line
+after each fails when that rewrite changed the file:
 
 ```sh
 cd pipeline

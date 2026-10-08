@@ -21,10 +21,11 @@ bun run check:budget
 ```
 
 Each output line shows measured/limit for the three sizes of a route, for
-example `/ payloadBytes=585921/673810 ok`. The command exits with status 1 if
-any is over its limit. CI runs it for the root path and for the `/wawapacha/`
-subpath (`PAGES_BASE_URL=/wawapacha/`). The SEO check is separate: see
-[`seo.md`](seo.md).
+example
+`/ payload=585921/673810 ok entry-js=928684/1067987 ok css=1555/1789 ok`. The
+command exits with status 1 if any is over its limit. CI runs it for the root
+path and for the `/wawapacha/` subpath (`PAGES_BASE_URL=/wawapacha/`). The SEO
+check is separate: see [`seo.md`](seo.md).
 
 ## Update the budget
 
@@ -34,7 +35,7 @@ measured sizes:
 ```sh
 cd web
 bun run generate
-bun run update:budget
+bun run check:budget --update
 ```
 
 The command measures every route in [`shared/site.ts`](../web/shared/site.ts)

@@ -1,8 +1,8 @@
 # Data freshness
 
-The freshness check reports published JSON that is missing, unreadable or older
-than its registry cadence allows. It is separate from due selection and never
-blocks a deploy.
+The freshness check reports published JSON that is missing, has no readable
+`ingestion_time` or is older than its registry cadence allows. It is separate
+from due selection and never blocks a deploy.
 
 Run it from `pipeline/`:
 
@@ -37,8 +37,10 @@ daily at 14:47 UTC against a worktree of the `data` branch.
 The site applies the same limit. `wawapacha-pipeline sources` writes each
 non-manual source's limit, in hours, to the
 [web catalog](../web/app/data/source-catalog.json) as `stale_after_hours`.
-During the build, `loadDataset` adds it to the dataset, so the browser receives
-one number and not the catalog. A chart shows a stale notice when:
+`bun run types` copies the limits into the generated
+[`dataset.ts`](../web/app/types/dataset.ts) as `staleAfterHours`, which
+[`ChartShell`](../web/app/components/ChartShell.vue) reads. A chart shows a
+stale notice when:
 
 - its `ingestion_time` is older than `stale_after_hours`, or
 - its newest record ended 90 days ago or more, whatever the last run was.

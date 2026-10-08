@@ -38,7 +38,7 @@ public source
 | [`contract.py`](../pipeline/src/wawapacha_pipeline/contract.py)                    | Validates a dataset against the schema and replaces the destination JSON atomically.                                                                      |
 | [`sources/`](../pipeline/src/wawapacha_pipeline/sources/)                          | One module per published source. Most download their input. `enfen_communique.py` and `senamhi_estaciones.py` read checked-in files instead.              |
 | [`catalog.py`](../pipeline/src/wawapacha_pipeline/catalog.py)                      | Renders [`sources.md`](sources.md) and [`source-catalog.json`](../web/app/data/source-catalog.json) from the registry.                                    |
-| [`cli.py`](../pipeline/src/wawapacha_pipeline/cli.py)                              | The `wawapacha-pipeline` commands `run`, `due`, `freshness` and `sources`.                                                                                |
+| [`cli.py`](../pipeline/src/wawapacha_pipeline/cli.py)                              | The `wawapacha-pipeline` commands `run`, `due`, `freshness`, `sources`, `new-source`, `snapshot-check` and `enfen-add`.                                   |
 | [`tests/`](../pipeline/tests/)                                                     | Source behavior, checked against real input samples in `tests/samples/`. No test needs the network.                                                       |
 | [`scripts/build_chirps_baseline.py`](../pipeline/scripts/build_chirps_baseline.py) | Builds the checked-in CHIRPS 1991–2020 department climatology, [`chirps_baseline.json`](../pipeline/src/wawapacha_pipeline/sources/chirps_baseline.json). |
 
@@ -50,31 +50,30 @@ registry id. The ids are listed in [`sources.md`](sources.md).
 `CADENCE_RULES` in
 [`registry.py`](../pipeline/src/wawapacha_pipeline/registry.py) are the cadence
 rules. `due` and `freshness` apply them to published timestamps, and the web
-catalog carries each source's stale limit, and the server loader adds it to the
-dataset, so the site applies the same rule.
+catalog carries each source's stale limit, which `bun run types` copies into the
+generated types, so the site applies the same rule.
 [`data-workflow.md`](data-workflow.md) and [`freshness.md`](freshness.md)
 describe what runs them.
 
 ### Web
 
-| Path                                                                            | Owns                                                                                                                                               |
-| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`pages/`](../web/app/pages/)                                                   | One file per public route. The route list is [`shared/site.ts`](../web/shared/site.ts).                                                            |
-| [`server/utils/loadDataset.ts`](../web/server/utils/loadDataset.ts)             | Loads the datasets listed in the source catalog, validates them against the schema and adds each source's stale limit.                             |
-| [`composables/useDataset.ts`](../web/app/composables/useDataset.ts)             | The page-facing loader. `useDataset(id, shape?)` hydrates from the Nuxt payload. `shape` runs on the server before serialization.                  |
-| [`composables/useSourceCatalog.ts`](../web/app/composables/useSourceCatalog.ts) | Reads the generated source catalog and gets each source's `ingestion_time` through the dataset loader.                                             |
-| [`data/source-catalog.json`](../web/app/data/source-catalog.json)               | Generated registry facts, labelled page ownership and each source's stale limit.                                                                   |
-| [`utils/freshness.ts`](../web/app/utils/freshness.ts)                           | Decides whether a dataset is stale, from its `ingestion_time`, the stale limit the loader added and the date of its last record.                   |
-| [`utils/sourceCatalog.ts`](../web/app/utils/sourceCatalog.ts)                   | Validates and shapes the generated source catalog.                                                                                                 |
-| [`components/ChartShell.vue`](../web/app/components/ChartShell.vue)             | The shared chart frame. See [`chart-rules.md`](chart-rules.md).                                                                                    |
-| [`composables/useChartTheme.ts`](../web/app/composables/useChartTheme.ts)       | Reads chart colors and font from CSS variables and refreshes them when the system color scheme changes.                                            |
-| [`composables/useSiteSeo.ts`](../web/app/composables/useSiteSeo.ts)             | Canonical, Open Graph and Twitter metadata. See [`seo.md`](seo.md).                                                                                |
-| [`messages.ts`](../web/app/messages.ts)                                         | Spanish product copy and the `data_type` label map.                                                                                                |
-| [`utils/format.ts`](../web/app/utils/format.ts)                                 | Shared Spanish number and date formatting, including Lima time and river-discharge precision.                                                      |
-| [`types/dataset.ts`](../web/app/types/dataset.ts)                               | TypeScript types generated from the schema, plus the id-to-record map built from the source catalog. Regenerate it with `bun run types` in `web/`. |
-| [`types/datasets.ts`](../web/app/types/datasets.ts)                             | The dataset types the loader and page shapes use, built on the generated map.                                                                      |
-| [`scripts/`](../web/scripts/)                                                   | The `check:seo`, `check:budget` and `update:budget` commands. See [`seo.md`](seo.md) and [`performance.md`](performance.md).                       |
-| [`test/`](../web/test/)                                                         | Behavior and type tests for the loader, shaping functions, chart shell and page data.                                                              |
+| Path                                                                            | Owns                                                                                                                                                                                       |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`pages/`](../web/app/pages/)                                                   | One file per public route. The route list is [`shared/site.ts`](../web/shared/site.ts).                                                                                                    |
+| [`server/utils/loadDataset.ts`](../web/server/utils/loadDataset.ts)             | Loads the datasets listed in the source catalog, validates them against the schema.                                                                                                        |
+| [`composables/useDataset.ts`](../web/app/composables/useDataset.ts)             | The page-facing loader. `useDataset(id, shape?)` hydrates from the Nuxt payload. `shape` runs on the server before serialization.                                                          |
+| [`composables/useSourceCatalog.ts`](../web/app/composables/useSourceCatalog.ts) | Reads the generated source catalog and gets each source's `ingestion_time` through the dataset loader.                                                                                     |
+| [`data/source-catalog.json`](../web/app/data/source-catalog.json)               | Generated registry facts, labelled page ownership and each source's stale limit.                                                                                                           |
+| [`utils/sourceCatalog.ts`](../web/app/utils/sourceCatalog.ts)                   | Validates and shapes the generated source catalog.                                                                                                                                         |
+| [`components/ChartShell.vue`](../web/app/components/ChartShell.vue)             | The shared chart frame. See [`chart-rules.md`](chart-rules.md).                                                                                                                            |
+| [`composables/useChartTheme.ts`](../web/app/composables/useChartTheme.ts)       | Reads chart colors and font from CSS variables and refreshes them when the system color scheme changes.                                                                                    |
+| [`composables/useSiteSeo.ts`](../web/app/composables/useSiteSeo.ts)             | Canonical, Open Graph and Twitter metadata. See [`seo.md`](seo.md).                                                                                                                        |
+| [`messages.ts`](../web/app/messages.ts)                                         | Spanish product copy and the `data_type` label map.                                                                                                                                        |
+| [`utils/format.ts`](../web/app/utils/format.ts)                                 | Shared Spanish number and date formatting, including Lima time and river-discharge precision.                                                                                              |
+| [`types/dataset.ts`](../web/app/types/dataset.ts)                               | TypeScript types generated from the schema, plus the dataset ids, the id-to-record map and `staleAfterHours`, built from the source catalog. Regenerate it with `bun run types` in `web/`. |
+| [`types/datasets.ts`](../web/app/types/datasets.ts)                             | The dataset types the loader and page shapes use, built on the generated map.                                                                                                              |
+| [`scripts/`](../web/scripts/)                                                   | The `types`, `check:seo` and `check:budget` commands. See [`seo.md`](seo.md) and [`performance.md`](performance.md).                                                                       |
+| [`test/`](../web/test/)                                                         | Behavior and type tests for the loader, shaping functions, chart shell and page data.                                                                                                      |
 
 ## Dataset loading and page payloads
 
@@ -99,11 +98,12 @@ shape their datasets:
 | `/rios`       | Keeps the river fields used by the chart and orders records by point and date.                                                                  |
 
 [`performance.md`](performance.md) covers the route size budget. It is separate
-from the 200 KiB gzip limit (`MAX_GZIP_BYTES`) that
+from the 200 KiB gzip limit (`MAX_GZIP_BYTES` in
+[`contract.py`](../pipeline/src/wawapacha_pipeline/contract.py)) that
 [`limites_inei_ign.py`](../pipeline/src/wawapacha_pipeline/sources/limites_inei_ign.py)
 and
 [`open_meteo_era5.py`](../pipeline/src/wawapacha_pipeline/sources/open_meteo_era5.py)
-apply to their published JSON.
+pass to `publish` for their published JSON.
 
 ## Boundaries
 
@@ -115,8 +115,8 @@ apply to their published JSON.
   `site_pages` uses.
 - **Notebooks hold no pipeline logic.**
   [`test_notebooks.py`](../pipeline/tests/test_notebooks.py) rejects functions
-  and classes outside marimo cells and runs the ONI notebook against a sample
-  without publishing.
+  and classes outside marimo cells and requires a test that runs each notebook
+  against a sample without publishing.
 - **Invalid data is not published.** Schema validation runs before the atomic
   replacement, so a failed run leaves the previous JSON in place.
 - **The web has one dataset entry point.** Pages call `useDataset`. Components

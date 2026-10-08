@@ -43,12 +43,18 @@ An `automatable` entry needs its module and gets a section in
 
 1. Add a `[[source]]` entry to `sources.toml`. An `automatable` entry needs all
    the data fields in the table above.
-2. Create `pipeline/src/wawapacha_pipeline/sources/<module>.py`, where
-   `<module>` is the id with hyphens replaced by underscores. Follow
+2. From `pipeline/`, create the module and its test:
+
+   ```sh
+   uv run wawapacha-pipeline new-source <id>
+   ```
+
+   It writes `sources/<module>.py` and `tests/test_<module>.py`, where
+   `<module>` is the id with hyphens replaced by underscores. It reads the
+   provenance with `registry.get(ID)` and leaves `parse` to write. Follow
    [`noaa_cpc_oni.py`](../pipeline/src/wawapacha_pipeline/sources/noaa_cpc_oni.py).
-   Define `ID`, `fetch`, `parse` and `run`, and read the provenance with
-   `registry.get(ID)`. Discovery imports the module by name, so no dispatcher
-   needs editing.
+   Discovery imports the module by name, so no dispatcher needs editing.
+
 3. From `pipeline/`, run `uv run wawapacha-pipeline sources` to regenerate
    [`sources.md`](sources.md) and
    [`source-catalog.json`](../web/app/data/source-catalog.json).
@@ -58,15 +64,22 @@ An `automatable` entry needs its module and gets a section in
    the records use the generic `DatasetRecord`. Then run `bun run types` in
    `web/`. It reads the ids from the catalog and the record types from the
    schema, so the page code needs no id list.
-5. Save a real copy of the original input in `pipeline/tests/samples/`.
-6. Add tests in `pipeline/tests/` that read the sample and cover the parser's
-   rejection cases. Use
+5. Save a real copy of the original input as
+   `pipeline/tests/samples/<module>.txt`, the path the generated test reads.
+6. Complete `tests/test_<module>.py`: add the parser's rejection cases. Use
    [`test_noaa_cpc_oni.py`](../pipeline/tests/test_noaa_cpc_oni.py) as the
    model.
 7. Add a notebook in `notebooks/` that imports the module and shows its steps.
    Open it from `pipeline/` with `uv run marimo edit ../notebooks/<module>.py`.
    [`test_notebooks.py`](../pipeline/tests/test_notebooks.py) fails if a
-   notebook defines a function or class outside a marimo cell.
+   notebook defines a function or class outside a marimo cell, and it fails if
+   no test runs the notebook. `ENVIRONMENTS` there maps a notebook stem to the
+   environment variables that point its source at a sample, so add your
+   notebook's entry. `open_meteo_era5` is the special case: its test runs the
+   notebook against a local server. A source that needs a fixture of its own
+   lists its id in `RUN_BY_SOURCE_TEST` and runs the notebook in a
+   `test_notebook_runs_to_the_end_without_publishing` test in its own test file,
+   as [`test_noaa_oisst.py`](../pipeline/tests/test_noaa_oisst.py) does.
 8. Run `uv run wawapacha-pipeline run <id>` in `pipeline/` to publish the first
    seed JSON. To show the dataset on a page, call `useDataset('<id>')`. The
    scheduled workflow publishes later updates to the `data` branch.
