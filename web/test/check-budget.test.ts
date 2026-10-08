@@ -4,8 +4,44 @@ import { describe, expect, it } from 'vitest'
 import {
   htmlAssetReferences,
   manifestJavaScriptFiles,
+  routeCheck,
+  updatedBudget,
   type ClientManifest,
 } from '../scripts/budget-assets'
+
+describe('budget limits', () => {
+  const budgeted = { payloadBytes: 1000, entryJsBytes: 2000, cssBytes: 10 }
+
+  it('allows each size up to its budget plus the margin, rounded up', () => {
+    const check = routeCheck(
+      { payloadBytes: 1150, entryJsBytes: 2300, cssBytes: 12 },
+      budgeted,
+      0.15,
+    )
+
+    expect(check.limits).toEqual({ payloadBytes: 1150, entryJsBytes: 2300, cssBytes: 12 })
+    expect(check.failures).toEqual([])
+  })
+
+  it('names every size over its limit', () => {
+    const check = routeCheck(
+      { payloadBytes: 1151, entryJsBytes: 2000, cssBytes: 13 },
+      budgeted,
+      0.15,
+    )
+
+    expect(check.failures).toEqual(['payloadBytes', 'cssBytes'])
+  })
+
+  it('replaces the routes with the measured sizes and keeps the margin', () => {
+    const measured = { '/': { payloadBytes: 1, entryJsBytes: 2, cssBytes: 3 } }
+
+    expect(updatedBudget({ margin: 0.15, routes: { '/old': budgeted } }, measured)).toEqual({
+      margin: 0.15,
+      routes: measured,
+    })
+  })
+})
 
 describe('budget asset references', () => {
   it('counts modulepreload scripts and stylesheet links without counting data-src', () => {
