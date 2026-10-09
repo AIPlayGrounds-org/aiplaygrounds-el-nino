@@ -64,12 +64,12 @@ date_checked = "2026-10-09"
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
 locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, lines 123-131"
-quote = "Se denomina \"El Niño Costero\" al periodo en el cual el ICEN indique la categoría de condiciones cálidas durante al menos tres (3) meses consecutivos."
+quote = "Se denomina \"El Niño Costero” al periodo en el cual el ICEN indique la categoría de condiciones cálidas durante al menos tres (3) meses consecutivos."
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
-locator = "Nota Técnica ENFEN 01-2024, PDF p. 2, Table 2, lines 100-122"
-quote = "Neutra Mayor o igual que -0.7 y menor o igual que 0.5; Condiciones cálidas: Débil Mayor que 0.5 y menor o igual que 1.3; Moderada Mayor que 1.3 y menor o igual que 2.1; Fuerte Mayor que 2.1 y menor o igual que 3.5; Extraordinaria Mayor que 3.5."
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, lines 105-106"
+quote = "La categoría \"Condiciones Cálidas\" incluye las magnitudes de \"Débil\" (>P75 y ≤P90), \"Moderada\" (>P90 y ≤P95), \" Fuerte\" (>P95 y ≤P99) y \"Extraordinaria\" (>P99)."
 
 [[claim]]
 id = "global-and-coastal-can-differ"
@@ -105,8 +105,8 @@ status = "verified"
 date_checked = "2026-10-09"
 
 [[claim.source]]
-ref = "https://doi.org/10.1155/2013/152875"
-locator = "Bazo, Lorenzo & Porfirio da Rocha (2013), section 5, HTML lines 111-123"
+ref = "https://onlinelibrary.wiley.com/doi/10.1155/2013/152875"
+locator = "Bazo, Lorenzo & Porfirio da Rocha (2013), section 5, HTML line 323"
 quote = "An analysis of the relationships between SST and rainfall in Tumbes-Piura allowed us to elaborate a linear and an exponential regression models to make monthly predictions of rainfall."
 
 [[claim]]
@@ -138,23 +138,23 @@ quote = "En los CO se explicará claramente que estos estados de alerta se suste
 
 [[claim]]
 id = "enfen-magnitude-wording"
-claim_es = "Los comunicados de ENFEN expresan la magnitud esperada con palabras y en condicional, y muestran las probabilidades mensuales de condiciones cálidas, frías y neutra en una figura."
+claim_es = "El Comunicado Oficial ENFEN N° 17-2026 expresa la magnitud esperada con palabras y en condicional, y muestra las probabilidades mensuales de condiciones cálidas, frías y neutra en una figura."
 status = "verified"
 date_checked = "2026-10-09"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
-locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, lines 15-16"
-quote = "se mantendría con una magnitud extraordinaria, respecto al calentamiento del mar"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, line 8"
+quote = "El Niño Costero (región Niño 1+2 - Figura 1) se mantendría con una magnitud extraordinaria,"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
-locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, line 19"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, line 11"
 quote = "El Niño (región Niño 3.4 - Figura 1) se mantendría con una magnitud muy fuerte"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
-locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, Figura 2 caption, lines 30-31"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, Figura 2 caption, lines 17-18"
 quote = "Probabilidades mensuales estimadas por el ENFEN de las condiciones cálidas, frías y neutra"
 
 [[claim]]
@@ -165,8 +165,18 @@ date_checked = "2026-10-09"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
-locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Table 3, lines 160-186"
-quote = "1982 7 1983 11 17 Niño Extraordinario; 1997 4 1998 8 17 Niño Extraordinario; 2017 1 2017 4 4 Niño Moderado"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Table 3, line 171"
+quote = "1982 7 1983 11 17 Niño Extraordinario"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Table 3, line 176"
+quote = "1997 4 1998 8 17 Niño Extraordinario"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Table 3, line 184"
+quote = "2017 1 2017 4 4 Niño Moderado"
 
 [[claim]]
 id = "nino-region-definitions"
@@ -176,7 +186,7 @@ date_checked = "2026-10-09"
 
 [[claim.source]]
 ref = "https://www.cpc.ncep.noaa.gov/data/indices/"
-locator = "Weekly Relative OISST.v2.1 row"
+locator = "Weekly Relative OISST.v2.1 row, line 79"
 quote = "Niño 1+2 (0–10°South)(90°West–80°West), Niño 3 (5°North–5°South)(150°West–90°West), Niño 4 (5°North–5°South)(160°East–150°West), Niño 3.4 (5°North–5°South)(170–120°West)"
 
 [[claim]]
@@ -187,8 +197,8 @@ date_checked = "2026-10-09"
 
 [[claim.source]]
 ref = "https://www.cpc.ncep.noaa.gov/data/indices/"
-locator = "Weekly Relative OISST.v2.1 row"
-quote = "Weekly Relative OISST.v2.1 (1991–2020 base period) Niño 1+2 (0–10°South)(90°West–80°West), Niño 3.4 (5°North–5°South)(170–120°West)"
+locator = "Weekly Relative OISST.v2.1 row, line 79"
+quote = "Weekly Relative OISST.v2.1 (1991–2020 base period) Niño 1+2 (0–10°South)(90°West–80°West), Niño 3 (5°North–5°South)(150°West–90°West), Niño 4 (5°North–5°South)(160°East–150°West), Niño 3.4 (5°North–5°South)(170–120°West)"
 
 [[claim]]
 id = "noaa-enso-strength-probabilities"
@@ -255,9 +265,9 @@ locator = "CHIRPS v3 description, product timing"
 quote = "The CHIRPS v3 final product blends in best available station inputs and is produced once a month, typically on the third week of the following month."
 
 [[claim.source]]
-ref = "https://www.chc.ucsb.edu/data/chirps3"
-locator = "CHIRPS v3 description, time steps"
-quote = "CHIRPS is fundamentally a pentad and monthly product, and all other time-steps are derived from those."
+ref = "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/readme.txt"
+locator = "CHIRPS v3 daily product README, line 2"
+quote = "CHIRPS is fundamentally a pentadal and monthly precipitation product."
 
 [[claim]]
 id = "era5-historical-reanalysis"
@@ -337,5 +347,20 @@ date_checked = "2026-10-09"
 
 [[claim.source]]
 ref = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
-locator = "Datos Hidrometeorológicos a Nivel Nacional, station list"
-quote = "Estación Meteorológica Convencional; Estación Meteorológica Automatica; Estación Hidrológica Convencional; Estación Hidrológica Automatica"
+locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend, line 189"
+quote = "Estación Meteorológica Convencional"
+
+[[claim.source]]
+ref = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
+locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend, line 194"
+quote = "Estación Meteorológica Automatica"
+
+[[claim.source]]
+ref = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
+locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend, line 199"
+quote = "Estación Hidrológica Convencional"
+
+[[claim.source]]
+ref = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
+locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend, line 204"
+quote = "Estación Hidrológica Automatica"
