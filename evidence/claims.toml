@@ -1,0 +1,148 @@
+# Claim text is in Spanish. Registry fields and source notes are in English.
+#
+# Each [[claim]] has an id, claim_es, status, date_checked and one or more
+# [[claim.source]] entries (ref, locator, quote). A "verified" claim says no
+# more than its quotes say. The site may state only verified claims.
+
+checked_at = "2026-10-09"
+
+[[claim]]
+id = "enso-is-ocean-atmosphere-pattern"
+claim_es = "ENSO es un patrón natural de cambios del océano y la atmósfera del Pacífico tropical que influye en el tiempo estacional."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/pdf/roni-info-may-2026.pdf"
+locator = "p. 1, lines 5-8"
+quote = "El Niño–Southern Oscillation (ENSO) is a natural pattern of ocean and atmosphere changes in the tropical Pacific Ocean that strongly influences seasonal weather patterns across the U.S. and around the world."
+
+[[claim]]
+id = "oni-definition-and-threshold"
+claim_es = "El ONI es la media móvil de tres meses de la anomalía de TSM en Niño 3.4; NOAA usa ±0,5 °C y cinco temporadas móviles consecutivas para marcar episodios históricos."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v5/"
+locator = "ONI page, lines 27-29"
+quote = "Warm (red) and cold (blue) periods based on a threshold of +/- 0.5°C for the Oceanic Niño Index (ONI) [3 month running mean of ERSST.v5 SST anomalies in the Niño 3.4 region (5°N-5°S, 120°-170°W)], based on centered 30-year base periods updated every 5 years. For historical purposes, periods of below and above normal SSTs are colored in blue and red when the threshold is met for a minimum of 5 consecutive overlapping seasons."
+
+[[claim]]
+id = "roni-is-current-official-index"
+claim_es = "Desde 2026, NOAA usa el RONI para el monitoreo y la predicción oficiales de ENSO."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/announcement.php"
+locator = "Announcement, lines 34-37"
+quote = "February 2026 The Climate Prediction Center is making the shift to use the Relative Oceanic Niño Index (RONI) to better designate past events and predict future ENSO."
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v5/"
+locator = "ONI page, lines 27-29"
+quote = "the Relative Oceanic Niño index (RONI) is used for official monitoring and prediction of the El Niño-Southern Oscillation (ENSO) phenomenon"
+
+[[claim]]
+id = "icen-definition"
+claim_es = "El ICEN es la media corrida de tres meses de las anomalías mensuales de TSM en Niño 1+2."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 1, lines 36-54"
+quote = "Consiste en la media corrida de tres meses de las anomalías mensuales de la temperatura superficial del mar (TSM) en la región Niño 1+2."
+
+[[claim]]
+id = "coastal-event-criterion"
+claim_es = "ENFEN identifica El Niño Costero cuando el ICEN está en una categoría cálida durante al menos tres meses consecutivos; sus categorías tienen umbrales propios."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, lines 123-131"
+quote = "Se denomina \"El Niño Costero\" al periodo en el cual el ICEN indique la categoría de condiciones cálidas durante al menos tres (3) meses consecutivos."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 2, Table 2, lines 100-122"
+quote = "Neutra Mayor o igual que -0.7 y menor o igual que 0.5; Condiciones cálidas: Débil Mayor que 0.5 y menor o igual que 1.3; Moderada Mayor que 1.3 y menor o igual que 2.1; Fuerte Mayor que 2.1 y menor o igual que 3.5; Extraordinaria Mayor que 3.5."
+
+[[claim]]
+id = "global-and-coastal-can-differ"
+claim_es = "El Niño Costero puede desarrollarse principalmente frente a la costa peruana y diferir del evento del Pacífico central; 2017 tuvo condiciones neutras en el Pacífico central."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 1, lines 21-31"
+quote = "Sin embargo, existen, también, eventos cálidos que se desarrollan, principalmente, frente a la costa peruana (El Niño Costero) los cuales pueden tener un impacto destructivo significativo en el ámbito local."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "Informe Técnico Extraordinario N°001-2017/ENFEN, resumen ejecutivo, lines 49-53"
+quote = "El periodo de diciembre 2016 a mayo del 2017 calificó formalmente como “El Niño Costero” de magnitud moderada, con condiciones neutras en el Pacífico Central."
+
+[[claim]]
+id = "2017-itcz-northern-rain"
+claim_es = "En 2017, ENFEN relacionó la activación temprana e intensa de la segunda banda de la ZCIT con lluvias muy fuertes en el norte."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "Informe Técnico Extraordinario N°001-2017/ENFEN, resumen ejecutivo, lines 49-51"
+quote = "Esto activó la segunda banda de la Zona de Convergencia Intertropical (ZCIT) en forma temprana e intensa frente a la costa de Perú, lo cual propició la ocurrencia de lluvias muy fuertes en la zona norte."
+
+[[claim]]
+id = "northwest-rainfall-regression-models"
+claim_es = "En el noroeste del Perú, el estudio de Tumbes-Piura construyó modelos de regresión entre la TSM y la lluvia para hacer predicciones mensuales."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://doi.org/10.1155/2013/152875"
+locator = "Bazo, Lorenzo & Porfirio da Rocha (2013), section 5, HTML lines 111-123"
+quote = "An analysis of the relationships between SST and rainfall in Tumbes-Piura allowed us to elaborate a linear and an exponential regression models to make monthly predictions of rainfall."
+
+[[claim]]
+id = "enfen-alert-states"
+claim_es = "El sistema de alerta de ENFEN tiene cinco estados y se anuncia en cada comunicado; Vigilancia se activa cuando el pronóstico indica una probabilidad superior al 50 % de condiciones cálidas."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-02-2026-sistema-de-alerta-ante-el-nino-costero-y-la-nina-costera/"
+locator = "Nota Técnica ENFEN 02-2026, PDF p. 1, lines 13-18"
+quote = "el cual consta de cinco “estados”, uno de los cuales será anunciado en cada Comunicado Oficial (CO) de la Comisión ENFEN."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-02-2026-sistema-de-alerta-ante-el-nino-costero-y-la-nina-costera/"
+locator = "Nota Técnica ENFEN 02-2026, PDF p. 1, lines 23-33"
+quote = "se activa la vigilancia cuando el pronóstico probabilístico mensual del ICEN indica que, dentro del horizonte de pronóstico del ENFEN, existe una probabilidad superior al 50 % de que se presenten condiciones cálidas"
+
+[[claim]]
+id = "alerts-are-probabilistic-and-updated"
+claim_es = "Los estados de alerta de ENFEN tienen incertidumbre y se actualizan con observaciones y predicciones."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-02-2026-sistema-de-alerta-ante-el-nino-costero-y-la-nina-costera/"
+locator = "Nota Técnica ENFEN 02-2026, PDF p. 2, lines 49-59"
+quote = "En los CO se explicará claramente que estos estados de alerta se sustentan en pronósticos de naturaleza probabilística, con niveles de incertidumbre. Por lo tanto, dichos estados serán actualizados de acuerdo al análisis de las observaciones oceánicas y atmosféricas, así como de las predicciones de los modelos climáticos."
+
+[[claim]]
+id = "historical-coastal-chronology"
+claim_es = "La cronología operativa de ENFEN clasifica 1982–1983 y 1997–1998 como El Niño Costero extraordinario, y 2017 como moderado, con periodos distintos."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Table 3, lines 160-186"
+quote = "1982 7 1983 11 17 Niño Extraordinario; 1997 4 1998 8 17 Niño Extraordinario; 2017 1 2017 4 4 Niño Moderado"
