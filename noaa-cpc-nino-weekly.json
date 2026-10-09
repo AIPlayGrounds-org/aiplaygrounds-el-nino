@@ -11,11 +11,11 @@
   "spatial_resolution": "Un valor por región Niño: Niño 1+2, 3, 3.4 y 4",
   "temporal_resolution": "Semanal",
   "reference_period": "1991–2020",
-  "ingestion_time": "2026-10-03T14:18:45+00:00",
+  "ingestion_time": "2026-10-09T19:32:12+00:00",
   "processing_version": "0.1.0",
   "source_revision": {
-    "sha256": "f257c99dfaa111e2503d208c93e93e380d0ffcc386bf5742fb2c48f980ecaa40",
-    "last_modified": "Sat, 03 Oct 2026 07:00:24 GMT"
+    "sha256": "1e9597620686b38e904adbe1b5fa50fb8bde2558e58e13f36b5b3aea37474296",
+    "last_modified": "Fri, 09 Oct 2026 07:00:13 GMT"
   },
   "records": [
     {
@@ -28210,13 +28210,13 @@
       "start": "2026-09-09",
       "end": "2026-09-09",
       "nino_1_2_sst": 25.2,
-      "nino_1_2_anomaly": 4.5,
+      "nino_1_2_anomaly": 4.6,
       "nino_3_sst": 28.6,
       "nino_3_anomaly": 3.7,
-      "nino_3_4_sst": 29.6,
-      "nino_3_4_anomaly": 2.9,
-      "nino_4_sst": 29.6,
-      "nino_4_anomaly": 0.9
+      "nino_3_4_sst": 29.5,
+      "nino_3_4_anomaly": 2.8,
+      "nino_4_sst": 29.5,
+      "nino_4_anomaly": 0.8
     },
     {
       "start": "2026-09-16",
@@ -28241,6 +28241,18 @@
       "nino_3_4_anomaly": 3.1,
       "nino_4_sst": 29.8,
       "nino_4_anomaly": 1.1
+    },
+    {
+      "start": "2026-09-30",
+      "end": "2026-09-30",
+      "nino_1_2_sst": 26.1,
+      "nino_1_2_anomaly": 5.3,
+      "nino_3_sst": 29.0,
+      "nino_3_anomaly": 4.0,
+      "nino_3_4_sst": 29.9,
+      "nino_3_4_anomaly": 3.2,
+      "nino_4_sst": 29.9,
+      "nino_4_anomaly": 1.2
     }
   ]
 }
