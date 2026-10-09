@@ -146,3 +146,96 @@ date_checked = "2026-10-09"
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
 locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Table 3, lines 160-186"
 quote = "1982 7 1983 11 17 Niño Extraordinario; 1997 4 1998 8 17 Niño Extraordinario; 2017 1 2017 4 4 Niño Moderado"
+
+[[claim]]
+id = "nino-region-definitions"
+claim_es = "Las regiones Niño 1+2, Niño 3, Niño 3.4 y Niño 4 son zonas del Pacífico con límites geográficos definidos para sus índices de TSM."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/"
+locator = "Weekly Relative OISST.v2.1 row"
+quote = "Niño 1+2 (0–10°South)(90°West–80°West), Niño 3 (5°North–5°South)(150°West–90°West), Niño 4 (5°North–5°South)(160°East–150°West), Niño 3.4 (5°North–5°South)(170–120°West)"
+
+[[claim]]
+id = "weekly-nino-anomalies"
+claim_es = "El producto semanal relativo de OISST publica valores para las regiones Niño 1+2 y Niño 3.4."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/"
+locator = "Weekly Relative OISST.v2.1 row"
+quote = "Weekly Relative OISST.v2.1 (1991–2020 base period) Niño 1+2 (0–10°South)(90°West–80°West), Niño 3.4 (5°North–5°South)(170–120°West)"
+
+[[claim]]
+id = "noaa-enso-strength-probabilities"
+claim_es = "El producto de probabilidades de intensidad de NOAA CPC muestra nueve temporadas móviles de tres meses y categorías de intensidad de El Niño y La Niña."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/"
+locator = "Official NOAA CPC ENSO Strength Probabilities, paragraphs 1–2"
+quote = "The bars show the chance of El Niño, ENSO-Neutral, and La Niña provided for 9 upcoming, overlapping 3-month seasons. The color shading within the bars indicates the chances of different categories of El Niño or La Niña strength (weak, moderate, strong, and very strong)."
+
+[[claim]]
+id = "chirps-rainfall-estimates"
+claim_es = "CHIRPS combina estimaciones satelitales de lluvia con observaciones de estaciones para producir una serie de precipitación cuadriculada de 0,05° sobre tierra."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://chc.ucsb.edu/data/chirps3"
+locator = "CHIRPS v3 description"
+quote = "CHIRPS v3 combines satellite-based thermal infrared rainfall estimates (CHIRP) with in-situ station observations to produce a 0.05° gridded rainfall time series over land."
+
+[[claim]]
+id = "era5-historical-reanalysis"
+claim_es = "ERA5 aporta reanálisis meteorológico histórico a 0,25° desde 1940, incluida la precipitación."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://open-meteo.com/en/docs/historical-weather-api"
+locator = "Historical Weather API introduction and daily variables"
+quote = "Gap-free and consistent historical weather data using weather reanalysis from ERA5 (0.25°, from 1940)"
+
+[[claim.source]]
+ref = "https://open-meteo.com/en/docs/historical-weather-api"
+locator = "Daily Parameter Definition, precipitation_sum row"
+quote = "Sum of daily precipitation (including rain, showers and snowfall)"
+
+[[claim]]
+id = "glofas-river-discharge-forecast"
+claim_es = "El producto GloFAS de caudal simulado ofrece una serie desde 1984 y un pronóstico de hasta siete meses."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://open-meteo.com/en/docs/flood-api"
+locator = "Flood API introduction"
+quote = "Simulated river discharge at 5 km resolution from 1984 up to 7 months forecast"
+
+[[claim]]
+id = "glofas-ensemble-percentiles"
+claim_es = "El producto de caudal de GloFAS ofrece percentiles del conjunto para los pronósticos, cuando están disponibles."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://open-meteo.com/en/docs/flood-api"
+locator = "Daily Parameter Definition, river_discharge_p25 and river_discharge_p75 rows"
+quote = "Statistical analysis from ensemble members for river discharge rate in m³/s. Only available for forecasts and not for consolidated historical data."
+
+[[claim]]
+id = "senamhi-hydrometeorological-stations"
+claim_es = "SENAMHI publica datos hidrometeorológicos nacionales de estaciones meteorológicas e hidrológicas convencionales y automáticas."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
+locator = "Datos Hidrometeorológicos a Nivel Nacional, station list"
+quote = "Estación Meteorológica Convencional; Estación Meteorológica Automatica; Estación Hidrológica Convencional; Estación Hidrológica Automatica"
