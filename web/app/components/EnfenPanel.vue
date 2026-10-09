@@ -20,6 +20,7 @@ const summary = computed(() =>
   <section class="panel enfen-panel" aria-labelledby="enfen-title">
     <div class="prose">
       <h2 id="enfen-title">{{ messages.panels.enfen.title }}</h2>
+      <p>{{ messages.panels.enfen.magnitudeNote }}</p>
     </div>
     <div class="figure">
       <ChartShell :dataset="dataset" :summary="summary">

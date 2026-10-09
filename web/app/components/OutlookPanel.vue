@@ -79,6 +79,7 @@ const option = computed(() => {
       <h2 id="outlook-title">{{ messages.panels.outlook.title }}</h2>
       <p class="source-label">{{ messages.panels.outlook.sourceLabel }}</p>
       <p>{{ messages.panels.outlook.sourceClaim }}</p>
+      <p>{{ messages.panels.outlook.probabilityMeaning }}</p>
     </div>
     <div class="figure">
       <ChartShell :dataset="dataset" :summary="summary">

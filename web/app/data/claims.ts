@@ -21,6 +21,8 @@ const verifiedClaims = {
     'El sistema de alerta de ENFEN tiene cinco estados y se anuncia en cada comunicado; Vigilancia se activa cuando el pronóstico indica una probabilidad superior al 50 % de condiciones cálidas.',
   'alerts-are-probabilistic-and-updated':
     'Los estados de alerta de ENFEN tienen incertidumbre y se actualizan con observaciones y predicciones.',
+  'enfen-magnitude-wording':
+    'Los comunicados de ENFEN expresan la magnitud esperada con palabras y en condicional, y muestran las probabilidades mensuales de condiciones cálidas, frías y neutra en una figura.',
   'historical-coastal-chronology':
     'La cronología operativa de ENFEN clasifica 1982–1983 y 1997–1998 como El Niño Costero extraordinario, y 2017 como moderado, con periodos distintos.',
   'nino-region-definitions':
@@ -29,12 +31,20 @@ const verifiedClaims = {
     'El producto semanal relativo de OISST publica valores para las regiones Niño 1+2 y Niño 3.4.',
   'noaa-enso-strength-probabilities':
     'El producto de probabilidades de intensidad de NOAA CPC muestra nueve temporadas móviles de tres meses y categorías de intensidad de El Niño y La Niña.',
+  'noaa-enso-probability-meaning':
+    'NOAA CPC expresa la intensidad como el porcentaje de probabilidad de cada categoría en cada temporada, verificado con el RONI en Niño 3.4 con umbrales de 0,5 °C; un 0 % es aproximado, no imposible, y la intensidad del evento no equivale necesariamente a la intensidad de su impacto.',
   'chirps-rainfall-estimates':
     'CHIRPS combina estimaciones satelitales de lluvia con observaciones de estaciones para producir una serie de precipitación cuadriculada de 0,05° sobre tierra.',
+  'chirps-pentad-latency':
+    'CHIRPS es fundamentalmente un producto pentadal y mensual; la versión preliminar de CHIRPS v3 está disponible dos días después de cada pentada y el producto final se produce una vez al mes, normalmente en la tercera semana del mes siguiente.',
   'era5-historical-reanalysis':
     'ERA5 aporta reanálisis meteorológico histórico a 0,25° desde 1940, incluida la precipitación.',
+  'era5-latency-and-limitations':
+    'Open-Meteo actualiza ERA5 a diario y con un retraso de varios días.',
   'glofas-river-discharge-forecast':
     'El producto GloFAS de caudal simulado ofrece una serie desde 1984 y un pronóstico de hasta siete meses.',
+  'glofas-river-point-limits':
+    'El caudal de GloFAS se calcula con una malla de 5 km: para unas coordenadas la API devuelve el caudal del río más grande en un área de 5 km, y puede no elegir el río más cercano.',
   'glofas-ensemble-percentiles':
     'El producto de caudal de GloFAS ofrece percentiles del conjunto para los pronósticos, cuando están disponibles.',
   'senamhi-hydrometeorological-stations':

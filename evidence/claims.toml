@@ -137,6 +137,27 @@ locator = "Nota Técnica ENFEN 02-2026, PDF p. 2, lines 49-59"
 quote = "En los CO se explicará claramente que estos estados de alerta se sustentan en pronósticos de naturaleza probabilística, con niveles de incertidumbre. Por lo tanto, dichos estados serán actualizados de acuerdo al análisis de las observaciones oceánicas y atmosféricas, así como de las predicciones de los modelos climáticos."
 
 [[claim]]
+id = "enfen-magnitude-wording"
+claim_es = "Los comunicados de ENFEN expresan la magnitud esperada con palabras y en condicional, y muestran las probabilidades mensuales de condiciones cálidas, frías y neutra en una figura."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, lines 15-16"
+quote = "se mantendría con una magnitud extraordinaria, respecto al calentamiento del mar"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, line 19"
+quote = "El Niño (región Niño 3.4 - Figura 1) se mantendría con una magnitud muy fuerte"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, Figura 2 caption, lines 30-31"
+quote = "Probabilidades mensuales estimadas por el ENFEN de las condiciones cálidas, frías y neutra"
+
+[[claim]]
 id = "historical-coastal-chronology"
 claim_es = "La cronología operativa de ENFEN clasifica 1982–1983 y 1997–1998 como El Niño Costero extraordinario, y 2017 como moderado, con periodos distintos."
 status = "verified"
@@ -178,7 +199,33 @@ date_checked = "2026-10-09"
 [[claim.source]]
 ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/"
 locator = "Official NOAA CPC ENSO Strength Probabilities, paragraphs 1–2"
-quote = "The bars show the chance of El Niño, ENSO-Neutral, and La Niña provided for 9 upcoming, overlapping 3-month seasons. The color shading within the bars indicates the chances of different categories of El Niño or La Niña strength (weak, moderate, strong, and very strong)."
+quote = "The bars show the chance of El Niño (red bars), ENSO-Neutral (grey bars), and La Niña (blue bars) provided for 9 upcoming, overlapping 3-month seasons (each letter represents a month, for example, F = February). The color shading within the bars indicates the chances of different categories of El Niño or La Niña strength (weak, moderate, strong, and very strong)."
+
+[[claim]]
+id = "noaa-enso-probability-meaning"
+claim_es = "NOAA CPC expresa la intensidad como el porcentaje de probabilidad de cada categoría en cada temporada, verificado con el RONI en Niño 3.4 con umbrales de 0,5 °C; un 0 % es aproximado, no imposible, y la intensidad del evento no equivale necesariamente a la intensidad de su impacto."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/"
+locator = "Official NOAA CPC ENSO Strength Probabilities, paragraph 1"
+quote = "Alternatively, the table presents the percent chances of each strength category in numerical form."
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/"
+locator = "Official NOAA CPC ENSO Strength Probabilities, Additional Information"
+quote = "Probabilities are verified using the Relative Oceanic Niño Index (RONI), using incremental -/+ 0.5 degree Celsius thresholds in sea surface temperature departures averaged in the Niño-3.4 region of the east-central equatorial Pacific Ocean (170–120W, 5S–5N)."
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/"
+locator = "Official NOAA CPC ENSO Strength Probabilities, Additional Information"
+quote = "The strength of El Niño or La Niña does not necessarily correspond with the strength of the influence or expected impact."
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/"
+locator = "Official NOAA CPC ENSO Strength Probabilities, Additional Information"
+quote = "A 0% chance is approximate and not exact, meaning there is still some finite, non-zero chance (e.g. .01%) of the outcome occurring."
 
 [[claim]]
 id = "chirps-rainfall-estimates"
@@ -190,6 +237,27 @@ date_checked = "2026-10-09"
 ref = "https://chc.ucsb.edu/data/chirps3"
 locator = "CHIRPS v3 description"
 quote = "CHIRPS v3 combines satellite-based thermal infrared rainfall estimates (CHIRP) with in-situ station observations to produce a 0.05° gridded rainfall time series over land."
+
+[[claim]]
+id = "chirps-pentad-latency"
+claim_es = "CHIRPS es fundamentalmente un producto pentadal y mensual; la versión preliminar de CHIRPS v3 está disponible dos días después de cada pentada y el producto final se produce una vez al mes, normalmente en la tercera semana del mes siguiente."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://www.chc.ucsb.edu/data/chirps3"
+locator = "CHIRPS v3 description, product timing"
+quote = "CHIRPS v3 Preliminary incorporates rapidly updated station observations and is available 2 days after the end of a pentad"
+
+[[claim.source]]
+ref = "https://www.chc.ucsb.edu/data/chirps3"
+locator = "CHIRPS v3 description, product timing"
+quote = "The CHIRPS v3 final product blends in best available station inputs and is produced once a month, typically on the third week of the following month."
+
+[[claim.source]]
+ref = "https://www.chc.ucsb.edu/data/chirps3"
+locator = "CHIRPS v3 description, time steps"
+quote = "CHIRPS is fundamentally a pentad and monthly product, and all other time-steps are derived from those."
 
 [[claim]]
 id = "era5-historical-reanalysis"
@@ -208,6 +276,17 @@ locator = "Daily Parameter Definition, precipitation_sum row"
 quote = "Sum of daily precipitation (including rain, showers and snowfall)"
 
 [[claim]]
+id = "era5-latency-and-limitations"
+claim_es = "Open-Meteo actualiza ERA5 a diario y con un retraso de varios días."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://open-meteo.com/en/docs/historical-weather-api"
+locator = "Data Sources table, ERA5 row, update frequency"
+quote = "Daily with 5 days delay"
+
+[[claim]]
 id = "glofas-river-discharge-forecast"
 claim_es = "El producto GloFAS de caudal simulado ofrece una serie desde 1984 y un pronóstico de hasta siete meses."
 status = "verified"
@@ -217,6 +296,27 @@ date_checked = "2026-10-09"
 ref = "https://open-meteo.com/en/docs/flood-api"
 locator = "Flood API introduction"
 quote = "Simulated river discharge at 5 km resolution from 1984 up to 7 months forecast"
+
+[[claim.source]]
+ref = "https://open-meteo.com/en/docs/flood-api"
+locator = "Data Sources"
+quote = "Per default, GloFAS version 4 with seamless data from 1984 until 7 months of forecast is used."
+
+[[claim]]
+id = "glofas-river-point-limits"
+claim_es = "El caudal de GloFAS se calcula con una malla de 5 km: para unas coordenadas la API devuelve el caudal del río más grande en un área de 5 km, y puede no elegir el río más cercano."
+status = "verified"
+date_checked = "2026-10-09"
+
+[[claim.source]]
+ref = "https://open-meteo.com/en/docs/flood-api"
+locator = "Data Sources"
+quote = "Please note: Due to the 5 km resolution the closest river might not be selected correctly."
+
+[[claim.source]]
+ref = "https://open-meteo.com/en/docs/flood-api"
+locator = "API Documentation"
+quote = "returns river discharge data from the largest river in a 5 km area for the given coordinates."
 
 [[claim]]
 id = "glofas-ensemble-percentiles"

@@ -27,6 +27,7 @@ useSiteSeo({ title: messages.rios.seoTitle, description: messages.rios.seoDescri
         <p class="eyebrow">{{ messages.page.brand }}</p>
         <h1 id="rios-title">{{ messages.rios.title }}</h1>
         <p>{{ messages.rios.lead }}</p>
+        <p>{{ messages.rios.limitsNote }}</p>
       </section>
 
       <div class="figure">
