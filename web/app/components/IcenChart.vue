@@ -32,7 +32,9 @@ const chartOption = computed(() => {
       textStyle: { color: colors.text },
       formatter: (params: { axisValue: string; value: number }[]) => {
         const point = params[0]
-        return point ? `${point.axisValue}<br/>ICEN: ${formatValue(point.value)} °C` : ''
+        return point
+          ? `${point.axisValue}<br/>${messages.historico.icenTooltip(formatValue(point.value))}`
+          : ''
       },
     },
     xAxis: {
@@ -92,7 +94,7 @@ const chartOption = computed(() => {
           <tbody>
             <tr v-for="record in dataset.records" :key="record.start">
               <th scope="row">{{ record.start }}</th>
-              <td>{{ formatValue(record.icen) }} °C</td>
+              <td>{{ formatValue(record.icen) }} {{ messages.historico.degreeC }}</td>
             </tr>
           </tbody>
         </table>

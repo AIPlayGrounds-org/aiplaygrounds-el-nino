@@ -49,7 +49,7 @@ const status = computed(() => {
  */
 const answer = computed(() => {
   if (!last) return null
-  const value = `${formatAnomaly(last.anomaly)} °C`
+  const value = messages.page.degreeValue(formatAnomaly(last.anomaly), messages.page.degreeC)
   const rule = messages.oni.episodeRule(streak)
   if (phase === 'warm') {
     return streak >= NOAA_EPISODE_SEASONS
@@ -86,7 +86,7 @@ const description = computed(() =>
     ? messages.oni.summary(
         monthName(records[0]!.start),
         monthName(last.end),
-        `${seasonLabel(last)}, ${formatAnomaly(last.anomaly)} °C`,
+        `${seasonLabel(last)}, ${messages.page.degreeValue(formatAnomaly(last.anomaly), messages.page.degreeC)}`,
         status.value.title,
       )
     : '',
@@ -132,7 +132,8 @@ useSiteSeo({
             <p class="byline">
               {{ messages.page.dataBy }}
               <a :href="CPC_ONI_PAGE" target="_blank" rel="noopener"
-                >NOAA<span class="sr-only">{{ messages.page.newTab }}</span></a
+                >{{ messages.page.noaaLink
+                }}<span class="sr-only">{{ messages.page.newTab }}</span></a
               >,
               {{ messages.page.observedUntil(monthName(last.end)) }}
             </p>
@@ -184,6 +185,16 @@ useSiteSeo({
 
         <NinoWeeklyPanel :dataset="weekly" />
         <EnfenPanel :dataset="enfen" />
+
+        <section class="local-path prose" aria-labelledby="local-title">
+          <h2 id="local-title">{{ messages.page.localTitle }}</h2>
+          <p>{{ messages.page.localLead }}</p>
+          <nav class="links" :aria-label="messages.page.localTitle">
+            <NuxtLink to="/territorio">{{ messages.page.localTerritoryLink }}</NuxtLink>
+            <NuxtLink to="/historico">{{ messages.page.localHistoryLink }}</NuxtLink>
+          </nav>
+        </section>
+
         <OutlookPanel :dataset="outlook" />
 
         <section class="explore" aria-labelledby="oni-history">
@@ -247,8 +258,8 @@ useSiteSeo({
                   <tr v-for="r in recent" :key="r.start">
                     <th scope="row">{{ seasonMonths(r) }}</th>
                     <td>{{ seasonLabel(r) }}</td>
-                    <td class="num">{{ formatTemperature(r.sst) }} °C</td>
-                    <td class="num">{{ formatAnomaly(r.anomaly) }} °C</td>
+                    <td class="num">{{ formatTemperature(r.sst) }} {{ messages.page.degreeC }}</td>
+                    <td class="num">{{ formatAnomaly(r.anomaly) }} {{ messages.page.degreeC }}</td>
                     <td>{{ phaseLabel[ensoPhase(r.anomaly)] }}</td>
                   </tr>
                 </tbody>
@@ -443,6 +454,15 @@ h2 {
 
 .explore {
   padding: clamp(64px, 10vw, 112px) 0 0;
+}
+.local-path {
+  max-width: 38rem;
+  margin: clamp(64px, 10vw, 112px) auto 0;
+  padding: 28px 16px 0;
+  border-top: 1px solid var(--border);
+}
+.local-path .links {
+  margin-top: 18px;
 }
 .oisst-panel {
   padding: clamp(64px, 10vw, 112px) 0 0;

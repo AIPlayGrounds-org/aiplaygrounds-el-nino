@@ -74,7 +74,7 @@ const chartOption = computed(() => {
       formatter: (params: { seriesName: string; value: number | null; dataIndex: number }[]) => {
         const offset = (params[0]?.dataIndex ?? 0) + 1
         return [
-          '<b>Mes ' + offset + '</b>',
+          messages.historico.stations.monthTooltip(offset),
           ...params.map((param) => {
             const event =
               param.seriesName === eventLabel('1982-83')
@@ -89,7 +89,7 @@ const chartOption = computed(() => {
               ': ' +
               (param.value === null
                 ? messages.historico.stations.missing
-                : formatValue(param.value) + ' mm')
+                : formatValue(param.value) + ' ' + messages.territory.precipitationUnit)
             )
           }),
         ].join('<br/>')
@@ -107,7 +107,7 @@ const chartOption = computed(() => {
     },
     yAxis: {
       type: 'value',
-      name: 'mm',
+      name: messages.territory.precipitationUnit,
       min: 0,
       axisLabel: { color: theme.value.muted, formatter: (value: number) => formatValue(value) },
       splitLine: { lineStyle: { color: theme.value.grid } },
@@ -199,9 +199,16 @@ const tableRows = computed(() =>
         <thead>
           <tr>
             <th scope="col">{{ messages.historico.stations.month }}</th>
-            <th scope="col">{{ eventLabel('1982-83') }} (mm)</th>
-            <th scope="col">{{ eventLabel('1997-98') }} (mm)</th>
-            <th scope="col">{{ messages.historico.stations.climatology }} (mm)</th>
+            <th scope="col">
+              {{ eventLabel('1982-83') }} {{ messages.historico.stations.millimeters }}
+            </th>
+            <th scope="col">
+              {{ eventLabel('1997-98') }} {{ messages.historico.stations.millimeters }}
+            </th>
+            <th scope="col">
+              {{ messages.historico.stations.climatology }}
+              {{ messages.historico.stations.millimeters }}
+            </th>
           </tr>
         </thead>
         <tbody>

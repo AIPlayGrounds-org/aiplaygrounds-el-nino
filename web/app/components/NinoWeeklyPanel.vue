@@ -63,7 +63,8 @@ const option = computed(() => {
       backgroundColor: t.surface,
       borderColor: t.border,
       textStyle: { color: t.text },
-      valueFormatter: (value: number) => `${formatValue(value)} °C`,
+      valueFormatter: (value: number) =>
+        messages.panels.weekly.value(formatValue(value), messages.page.degreeC),
     },
     xAxis: {
       type: 'time',

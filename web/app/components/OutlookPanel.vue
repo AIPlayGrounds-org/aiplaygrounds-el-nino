@@ -45,13 +45,13 @@ const option = computed(() => {
       backgroundColor: t.surface,
       borderColor: t.border,
       textStyle: { color: t.text },
-      valueFormatter: (value: number) => `${value} %`,
+      valueFormatter: (value: number) => messages.panels.outlook.percent(value),
     },
     xAxis: {
       type: 'value',
       name: messages.panels.outlook.probability,
       max: 100,
-      axisLabel: { color: t.muted, formatter: (value: number) => `${value} %` },
+      axisLabel: { color: t.muted, formatter: messages.panels.outlook.percent },
       splitLine: { lineStyle: { color: t.grid } },
     },
     yAxis: {
@@ -78,6 +78,7 @@ const option = computed(() => {
     <div class="prose">
       <h2 id="outlook-title">{{ messages.panels.outlook.title }}</h2>
       <p class="source-label">{{ messages.panels.outlook.sourceLabel }}</p>
+      <p>{{ messages.panels.outlook.sourceClaim }}</p>
     </div>
     <div class="figure">
       <ChartShell :dataset="dataset" :summary="summary">

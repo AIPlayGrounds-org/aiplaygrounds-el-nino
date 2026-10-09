@@ -90,8 +90,8 @@ const option = computed(() => {
       itemWidth: 12,
       itemHeight: 200,
       text: [
-        `${formatAnomaly(mapData.valueMax)} ${props.dataset.unit}`,
-        `${formatAnomaly(-mapData.valueMax)} ${props.dataset.unit}`,
+        messages.oisst.value(formatAnomaly(mapData.valueMax), props.dataset.unit),
+        messages.oisst.value(formatAnomaly(-mapData.valueMax), props.dataset.unit),
       ],
       calculable: false,
       textStyle: { color: t.muted },

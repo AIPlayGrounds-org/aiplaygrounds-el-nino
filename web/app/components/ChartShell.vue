@@ -47,7 +47,7 @@ const periodDetails = [
   props.dataset.temporal_resolution,
   period,
   props.dataset.reference_period
-    ? `${messages.provenance.periodBase}: ${props.dataset.reference_period}`
+    ? messages.provenance.periodValue(props.dataset.reference_period)
     : null,
 ]
   .filter(Boolean)

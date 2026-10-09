@@ -54,13 +54,15 @@ const metricLabel = computed(() =>
 )
 const number = new Intl.NumberFormat('es-PE', { maximumFractionDigits: 1 })
 const formatAmount = (value: number | null | undefined, unit: string) =>
-  value === null || value === undefined ? territory.noData : `${number.format(value)} ${unit}`
+  value === null || value === undefined
+    ? territory.noData
+    : territory.value(number.format(value), unit)
 const displayPrecipitation = (value: number | null | undefined) =>
   formatAmount(value, territory.precipitationUnit)
 const displayAnomaly = (value: number | null | undefined) =>
   value === null || value === undefined
     ? territory.noData
-    : `${formatValue(value)} ${territory.anomalyUnit}`
+    : territory.value(formatValue(value), territory.anomalyUnit)
 const displayMetricValue = (record: ChirpsRecord) =>
   metric.value === 'precipitation'
     ? displayPrecipitation(record.precipitation_mm)
@@ -262,6 +264,7 @@ useSiteSeo({ title: territory.seoTitle, description: territory.seoDescription })
       <ChartShell :dataset="era5" :summary="era5Summary">
         <div v-if="era5Records.length" class="cross-check">
           <h2>{{ territory.crossCheckTitle }}</h2>
+          <p>{{ territory.crossCheckClaim }}</p>
           <p>
             {{ territory.crossCheckLead(era5.window.days, era5.window.start, era5.window.end) }}
           </p>

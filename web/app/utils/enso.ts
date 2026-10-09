@@ -1,5 +1,6 @@
 // Classify ONI anomalies with NOAA's official thresholds.
 import type { OniRecord } from '~/types/dataset'
+import { messages } from '~/messages'
 
 export const ENSO_THRESHOLD = 0.5
 // NOAA habla de episodio El Niño o La Niña a partir de 5 trimestres seguidos sobre el umbral.
@@ -43,7 +44,7 @@ const parseMonth = (yyyymm: string) => {
 /** «2026-08» → «agosto de 2026». */
 export const monthName = (yyyymm: string) => {
   const { year, month } = parseMonth(yyyymm)
-  return `${MONTHS[month - 1]} de ${year}`
+  return messages.calendar.month(MONTHS[month - 1]!, year)
 }
 
 /** Meses que cubre un trimestre: «junio a agosto de 2026» o «diciembre de 1949 a febrero de 1950». */
@@ -51,8 +52,8 @@ export const seasonMonths = (record: OniRecord) => {
   const start = parseMonth(record.start)
   const end = parseMonth(record.end)
   return start.year === end.year
-    ? `${MONTHS[start.month - 1]} a ${monthName(record.end)}`
-    : `${monthName(record.start)} a ${monthName(record.end)}`
+    ? messages.calendar.sameYearRange(MONTHS[start.month - 1]!, monthName(record.end))
+    : messages.calendar.crossYearRange(monthName(record.start), monthName(record.end))
 }
 
 /** Fecha del mes central del trimestre (JJA 2026 → 2026-07-01), para dibujarlo y para nombrarlo. */

@@ -127,7 +127,11 @@ const chartOptionFor = (series: HistorySeries[], max: number, description: strin
           `<b>${messages.historico.monthFromStart(params[0]?.axisValue ?? 0)}</b>`,
           ...params.map(
             (param) =>
-              `${param.seriesName}: ${param.value === null ? messages.historico.missing : `${formatValue(param.value)} °C`}`,
+              `${param.seriesName}: ${
+                param.value === null
+                  ? messages.historico.missing
+                  : messages.historico.value(formatValue(param.value), messages.page.degreeC)
+              }`,
           ),
         ].join('<br/>'),
     },
@@ -140,7 +144,7 @@ const chartOptionFor = (series: HistorySeries[], max: number, description: strin
     },
     yAxis: {
       type: 'value',
-      name: `${messages.historico.anomaly} (°C)`,
+      name: messages.historico.value(messages.historico.anomaly, messages.page.degreeC),
       axisLabel: { color: t.muted, formatter: (value: number) => formatValue(value) },
       splitLine: { lineStyle: { color: t.grid } },
     },
@@ -230,7 +234,11 @@ const oniChartOption = computed(() =>
             <tr v-for="row in tableRows" :key="row.offset">
               <th scope="row">{{ row.offset }}</th>
               <td v-for="(value, index) in row.values" :key="selectedSeries[index]?.event">
-                {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
+                {{
+                  value === null
+                    ? messages.historico.missing
+                    : messages.historico.value(formatValue(value), messages.page.degreeC)
+                }}
               </td>
             </tr>
           </tbody>
@@ -284,7 +292,11 @@ const oniChartOption = computed(() =>
             <tr v-for="row in oniTableRows" :key="row.offset">
               <th scope="row">{{ row.offset }}</th>
               <td v-for="(value, index) in row.values" :key="selectedOniSeries[index]?.event">
-                {{ value === null ? messages.historico.missing : `${formatValue(value)} °C` }}
+                {{
+                  value === null
+                    ? messages.historico.missing
+                    : messages.historico.value(formatValue(value), messages.page.degreeC)
+                }}
               </td>
             </tr>
           </tbody>

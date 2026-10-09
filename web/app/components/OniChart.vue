@@ -101,8 +101,16 @@ const option = computed(() => {
         const record = records[params[0]!.data[2]]!
         return [
           `<b>${seasonLabel(record)}</b> · ${seasonMonths(record)}`,
-          `${messages.chart.anomaly}: ${formatAnomaly(record.anomaly)} °C`,
-          `${messages.chart.seaTemperature}: ${formatTemperature(record.sst)} °C`,
+          messages.chart.value(
+            messages.chart.anomaly,
+            formatAnomaly(record.anomaly),
+            messages.page.degreeC,
+          ),
+          messages.chart.value(
+            messages.chart.seaTemperature,
+            formatTemperature(record.sst),
+            messages.page.degreeC,
+          ),
         ].join('<br/>')
       },
     },
@@ -148,7 +156,10 @@ const option = computed(() => {
             position: 'end',
             color: t.muted,
             formatter: (p: { value: number }) =>
-              `${axisNumber.format(p.value).replace('-', '−')} °C`,
+              messages.page.degreeValue(
+                axisNumber.format(p.value).replace('-', '−'),
+                messages.page.degreeC,
+              ),
           },
           data: [{ yAxis: ENSO_THRESHOLD }, { yAxis: -ENSO_THRESHOLD }],
         },
@@ -173,7 +184,8 @@ const option = computed(() => {
             fontSize: narrow ? 15 : 18,
             backgroundColor: t.surface,
             padding: [2, 4],
-            formatter: () => `${formatAnomaly(last.anomaly)} °C`,
+            formatter: () =>
+              messages.page.degreeValue(formatAnomaly(last.anomaly), messages.page.degreeC),
           },
           data: [{ coord: [isoDay(centerDate(last)), last.anomaly] }],
         },
