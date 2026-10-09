@@ -182,6 +182,7 @@ useSiteSeo({ title: territory.seoTitle, description: territory.seoDescription })
     <section class="intro" aria-labelledby="territory-title">
       <h1 id="territory-title">{{ territory.title }}</h1>
       <p>{{ territory.lead }}</p>
+      <p>{{ territory.leadDetails }}</p>
       <div class="metric-toggle" role="group" :aria-label="territory.metricGroup">
         <button
           type="button"
@@ -265,6 +266,7 @@ useSiteSeo({ title: territory.seoTitle, description: territory.seoDescription })
         <div v-if="era5Records.length" class="cross-check">
           <h2>{{ territory.crossCheckTitle }}</h2>
           <p>{{ territory.crossCheckClaim }}</p>
+          <p>{{ territory.crossCheckLimits }}</p>
           <p>
             {{ territory.crossCheckLead(era5.window.days, era5.window.start, era5.window.end) }}
           </p>

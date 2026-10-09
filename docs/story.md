@@ -23,28 +23,36 @@ The coastal reading uses
 view, the homepage shows the coastal explanation and weekly regional values. The
 historical route places the coastal index after the sea chronology.
 
+The site makes no claim about how El Niño Costero rainfall differs between the
+north and south coasts.
+
 ## What is the official state in Peru?
 
-The official-state reading uses [enfen-alert-states](../evidence/claims.toml).
-The homepage places the official state after the weekly regional values and
-shows the communiqué details when the data contains them.
+The official-state reading uses [enfen-alert-states](../evidence/claims.toml)
+and [enfen-magnitude-wording](../evidence/claims.toml). The homepage places the
+official state after the weekly regional values and shows the communiqué details
+when the data contains them.
 
 ## What do local observations show?
 
 The local views use
 [senamhi-hydrometeorological-stations](../evidence/claims.toml),
-[chirps-rainfall-estimates](../evidence/claims.toml) and
-[era5-historical-reanalysis](../evidence/claims.toml). The homepage links to
+[chirps-rainfall-estimates](../evidence/claims.toml),
+[chirps-pentad-latency](../evidence/claims.toml),
+[era5-historical-reanalysis](../evidence/claims.toml) and
+[era5-latency-and-limitations](../evidence/claims.toml). The homepage links to
 `/territorio` and `/historico` after the official-state section. The historical
 route ends with station observations.
 
 ## What should the reader expect next?
 
 The intensity outlook uses
-[noaa-enso-strength-probabilities](../evidence/claims.toml). It follows the
-local links on the homepage. The river view uses
-[glofas-river-discharge-forecast](../evidence/claims.toml) and
-[glofas-ensemble-percentiles](../evidence/claims.toml); the site keeps that view
+[noaa-enso-strength-probabilities](../evidence/claims.toml) and
+[noaa-enso-probability-meaning](../evidence/claims.toml). It follows the local
+links on the homepage. The river view uses
+[glofas-river-discharge-forecast](../evidence/claims.toml),
+[glofas-ensemble-percentiles](../evidence/claims.toml) and
+[glofas-river-point-limits](../evidence/claims.toml); the site keeps that view
 separate from the ocean signal.
 
 ## What happened in past events?

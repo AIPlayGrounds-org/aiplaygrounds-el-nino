@@ -266,6 +266,7 @@ export const messages = {
     sectionLabel: 'Territorio',
     title: 'Lluvia por departamento',
     lead: claim('chirps-rainfall-estimates'),
+    leadDetails: claim('chirps-pentad-latency'),
     metricGroup: 'Métrica del mapa',
     precipitation: 'Precipitación',
     anomaly: 'Anomalía',
@@ -290,6 +291,7 @@ export const messages = {
     chartError: 'Error de mapa',
     crossCheckTitle: 'Comprobación con ERA5',
     crossCheckClaim: claim('era5-historical-reanalysis'),
+    crossCheckLimits: claim('era5-latency-and-limitations'),
     crossCheckLead: (days: number, start: string, end: string) =>
       `ERA5 · ${days} días · ${formatDay(start)}–${formatDay(end)}`,
     crossCheckCaption: 'Celda ERA5',
@@ -314,6 +316,7 @@ export const messages = {
     title: 'Caudal de ríos',
     lead: claim('glofas-river-discharge-forecast'),
     modelNote: claim('glofas-ensemble-percentiles'),
+    limitsNote: claim('glofas-river-point-limits'),
     pointLabel: 'Punto de cuenca',
     estimatedSeries: 'Estimación del modelo',
     forecastSeries: 'Pronóstico del modelo',
@@ -374,12 +377,14 @@ export const messages = {
       nextDue: 'Próxima fecha prevista',
       nextDueStale: (date: string) => `Próximo comunicado · ${date}`,
       detail: 'Ver el comunicado oficial',
+      magnitudeNote: claim('enfen-magnitude-wording'),
       empty: 'Sin comunicados',
     },
     outlook: {
       title: 'Probabilidades de intensidad',
       sourceLabel: 'Producto NOAA CPC',
       sourceClaim: claim('noaa-enso-strength-probabilities'),
+      probabilityMeaning: claim('noaa-enso-probability-meaning'),
       summary: (seasons: number, issueDate: string) =>
         `Probabilidades · ${seasons} temporadas · ${issueDate}`,
       issueDate: 'Emisión',
