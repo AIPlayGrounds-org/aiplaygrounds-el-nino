@@ -24,9 +24,7 @@ describe('OISST map data', () => {
     const map = buildOisstMap(gridFixture.records[0])
 
     expect(map.warmest).toEqual({ lat: 0, lon: -79, value: 0.5 })
-    expect(summarizeOisst(map, '2026-10-01', '°C')).toBe(
-      'La celda más cálida del 2026-10-01 registra +0,50 °C (0° N, 79° O).',
-    )
+    expect(summarizeOisst(map, '2026-10-01', '°C')).toBe('Máxima +0,50 °C · 0° N, 79° O')
   })
 
   it('aggregates non-null cells into one-degree latitude bands', () => {
@@ -86,7 +84,7 @@ describe('OisstMap component', () => {
   it('renders the summary, provenance and band table for a grid fixture', () => {
     const wrapper = mountMap(gridFixture)
 
-    expect(wrapper.text()).toContain('La celda más cálida del 2026-10-01')
+    expect(wrapper.text()).toContain('Máxima +0,50 °C')
     expect(wrapper.get('.provenance').text()).toContain(gridFixture.variable)
     expect(wrapper.findAll('tbody tr')).toHaveLength(2)
     expect(wrapper.get('summary').text()).toBe(messages.oisst.tableSummary)

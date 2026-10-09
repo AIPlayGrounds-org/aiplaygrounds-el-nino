@@ -150,10 +150,10 @@ describe('DatasetAttribution', () => {
     })
     const link = wrapper.get('a')
 
-    expect(link.text()).toContain('Weather data by Open-Meteo.com')
+    expect(link.text()).toContain('Datos meteorológicos')
     expect(link.attributes('href')).toBe('https://open-meteo.com/')
     expect(wrapper.text()).toContain('ERA5')
-    expect(wrapper.text()).toContain('Copernicus Climate Change Service')
+    expect(wrapper.text()).toContain('Datos ERA5')
     expect(wrapper.text()).not.toContain(territoryEra5DatasetFixture.source.product)
   })
 
@@ -163,7 +163,7 @@ describe('DatasetAttribution', () => {
     })
 
     expect(wrapper.get('a').attributes('href')).toBe('https://open-meteo.com/')
-    expect(wrapper.text()).toContain('Copernicus Emergency Management Service')
+    expect(wrapper.text()).toContain('Datos GloFAS')
   })
 
   it('prints nothing for a dataset that is not from Open-Meteo', () => {
