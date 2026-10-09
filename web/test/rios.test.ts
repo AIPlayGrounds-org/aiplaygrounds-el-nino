@@ -94,10 +94,8 @@ describe('RiosChart', () => {
     expect(wrapper.text()).toContain('Sin dato')
     expect(wrapper.find('tbody tr').text()).toContain('No aplica')
     expect(options[0]?.series.map((series) => series.name)).toContain('Pronóstico del modelo')
-    expect(wrapper.text()).toContain(
-      'el último valor estimado del periodo reciente es 1.67 m³/s (3 de octubre de 2026)',
-    )
-    expect(wrapper.text()).toContain('El pronóstico del modelo comienza el 4 de octubre de 2026.')
+    expect(wrapper.text()).toContain('Canete · 1.67 m³/s · 3 de octubre de 2026')
+    expect(wrapper.text()).toContain('4 de octubre de 2026')
 
     await wrapper.find('select').setValue('Mantaro')
     await nextTick()

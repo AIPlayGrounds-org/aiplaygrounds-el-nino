@@ -115,7 +115,7 @@ describe('OutlookPanel', () => {
   it('counts the seasons from the records in the summary', () => {
     const { wrapper } = mountOutlook(outlookFixture)
 
-    expect(wrapper.text()).toContain('para 3 temporadas móviles')
+    expect(wrapper.text()).toContain('Probabilidades · 3 temporadas')
   })
 
   it('shows the month-only issue date without a day', () => {
@@ -149,7 +149,7 @@ describe('OutlookPanel', () => {
     expect(option().series.map((series: { name: string }) => series.name)).toEqual(labels)
     expect(wrapper.findAll('.category-key li').map((item) => item.text())).toEqual(labels)
     expect(wrapper.text()).not.toContain('Index')
-    expect(wrapper.get('.source-label').text()).toBe('Pronóstico de NOAA CPC')
+    expect(wrapper.get('.source-label').text()).toBe(messages.panels.outlook.sourceLabel)
   })
 })
 
@@ -190,7 +190,7 @@ describe('EnfenPanel', () => {
   it('shows the official status, dates and detail link of a current communique', () => {
     const wrapper = mountEnfen(false)
 
-    expect(wrapper.get('.number').text()).toBe('Comunicado n.º 17 · 2026')
+    expect(wrapper.get('.number').text()).toBe('Comunicado 17 · 2026')
     expect(wrapper.get('.status').text()).toBe('Alerta de El Niño Costero')
     expect(wrapper.text()).toContain('Estado oficial')
     expect(wrapper.text()).toContain('28 de septiembre de 2026')
@@ -204,9 +204,7 @@ describe('EnfenPanel', () => {
   it('says the next communique is not yet published when the record is stale', () => {
     const wrapper = mountEnfen(true)
 
-    expect(wrapper.get('.stale-status').text()).toBe(
-      'Próximo comunicado previsto el 15 de octubre de 2026; aún no publicado',
-    )
+    expect(wrapper.get('.stale-status').text()).toBe('Próximo comunicado · 15 de octubre de 2026')
     expect(wrapper.text()).toContain('Último estado oficial')
     expect(wrapper.get('.status').text()).toBe('Alerta de El Niño Costero')
   })

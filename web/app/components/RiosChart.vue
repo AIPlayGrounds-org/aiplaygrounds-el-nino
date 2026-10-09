@@ -47,12 +47,12 @@ const firstForecast = computed(() => firstForecastRiverRecord(records.value))
 const theme = useChartTheme()
 
 const displayValue = (value: number | null) =>
-  value === null ? rios.noData : `${formatDischarge(value)} ${props.dataset.unit}`
+  value === null ? rios.noData : rios.value(formatDischarge(value), props.dataset.unit)
 const displayRange = (record: RiosRecord) => {
   if (record.data_type !== 'forecast') return rios.notApplicable
   const range = riverRange(record)
   return range
-    ? `${formatDischarge(range[0]!)}–${formatDischarge(range[1]!)} ${props.dataset.unit}`
+    ? rios.value(`${formatDischarge(range[0]!)}–${formatDischarge(range[1]!)}`, props.dataset.unit)
     : rios.noData
 }
 
@@ -96,7 +96,7 @@ const option = computed(() => {
       borderColor: t.border,
       textStyle: { color: t.text },
       valueFormatter: (value: number | null) =>
-        value === null ? rios.noData : `${formatDischarge(value)} ${props.dataset.unit}`,
+        value === null ? rios.noData : rios.value(formatDischarge(value), props.dataset.unit),
     },
     xAxis: {
       type: 'time',

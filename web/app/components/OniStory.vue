@@ -64,10 +64,6 @@ const phaseWord = {
   neutral: messages.story.neutralPhase,
 }[phase]
 
-// Del borde este de Niño 3.4 (120° O) a la costa peruana (unos 81° O) hay unos 39° sobre el ecuador,
-// es decir, unos 4300 km; el texto lo redondea hacia abajo.
-const DISTANCE_KM = '4000'
-
 type Scene = 'map' | 'chart'
 type Step = { scene: Scene; html: string; state: string }
 const steps: Step[] = [
@@ -75,11 +71,6 @@ const steps: Step[] = [
     scene: 'map',
     state: 'box',
     html: messages.story.stepMap,
-  },
-  {
-    scene: 'map',
-    state: 'distance',
-    html: messages.story.stepDistance(DISTANCE_KM),
   },
   {
     scene: 'map',
@@ -267,8 +258,6 @@ const map = computed(() => {
     frame: { x: ox, y: oy, width: (e.east - e.west) * scale, height: (e.north - e.south) * scale },
     nino34: { x: x(-170), y: y(5), width: x(-120) - x(-170), height: y(-5) - y(5) },
     equator: y(0),
-    arrow: { x1: x(-120), y1: y(-5), x2: x(-77.2), y2: y(-12.2) },
-    distance: { x: (x(-120) + x(-77.2)) / 2, y: (y(-5) + y(-12.2)) / 2 + 26 },
     peru: { x: x(-75), y: y(-9) },
     label: { x: Math.max(x(-145), ox + 8), y: y(5) - 12 },
     equatorLabel: { x: x(-117), y: y(0) - 8 },
@@ -377,36 +366,12 @@ const lineOn = computed(() => !show('dot', 'band'))
             <text class="hand warm" :x="map.label.x" :y="map.label.y">
               {{ messages.story.ninoRegion }}
             </text>
-            <g class="fade" :class="{ on: show('distance') }">
-              <line
-                class="arrow"
-                v-bind="map.arrow"
-                marker-end="url(#story-arrow)"
-                marker-start="url(#story-arrow)"
-              />
-              <text class="hand" :x="map.distance.x" :y="map.distance.y" text-anchor="middle">
-                {{ messages.story.distance(DISTANCE_KM) }}
-              </text>
-            </g>
             <g class="fade" :class="{ on: show('measure') }">
               <text class="hand warm big" :x="map.thermo.x" :y="map.thermo.y">
                 <tspan :x="map.thermo.x">{{ messages.story.anomalyEquation[0] }}</tspan>
                 <tspan :x="map.thermo.x" dy="1.2em">{{ messages.story.anomalyEquation[1] }}</tspan>
               </text>
             </g>
-            <defs>
-              <marker
-                id="story-arrow"
-                viewBox="0 0 10 10"
-                refX="9"
-                refY="5"
-                markerWidth="7"
-                markerHeight="7"
-                orient="auto-start-reverse"
-              >
-                <path d="M0,0 L10,5 L0,10 z" class="arrow-head" />
-              </marker>
-            </defs>
           </g>
 
           <!-- Escena 2: el índice en el tiempo. -->
@@ -439,7 +404,9 @@ const lineOn = computed(() => !show('dot', 'band'))
                   {{ v > 0 ? '+' : v < 0 ? '−' : '' }}{{ Math.abs(v) }}
                 </text>
               </g>
-              <text :x="plot.m.left - 10" :y="plot.m.top - 18" class="unit">°C</text>
+              <text :x="plot.m.left - 10" :y="plot.m.top - 18" class="unit">
+                {{ messages.page.degreeC }}
+              </text>
               <g v-for="yr in plot.years" :key="`${yr.label}-${Math.round(yr.x)}`">
                 <text :x="yr.x" :y="plot.m.top + plot.h + 26" text-anchor="middle">
                   {{ yr.label }}
@@ -492,7 +459,7 @@ const lineOn = computed(() => !show('dot', 'band'))
             <g class="fade" :class="{ on: show('year') && Math.abs(rise) >= 0.5 }">
               <text class="hand rise" :class="phase" :x="pt(middle).cx + 14" :y="pt(middle).cy + 4">
                 <tspan :x="pt(middle).cx + 14">
-                  {{ rise > 0 ? '+' : '−' }}{{ formatMagnitude(rise) }} °C
+                  {{ rise > 0 ? '+' : '−' }}{{ formatMagnitude(rise) }} {{ messages.page.degreeC }}
                 </tspan>
                 <tspan :x="pt(middle).cx + 14" dy="1.15em">
                   {{ messages.story.risePeriod(turnSteps) }}
@@ -567,7 +534,7 @@ const lineOn = computed(() => !show('dot', 'band'))
               :x="pt(last).cx + (narrow ? 10 : 14)"
               :y="pt(last).cy + 7"
             >
-              {{ fmt(last.anomaly) }} °C
+              {{ fmt(last.anomaly) }} {{ messages.page.degreeC }}
             </text>
           </g>
         </svg>
@@ -725,14 +692,6 @@ svg {
   fill: var(--warm-tint);
   stroke: var(--warm);
   stroke-width: 2.5;
-}
-.arrow {
-  stroke: var(--text);
-  stroke-width: 1.5;
-  stroke-dasharray: 5 4;
-}
-.arrow-head {
-  fill: var(--text);
 }
 .hand {
   font-family: var(--hand);
