@@ -90,7 +90,7 @@ data_type = "observed"
 spatial_resolution = "Región Niño 1+2"
 temporal_resolution = "Mensual, media móvil de tres meses"
 history = "IGP numeric table from 1950"
-reference_period = "1991–2020 según ENFEN (2024)"
+reference_period = "Climatología móvil de 30 años; 1991–2020 desde 2006 (ENFEN, 2024)"
 cadence = "Daily check; the upstream update lag is unconfirmed."
 notes = [
   "The official table header cites ENFEN (2024) and says `Versión oficial`.",
@@ -367,9 +367,10 @@ notes = [
   "v3 can have different properties from v2.",
   "The preliminary Latin America pentad GeoTIFF directory is discovered at runtime; the newest file in its listing ends the rolling 36-month window.",
   "Preliminary pentads are published about two days after the pentad ends. Missing values are -9999; values above 5,000 mm per pentad fail validation.",
+  "A department value is the unweighted mean of the 0.05° cells its boundary touches (`all_touched`): every touched cell counts once, whatever share of it lies inside the department. It is not area-weighted.",
   "The live preliminary archive begins in 2025-01 and can have an absent pentad; the module publishes only files present in the discovered rolling window and never fills gaps from the final product.",
   "The static department baseline is the arithmetic mean of 1991–2020 CHC v3 final pentad GeoTIFFs from https://data.chc.ucsb.edu/products/CHIRPS/v3.0/pentads/latam/tifs/, using the same department mask; February P6 is split into common and leap years.",
-  "Anomalies subtract this final-pentad climatology from preliminary pentad department means. Preliminary and final products are never mixed for a single input.",
+  "Anomalies subtract this final-pentad climatology from preliminary pentad department means, so an anomaly compares a preliminary value with a final base. No single input mixes the two products.",
 ]
 
 [source.access]
