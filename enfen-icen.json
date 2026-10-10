@@ -11,7 +11,7 @@
   "spatial_resolution": "Región Niño 1+2",
   "temporal_resolution": "Mensual, media móvil de tres meses",
   "reference_period": "1991–2020 según ENFEN (2024)",
-  "ingestion_time": "2026-10-09T19:32:13+00:00",
+  "ingestion_time": "2026-10-10T18:33:35+00:00",
   "processing_version": "0.1.0",
   "records": [
     {
