@@ -4,12 +4,6 @@ import { parseClaims } from './claim-registry'
 
 export const renderClaims = (registry: string): string => {
   const verifiedClaims = parseClaims(registry).filter((claim) => claim.status === 'verified')
-  const ids = new Set<string>()
-  for (const claim of verifiedClaims) {
-    if (ids.has(claim.id)) throw new Error(`duplicate claim id: ${claim.id}`)
-    ids.add(claim.id)
-  }
-
   const entries = verifiedClaims
     .map((claim) => `  ${JSON.stringify(claim.id)}: ${JSON.stringify(claim.claimEs)},`)
     .join('\n')

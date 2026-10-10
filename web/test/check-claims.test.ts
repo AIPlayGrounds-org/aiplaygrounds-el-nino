@@ -11,9 +11,9 @@ claim_es = "Una afirmación verificada con ${escapedQuote}"comillas${escapedQuot
 status = "verified"
 
 [[claim]]
-id = "pending-id"
-claim_es = "Afirmación pendiente"
-status = "pending"
+id = "held-id"
+claim_es = "Afirmación retenida"
+status = "held"
 
 [[claim]]
 id = "multiline-id"
@@ -41,9 +41,23 @@ describe('claim check', () => {
     expect(result.errors).toEqual(['claim id is unknown: missing-id'])
   })
 
-  it('rejects an unverified claim id', async () => {
-    const result = await site("import { claim } from './claims'; claim('pending-id')")
-    expect(result.errors).toEqual(['claim id is not verified: pending-id'])
+  it('rejects a held claim id', async () => {
+    const result = await site("import { claim } from './claims'; claim('held-id')")
+    expect(result.errors).toEqual(['claim id is not verified: held-id'])
+  })
+
+  it('does not bundle a held claim', () => {
+    expect(renderClaims(registry)).not.toContain('held-id')
+  })
+
+  it('rejects a status that is neither verified nor held', () => {
+    const typo = registry.replace('status = "held"', 'status = "verifed"')
+    expect(() => parseClaims(typo)).toThrow('claim held-id has status "verifed"')
+  })
+
+  it('rejects a duplicate claim id, whatever its status', () => {
+    const duplicate = `${registry}\n[[claim]]\nid = "held-id"\nclaim_es = "Otra"\nstatus = "held"\n`
+    expect(() => parseClaims(duplicate)).toThrow('duplicate claim id: held-id')
   })
 
   it('rejects an unknown claim id in a Vue template', async () => {
@@ -87,7 +101,7 @@ describe('claim check', () => {
         claimEs: 'Una afirmación verificada con "comillas".',
         status: 'verified',
       },
-      { id: 'pending-id', claimEs: 'Afirmación pendiente', status: 'pending' },
+      { id: 'held-id', claimEs: 'Afirmación retenida', status: 'held' },
       { id: 'multiline-id', claimEs: 'Una afirmación\nen varias líneas.\n', status: 'verified' },
     ])
     const result = await site("import { claim } from './claims'; claim('multiline-id')")

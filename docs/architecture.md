@@ -41,6 +41,8 @@ public source
 | [`cli.py`](../pipeline/src/wawapacha_pipeline/cli.py)                              | The `wawapacha-pipeline` commands `run`, `due`, `freshness`, `sources`, `new-source`, `snapshot-check` and `enfen-add`.                                   |
 | [`tests/`](../pipeline/tests/)                                                     | Source behavior, checked against real input samples in `tests/samples/`. No test needs the network.                                                       |
 | [`scripts/build_chirps_baseline.py`](../pipeline/scripts/build_chirps_baseline.py) | Builds the checked-in CHIRPS 1991–2020 department climatology, [`chirps_baseline.json`](../pipeline/src/wawapacha_pipeline/sources/chirps_baseline.json). |
+| [`scripts/check_icen.py`](../pipeline/scripts/check_icen.py)                       | Checks the ICEN claims in [`claims.toml`](../evidence/claims.toml) against the live `ICEN.txt`.                                                           |
+| [`scripts/check_weekly_nino.py`](../pipeline/scripts/check_weekly_nino.py)         | Checks the weekly Niño claims in [`claims.toml`](../evidence/claims.toml) against the two CPC files.                                                      |
 
 A source id maps to its module:
 `sources/<id with hyphens replaced by underscores>.py`. Discovery requires the
@@ -72,7 +74,7 @@ describe what runs them.
 | [`utils/format.ts`](../web/app/utils/format.ts)                                 | Shared Spanish number and date formatting, including Lima time and river-discharge precision.                                                                                              |
 | [`types/dataset.ts`](../web/app/types/dataset.ts)                               | TypeScript types generated from the schema, plus the dataset ids, the id-to-record map and `staleAfterHours`, built from the source catalog. Regenerate it with `bun run types` in `web/`. |
 | [`types/datasets.ts`](../web/app/types/datasets.ts)                             | The dataset types the loader and page shapes use, built on the generated map.                                                                                                              |
-| [`scripts/`](../web/scripts/)                                                   | The `types`, `check:seo` and `check:budget` commands. See [`seo.md`](seo.md) and [`performance.md`](performance.md).                                                                       |
+| [`scripts/`](../web/scripts/)                                                   | The `types`, `claims`, `check:claims`, `check:seo` and `check:budget` commands. See [`claims.md`](claims.md), [`seo.md`](seo.md) and [`performance.md`](performance.md).                   |
 | [`test/`](../web/test/)                                                         | Behavior and type tests for the loader, shaping functions, chart shell and page data.                                                                                                      |
 
 ## Dataset loading and page payloads

@@ -95,23 +95,23 @@ Notes:
 
 Reviewed on 2026-10-04. [Official page](https://enfen.imarpe.gob.pe/).
 
-| Field               | Value                                                           |
-| ------------------- | --------------------------------------------------------------- |
-| Institution         | Comisión Multisectorial ENFEN                                   |
-| Product             | Índice Costero El Niño (ICEN)                                   |
-| Variable            | Anomalía de la temperatura superficial del mar en Niño 1+2      |
-| Unit                | °C                                                              |
-| Data type           | observed                                                        |
-| Update              | daily                                                           |
-| Spatial resolution  | Región Niño 1+2                                                 |
-| Temporal resolution | Mensual, media móvil de tres meses                              |
-| History             | IGP numeric table from 1950                                     |
-| Cadence             | Daily check; the upstream update lag is unconfirmed.            |
-| Reference period    | 1991–2020 según ENFEN (2024)                                    |
-| Access              | HTTP text file                                                  |
-| Download URL        | http://met.igp.gob.pe/datos/ICEN.txt                            |
-| Format              | Whitespace-delimited text: `yy mm ICEN`, with `%` comment lines |
-| Authentication      | none                                                            |
+| Field               | Value                                                             |
+| ------------------- | ----------------------------------------------------------------- |
+| Institution         | Comisión Multisectorial ENFEN                                     |
+| Product             | Índice Costero El Niño (ICEN)                                     |
+| Variable            | Anomalía de la temperatura superficial del mar en Niño 1+2        |
+| Unit                | °C                                                                |
+| Data type           | observed                                                          |
+| Update              | daily                                                             |
+| Spatial resolution  | Región Niño 1+2                                                   |
+| Temporal resolution | Mensual, media móvil de tres meses                                |
+| History             | IGP numeric table from 1950                                       |
+| Cadence             | Daily check; the upstream update lag is unconfirmed.              |
+| Reference period    | Climatología móvil de 30 años; 1991–2020 desde 2006 (ENFEN, 2024) |
+| Access              | HTTP text file                                                    |
+| Download URL        | http://met.igp.gob.pe/datos/ICEN.txt                              |
+| Format              | Whitespace-delimited text: `yy mm ICEN`, with `%` comment lines   |
+| Authentication      | none                                                              |
 
 Notes:
 
@@ -294,6 +294,9 @@ Notes:
   runtime; the newest file in its listing ends the rolling 36-month window.
 - Preliminary pentads are published about two days after the pentad ends.
   Missing values are -9999; values above 5,000 mm per pentad fail validation.
+- A department value is the unweighted mean of the 0.05° cells its boundary
+  touches (`all_touched`): every touched cell counts once, whatever share of it
+  lies inside the department. It is not area-weighted.
 - The live preliminary archive begins in 2025-01 and can have an absent pentad;
   the module publishes only files present in the discovered rolling window and
   never fills gaps from the final product.
@@ -302,8 +305,8 @@ Notes:
   https://data.chc.ucsb.edu/products/CHIRPS/v3.0/pentads/latam/tifs/, using the
   same department mask; February P6 is split into common and leap years.
 - Anomalies subtract this final-pentad climatology from preliminary pentad
-  department means. Preliminary and final products are never mixed for a single
-  input.
+  department means, so an anomaly compares a preliminary value with a final
+  base. No single input mixes the two products.
 
 ### open-meteo-era5
 

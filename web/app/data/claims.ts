@@ -28,7 +28,7 @@ const verifiedClaims = {
   'nino-region-definitions':
     'Las regiones Niño 1+2, Niño 3, Niño 3.4 y Niño 4 son zonas del Pacífico con límites geográficos definidos para sus índices de TSM.',
   'weekly-nino-anomalies':
-    'El producto semanal relativo de OISST publica valores para las regiones Niño 1+2 y Niño 3.4.',
+    'El producto semanal OISST.v2.1 de CPC, archivo wksst9120.for, publica valores para las regiones Niño 1+2 y Niño 3.4.',
   'noaa-enso-strength-probabilities':
     'El producto de probabilidades de intensidad de NOAA CPC muestra nueve temporadas móviles de tres meses y categorías de intensidad de El Niño y La Niña.',
   'noaa-enso-probability-meaning':
@@ -49,6 +49,136 @@ const verifiedClaims = {
     'El producto de caudal de GloFAS ofrece percentiles del conjunto para los pronósticos, cuando están disponibles.',
   'senamhi-hydrometeorological-stations':
     'SENAMHI publica datos hidrometeorológicos nacionales de estaciones meteorológicas e hidrológicas convencionales y automáticas.',
+  'enfen-state-co17-alerta':
+    'En el Comunicado Oficial ENFEN N° 17-2026, del 28 de setiembre de 2026, el estado del sistema de alerta es "Alerta de El Niño Costero".',
+  'enfen-co17-coast-extraordinaria-jan2027':
+    'El Comunicado Oficial ENFEN N° 17-2026 dice que El Niño Costero (región Niño 1+2) se mantendría con magnitud extraordinaria, respecto al calentamiento del mar, hasta enero de 2027, y que reduciría su magnitud hacia el otoño de 2027.',
+  'enfen-co17-headline-autumn-2027':
+    'El titular del Comunicado Oficial ENFEN N° 17-2026 dice que El Niño Costero se prolongaría hasta el otoño de 2027.',
+  'enfen-co17-nino34-muy-fuerte-jan2027':
+    'El Comunicado Oficial ENFEN N° 17-2026 dice que El Niño (región Niño 3.4) se mantendría con magnitud muy fuerte hasta enero de 2027 y reduciría su magnitud hacia el otoño de ese año.',
+  'enfen-co17-nino34-basis-roni':
+    'En el Comunicado Oficial ENFEN N° 17-2026 la magnitud de El Niño en la región Niño 3.4 se presenta según el RONI.',
+  'enfen-co17-ond-rain-rivers':
+    'Para el trimestre octubre–diciembre de 2026 el Comunicado Oficial ENFEN N° 17-2026 prevé precipitaciones superiores a lo normal en la costa norte, la costa central y los valles de la vertiente occidental andina norte, sin descartar episodios puntuales de lluvia de moderada a fuerte intensidad, y caudales por encima de sus valores habituales en los ríos Tumbes, Chira, Piura, La Leche y Jequetepeque, principalmente.',
+  'enfen-it17-ond-river-list':
+    'El Informe Técnico ENFEN Año 12 N° 17 nombra solo los ríos Tumbes, Chira, Piura y Jequetepeque para el incremento de caudales de octubre a diciembre de 2026; La Leche no figura en esa frase.',
+  'enfen-co17-summer2027-rain':
+    'Para el verano de 2027 el Comunicado Oficial ENFEN N° 17-2026 prevé lluvias superiores a lo normal en la costa norte, la costa central y la sierra norte occidental.',
+  'enfen-co17-air-temperature-records':
+    'El Comunicado Oficial ENFEN N° 17-2026 prevé temperaturas del aire muy superiores a sus valores habituales en toda la costa peruana, con alta probabilidad de registrar nuevos récords térmicos; el comunicado no fija una ventana de tiempo para esa frase.',
+  'enfen-co17-next-2026-10-15':
+    'El Comunicado Oficial ENFEN N° 17-2026 anuncia que el próximo comunicado oficial se emitirá el jueves 15 de octubre de 2026.',
+  'enfen-co01-vigilancia-2026-01-15':
+    'El 15 de enero de 2026, en el Comunicado Oficial ENFEN N° 01-2026, ENFEN cambió el estado del sistema de alerta de "No Activo" a "Vigilancia de El Niño Costero".',
+  'enfen-co03-alerta-2026-02-13':
+    'El 13 de febrero de 2026, en el Comunicado Oficial ENFEN N° 03-2026, ENFEN dispuso la activación del estado "Alerta de El Niño Costero"; en ese estado la Comisión considera que El Niño Costero es inminente, ya se ha iniciado o continuará en los siguientes meses.',
+  'icen-category-thresholds':
+    'ENFEN clasifica el ICEN mensual como cálida débil por encima de 0,5 y hasta 1,3, moderada por encima de 1,3 y hasta 2,1, fuerte por encima de 2,1 y hasta 3,5, y extraordinaria por encima de 3,5; la categoría neutra va de −0,7 a 0,5, ambos inclusive.',
+  'icen-moving-climatology':
+    'ENFEN calcula las anomalías del ICEN con climatologías de 30 años que cambian cada cinco años (la primera, 1931–1960; la siguiente, 1936–1965; la actual, 1991–2020); desde 2006 se usa 1991–2020, y para los quinquenios posteriores a 2010 se emplea esa misma climatología de forma temporal. La fuente es el producto ERSSTv5 de NOAA para Niño 1+2. Los umbrales de categoría se definen por percentiles respecto del periodo base 1950–2023, y la próxima actualización del ICEN y sus umbrales será en 2031.',
+  'icen-peak-1982-83':
+    'En el archivo ICEN.txt del IGP, el valor mensual más alto durante el evento de 1982–83 (julio de 1982 a noviembre de 1983 en la cronología de ENFEN) es 4,32, en junio de 1983.',
+  'icen-peak-1997-98':
+    'En el archivo ICEN.txt del IGP, el valor mensual más alto durante el evento de 1997–98 (abril de 1997 a agosto de 1998 en la cronología de ENFEN) es 4,08, en noviembre de 1997.',
+  'icen-peak-2017':
+    'En el archivo ICEN.txt del IGP, el valor mensual más alto durante el evento de 2017 (enero a abril de 2017 en la cronología de ENFEN) es 1,31, en marzo de 2017.',
+  'icen-2026-07':
+    'El último valor publicado del ICEN en el archivo ICEN.txt del IGP es 3,38, de julio de 2026; el Informe Técnico ENFEN Año 12 N° 17 imprime el mismo valor.',
+  'icen-2026-07-rank':
+    'En la serie ICEN.txt del IGP, de enero de 1950 a julio de 2026 (919 meses), el valor de julio de 2026 (3,38) es el 12.º más alto; los 11 valores superiores son de abril a julio de 1983, de julio a diciembre de 1997 y enero de 1998, y ningún otro mes iguala 3,38. El último valor del archivo puede cambiar cuando se revise.',
+  'icen-2026-07-category':
+    'El Informe Técnico ENFEN Año 12 N° 17 ubica el ICEN de julio de 2026 en la categoría Cálida Fuerte y su valor temporal de agosto en Cálida Extraordinaria. El valor de julio, 3,38, no supera el umbral de 3,5 de la categoría extraordinaria.',
+  'icentmp-2026-08':
+    'El ICEN temporal (ICENtmp) de agosto de 2026 es 3,97 (Cálida Extraordinaria). No es un ICEN publicado: ENFEN lo calcula con las anomalías mensuales observadas y reemplaza los meses faltantes con pronósticos del ensamble NMME, y su valor se reemplaza por el ICEN cuando haya datos.',
+  'icen-file-matches-enfen-table':
+    'Los valores del ICEN de enero a julio de 2026 en ICEN.txt coinciden con los que ENFEN imprime en el Informe Técnico Año 12 N° 17.',
+  'icen-chronology-reproduced':
+    'Aplicar a ICEN.txt la regla de ENFEN (al menos tres meses consecutivos en una categoría cálida) con los umbrales de la Tabla 2 da 25 eventos hasta febrero de 2024; 24 coinciden en inicio, fin, duración y magnitud con la Tabla 3 de ENFEN. En 2012 la tabla fija abril a julio (4 meses), pero el valor de julio de 2012 en el archivo es 0,50, justo en el límite estricto de "mayor que 0.5", y el archivo da abril a junio.',
+  'igp-icenr-exists':
+    'El IGP publica además un "ICEN relativo" (ICENr), que se basa en el ICEN clásico con una climatología 1991–2020 y da valores menores: para junio de 2026 el ICEN es 2,66 y el ICENr, 2,26.',
+  'icen-latest-value-revises':
+    'Según el IGP, el último ICEN usa el último valor del archivo ERSSTv5 ("dato en tiempo real"), que cambia el mes siguiente, por lo que los valores de meses anteriores pueden diferir levemente cuando se usan datos actualizados.',
+  'ersst-v5-index-base-1971-2000':
+    'Los archivos de índices Niño de ERSST v5 de NCEI usan anomalías respecto de una climatología 1971–2000 y no son los índices oficiales de NOAA para el monitoreo del clima.',
+  'cpc-weekly-oisst-base-1991-2020':
+    'Los índices Niño semanales OISST.v2.1 de CPC usan un periodo base 1991–2020.',
+  'weekly-nino12-record-2026-09-30':
+    'En el archivo semanal OISST.v2.1 de CPC (wksst9120.for), leído el 10 de octubre de 2026, la anomalía semanal más alta de Niño 1+2 es +5,3 °C, en la semana centrada el 30 de setiembre de 2026; antes de 2026 el máximo es +4,5 °C, en la semana del 29 de junio de 1983. CPC corrige las últimas semanas del archivo; el valor más reciente es provisional.',
+  'weekly-nino12-2026-09-23':
+    'En la semana centrada el 23 de setiembre de 2026, la anomalía semanal OISST fue +4,7 °C en Niño 1+2 y +3,1 °C en Niño 3.4, según el archivo wksst9120.for de CPC y el Informe Técnico ENFEN Año 12 N° 17.',
+  'cpc-weekly-relative-oisst-is-another-file':
+    'CPC publica dos archivos semanales de Niño con el mismo periodo base 1991–2020: "Weekly OISST.v2.1" (wksst9120.for) y "Weekly Relative OISST.v2.1" (rel_wksst9120.txt). Son series distintas: el 23 de setiembre de 2026 dan +4,7 °C y +3,9 °C en Niño 1+2, y en la serie relativa el máximo es +4,6 °C, del 29 de junio de 1983. ENFEN cita +4,7 °C, el valor de wksst9120.for.',
+  'enfen-it17-nino12-sst-marine-heatwave':
+    'El Informe Técnico ENFEN Año 12 N° 17 dice que durante setiembre de 2026 la TSM en la región Niño 1+2 tuvo anomalías positivas de +4 °C a +7 °C en gran parte del área, y que al 22 de setiembre la ola de calor marina cubría el 100 % de la franja de 150 mn entre 4°S y 18,5°S.',
+  'enfen-it17-intro-impacts':
+    'El Informe Técnico ENFEN Año 12 N° 17 afirma, sin cifras, que las condiciones cálidas anómalas sobre el Pacífico oriental, frente a la costa norte de Perú y durante el verano austral, generan lluvias intensas que causan impactos en los sectores socioeconómicos.',
+  'enfen-it17-models-disagree':
+    'Según el Informe Técnico ENFEN Año 12 N° 17, los pronósticos del modelo CFSv2 no coinciden del todo: para Niño 3.4 un grupo de simulaciones muestra un evento de menor magnitud en promedio, y para Niño 1+2 el pronóstico indica una tendencia negativa hasta fines de verano y luego una nueva tendencia positiva.',
+  'enfen-it17-ai-model-e-index':
+    'El Informe Técnico ENFEN Año 12 N° 17 dice que el modelo de IA pronostica valores positivos del índice E hasta julio de 2027, comparables a los observados en El Niño 1997/1998. Es un pronóstico de un modelo sobre el índice E, no una comparación de la magnitud del evento.',
+  'enfen-2026-coast-magnitude-wording':
+    'En 2026 ENFEN cambió la magnitud que pronosticaba para El Niño Costero (región Niño 1+2) en el Resumen Ejecutivo de cada comunicado: débil (N° 01, 15 de enero), débil con posible magnitud moderada en julio (N° 03, 13 de febrero), débil con posible magnitud moderada entre junio y julio (N° 07, 16 de abril), fuerte entre junio y septiembre (N° 11, 15 de junio), fuerte con la extraordinaria no descartada (N° 13, 17 de julio), entre fuerte y extraordinaria (N° 14, 14 de agosto), extraordinaria de setiembre de 2026 a enero de 2027 (N° 15, 28 de agosto) y con la más alta probabilidad de magnitud extraordinaria (N° 16, 14 de setiembre). El N° 17 del 28 de setiembre sigue en enfen-co17-coast-extraordinaria-jan2027.',
+  'roni-definition':
+    'El RONI es la media móvil de tres meses de las anomalías de TSM ERSST.v6 en Niño 3.4 menos la anomalía media del trópico (20°N–20°S), ajustada para que su varianza iguale la del índice Niño 3.4. Usa el umbral de ±0,5 °C sobre la base 1991–2020, y NOAA dice que los umbrales y definiciones no cambian respecto del ONI.',
+  'noaa-enso-alert-status-2026-10':
+    'En la discusión de diagnóstico ENSO emitida el 8 de octubre de 2026, el Climate Prediction Center de NOAA mantiene el estado "El Niño Advisory" y dice que El Niño continúa fortaleciéndose, con un evento de fuerte a muy fuerte probable hasta enero–marzo de 2027.',
+  'oni-roni-2026-seasons':
+    'En los archivos oni.ascii.txt y RONI.ascii.txt de CPC, la anomalía de JAS 2026 es 2,16 °C en el ONI y 1,69 °C en el RONI; en cada una de las ocho temporadas de 2026 (DJF a JAS) el ONI supera al RONI en 0,42 a 0,55 °C.',
+  'impact-1983-cepal-total':
+    'CEPAL estimó en 3 480 millones de dólares los daños totales de los desastres naturales de 1982–1983 en Bolivia, Ecuador y Perú, de los cuales 2 000 millones corresponden a Perú. El Cuadro 2 da para Perú 2001,8 millones en total: 1209,6 directos y 792,2 indirectos.',
+  'impact-1983-paho-deaths':
+    'La Tabla 1 de la OPS (documento CE122/10, 4 de mayo de 1998) atribuye 380 muertes en Perú al fenómeno de 1982/1983. Es una tabla preliminar tomada de una página web de la OPS en Ecuador, no un conteo final.',
+  'impact-1998-paho-deaths':
+    'La misma Tabla 1 de la OPS registra para Perú en 1997/1998 203 muertes y 107 heridos, acumulados a marzo de 1998; la columna de desaparecidos dice "No data". Es una cifra preliminar, no un conteo final.',
+  'impact-1998-paho-health-facilities':
+    'La OPS informó a principios de 1998 que en Perú el 9,5 % (437 de 4 576) de los establecimientos de salud había sufrido daños: 2 % de los hospitales (9 de 443) y 10,3 % de los demás centros de salud (428 de 4 133).',
+  'impact-2017-paho-sinpad-may':
+    'Según el SINPAD, actualizado al 17 de mayo de 2017, se reportaban 231 874 damnificados, 1 129 013 afectados y 143 fallecidos por el Niño Costero; son cifras parciales a esa fecha.',
+  'impact-1998-caf-total':
+    'La CAF estimó en 3 500 millones de dólares los daños totales del Fenómeno El Niño 1997–98 en Perú: 1 612 millones directos (46 %) y 1 888 millones indirectos (54 %), con la metodología de CEPAL sobre cifras de instituciones públicas. La propia CAF advierte que esa información contiene imprecisiones.',
+  'impact-1998-caf-by-sector':
+    'Según la CAF, en 1997–98 los sectores productivos fueron los más afectados (46 % del daño total; agropecuario 17 %, industria 19 %, comercio 8 %) y el transporte fue el segundo en importancia (21 %).',
+  'impact-1998-caf-share-of-gdp':
+    'La CAF estimó que Perú tuvo en 1997–98 pérdidas por más de 3 500 millones de dólares, más del 4,5 % del PIB de 1997.',
+  'impact-8283-9798-caf-comparison':
+    'La CAF comparó los daños de 1982–83 y 1997–98 en Perú: los totales son muy similares (diferencia de 4 %, dentro del margen de error); el evento de 1982–83 representó cerca del 7 % del PIB y el de 1997–98 el 5 %.',
+  'impact-1998-caf-early-tally':
+    'Al terminar la fase de contingencia, el volumen de la CAF informa un balance de más de 140 muertos, 140 mil viviendas dañadas y 140 puentes destruidos, sin nombrar la institución que contó. Es un balance temprano, no un conteo final.',
+  'impact-2017-indeci-summary':
+    'El documento de lecciones aprendidas de INDECI, el Programa Mundial de Alimentos, Save the Children y USAID (2018) reproduce, como cifras nacionales de la temporada de lluvias diciembre 2016 – junio 2017 actualizadas al 28 de junio de 2017: 283 152 damnificados, 1 432 867 afectados, 159 fallecidos, 29 821 viviendas colapsadas, 347 633 afectadas y 25 361 inhabitables.',
+  'impact-2017-indeci-registry-limits':
+    'En la Tabla 3 de ese documento (recomendaciones de los últimos desastres), la fila 7, "Metodología y herramienta de registro de daños y evaluación de necesidades", recomienda para el Fenómeno El Niño Costero 2017 replantear el modelo de evaluación de daños y de identificación de personas damnificadas, y para el FEN 1997–1998 institucionalizar la evaluación de los daños en la fase de emergencia.',
+  'impact-2017-enfen-qualitative':
+    'El Informe Técnico Extraordinario N° 001-2017/ENFEN calificó el periodo de diciembre de 2016 a mayo de 2017 como El Niño Costero de magnitud moderada y dice que, por sus impactos asociados a lluvias e inundaciones, puede considerarse el tercer Fenómeno El Niño más intenso de al menos los últimos cien años para el Perú. El informe no da un método para esa clasificación ni cifras de personas o daños.',
+  'impact-2017-enfen-fisheries':
+    'ENFEN informó que en el verano de 2017 la anchoveta se desplazó al sur de los 10°S (Huarmey), estuvo replegada hacia la costa y no desovó, y que aumentó la disponibilidad de recursos de aguas cálidas como caballa, bonito y atunes. El informe no da toneladas.',
+  'enfen-it2017-station-rain-records':
+    'ENFEN informa que en febrero y marzo de 2017 la estación Morropón (Piura) registró el 22 de febrero la precipitación más alta del registro histórico de febrero (150 mm en 24 h), la estación Partidor (Tambo Grande, Piura) 258,5 mm en 24 h el día 3 de marzo y la estación Jayanca (Lambayeque) 113 mm en 24 h el día 4, el segundo valor más alto de toda su serie. Son totales de 24 horas, no del evento.',
+  'enfen-it2017-rain-intensity-classes':
+    'ENFEN dice que en 2017 hubo lluvias de "fuertes" a "extremadamente fuertes", principalmente en las zonas bajas y medias de Tumbes, Piura y Lambayeque, y que Piura, Chiclayo, Trujillo y Huarmey soportaron lluvias intensas que superaron récords históricos observados solamente en eventos El Niño extraordinarios. En el informe las lluvias "fuertes", "muy fuertes" y "extremadamente fuertes" son los percentiles 90, 95 y 99 de la precipitación diaria.',
+  'enfen-it2017-accumulation-vs-1983-1998':
+    'ENFEN dice que la precipitación acumulada entre enero y marzo de 2017 en las zonas bajas de Piura y Lambayeque fue menor que la del mismo periodo de El Niño 1997/1998, similar a la acumulada durante El Niño 1982/1983 al mes de marzo y posiblemente superior a lo estimado para El Niño de 1925. El texto no da cifras.',
+  'enfen-it2017-affected-regions':
+    'ENFEN dice que las principales manifestaciones de El Niño Costero 2017 fueron el incremento sustancial de las lluvias y de los caudales de los ríos en las regiones históricamente afectadas por El Niño extraordinarios: Tumbes, Piura, Lambayeque, La Libertad, Ancash, Lima e Ica. No da cantidades.',
+  'senamhi-69-2026-2017-generalised-humid':
+    'SENAMHI dice que el evento de 2017 presentó condiciones húmedas generalizadas en gran parte del territorio durante el trimestre EFM; "gran parte del territorio" no es la costa.',
+  'senamhi-69-2026-nino-costero-composite-coasts':
+    'En el compuesto de máximas anomalías de SENAMHI para El Niño Costero (EFM 2017 y 2023), las anomalías más extremas (>250 %) están en la costa norte entre 3°S y 6°S, y la señal húmeda se extiende a lo largo de toda la franja costera hasta unos 17,5°S con anomalías muy húmedas (100 %–250 %). El compuesto es el máximo celda por celda de dos eventos.',
+  'senamhi-69-2026-nino-costero-composite-limits':
+    'SENAMHI advierte que el patrón del compuesto de El Niño Costero no debe interpretarse como el comportamiento típico de un Niño Costero en EFM, sino como el escenario más extremo registrado entre 2017 y 2023; que en la costa árida las anomalías porcentuales deben leerse en términos cualitativos; y que en 2023 el calentamiento costero se consolidó hacia marzo, con lluvias intensificadas por el ciclón Yaku en la costa norte y central.',
+  'senamhi-pisco-coverage-from-1981':
+    'SENAMHI describe PISCO v2.2 como un producto grillado de acumulados mensuales de precipitación a 0,1° (unos 10 km), con cobertura temporal desde enero de 1981 y cobertura espacial del territorio peruano. No son series de estaciones.',
+  'chirps-pentad-6-days':
+    'En CHIRPS cada mes tiene seis pentadas: las cinco primeras tienen cinco días y la sexta, de entre 3 y 6 días, cierra el mes. CHC añade que los productos diarios rnl y sat suman el mismo total pentadal de CHIRPS3.',
+  'chirps-preliminary-provisional':
+    'FEWS NET considera provisionales los datos preliminares de CHIRPS hasta que se incorporan todas las estaciones, unos 20 días después del fin del mes; el producto final se publica una vez al mes.',
+  'chirps-license':
+    'CHIRPS3 es de dominio público, registrado con Creative Commons, y se licencia bajo Creative Commons Atribución 4.0 Internacional.',
+  'chirps-daily-grid-not-finer':
+    'La malla de 0,05° de los productos diarios de CHIRPS3 no indica que los datos de ERA5 o IMERG usados para la desagregación temporal contengan información a esa resolución.',
+  'chirps-department-mean-of-touched-cells':
+    'El valor de CHIRPS por departamento es el promedio simple de las celdas de 0,05° que toca el límite departamental: cada celda tocada pesa igual, sin importar qué parte de ella queda dentro. No es un promedio ponderado por área.',
 } as const
 
 export type ClaimId = keyof typeof verifiedClaims

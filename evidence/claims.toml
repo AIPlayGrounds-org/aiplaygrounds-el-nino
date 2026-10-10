@@ -1,101 +1,103 @@
+# The claim registry. Its fields, quote rules and checks are in docs/claims.md.
 # Claim text is in Spanish. Registry fields and source notes are in English.
-#
-# Each [[claim]] has an id, claim_es, status, date_checked and one or more
-# [[claim.source]] entries (ref, locator, quote). A "verified" claim says no
-# more than its quotes say. The site may state only verified claims.
 
-checked_at = "2026-10-09"
+checked_at = "2026-10-10"
 
 [[claim]]
 id = "enso-is-ocean-atmosphere-pattern"
 claim_es = "ENSO es un patrón natural de cambios del océano y la atmósfera del Pacífico tropical que influye en el tiempo estacional."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/pdf/roni-info-may-2026.pdf"
-locator = "p. 1, lines 5-8"
+locator = "NOAA CPC, Relative Oceanic Niño Index (RONI): What's Changing and Why It Matters, PDF p. 1, first paragraph, sentence 1"
 quote = "El Niño–Southern Oscillation (ENSO) is a natural pattern of ocean and atmosphere changes in the tropical Pacific Ocean that strongly influences seasonal weather patterns across the U.S. and around the world."
 
 [[claim]]
 id = "oni-definition-and-threshold"
 claim_es = "El ONI es la media móvil de tres meses de la anomalía de TSM en Niño 3.4; NOAA usa ±0,5 °C y cinco temporadas móviles consecutivas para marcar episodios históricos."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
-ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v5/"
-locator = "ONI page, lines 27-29"
-quote = "Warm (red) and cold (blue) periods based on a threshold of +/- 0.5°C for the Oceanic Niño Index (ONI) [3 month running mean of ERSST.v5 SST anomalies in the Niño 3.4 region (5°N-5°S, 120°-170°W)], based on centered 30-year base periods updated every 5 years. For historical purposes, periods of below and above normal SSTs are colored in blue and red when the threshold is met for a minimum of 5 consecutive overlapping seasons."
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/"
+locator = "Oceanic Niño Index (ONI) v6 page, second and third paragraphs under the title"
+quote = "Warm (red) and cold (blue) periods based on a threshold of +/- 0.5°C for the Oceanic Niño Index (ONI) [3 month running mean of ERSST.v6 SST anomalies in the Niño 3.4 region (5°N-5°S, 120°-170°W)], based on centered 30-year base periods updated every 5 years. For historical purposes, periods of below and above normal SSTs are colored in blue and red when the threshold is met for a minimum of 5 consecutive overlapping seasons."
 
 [[claim]]
 id = "roni-is-current-official-index"
 claim_es = "Desde 2026, NOAA usa el RONI para el monitoreo y la predicción oficiales de ENSO."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/announcement.php"
-locator = "Announcement, lines 34-37"
+locator = "Announcement, the paragraph under the heading \"CPC adopts Relative Oceanic Niño Index (RONI) for reliable, responsive monitoring and tracking of ENSO\""
 quote = "February 2026 The Climate Prediction Center is making the shift to use the Relative Oceanic Niño Index (RONI) to better designate past events and predict future ENSO."
 
 [[claim.source]]
-ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v5/"
-locator = "ONI page, lines 27-29"
-quote = "the Relative Oceanic Niño index (RONI) is used for official monitoring and prediction of the El Niño-Southern Oscillation (ENSO) phenomenon"
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/"
+locator = "Oceanic Niño Index (ONI) v6 page, first paragraph under the title"
+quote = "This page will continue to be updated by the 5th of each month, but per NWS Public Information Statement 26-05, the Relative Oceanic Niño index (RONI) is used for official monitoring and prediction of the El Niño-Southern Oscillation (ENSO) phenomenon."
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/pdf/roni-info-may-2026.pdf"
+locator = "RONI circular, PDF p. 2, Frequently Asked Questions, answer to \"Will CPC maintain historical ENSO records?\""
+quote = "But RONI is now the primary standard for official advisories and classifications of ENSO events."
 
 [[claim]]
 id = "icen-definition"
 claim_es = "El ICEN es la media corrida de tres meses de las anomalías mensuales de TSM en Niño 1+2."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
-locator = "Nota Técnica ENFEN 01-2024, PDF p. 1, lines 36-54"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 1, section 2 \"Índice Costero El Niño (ICEN)\", first sentence"
 quote = "Consiste en la media corrida de tres meses de las anomalías mensuales de la temperatura superficial del mar (TSM) en la región Niño 1+2."
 
 [[claim]]
 id = "coastal-event-criterion"
 claim_es = "ENFEN identifica El Niño Costero cuando el ICEN está en una categoría cálida durante al menos tres meses consecutivos; sus categorías tienen umbrales propios."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
-locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, lines 123-131"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, section 4, second bullet, sentence 1"
 quote = "Se denomina \"El Niño Costero” al periodo en el cual el ICEN indique la categoría de condiciones cálidas durante al menos tres (3) meses consecutivos."
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
-locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, lines 105-106"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, section 3 \"Categorías\", paragraph 2"
 quote = "La categoría \"Condiciones Cálidas\" incluye las magnitudes de \"Débil\" (>P75 y ≤P90), \"Moderada\" (>P90 y ≤P95), \" Fuerte\" (>P95 y ≤P99) y \"Extraordinaria\" (>P99)."
 
 [[claim]]
 id = "global-and-coastal-can-differ"
 claim_es = "El Niño Costero puede desarrollarse principalmente frente a la costa peruana y diferir del evento del Pacífico central; 2017 tuvo condiciones neutras en el Pacífico central."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
-locator = "Nota Técnica ENFEN 01-2024, PDF p. 1, lines 21-31"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 1, section 1 \"Antecedentes\", paragraph 3"
 quote = "Sin embargo, existen, también, eventos cálidos que se desarrollan, principalmente, frente a la costa peruana (El Niño Costero) los cuales pueden tener un impacto destructivo significativo en el ámbito local."
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
-locator = "Informe Técnico Extraordinario N°001-2017/ENFEN, resumen ejecutivo, lines 49-53"
+locator = "Informe Técnico Extraordinario N°001-2017/ENFEN, PDF p. 1, Resumen ejecutivo, paragraph 2, sentence 1"
 quote = "El periodo de diciembre 2016 a mayo del 2017 calificó formalmente como “El Niño Costero” de magnitud moderada, con condiciones neutras en el Pacífico Central."
 
 [[claim]]
 id = "2017-itcz-northern-rain"
 claim_es = "En 2017, ENFEN relacionó la activación temprana e intensa de la segunda banda de la ZCIT con lluvias muy fuertes en el norte."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
-locator = "Informe Técnico Extraordinario N°001-2017/ENFEN, resumen ejecutivo, lines 49-51"
+locator = "Informe Técnico Extraordinario N°001-2017/ENFEN, PDF p. 1, Resumen ejecutivo, paragraph 1, sentence 2"
 quote = "Esto activó la segunda banda de la Zona de Convergencia Intertropical (ZCIT) en forma temprana e intensa frente a la costa de Perú, lo cual propició la ocurrencia de lluvias muy fuertes en la zona norte."
 
 [[claim]]
@@ -106,105 +108,105 @@ date_checked = "2026-10-09"
 
 [[claim.source]]
 ref = "https://onlinelibrary.wiley.com/doi/10.1155/2013/152875"
-locator = "Bazo, Lorenzo & Porfirio da Rocha (2013), section 5, HTML line 323"
+locator = "Bazo, Lorenzo & Porfirio da Rocha (2013), section 5 (conclusions)"
 quote = "An analysis of the relationships between SST and rainfall in Tumbes-Piura allowed us to elaborate a linear and an exponential regression models to make monthly predictions of rainfall."
 
 [[claim]]
 id = "enfen-alert-states"
 claim_es = "El sistema de alerta de ENFEN tiene cinco estados y se anuncia en cada comunicado; Vigilancia se activa cuando el pronóstico indica una probabilidad superior al 50 % de condiciones cálidas."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-02-2026-sistema-de-alerta-ante-el-nino-costero-y-la-nina-costera/"
-locator = "Nota Técnica ENFEN 02-2026, PDF p. 1, lines 13-18"
+locator = "Nota Técnica ENFEN 02-2026, PDF p. 1, Introducción, sentence 1"
 quote = "el cual consta de cinco “estados”, uno de los cuales será anunciado en cada Comunicado Oficial (CO) de la Comisión ENFEN."
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-02-2026-sistema-de-alerta-ante-el-nino-costero-y-la-nina-costera/"
-locator = "Nota Técnica ENFEN 02-2026, PDF p. 1, lines 23-33"
+locator = "Nota Técnica ENFEN 02-2026, PDF p. 1, \"Estados del sistema de alerta\", item \"Vigilancia de El Niño Costero\""
 quote = "se activa la vigilancia cuando el pronóstico probabilístico mensual del ICEN indica que, dentro del horizonte de pronóstico del ENFEN, existe una probabilidad superior al 50 % de que se presenten condiciones cálidas"
 
 [[claim]]
 id = "alerts-are-probabilistic-and-updated"
 claim_es = "Los estados de alerta de ENFEN tienen incertidumbre y se actualizan con observaciones y predicciones."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-02-2026-sistema-de-alerta-ante-el-nino-costero-y-la-nina-costera/"
-locator = "Nota Técnica ENFEN 02-2026, PDF p. 2, lines 49-59"
+locator = "Nota Técnica ENFEN 02-2026, PDF p. 2, \"Consideraciones\", fourth paragraph"
 quote = "En los CO se explicará claramente que estos estados de alerta se sustentan en pronósticos de naturaleza probabilística, con niveles de incertidumbre. Por lo tanto, dichos estados serán actualizados de acuerdo al análisis de las observaciones oceánicas y atmosféricas, así como de las predicciones de los modelos climáticos."
 
 [[claim]]
 id = "enfen-magnitude-wording"
 claim_es = "El Comunicado Oficial ENFEN N° 17-2026 expresa la magnitud esperada con palabras y en condicional, y muestra las probabilidades mensuales de condiciones cálidas, frías y neutra en una figura."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
-locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, line 8"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, first paragraph under the headline"
 quote = "El Niño Costero (región Niño 1+2 - Figura 1) se mantendría con una magnitud extraordinaria,"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
-locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, line 11"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, first paragraph under the headline, sentence 2"
 quote = "El Niño (región Niño 3.4 - Figura 1) se mantendría con una magnitud muy fuerte"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
-locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, Figura 2 caption, lines 17-18"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, Figura 2 caption"
 quote = "Probabilidades mensuales estimadas por el ENFEN de las condiciones cálidas, frías y neutra"
 
 [[claim]]
 id = "historical-coastal-chronology"
 claim_es = "La cronología operativa de ENFEN clasifica 1982–1983 y 1997–1998 como El Niño Costero extraordinario, y 2017 como moderado, con periodos distintos."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
-locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Table 3, line 171"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Tabla 3, row of the event that starts in 1982"
 quote = "1982 7 1983 11 17 Niño Extraordinario"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
-locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Table 3, line 176"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Tabla 3, row of the event that starts in 1997"
 quote = "1997 4 1998 8 17 Niño Extraordinario"
 
 [[claim.source]]
 ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
-locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Table 3, line 184"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Tabla 3, row of the event that starts in 2017"
 quote = "2017 1 2017 4 4 Niño Moderado"
 
 [[claim]]
 id = "nino-region-definitions"
 claim_es = "Las regiones Niño 1+2, Niño 3, Niño 3.4 y Niño 4 son zonas del Pacífico con límites geográficos definidos para sus índices de TSM."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://www.cpc.ncep.noaa.gov/data/indices/"
-locator = "Weekly Relative OISST.v2.1 row, line 79"
-quote = "Niño 1+2 (0–10°South)(90°West–80°West), Niño 3 (5°North–5°South)(150°West–90°West), Niño 4 (5°North–5°South)(160°East–150°West), Niño 3.4 (5°North–5°South)(170–120°West)"
+locator = "Sea Surface Temperature (SST) section, row \"Weekly OISST.v2.1 (1991-2020 base period)\", whose Data link is wksst9120.for"
+quote = "Niño 1+2 (0-10°South)(90°West-80°West) Niño 3 (5°North-5°South)(150°West-90°West) Niño 4 (5°North-5°South) (160°East-150°West) Niño 3.4 (5°North-5°South)(170-120°West)"
 
 [[claim]]
 id = "weekly-nino-anomalies"
-claim_es = "El producto semanal relativo de OISST publica valores para las regiones Niño 1+2 y Niño 3.4."
+claim_es = "El producto semanal OISST.v2.1 de CPC, archivo wksst9120.for, publica valores para las regiones Niño 1+2 y Niño 3.4."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://www.cpc.ncep.noaa.gov/data/indices/"
-locator = "Weekly Relative OISST.v2.1 row, line 79"
-quote = "Weekly Relative OISST.v2.1 (1991–2020 base period) Niño 1+2 (0–10°South)(90°West–80°West), Niño 3 (5°North–5°South)(150°West–90°West), Niño 4 (5°North–5°South)(160°East–150°West), Niño 3.4 (5°North–5°South)(170–120°West)"
+locator = "Sea Surface Temperature (SST) section, row \"Weekly OISST.v2.1 (1991-2020 base period)\", whose Data link is wksst9120.for"
+quote = "Weekly OISST.v2.1 (1991-2020 base period) Niño 1+2 (0-10°South)(90°West-80°West) Niño 3 (5°North-5°South)(150°West-90°West) Niño 4 (5°North-5°South) (160°East-150°West) Niño 3.4 (5°North-5°South)(170-120°West)"
 
 [[claim]]
 id = "noaa-enso-strength-probabilities"
 claim_es = "El producto de probabilidades de intensidad de NOAA CPC muestra nueve temporadas móviles de tres meses y categorías de intensidad de El Niño y La Niña."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/"
@@ -215,7 +217,7 @@ quote = "The bars show the chance of El Niño (red bars), ENSO-Neutral (grey bar
 id = "noaa-enso-probability-meaning"
 claim_es = "NOAA CPC expresa la intensidad como el porcentaje de probabilidad de cada categoría en cada temporada, verificado con el RONI en Niño 3.4 con umbrales de 0,5 °C; un 0 % es aproximado, no imposible, y la intensidad del evento no equivale necesariamente a la intensidad de su impacto."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/"
@@ -241,7 +243,7 @@ quote = "A 0% chance is approximate and not exact, meaning there is still some f
 id = "chirps-rainfall-estimates"
 claim_es = "CHIRPS combina estimaciones satelitales de lluvia con observaciones de estaciones para producir una serie de precipitación cuadriculada de 0,05° sobre tierra."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://chc.ucsb.edu/data/chirps3"
@@ -252,7 +254,7 @@ quote = "CHIRPS v3 combines satellite-based thermal infrared rainfall estimates 
 id = "chirps-pentad-latency"
 claim_es = "CHIRPS es fundamentalmente un producto pentadal y mensual; la versión preliminar de CHIRPS v3 está disponible dos días después de cada pentada y el producto final se produce una vez al mes, normalmente en la tercera semana del mes siguiente."
 status = "verified"
-date_checked = "2026-10-09"
+date_checked = "2026-10-10"
 
 [[claim.source]]
 ref = "https://www.chc.ucsb.edu/data/chirps3"
@@ -266,7 +268,7 @@ quote = "The CHIRPS v3 final product blends in best available station inputs and
 
 [[claim.source]]
 ref = "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/readme.txt"
-locator = "CHIRPS v3 daily product README, line 2"
+locator = "CHC, Information about CHIRPS Daily Precipitation, paragraph 1"
 quote = "CHIRPS is fundamentally a pentadal and monthly precipitation product."
 
 [[claim]]
@@ -347,20 +349,1278 @@ date_checked = "2026-10-09"
 
 [[claim.source]]
 ref = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
-locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend, line 189"
+locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend"
 quote = "Estación Meteorológica Convencional"
 
 [[claim.source]]
 ref = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
-locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend, line 194"
+locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend"
 quote = "Estación Meteorológica Automatica"
 
 [[claim.source]]
 ref = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
-locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend, line 199"
+locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend"
 quote = "Estación Hidrológica Convencional"
 
 [[claim.source]]
 ref = "https://www.senamhi.gob.pe/servicios/?p=estaciones"
-locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend, line 204"
+locator = "Datos Hidrometeorológicos a Nivel Nacional, station map legend"
 quote = "Estación Hidrológica Automatica"
+
+[[claim]]
+id = "enfen-state-co17-alerta"
+claim_es = "En el Comunicado Oficial ENFEN N° 17-2026, del 28 de setiembre de 2026, el estado del sistema de alerta es \"Alerta de El Niño Costero\"."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, header block, third line under the date"
+quote = "Alerta de El Niño Costero"
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 25, section V, opening paragraph"
+quote = "mantiene el estado de “Alerta de El Niño Costero”"
+[[claim]]
+id = "enfen-co17-coast-extraordinaria-jan2027"
+claim_es = "El Comunicado Oficial ENFEN N° 17-2026 dice que El Niño Costero (región Niño 1+2) se mantendría con magnitud extraordinaria, respecto al calentamiento del mar, hasta enero de 2027, y que reduciría su magnitud hacia el otoño de 2027."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, first body paragraph"
+quote = "El Niño Costero (región Niño 1+2 - Figura 1) se mantendría con una magnitud extraordinaria, respecto al calentamiento del mar, hasta enero 2027 (Figura 2a), reduciendo su magnitud hacia el otoño de 2027."
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 25, section V, first bullet"
+quote = "El Niño Costero (región Niño 1+2), se mantendría con una magnitud extraordinaria, respecto al calentamiento del mar, hasta enero 2027, reduciendo su magnitud hacia el otoño de 2027."
+[[claim]]
+id = "enfen-co17-headline-autumn-2027"
+claim_es = "El titular del Comunicado Oficial ENFEN N° 17-2026 dice que El Niño Costero se prolongaría hasta el otoño de 2027."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, headline directly under the state line"
+quote = "EL NIÑO COSTERO SE PROLONGARÍA HASTA EL OTOÑO DE 2027"
+[[claim]]
+id = "enfen-co17-nino34-muy-fuerte-jan2027"
+claim_es = "El Comunicado Oficial ENFEN N° 17-2026 dice que El Niño (región Niño 3.4) se mantendría con magnitud muy fuerte hasta enero de 2027 y reduciría su magnitud hacia el otoño de ese año."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, second body paragraph"
+quote = "El Niño (región Niño 3.4 - Figura 1) se mantendría con una magnitud muy fuerte (Figura 2b) hasta enero de 2027, reduciendo su magnitud hacia el otoño de dicho año."
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 25, section V, second bullet"
+quote = "El Niño (región Niño 3.4), se mantendría con una magnitud muy fuerte hasta enero de 2027, reduciendo su magnitud hacia el otoño de dicho año."
+[[claim]]
+id = "enfen-co17-nino34-basis-roni"
+claim_es = "En el Comunicado Oficial ENFEN N° 17-2026 la magnitud de El Niño en la región Niño 3.4 se presenta según el RONI."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 1, Figura 2 caption"
+quote = "b) según el RONI para la región Niño 3.4"
+[[claim]]
+id = "enfen-co17-ond-rain-rivers"
+claim_es = "Para el trimestre octubre–diciembre de 2026 el Comunicado Oficial ENFEN N° 17-2026 prevé precipitaciones superiores a lo normal en la costa norte, la costa central y los valles de la vertiente occidental andina norte, sin descartar episodios puntuales de lluvia de moderada a fuerte intensidad, y caudales por encima de sus valores habituales en los ríos Tumbes, Chira, Piura, La Leche y Jequetepeque, principalmente."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 2, first bullet (\"Ante estos escenarios de calentamiento anómalo del mar, se prevén:\"), sentences 1-3"
+quote = "Para el trimestre octubre – diciembre, precipitaciones superiores a lo normal en la costa norte, costa central y valles de la vertiente occidental andina norte. No se descarta la ocurrencia de episodios puntuales de lluvia de moderada a fuerte intensidad, concentrándose principalmente en la costa norte, tal como se han venido presentando en los últimos días en la región costera de Tumbes."
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 2, first bullet, sentence 3"
+quote = "Esta condición favorecería a un incremento de los caudales por encima de sus valores habituales en los ríos Tumbes, Chira, Piura, la Leche y Jequetepeque, principalmente."
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 2, footnote 7"
+quote = "“lluvias fuertes” se definen como el percentil 90% de la precipitación diaria"
+[[claim]]
+id = "enfen-it17-ond-river-list"
+claim_es = "El Informe Técnico ENFEN Año 12 N° 17 nombra solo los ríos Tumbes, Chira, Piura y Jequetepeque para el incremento de caudales de octubre a diciembre de 2026; La Leche no figura en esa frase."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 24, section IV, paragraph beginning \"Para el trimestre octubre–diciembre\""
+quote = "dicha condición favorecerá un incremento de los caudales por encima de sus valores habituales en los ríos Tumbes, Chira, Piura y Jequetepeque."
+[[claim]]
+id = "enfen-co17-ond-contrast-south-amazon"
+claim_es = "Para octubre–diciembre de 2026 el Comunicado Oficial ENFEN N° 17-2026 prevé que la sierra sur y la región amazónica mantengan precipitaciones y caudales de normal a inferior a sus promedios, y caudales por debajo de lo normal en la región hidrográfica del lago Titicaca."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 2, first bullet, sentences 4-5"
+quote = "En contraste, la sierra sur y la región amazónica mantendrán precipitaciones y caudales de normal a inferior de sus promedios. Asimismo, en la región hidrográfica del lago Titicaca, caudales por debajo de lo normal."
+[[claim]]
+id = "enfen-co17-summer2027-rain"
+claim_es = "Para el verano de 2027 el Comunicado Oficial ENFEN N° 17-2026 prevé lluvias superiores a lo normal en la costa norte, la costa central y la sierra norte occidental."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 2, second bullet"
+quote = "Para el verano de 2027, lluvias superiores a lo normal en la costa norte, costa central y sierra norte occidental, y condiciones deficitarias a normales en la sierra sur y la región amazónica."
+
+[[claim]]
+id = "enfen-co17-summer2027-south-amazon"
+claim_es = "Para el verano de 2027 el Comunicado Oficial ENFEN N° 17-2026 prevé condiciones deficitarias a normales en la sierra sur y la región amazónica."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 2, second bullet"
+quote = "Para el verano de 2027, lluvias superiores a lo normal en la costa norte, costa central y sierra norte occidental, y condiciones deficitarias a normales en la sierra sur y la región amazónica."
+[[claim]]
+id = "enfen-co17-air-temperature-records"
+claim_es = "El Comunicado Oficial ENFEN N° 17-2026 prevé temperaturas del aire muy superiores a sus valores habituales en toda la costa peruana, con alta probabilidad de registrar nuevos récords térmicos; el comunicado no fija una ventana de tiempo para esa frase."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 2, third bullet"
+quote = "Temperaturas del aire muy superiores a sus valores habituales en toda la costa peruana, con una alta probabilidad de registrar nuevos récords térmicos."
+[[claim]]
+id = "enfen-co17-next-2026-10-15"
+claim_es = "El Comunicado Oficial ENFEN N° 17-2026 anuncia que el próximo comunicado oficial se emitirá el jueves 15 de octubre de 2026."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-17-2026/"
+locator = "Comunicado Oficial ENFEN N° 17-2026, PDF p. 2, closing paragraph"
+quote = "El próximo Comunicado Oficial se emitirá el jueves 15 de octubre de 2026."
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 26, closing paragraph"
+quote = "El próximo Comunicado Oficial se emitirá el jueves 15 de octubre de 2026."
+[[claim]]
+id = "enfen-co01-vigilancia-2026-01-15"
+claim_es = "El 15 de enero de 2026, en el Comunicado Oficial ENFEN N° 01-2026, ENFEN cambió el estado del sistema de alerta de \"No Activo\" a \"Vigilancia de El Niño Costero\"."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-01-2026/"
+locator = "Comunicado Oficial ENFEN N° 01-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", second paragraph, sentence 2; the header gives the date \"15 de enero 2026\""
+quote = "la comisión ENFEN cambia el Estado del Sistema de Alerta ante El Niño Costero/La Niña Costera de “No Activo” a “Vigilancia de El Niño Costero”"
+[[claim]]
+id = "enfen-co03-alerta-2026-02-13"
+claim_es = "El 13 de febrero de 2026, en el Comunicado Oficial ENFEN N° 03-2026, ENFEN dispuso la activación del estado \"Alerta de El Niño Costero\"; en ese estado la Comisión considera que El Niño Costero es inminente, ya se ha iniciado o continuará en los siguientes meses."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-03-2026/"
+locator = "Comunicado Oficial ENFEN N° 03-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", first paragraph; the header gives the date \"13 de febrero 2026\""
+quote = "ENFEN dispone la activación del Estado de “Alerta de El Niño Costero”, debido a que considera que el desarrollo de El Niño Costero se iniciaría a partir de marzo, persistiendo hasta noviembre del presente año."
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-03-2026/"
+locator = "Comunicado Oficial ENFEN N° 03-2026, PDF p. 1, footnote 1"
+quote = "la Comisión ENFEN considera que El Niño Costero es inminente, ya se ha iniciado o continuará en los siguientes meses."
+
+[[claim]]
+id = "icen-category-thresholds"
+claim_es = "ENFEN clasifica el ICEN mensual como cálida débil por encima de 0,5 y hasta 1,3, moderada por encima de 1,3 y hasta 2,1, fuerte por encima de 2,1 y hasta 3,5, y extraordinaria por encima de 3,5; la categoría neutra va de −0,7 a 0,5, ambos inclusive."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, section 3, Tabla 2, rows of \"Condiciones cálidas\" (the extracted text puts each cell on its own line)"
+quote = "Condiciones cálidas Débil Mayor que 0.5 y menor o igual que 1.3 Moderada Mayor que 1.3 y menor o igual que 2.1 Fuerte Mayor que 2.1 y menor o igual que 3.5 Extraordinaria Mayor que 3.5"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, section 3, Tabla 2, row \"Neutra\""
+quote = "Neutra Mayor o igual que -0.7 y menor o igual que 0.5"
+
+[[claim]]
+id = "icen-moving-climatology"
+claim_es = "ENFEN calcula las anomalías del ICEN con climatologías de 30 años que cambian cada cinco años (la primera, 1931–1960; la siguiente, 1936–1965; la actual, 1991–2020); desde 2006 se usa 1991–2020, y para los quinquenios posteriores a 2010 se emplea esa misma climatología de forma temporal. La fuente es el producto ERSSTv5 de NOAA para Niño 1+2. Los umbrales de categoría se definen por percentiles respecto del periodo base 1950–2023, y la próxima actualización del ICEN y sus umbrales será en 2031."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 2, section 2, first paragraph"
+quote = "es decir se calculan las climatologías cada 5 años: siendo la primera, la del periodo 1931 a 1960; la siguiente, la del periodo 1936 a 1965 y así sucesivamente hasta el periodo actual que va de 1991 a 2020."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 2, section 2, Tabla 1, rows for 2006-2010 and 2011-2015"
+quote = "2006-2010 1991-2020 2011-2015 1991-2020*"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 2, Tabla 1, note under the table"
+quote = "* Para los quinquenios posteriores al 2010 se emplea temporalmente la climatología 1991-2020, en tanto no se completen los periodos de las climatologías de 30 años correspondientes."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 2, section 2, first paragraph, last sentence (the PDF spells ERSSTv5 \"ERRSTv5\")"
+quote = "La información usada para este cálculo proviene del producto ERRSTv5 de la NOAA para la región Niño 1+2"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, section 3, first paragraph"
+quote = "Para caracterizar cada condición mensual se han establecido categorías en base al valor del ICEN y el percentil que corresponda respecto al periodo base 1950 a 2023"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, heading \"Actualización del ICEN\""
+quote = "La próxima actualización del ICEN y sus umbrales será en el año 2031."
+
+[[claim]]
+id = "icen-peak-1982-83"
+claim_es = "En el archivo ICEN.txt del IGP, el valor mensual más alto durante el evento de 1982–83 (julio de 1982 a noviembre de 1983 en la cronología de ENFEN) es 4,32, en junio de 1983."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_icen.py"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt (Índice Costero El Niño; ENFEN, 2024), data row for year 1983, month 6; the file has no pages"
+quote = "1983   6    4.32"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Tabla 3, row of the event that starts in 1982"
+quote = "1982 7 1983 11 17 Niño Extraordinario"
+
+[[claim]]
+id = "icen-peak-1997-98"
+claim_es = "En el archivo ICEN.txt del IGP, el valor mensual más alto durante el evento de 1997–98 (abril de 1997 a agosto de 1998 en la cronología de ENFEN) es 4,08, en noviembre de 1997."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_icen.py"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt (Índice Costero El Niño; ENFEN, 2024), data row for year 1997, month 11; the file has no pages"
+quote = "1997  11    4.08"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Tabla 3, row of the event that starts in 1997"
+quote = "1997 4 1998 8 17 Niño Extraordinario"
+
+[[claim]]
+id = "icen-peak-2017"
+claim_es = "En el archivo ICEN.txt del IGP, el valor mensual más alto durante el evento de 2017 (enero a abril de 2017 en la cronología de ENFEN) es 1,31, en marzo de 2017."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_icen.py"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt (Índice Costero El Niño; ENFEN, 2024), data row for year 2017, month 3; the file has no pages"
+quote = "2017   3    1.31"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Tabla 3, row of the event that starts in 2017"
+quote = "2017 1 2017 4 4 Niño Moderado"
+
+[[claim]]
+id = "icen-2026-07"
+claim_es = "El último valor publicado del ICEN en el archivo ICEN.txt del IGP es 3,38, de julio de 2026; el Informe Técnico ENFEN Año 12 N° 17 imprime el mismo valor."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_icen.py"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt (Índice Costero El Niño; ENFEN, 2024), last data row, year 2026, month 7; the file has no pages"
+quote = "2026   7    3.38"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 28, Tabla 3, row Jul-26 (the extracted text puts each cell on its own line)"
+quote = "Jul-26 3.38 Cálida Fuerte"
+
+[[claim]]
+id = "icen-2026-07-rank"
+claim_es = "En la serie ICEN.txt del IGP, de enero de 1950 a julio de 2026 (919 meses), el valor de julio de 2026 (3,38) es el 12.º más alto; los 11 valores superiores son de abril a julio de 1983, de julio a diciembre de 1997 y enero de 1998, y ningún otro mes iguala 3,38. El último valor del archivo puede cambiar cuando se revise."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_icen.py"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt (Índice Costero El Niño; ENFEN, 2024), data row for year 2026, month 7; the file has no pages"
+quote = "2026   7    3.38"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1983, month 6"
+quote = "1983   6    4.32"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1983, month 5"
+quote = "1983   5    4.13"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1997, month 11"
+quote = "1997  11    4.08"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1997, month 12"
+quote = "1997  12    4.06"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1997, month 10"
+quote = "1997  10    4.01"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1983, month 7"
+quote = "1983   7    3.99"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1997, month 8"
+quote = "1997   8    3.85"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1997, month 9"
+quote = "1997   9    3.85"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1997, month 7"
+quote = "1997   7    3.57"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1998, month 1"
+quote = "1998   1    3.49"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt, data row for year 1983, month 4"
+quote = "1983   4    3.48"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim]]
+id = "icen-2026-07-category"
+claim_es = "El Informe Técnico ENFEN Año 12 N° 17 ubica el ICEN de julio de 2026 en la categoría Cálida Fuerte y su valor temporal de agosto en Cálida Extraordinaria. El valor de julio, 3,38, no supera el umbral de 3,5 de la categoría extraordinaria."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 10, section 3.1, third paragraph"
+quote = "Los valores del ICEN para julio y su temporal de agosto de 2026 se ubican en las categorías Cálida Fuerte y Cálida Extraordinaria, respectivamente."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, section 3, Tabla 2, row \"Extraordinaria\""
+quote = "Extraordinaria Mayor que 3.5"
+
+[[claim]]
+id = "icentmp-2026-08"
+claim_es = "El ICEN temporal (ICENtmp) de agosto de 2026 es 3,97 (Cálida Extraordinaria). No es un ICEN publicado: ENFEN lo calcula con las anomalías mensuales observadas y reemplaza los meses faltantes con pronósticos del ensamble NMME, y su valor se reemplaza por el ICEN cuando haya datos."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 28, Tabla 3, row Ago-26 under the column ICENtmp (the extracted text puts each cell on its own line)"
+quote = "Ago-26 3.97 Cálida Extraordinaria"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 2, heading \"ICEN temporal (ICENtmp)\""
+quote = "Este se calcula incluyendo los valores mensuales observados de las anomalías de la temperatura superficial del mar (ERSST.v5) y reemplazando los datos mensuales faltantes con los pronósticos del ensamble de modelos NMME. Este índice tiene carácter temporal y su valor será reemplazado por el ICEN correspondiente cuando se tengan disponibles los datos necesarios."
+
+[[claim]]
+id = "icen-file-matches-enfen-table"
+claim_es = "Los valores del ICEN de enero a julio de 2026 en ICEN.txt coinciden con los que ENFEN imprime en el Informe Técnico Año 12 N° 17."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_icen.py"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 28, Tabla 3, rows Ene-26 to Jul-26 (the extracted text puts each cell on its own line)"
+quote = "Ene-26 –0.06 Neutra –0.90 Fría Débil –0.39 Neutra Feb-26 0.42 Neutra –0.72 Fría Débil –0.16 Neutra Mar-26 0.96 Cálida Débil –0.48 Neutra 0.11 Neutra Abr-26 1.34 Cálida Moderada –0.06 Neutra 0.48 Neutra May-26 1.98 Cálida Moderada 0.47 Neutra 0.98 Cálida Débil Jun-26 2.66 Cálida Fuerte 0.97 Cálida Débil 1.41 Cálida Moderada Jul-26 3.38 Cálida Fuerte 1.36 Cálida Moderada 1.80 Cálida Fuerte"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt (Índice Costero El Niño; ENFEN, 2024), data rows for 2026, months 1 to 7; the file has no pages"
+quote = "2026   1   -0.06 2026   2    0.42 2026   3    0.96 2026   4    1.34 2026   5    1.98 2026   6    2.66 2026   7    3.38"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim]]
+id = "icen-chronology-reproduced"
+claim_es = "Aplicar a ICEN.txt la regla de ENFEN (al menos tres meses consecutivos en una categoría cálida) con los umbrales de la Tabla 2 da 25 eventos hasta febrero de 2024; 24 coinciden en inicio, fin, duración y magnitud con la Tabla 3 de ENFEN. En 2012 la tabla fija abril a julio (4 meses), pero el valor de julio de 2012 en el archivo es 0,50, justo en el límite estricto de \"mayor que 0.5\", y el archivo da abril a junio."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_icen.py"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 3, section 4, second bullet"
+quote = "Se denomina \"El Niño Costero” al periodo en el cual el ICEN indique la categoría de condiciones cálidas durante al menos tres (3) meses consecutivos. La magnitud de este evento es la mayor alcanzada en base al ICEN durante el evento."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/nota-tecnica-enfen-01-2024-definicion-operacional-de-los-eventos-el-nino-costero-y-la-nina-costera-en-el-peru/"
+locator = "Nota Técnica ENFEN 01-2024, PDF p. 5, Tabla 3, row of the event that starts in 2012"
+quote = "2012 4 2012 7 4 Niño Débil"
+
+[[claim.source]]
+ref = "http://met.igp.gob.pe/datos/ICEN.txt"
+locator = "ICEN.txt (Índice Costero El Niño; ENFEN, 2024), data row for year 2012, month 7; the file has no pages"
+quote = "2012   7    0.50"
+sha256 = "af2514affa3a462fd5d509f054cd535ab105cf8397e9341e19761712121f5684"
+
+[[claim]]
+id = "igp-icenr-exists"
+claim_es = "El IGP publica además un \"ICEN relativo\" (ICENr), que se basa en el ICEN clásico con una climatología 1991–2020 y da valores menores: para junio de 2026 el ICEN es 2,66 y el ICENr, 2,26."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://repositorio.igp.gob.pe/bitstreams/b7560525-c705-4ad7-a423-9d897ca7e5bb/download"
+locator = "Informe Técnico IGP N° PpR/El Niño-IGP/2026-07 (14/08/2026), PDF p. 2, section \"Índice Costero El Niño (ICEN) y el ICEN relativo\", second paragraph"
+quote = "El IGP, como parte de su trabajo de investigación e innovación, ha desarrollado un nuevo indicador que se basa en el ICEN clásico (ENFEN, 2012) con una climatología 1991-2020, al cual ha denominado “ICEN relativo” (ICENr; Reupo et al., 2024)."
+
+[[claim.source]]
+ref = "https://repositorio.igp.gob.pe/bitstreams/b7560525-c705-4ad7-a423-9d897ca7e5bb/download"
+locator = "Informe Técnico IGP N° PpR/El Niño-IGP/2026-07 (14/08/2026), PDF p. 2, Tabla 1, row Junio 2026 (the extracted text puts each cell on its own line)"
+quote = "2026 Junio 2.66 Cálida Fuerte 2.26 Cálida Fuerte"
+
+[[claim]]
+id = "icen-latest-value-revises"
+claim_es = "Según el IGP, el último ICEN usa el último valor del archivo ERSSTv5 (\"dato en tiempo real\"), que cambia el mes siguiente, por lo que los valores de meses anteriores pueden diferir levemente cuando se usan datos actualizados."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://repositorio.igp.gob.pe/bitstreams/b7560525-c705-4ad7-a423-9d897ca7e5bb/download"
+locator = "Informe Técnico IGP N° PpR/El Niño-IGP/2026-07 (14/08/2026), PDF p. 2, section \"Índice Costero El Niño (ICEN) y el ICEN relativo\", first paragraph"
+quote = "Cabe señalar que para el cálculo del último ICEN se utiliza la última información del archivo de ERSSTv5 publicada en la web, cuyo último valor (“dato en tiempo real”) siempre cambiará en el siguiente mes. Por este motivo, existirán pequeñas discrepancias en el valor del ICEN para los meses anteriores cuando se use la data actualizada."
+
+[[claim]]
+id = "ersst-v5-index-base-1971-2000"
+claim_es = "Los archivos de índices Niño de ERSST v5 de NCEI usan anomalías respecto de una climatología 1971–2000 y no son los índices oficiales de NOAA para el monitoreo del clima."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/Readme"
+locator = "NCEI ERSST v5 index directory, Readme, final \"Note\""
+quote = "Note: The anomalies are based on climatology from 1971 to 2000 These indices are generated for the convenience of users. They are not the official NOAA indices used for climate monitoring. (2015/1/15)"
+
+[[claim.source]]
+ref = "https://www.ncei.noaa.gov/products/extended-reconstructed-sst"
+locator = "NCEI product page \"Extended Reconstructed Sea Surface Temperature (ERSST)\", section \"Version 5\", Time Frame"
+quote = "January 1854—Present (anomalies are computed with respect to a 1971— 2000 climatology)"
+
+[[claim]]
+id = "cpc-weekly-oisst-base-1991-2020"
+claim_es = "Los índices Niño semanales OISST.v2.1 de CPC usan un periodo base 1991–2020."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/"
+locator = "Climate Prediction Center, Monitoring & Data, index values page, Sea Surface Temperature (SST) section, row \"Weekly OISST.v2.1 (1991-2020 base period)\", whose Data link is wksst9120.for"
+quote = "Weekly OISST.v2.1 (1991-2020 base period) Niño 1+2 (0-10°South)(90°West-80°West) Niño 3 (5°North-5°South)(150°West-90°West) Niño 4 (5°North-5°South) (160°East-150°West) Niño 3.4 (5°North-5°South)(170-120°West)"
+
+[[claim]]
+id = "weekly-nino12-record-2026-09-30"
+claim_es = "En el archivo semanal OISST.v2.1 de CPC (wksst9120.for), leído el 10 de octubre de 2026, la anomalía semanal más alta de Niño 1+2 es +5,3 °C, en la semana centrada el 30 de setiembre de 2026; antes de 2026 el máximo es +4,5 °C, en la semana del 29 de junio de 1983. CPC corrige las últimas semanas del archivo; el valor más reciente es provisional."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_weekly_nino.py"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for"
+locator = "wksst9120.for (Weekly SST data starts week centered on 2Sept1981), data row of the week 30SEP2026, columns Nino1+2 SST and SSTA first; the file has no pages"
+quote = "30SEP2026     26.1 5.3     29.0 4.0     29.9 3.2     29.9 1.2"
+sha256 = "1e9597620686b38e904adbe1b5fa50fb8bde2558e58e13f36b5b3aea37474296"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for"
+locator = "wksst9120.for, data row of the week 29JUN1983"
+quote = "29JUN1983     27.0 4.5     27.4 1.1     27.6 0.1     28.6-0.2"
+sha256 = "1e9597620686b38e904adbe1b5fa50fb8bde2558e58e13f36b5b3aea37474296"
+
+[[claim]]
+id = "weekly-nino12-2026-09-23"
+claim_es = "En la semana centrada el 23 de setiembre de 2026, la anomalía semanal OISST fue +4,7 °C en Niño 1+2 y +3,1 °C en Niño 3.4, según el archivo wksst9120.for de CPC y el Informe Técnico ENFEN Año 12 N° 17."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_weekly_nino.py"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for"
+locator = "wksst9120.for, data row of the week 23SEP2026; the file has no pages"
+quote = "23SEP2026     25.4 4.7     28.8 3.9     29.7 3.1     29.8 1.1"
+sha256 = "1e9597620686b38e904adbe1b5fa50fb8bde2558e58e13f36b5b3aea37474296"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN, Año 12 N° 17, PDF p. 10, section 3.1, second paragraph"
+quote = "Según los datos semanales del OISST, en la cuarta semana de setiembre las anomalías alcanzaron +3,1 °C y +4,7 °C en las regiones Niño 3.4 y Niño 1+2, respectivamente."
+
+[[claim]]
+id = "cpc-weekly-relative-oisst-is-another-file"
+claim_es = "CPC publica dos archivos semanales de Niño con el mismo periodo base 1991–2020: \"Weekly OISST.v2.1\" (wksst9120.for) y \"Weekly Relative OISST.v2.1\" (rel_wksst9120.txt). Son series distintas: el 23 de setiembre de 2026 dan +4,7 °C y +3,9 °C en Niño 1+2, y en la serie relativa el máximo es +4,6 °C, del 29 de junio de 1983. ENFEN cita +4,7 °C, el valor de wksst9120.for."
+status = "verified"
+date_checked = "2026-10-10"
+reproduce = "uv run --project pipeline pipeline/scripts/check_weekly_nino.py"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/"
+locator = "Climate Prediction Center, Monitoring & Data, index values page, Relative Sea Surface Temperature section, row \"Weekly Relative OISST.v2.1 (1991–2020 base period)\", whose Data link is rel_wksst9120.txt"
+quote = "Weekly Relative OISST.v2.1 (1991–2020 base period) Niño 1+2 (0–10°South)(90°West–80°West), Niño 3 (5°North–5°South)(150°West–90°West), Niño 4 (5°North–5°South)(160°East–150°West), Niño 3.4 (5°North–5°South)(170–120°West)"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/rel_wksst9120.txt"
+locator = "rel_wksst9120.txt (Weekly Relative SST data starts week centered on 9Sept1981), data row of the week 23SEP2026, column Nino1+2; the file has no pages"
+quote = "23SEP2026         3.9        3.1        2.2        0.1"
+sha256 = "4acdbda778ef6221edc62ffc9b19bd0f62ee2750b8f11fcb1ac8787692b45b19"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/rel_wksst9120.txt"
+locator = "rel_wksst9120.txt, data row of the week 29JUN1983"
+quote = "29JUN1983         4.6        1.3        0.1       -0.2"
+sha256 = "4acdbda778ef6221edc62ffc9b19bd0f62ee2750b8f11fcb1ac8787692b45b19"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for"
+locator = "wksst9120.for, data row of the week 23SEP2026; the file has no pages"
+quote = "23SEP2026     25.4 4.7     28.8 3.9     29.7 3.1     29.8 1.1"
+sha256 = "1e9597620686b38e904adbe1b5fa50fb8bde2558e58e13f36b5b3aea37474296"
+
+[[claim]]
+id = "enfen-it17-nino12-sst-marine-heatwave"
+claim_es = "El Informe Técnico ENFEN Año 12 N° 17 dice que durante setiembre de 2026 la TSM en la región Niño 1+2 tuvo anomalías positivas de +4 °C a +7 °C en gran parte del área, y que al 22 de setiembre la ola de calor marina cubría el 100 % de la franja de 150 mn entre 4°S y 18,5°S."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN Año 12 N° 17, PDF p. 14, first paragraph, sentence 1"
+quote = "Durante setiembre, la TSM en la región Niño 1+2 mantuvo núcleos de anomalías positivas intensas, con valores de +4 °C a +7 °C en gran parte del área, consolidando una condición cálida persistente."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN Año 12 N° 17, PDF p. 14, paragraph with the Hobday et al. (2016) reference"
+quote = "al 22 de setiembre, la cobertura de la ola de calor marina (OCM; Hobday et al., 2016) en la franja de 150 mn comprendida entre los 4°S y 18,5°S, continúa ocupando el 100 % del área."
+
+[[claim]]
+id = "enfen-it17-intro-impacts"
+claim_es = "El Informe Técnico ENFEN Año 12 N° 17 afirma, sin cifras, que las condiciones cálidas anómalas sobre el Pacífico oriental, frente a la costa norte de Perú y durante el verano austral, generan lluvias intensas que causan impactos en los sectores socioeconómicos."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN Año 12 N° 17, PDF p. 5, Introducción, sentence 4"
+quote = "las condiciones cálidas anómalas sobre el Pacífico oriental, particularmente frente a la costa norte de Perú y durante el verano austral, generan lluvias intensas que causan impactos en los sectores socioeconómicos."
+
+[[claim]]
+id = "enfen-it17-models-disagree"
+claim_es = "Según el Informe Técnico ENFEN Año 12 N° 17, los pronósticos del modelo CFSv2 no coinciden del todo: para Niño 3.4 un grupo de simulaciones muestra un evento de menor magnitud en promedio, y para Niño 1+2 el pronóstico indica una tendencia negativa hasta fines de verano y luego una nueva tendencia positiva."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN Año 12 N° 17, PDF p. 23, paragraph on the CFSv2 model, Niño 3.4"
+quote = "En estos pronósticos se observa que un grupo de simulaciones muestran un evento El Niño de menor magnitud, en promedio."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN Año 12 N° 17, PDF p. 23, paragraph on the CFSv2 model, Niño 1+2"
+quote = "El pronóstico indica una tendencia negativa hasta fines de verano y luego una nueva tendencia positiva"
+
+[[claim]]
+id = "enfen-it17-ai-model-e-index"
+claim_es = "El Informe Técnico ENFEN Año 12 N° 17 dice que el modelo de IA pronostica valores positivos del índice E hasta julio de 2027, comparables a los observados en El Niño 1997/1998. Es un pronóstico de un modelo sobre el índice E, no una comparación de la magnitud del evento."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-enfen-ano-12-n17-al-25-de-setiembre-de-2026/"
+locator = "Informe Técnico ENFEN Año 12 N° 17, PDF p. 23, first paragraph, sentence 1"
+quote = "El modelo IA pronostica valores positivos del índice E, por lo pronto, hasta julio de 2027, dichos valores son comparables al observado en el evento El Niño 1997/1998."
+
+[[claim]]
+id = "enfen-2026-coast-magnitude-wording"
+claim_es = "En 2026 ENFEN cambió la magnitud que pronosticaba para El Niño Costero (región Niño 1+2) en el Resumen Ejecutivo de cada comunicado: débil (N° 01, 15 de enero), débil con posible magnitud moderada en julio (N° 03, 13 de febrero), débil con posible magnitud moderada entre junio y julio (N° 07, 16 de abril), fuerte entre junio y septiembre (N° 11, 15 de junio), fuerte con la extraordinaria no descartada (N° 13, 17 de julio), entre fuerte y extraordinaria (N° 14, 14 de agosto), extraordinaria de setiembre de 2026 a enero de 2027 (N° 15, 28 de agosto) y con la más alta probabilidad de magnitud extraordinaria (N° 16, 14 de setiembre). El N° 17 del 28 de setiembre sigue en enfen-co17-coast-extraordinaria-jan2027."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-01-2026/"
+locator = "Comunicado Oficial ENFEN N° 01-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", second paragraph, sentence 2; the header gives the date \"15 de enero 2026\""
+quote = "persistiendo al menos hasta octubre de 2026, lo cual configuraría el desarrollo de un evento de El Niño Costero de magnitud débil, por lo pronto."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-03-2026/"
+locator = "Comunicado Oficial ENFEN N° 03-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", sentence 2; the header gives the date 13 de febrero de 2026"
+quote = "es más probable que predominen condiciones cálidas de magnitud débil durante la mayor parte del evento, pudiendo alcanzar una magnitud moderada en julio."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-07-2026/"
+locator = "Comunicado Oficial ENFEN N° 07-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", sentence 2; the header gives the date 16 de abril de 2026"
+quote = "es más probable que El Niño costero continúe hasta enero de 2027 con una magnitud débil, pudiendo alcanzar una magnitud moderada entre junio y julio del presente año."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-11-2026/"
+locator = "Comunicado Oficial ENFEN N° 11-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", sentence 2; the header gives the date 15 de junio de 2026"
+quote = "con una mayor probabilidad de presentar una magnitud fuerte entre junio y septiembre, para luego disminuir a moderado hasta diciembre."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-13-2026/"
+locator = "Comunicado Oficial ENFEN N° 13-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", sentence 3; the header gives the date 17 de julio de 2026"
+quote = "es más probable que el evento continúe de magnitud fuerte; sin embargo, no se descarta la magnitud extraordinaria, hacia finales de 2026."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-14-2026/"
+locator = "Comunicado Oficial ENFEN N° 14-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", sentence 2; the header gives the date 14 de agosto de 2026"
+quote = "con una magnitud más probable entre fuerte y extraordinaria hasta el verano."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-15-2026/"
+locator = "Comunicado Oficial ENFEN N° 15-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", sentence 2; the header gives the date 28 de agosto de 2026"
+quote = "con una magnitud extraordinaria de setiembre 2026 a enero de 2027 (≥ 62%)"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/comunicado-oficial-enfen-n-16-2026/"
+locator = "Comunicado Oficial ENFEN N° 16-2026, PDF p. 1, \"RESUMEN EJECUTIVO\", sentence 1; the header gives the date 14 de setiembre de 2026"
+quote = "con la más alta probabilidad de una magnitud extraordinaria de setiembre 2026 a enero de 2027."
+
+[[claim]]
+id = "roni-definition"
+claim_es = "El RONI es la media móvil de tres meses de las anomalías de TSM ERSST.v6 en Niño 3.4 menos la anomalía media del trópico (20°N–20°S), ajustada para que su varianza iguale la del índice Niño 3.4. Usa el umbral de ±0,5 °C sobre la base 1991–2020, y NOAA dice que los umbrales y definiciones no cambian respecto del ONI."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/"
+locator = "Relative Oceanic Niño Index (RONI): Historical El Niño / La Niña episodes (1950–Present), first paragraph under the title"
+quote = "Warm (red) and cold (blue) periods based on a threshold of +/- 0.5°C for the Relative Oceanic Niño Index (RONI), using the 1991–2020 base period [3 month running mean of ERSST.v6 SST anomalies in the Niño 3.4 region (5°N–5°S, 120°–170°W) with average tropical mean (20°N–20°S) SST anomalies subtracted. The difference is then adjusted so the variance equals the original Niño 3.4 index]."
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/pdf/roni-info-may-2026.pdf"
+locator = "RONI circular, PDF p. 1, KEY POINTS, fourth bullet"
+quote = "Thresholds and definitions stay the same— only the measurement improves."
+
+[[claim]]
+id = "noaa-enso-alert-status-2026-10"
+claim_es = "En la discusión de diagnóstico ENSO emitida el 8 de octubre de 2026, el Climate Prediction Center de NOAA mantiene el estado \"El Niño Advisory\" y dice que El Niño continúa fortaleciéndose, con un evento de fuerte a muy fuerte probable hasta enero–marzo de 2027."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml"
+locator = "ENSO Diagnostic Discussion issued 8 October 2026, header line \"ENSO Alert System Status\""
+quote = "ENSO Alert System Status: El Niño Advisory"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml"
+locator = "ENSO Diagnostic Discussion issued 8 October 2026, Synopsis line"
+quote = "El Niño continues to strengthen, with a strong-to-very strong El Niño likely through January-March 2027 (remaining greater than an 83% chance)."
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml"
+locator = "ENSO Diagnostic Discussion issued 8 October 2026, second paragraph of the discussion, last two sentences before \"In summary\""
+quote = "Chances remain high for a historic event that would exceed the strength of previous El Niño events dating back to 1950 (+2.5°C or more for a 3-month RONI value ): the chance is 54% for September-November, 83% for October-December, and 70% for November-January."
+
+[[claim]]
+id = "oni-roni-2026-seasons"
+claim_es = "En los archivos oni.ascii.txt y RONI.ascii.txt de CPC, la anomalía de JAS 2026 es 2,16 °C en el ONI y 1,69 °C en el RONI; en cada una de las ocho temporadas de 2026 (DJF a JAS) el ONI supera al RONI en 0,42 a 0,55 °C."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt"
+locator = "oni.ascii.txt, last eight data rows (columns SEAS, YR, TOTAL, ANOM), DJF 2026 to JAS 2026; the file has no pages"
+quote = "DJF 2026 26.15 -0.39 JFM 2026 26.57 -0.21 FMA 2026 27.34 0.11 MAM 2026 28.09 0.46 AMJ 2026 28.74 0.95 MJJ 2026 29.02 1.39 JJA 2026 29.09 1.80 JAS 2026 29.12 2.16"
+sha256 = "5d6fa3a2f857d916550d39c2c686e94cb942430195c82518e6a5d0f5ffbd0665"
+
+[[claim.source]]
+ref = "https://www.cpc.ncep.noaa.gov/data/indices/RONI.ascii.txt"
+locator = "RONI.ascii.txt, last eight data rows (columns SEAS, YR, ANOM), DJF 2026 to JAS 2026; the file has no pages"
+quote = "DJF 2026 -0.91 JFM 2026 -0.76 FMA 2026 -0.44 MAM 2026 -0.04 AMJ 2026 0.49 MJJ 2026 0.97 JJA 2026 1.36 JAS 2026 1.69"
+sha256 = "24d79a53c8c30aaf32200c08447291655fc1d693f11165793ba6d3aa378d98ff"
+
+[[claim]]
+id = "impact-1983-cepal-total"
+claim_es = "CEPAL estimó en 3 480 millones de dólares los daños totales de los desastres naturales de 1982–1983 en Bolivia, Ecuador y Perú, de los cuales 2 000 millones corresponden a Perú. El Cuadro 2 da para Perú 2001,8 millones en total: 1209,6 directos y 792,2 indirectos."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://hdl.handle.net/11362/35343"
+locator = "CEPAL, Los desastres naturales de 1982-1983 en Bolivia, Ecuador y Perú (E/CEPAL/G.1274, 27 December 1983), printed p. 11 (PDF p. 15), second paragraph; scanned image without text layer, quote transcribed from the page image"
+quote = "Las estimaciones realizadas indican que los daños totales impuestos por los fenómenos naturales llegan a los 3 480 millones de dólares. De ello, 2 000 millones corresponden a Perú; 840 millones a Bolivia, y 640 al Ecuador."
+
+[[claim.source]]
+ref = "https://hdl.handle.net/11362/35343"
+locator = "same document, printed p. 12 (PDF p. 16), Cuadro 2 \"Resumen de daños causados por desastres naturales en Bolivia, Ecuador y Perú (Millones de dólares)\", the Perú columns Total, Directo and Indirecto in the row Total; scanned image, figures transcribed from the page image"
+quote = "2001.8 1209.6 792.2"
+
+[[claim]]
+id = "impact-1983-cepal-people"
+claim_es = "CEPAL, citando estimaciones del gobierno, señaló unos 460 000 pobladores rurales que perdieron total o parcialmente cosechas y ganado por la sequía del sur, y unas 830 000 personas afectadas directa o indirectamente por las avenidas y avalanchas del norte. Son dos peligros distintos: las cifras no se suman."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://hdl.handle.net/11362/35343"
+locator = "CEPAL, Los desastres naturales de 1982-1983 en Bolivia, Ecuador y Perú (E/CEPAL/G.1274), printed p. 63 (PDF p. 67), second paragraph; scanned image, quote transcribed from the page image"
+quote = "Estimaciones del gobierno sitúan en alrededor de 460 000 los pobladores de zonas rurales en los departamentos ya citados que han perdido total o parcialmente sus cosechas y su ganado."
+
+[[claim.source]]
+ref = "https://hdl.handle.net/11362/35343"
+locator = "same document, printed p. 65 (PDF p. 69), first paragraph; scanned image, quote transcribed from the page image"
+quote = "Aparte de afectar directa e indirectamente a unas 830 000 personas, las avenidas y avalanchas dañaron a la zona de mayor producción agrícola y de mejor infraestructura del país."
+
+[[claim]]
+id = "impact-1983-cepal-mechanism"
+claim_es = "CEPAL describió el daño de 1982–1983 en Perú como una sequía prolongada y extrema en el altiplano del sur y, en la costa entre Lima y la frontera con Ecuador, intensas precipitaciones y notables ascensos de la temperatura del mar."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://hdl.handle.net/11362/35343"
+locator = "CEPAL, Los desastres naturales de 1982-1983 en Bolivia, Ecuador y Perú (E/CEPAL/G.1274), printed p. 63 (PDF p. 67), second paragraph of section 4(a); scanned image, quote transcribed from the page image"
+quote = "Una prolongada y extrema sequía se produjo en la región del altiplano, ubicada en el sur del país"
+
+[[claim.source]]
+ref = "https://hdl.handle.net/11362/35343"
+locator = "same document, printed p. 63 (PDF p. 67), fifth paragraph; scanned image, quote transcribed from the page image"
+quote = "De otro lado, en la región costera del país -comprendida entre Lima y la frontera con el Ecuador- se produjeron intensas precipitaciones y notables ascensos en la temperatura del mar."
+
+[[claim]]
+id = "impact-1983-paho-deaths"
+claim_es = "La Tabla 1 de la OPS (documento CE122/10, 4 de mayo de 1998) atribuye 380 muertes en Perú al fenómeno de 1982/1983. Es una tabla preliminar tomada de una página web de la OPS en Ecuador, no un conteo final."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://www1.paho.org/english/gov/ce/ce122_10.pdf"
+locator = "PAHO Executive Committee, 122nd Session, CE122/10 \"El Niño and its impact on health\" (4 May 1998), PDF p. 8, Table 1, Peru row (columns Deaths 1982/1983, Deaths 1997/1998*, Injuries 1997/1998**, Disappearances 1997/1998**)"
+quote = "Peru Intense rains in the northern and Amazon regions of the country, with major flooding, mudslides, and damage to the roadways. Significant increase in the number of cholera cases in the northern region of the country. Health conditions are currently poor in these areas. 380 203 107 No data"
+
+[[claim.source]]
+ref = "https://www1.paho.org/english/gov/ce/ce122_10.pdf"
+locator = "same document, PDF p. 8, note under Table 1"
+quote = "*Cumulative to March 1998 Source: Web page. Programa desastres OPS/Ecuador."
+
+[[claim]]
+id = "impact-1998-paho-deaths"
+claim_es = "La misma Tabla 1 de la OPS registra para Perú en 1997/1998 203 muertes y 107 heridos, acumulados a marzo de 1998; la columna de desaparecidos dice \"No data\". Es una cifra preliminar, no un conteo final."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://www1.paho.org/english/gov/ce/ce122_10.pdf"
+locator = "PAHO CE122/10, PDF p. 8, Table 1, Peru row, columns Deaths 1997/1998*, Injuries 1997/1998** and Disappearances 1997/1998**"
+quote = "Peru Intense rains in the northern and Amazon regions of the country, with major flooding, mudslides, and damage to the roadways. Significant increase in the number of cholera cases in the northern region of the country. Health conditions are currently poor in these areas. 380 203 107 No data"
+
+[[claim.source]]
+ref = "https://www1.paho.org/english/gov/ce/ce122_10.pdf"
+locator = "same document, PDF p. 8, note under Table 1"
+quote = "*Cumulative to March 1998 Source: Web page. Programa desastres OPS/Ecuador."
+
+[[claim]]
+id = "impact-1998-paho-health-facilities"
+claim_es = "La OPS informó a principios de 1998 que en Perú el 9,5 % (437 de 4 576) de los establecimientos de salud había sufrido daños: 2 % de los hospitales (9 de 443) y 10,3 % de los demás centros de salud (428 de 4 133)."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://www1.paho.org/english/gov/ce/ce122_10.pdf"
+locator = "PAHO CE122/10, PDF p. 7, paragraph on damage to health facilities"
+quote = "For example, in Peru it was reported that 9.5% (437/4,576) of health facilities had been damaged, with hospitals showing a damage rate of 2% (9/443) and other health centers a rate of 10.3% (428/4,133)."
+
+[[claim]]
+id = "impact-2017-paho-sinpad-may"
+claim_es = "Según el SINPAD, actualizado al 17 de mayo de 2017, se reportaban 231 874 damnificados, 1 129 013 afectados y 143 fallecidos por el Niño Costero; son cifras parciales a esa fecha."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://www.paho.org/es/peru/emergencia-por-impacto-fenomeno-nino-costero-peru-2017"
+locator = "PAHO Peru, \"Emergencia por impacto Fenómeno El Niño Costero – Perú, 2017\" (web page, no page numbers), paragraph beginning \"Según el reporte del Sistema de Información Nacional para la Respuesta y Rehabilitación - SINPAD\""
+quote = "Según el reporte del Sistema de Información Nacional para la Respuesta y Rehabilitación - SINPAD, actualizado al 17 de mayo de 2017, se reportan 231,874 damnificados; 1 129,013 afectados y 143 fallecidos."
+
+[[claim]]
+id = "impact-1998-caf-total"
+claim_es = "La CAF estimó en 3 500 millones de dólares los daños totales del Fenómeno El Niño 1997–98 en Perú: 1 612 millones directos (46 %) y 1 888 millones indirectos (54 %), con la metodología de CEPAL sobre cifras de instituciones públicas. La propia CAF advierte que esa información contiene imprecisiones."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://dipecholac.net/docs/files/996-publicacion-caf-peru-nino-97-98.pdf"
+locator = "CAF, El Fenómeno El Niño 1997-1998. Memoria, retos y soluciones. Volumen V: Perú (2000), printed p. 52 (PDF p. 43), paragraph above Cuadro III.2.1-2"
+quote = "los daños totales originados por el Fenómeno El Niño 1997-98 en el Perú ascienden a los 3.500 millones de dólares. Ello incluye daños directos por valor de 1.612 millones de dólares (el 46% del total), y daños o pérdidas indirectas por 1.888 millones adicionales (el 54%) (Cuadro III.2.1-2)."
+
+[[claim.source]]
+ref = "https://dipecholac.net/docs/files/996-publicacion-caf-peru-nino-97-98.pdf"
+locator = "same document, printed p. 51 (PDF p. 42), paragraph on the quality of the information"
+quote = "Dicha información contiene algunas imprecisiones. Por un lado, no se dispuso de información uniforme y coherente sobre los daños en todos los sectores"
+
+[[claim]]
+id = "impact-1998-caf-by-sector"
+claim_es = "Según la CAF, en 1997–98 los sectores productivos fueron los más afectados (46 % del daño total; agropecuario 17 %, industria 19 %, comercio 8 %) y el transporte fue el segundo en importancia (21 %)."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://dipecholac.net/docs/files/996-publicacion-caf-peru-nino-97-98.pdf"
+locator = "CAF, El Fenómeno El Niño 1997-1998, Volumen V: Perú, printed p. 52 (PDF p. 43), paragraph after Cuadro III.2.1-3"
+quote = "fueron los sectores productivos los que resultaron más afectados (46% del daño total) debido a que las inundaciones dañaron tanto la infraestructura como la producción agropecuaria (17%); los cambios en las características del mar afectaron la pesca y se sucedieron pérdidas escalonadas de producción en los sectores de industria (19%) y comercio (8%). Los daños en el transporte, especialmente en los caminos y puentes, fueron los segundos en importancia (21%)"
+
+[[claim]]
+id = "impact-1998-caf-share-of-gdp"
+claim_es = "La CAF estimó que Perú tuvo en 1997–98 pérdidas por más de 3 500 millones de dólares, más del 4,5 % del PIB de 1997."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://dipecholac.net/docs/files/996-publicacion-caf-peru-nino-97-98.pdf"
+locator = "CAF, El Fenómeno El Niño 1997-1998, Volumen V: Perú, printed p. 54 (PDF p. 45), paragraph above Cuadro III.2.1-5"
+quote = "Perú tuvo pérdidas por más de 3.500 millones de dólares, que representan más del 4,5% del PIB de 1997 (Cuadro III.2.1-5)."
+
+[[claim]]
+id = "impact-8283-9798-caf-comparison"
+claim_es = "La CAF comparó los daños de 1982–83 y 1997–98 en Perú: los totales son muy similares (diferencia de 4 %, dentro del margen de error); el evento de 1982–83 representó cerca del 7 % del PIB y el de 1997–98 el 5 %."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://dipecholac.net/docs/files/996-publicacion-caf-peru-nino-97-98.pdf"
+locator = "CAF, El Fenómeno El Niño 1997-1998, Volumen V: Perú, printed p. 54 (PDF p. 45), paragraph after the comparison table, sentence 1"
+quote = "el monto total de los daños en ambos eventos es muy similar, ya que hay una diferencia entre ellos de solamente un 4%, lo que obviamente está dentro del mismo margen de error de las estimaciones."
+
+[[claim.source]]
+ref = "https://dipecholac.net/docs/files/996-publicacion-caf-peru-nino-97-98.pdf"
+locator = "same document, printed p. 54 (PDF p. 45), same paragraph, sentence 3"
+quote = "los daños del evento de hace 15 años representaron cerca del 7% del PIB, en tanto que en esta ocasión –a pesar de ser ligeramente más elevados en términos absolutos– alcanzaron solamente el 5%."
+
+[[claim]]
+id = "impact-8283-9798-caf-attribution"
+claim_es = "La CAF atribuye el menor impacto relativo de 1997–98 frente a 1982–83 a que no hubo sequía en el sur y a que un pronóstico temprano permitió obras de prevención."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://dipecholac.net/docs/files/996-publicacion-caf-peru-nino-97-98.pdf"
+locator = "CAF, El Fenómeno El Niño 1997-1998, Volumen V: Perú, printed p. 54 (PDF p. 45), paragraph after the comparison table, last sentence"
+quote = "no se produjo en esta ocasión una sequía en la región del sur peruano, lo que redujo las pérdidas agropecuarias; y por la otra, porque al existir un pronóstico temprano fue posible emprender obras y acciones de prevención que lograron mitigar –aunque fuese parcialmente– los efectos negativos del fenómeno."
+
+[[claim]]
+id = "impact-1998-caf-early-tally"
+claim_es = "Al terminar la fase de contingencia, el volumen de la CAF informa un balance de más de 140 muertos, 140 mil viviendas dañadas y 140 puentes destruidos, sin nombrar la institución que contó. Es un balance temprano, no un conteo final."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://dipecholac.net/docs/files/996-publicacion-caf-peru-nino-97-98.pdf"
+locator = "CAF, El Fenómeno El Niño 1997-1998, Volumen V: Perú, printed p. 205 (PDF p. 213), paragraph before the list of strengths"
+quote = "Al finalizar la contingencia ya se habían declarado en emergencia 16 departamentos en todo el país. El balance de los efectos superaba los 140 muertos, 140 mil viviendas dañadas, 140 puentes destruidos"
+
+[[claim]]
+id = "impact-2017-indeci-summary"
+claim_es = "El documento de lecciones aprendidas de INDECI, el Programa Mundial de Alimentos, Save the Children y USAID (2018) reproduce, como cifras nacionales de la temporada de lluvias diciembre 2016 – junio 2017 actualizadas al 28 de junio de 2017: 283 152 damnificados, 1 432 867 afectados, 159 fallecidos, 29 821 viviendas colapsadas, 347 633 afectadas y 25 361 inhabitables."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://dylbw5db8047o.cloudfront.net/uploads/fortaleciendo_la_respuesta_ante_desastres_en_el_peru.pdf"
+locator = "INDECI, PMA, Save the Children and USAID, Fortaleciendo la respuesta ante desastres en el Perú: Lecciones Aprendidas del Fenómeno El Niño Costero 2017 en el Perú (2018), PDF p. 27, Tabla 1, row Total Nacional (source line \"Fuente: INDECI\")"
+quote = "Damnificada Afectada Fallecidos Colapsadas Afectadas Inhabitables Total Nacional 283,152 1,432,867 159 29,821 347,633 25,361"
+
+[[claim.source]]
+ref = "https://dylbw5db8047o.cloudfront.net/uploads/fortaleciendo_la_respuesta_ante_desastres_en_el_peru.pdf"
+locator = "same document, PDF p. 27, footnote 13 of Tabla 1"
+quote = "INDECI. Resumen Ejecutivo – Temporada de lluvias diciembre 2016 – junio 2017, actualizado al 28 de junio del 2017."
+
+[[claim]]
+id = "impact-2017-indeci-registry-limits"
+claim_es = "En la Tabla 3 de ese documento (recomendaciones de los últimos desastres), la fila 7, \"Metodología y herramienta de registro de daños y evaluación de necesidades\", recomienda para el Fenómeno El Niño Costero 2017 replantear el modelo de evaluación de daños y de identificación de personas damnificadas, y para el FEN 1997–1998 institucionalizar la evaluación de los daños en la fase de emergencia."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://dylbw5db8047o.cloudfront.net/uploads/fortaleciendo_la_respuesta_ante_desastres_en_el_peru.pdf"
+locator = "Fortaleciendo la respuesta ante desastres en el Perú (2018), PDF p. 61, Tabla 3, row 7, column \"FENÓMENO EL NIÑO COSTERO 2017\""
+quote = "Replantear el modelo de evaluación de daños, análisis de necesidades e identificación de personas damnificadas."
+
+[[claim.source]]
+ref = "https://dylbw5db8047o.cloudfront.net/uploads/fortaleciendo_la_respuesta_ante_desastres_en_el_peru.pdf"
+locator = "same document, PDF p. 61, Tabla 3, row 7, column \"FEN 1997-1998\""
+quote = "Institucionalizar la evaluación de los daños en la fase de emergencia."
+
+[[claim]]
+id = "impact-2017-enfen-qualitative"
+claim_es = "El Informe Técnico Extraordinario N° 001-2017/ENFEN calificó el periodo de diciembre de 2016 a mayo de 2017 como El Niño Costero de magnitud moderada y dice que, por sus impactos asociados a lluvias e inundaciones, puede considerarse el tercer Fenómeno El Niño más intenso de al menos los últimos cien años para el Perú. El informe no da un método para esa clasificación ni cifras de personas o daños."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "ENFEN, Informe Técnico Extraordinario N° 001-2017/ENFEN. El Niño Costero 2017, PDF p. 1, Resumen ejecutivo, sentence 2 of the paragraph beginning \"El periodo de diciembre 2016\""
+quote = "El periodo de diciembre 2016 a mayo del 2017 calificó formalmente como “El Niño Costero” de magnitud moderada"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "same document, PDF p. 1, Resumen ejecutivo, sentence 4 of the same paragraph"
+quote = "Por sus impactos, asociados a las lluvias e inundaciones, “El Niño costero 2017” se puede considerar como el tercer “Fenómeno El Niño” más intenso de al menos los últimos cien años para el Perú."
+
+[[claim]]
+id = "impact-2017-enfen-fisheries"
+claim_es = "ENFEN informó que en el verano de 2017 la anchoveta se desplazó al sur de los 10°S (Huarmey), estuvo replegada hacia la costa y no desovó, y que aumentó la disponibilidad de recursos de aguas cálidas como caballa, bonito y atunes. El informe no da toneladas."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "ENFEN, Informe Técnico Extraordinario N° 001-2017/ENFEN, PDF p. 29, last paragraph of the conclusions before section 4 Recomendaciones"
+quote = "La anchoveta, especie clave del ecosistema marino peruano, mostró un desplazamiento hacia el sur de los 10°S (Huarmey) y estuvo replegada hacia la costa, desde Salaverry hasta el extremo sur del litoral peruano; no presentó actividad reproductiva ni desove durante el verano. Además, se detectó el incremento de la disponibilidad de recursos asociados a aguas cálidas, como caballa, bonito y atunes en todo el litoral peruano."
+
+[[claim]]
+id = "enfen-it2017-station-rain-records"
+claim_es = "ENFEN informa que en febrero y marzo de 2017 la estación Morropón (Piura) registró el 22 de febrero la precipitación más alta del registro histórico de febrero (150 mm en 24 h), la estación Partidor (Tambo Grande, Piura) 258,5 mm en 24 h el día 3 de marzo y la estación Jayanca (Lambayeque) 113 mm en 24 h el día 4, el segundo valor más alto de toda su serie. Son totales de 24 horas, no del evento."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "ENFEN, Informe Técnico Extraordinario N° 001-2017/ENFEN. El Niño Costero 2017, PDF p. 19, section 2.2 \"Lluvias intensas\", paragraph 2"
+quote = "registrarse en la estación meteorológica Morropón (Piura) para el día 22 de febrero la precipitación más alta del registro histórico de febrero (150 mm/24hrs)"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "same document, PDF p. 19, section 2.2, paragraph 2, a later sentence"
+quote = "sobresalen algunos récords de precipitaciones extremas encontrados el día 03 en la estación Partidor (Tambo Grande, Piura) con 258,5 mm/24hrs y el día 04 en la estación Jayanca (Lambayeque) reportó el segundo valor más alto de toda su serie histórica con 113 mm/24hrs."
+
+[[claim]]
+id = "enfen-it2017-rain-intensity-classes"
+claim_es = "ENFEN dice que en 2017 hubo lluvias de \"fuertes\" a \"extremadamente fuertes\", principalmente en las zonas bajas y medias de Tumbes, Piura y Lambayeque, y que Piura, Chiclayo, Trujillo y Huarmey soportaron lluvias intensas que superaron récords históricos observados solamente en eventos El Niño extraordinarios. En el informe las lluvias \"fuertes\", \"muy fuertes\" y \"extremadamente fuertes\" son los percentiles 90, 95 y 99 de la precipitación diaria."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "ENFEN, Informe Técnico Extraordinario N° 001-2017/ENFEN, PDF p. 19, section 2.2, paragraph 1, sentence 2"
+quote = "Ciudades como Piura, Chiclayo, Trujillo y Huarmey soportaron lluvias intensas que superaron records históricos observados solamente en eventos El Niño extraordinarios."
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "same document, PDF p. 19, section 2.2, paragraph 1, sentence 3"
+quote = "se presentaron lluvias entre “fuerte” a “extremadamente fuertes” (SENAMHI, 2015), principalmente en las zonas bajas y medias de Tumbes, Piura y Lambayeque"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "same document, PDF p. 19, footnote 2"
+quote = "“Lluvias muy fuertes” se definen como el percentil 95% de la precipitación diaria; “lluvias fuertes” se definen como el percentil 90% de la precipitación diaria y “lluvias extremadamente fuertes” se definen como el percentil 99% de la precipitación diaria."
+
+[[claim]]
+id = "enfen-it2017-accumulation-vs-1983-1998"
+claim_es = "ENFEN dice que la precipitación acumulada entre enero y marzo de 2017 en las zonas bajas de Piura y Lambayeque fue menor que la del mismo periodo de El Niño 1997/1998, similar a la acumulada durante El Niño 1982/1983 al mes de marzo y posiblemente superior a lo estimado para El Niño de 1925. El texto no da cifras."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "ENFEN, Informe Técnico Extraordinario N° 001-2017/ENFEN, PDF p. 19, section 2.2, last sentence of paragraph 2"
+quote = "No obstante la intensidad de las lluvias, la precipitación acumulada entre enero y marzo en las zonas bajas de Piura y Lambayeque fueron menores a lo observado en el mismo periodo durante El Niño 1997/1998, similar a lo acumulado durante El Niño 1982/1983 al mes de marzo y posiblemente superior a lo estimado para El Niño de 1925 (Takahashi y Martínez, 2017)."
+
+[[claim]]
+id = "enfen-it2017-affected-regions"
+claim_es = "ENFEN dice que las principales manifestaciones de El Niño Costero 2017 fueron el incremento sustancial de las lluvias y de los caudales de los ríos en las regiones históricamente afectadas por El Niño extraordinarios: Tumbes, Piura, Lambayeque, La Libertad, Ancash, Lima e Ica. No da cantidades."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://enfen.imarpe.gob.pe/download/informe-tecnico-el-nino-costero-2017/"
+locator = "ENFEN, Informe Técnico Extraordinario N° 001-2017/ENFEN, PDF p. 29, section 3 Conclusiones, bullet 2"
+quote = "Las principales manifestaciones de El Niño Costero 2017 fueron el incremento sustancial de las lluvias y por ende los caudales de los ríos en las regiones históricamente afectadas por el fenómeno El Niño extraordinarios: Tumbes, Piura, Lambayeque, La Libertad, así como Ancash, Lima e Ica."
+
+[[claim]]
+id = "senamhi-69-2026-2017-generalised-humid"
+claim_es = "SENAMHI dice que el evento de 2017 presentó condiciones húmedas generalizadas en gran parte del territorio durante el trimestre EFM; \"gran parte del territorio\" no es la costa."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "SENAMHI, Informe Técnico N° 69-2026/SENAMHI-DMA-SPC, Mapas de anomalías extremas de precipitación durante eventos El Niño/Oscilación Sur (1983, 1998, 2016) y El Niño Costero (2017, 2023), periodo enero-marzo (June 2026), PDF p. 7 of 21, section 4.1, Mapa N° 3 paragraph"
+quote = "el evento 2017 presentó condiciones húmedas generalizadas en gran parte del territorio durante el trimestre EFM"
+
+[[claim]]
+id = "senamhi-69-2026-nino-costero-composite-coasts"
+claim_es = "En el compuesto de máximas anomalías de SENAMHI para El Niño Costero (EFM 2017 y 2023), las anomalías más extremas (>250 %) están en la costa norte entre 3°S y 6°S, y la señal húmeda se extiende a lo largo de toda la franja costera hasta unos 17,5°S con anomalías muy húmedas (100 %–250 %). El compuesto es el máximo celda por celda de dos eventos."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "SENAMHI, Informe Técnico N° 69-2026/SENAMHI-DMA-SPC (June 2026), PDF p. 7 of 21, section 4.1, Mapa N° 3 paragraph, sentence 1"
+quote = "Las anomalías más extremas (>250%, extremadamente húmedo) se registran en la costa norte entre los 3°S y 6°S (Tumbes, Piura, Lambayeque), con el núcleo más intenso entre 4°S y 5.5°S."
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "same document, PDF p. 7 of 21, section 4.1, Mapa N° 3 paragraph, sentence 2 (part)"
+quote = "la señal húmeda se extiende de forma más continua y pronunciada a lo largo de toda la franja costera hasta aproximadamente los 17.5°S con anomalías muy húmedas (100%–250%)"
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "same document, PDF p. 4 of 21, section 3.4"
+quote = "seleccionar, para cada celda de la grilla, el valor más extremo registrado entre los eventos analizados"
+
+[[claim]]
+id = "senamhi-69-2026-nino-costero-composite-limits"
+claim_es = "SENAMHI advierte que el patrón del compuesto de El Niño Costero no debe interpretarse como el comportamiento típico de un Niño Costero en EFM, sino como el escenario más extremo registrado entre 2017 y 2023; que en la costa árida las anomalías porcentuales deben leerse en términos cualitativos; y que en 2023 el calentamiento costero se consolidó hacia marzo, con lluvias intensificadas por el ciclón Yaku en la costa norte y central."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "SENAMHI, Informe Técnico N° 69-2026/SENAMHI-DMA-SPC (June 2026), PDF p. 7 of 21, section 4.1, last sentence of the Mapa N° 3 paragraph"
+quote = "Por ello, el patrón del composite no debe interpretarse como el comportamiento típico de un Niño Costero en el trimestre EFM, sino como el escenario más extremo registrado entre ambos eventos para el territorio."
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "same document, PDF p. 4 of 21, section 3.3"
+quote = "en zonas con climatología de referencia cercana a cero — principalmente la costa árida— pequeñas diferencias absolutas de precipitación pueden traducirse en anomalías porcentuales muy elevadas. Por ello, los valores en estos sectores deben interpretarse en términos cualitativos, identificando la presencia o ausencia de exceso o déficit, más que como magnitudes absolutas comparables con otras regiones."
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "same document, PDF p. 7 of 21, section 4.1, Mapa N° 3 paragraph"
+quote = "mientras que en 2023 el calentamiento costero se consolidó principalmente hacia marzo, mes en que el sistema ciclónico Yaku intensificó las lluvias en la costa norte y central."
+
+[[claim]]
+id = "senamhi-69-2026-enso-canonical-south-coast"
+claim_es = "En los compuestos de SENAMHI para El Niño/ENOS canónico (EFM 1983, 1998 y 2016), la señal negativa más intensa se concentra en la costa sur y la sierra sur, con anomalías extremadamente secas (-100 % a -75 %) de Ica a Tacna entre 13°S y 18°S, liderada por el evento 2015–2016; en el compuesto de máximos de los mismos eventos, la franja costera centro y sur hasta 18°S muestra anomalías de moderadamente húmedas a muy húmedas (15 %–250 %), con núcleos >250 % en las cuencas medias de Lima, Ica, Huancavelica, Arequipa, Moquegua y Tacna."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "SENAMHI, Informe Técnico N° 69-2026/SENAMHI-DMA-SPC (June 2026), PDF p. 6 of 21, section 4.1, Mapa N° 2 paragraph, sentence 1"
+quote = "La señal negativa más intensa se concentra en la costa sur y sierra sur — tanto occidental como oriental — con un núcleo de anomalías extremadamente secas (-100% a -75%) que se extiende de forma continua desde Ica hasta Tacna y desde Ayacucho hasta Puno entre los 13°S y 18°S"
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "same document, PDF p. 6 of 21, section 4.1, Mapa N° 2 paragraph, sentence 4"
+quote = "Este patrón está liderado por el evento 2015-2016, que generó déficits generalizados en la sierra central y sur, mientras que los eventos 1982-1983 y 1997-1998 contribuyeron con déficits severos concentrados principalmente en la sierra sur."
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "same document, PDF p. 6 of 21, section 4.1, Mapa N° 1 paragraph, sentence 2 (part)"
+quote = "hacia la franja costera centro y sur hasta los 18°S con anomalías moderadamente húmedas a muy húmedas (15%–250%), con núcleos destacados >250%, asociados a las cuencas medias de Lima, Ica, Huancavelica, Arequipa, Moquegua y Tacna."
+
+[[claim]]
+id = "igp-sanabria-2018-meridional-mode"
+claim_es = "El boletín técnico del IGP (agosto de 2018) dice que el primer modo de la lluvia en eventos fuertes de El Niño representa precipitación intensa en el norte de Perú y lluvias leves en las zonas costeras del sur, con un nodo en la latitud de Lima (12°S), y que al sur de ese nodo las anomalías tienden a ser negativas en las tierras altas pero aún positivas cerca de la costa. El estudio cubre 1972–73, 1982–83, 1997–98 y 2015–16, no el Niño Costero de 2017."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://repositorio.igp.gob.pe/bitstreams/76006852-0412-4eda-a783-90cd342aa18e/download"
+locator = "IGP, Janeet Sanabria Quispe, Lluvias a lo largo de la costa del Perú durante los eventos fuertes de El Niño, Boletín Técnico Vol. 5 N° 8 (August 2018), PDF p. 4 of 5, Conclusiones, paragraph 1"
+quote = "el primer modo representa la precipitación intensa en la parte norte del Perú y las lluvias leves en las zonas costeras del sur, caracterizándose por un patrón de see-saw meridional (Ep) con un nodo en la latitud de Lima (12°S)"
+
+[[claim.source]]
+ref = "https://repositorio.igp.gob.pe/bitstreams/76006852-0412-4eda-a783-90cd342aa18e/download"
+locator = "same document, PDF p. 3 of 5, paragraph on the Ep pattern"
+quote = "Al sur de esta última, las anomalías de la precipitación durante los eventos extremos de El Niño tienden a ser negativas en las tierras altas, pero aún positivas cerca de la costa."
+
+[[claim]]
+id = "sanabria-2018-abstract"
+claim_es = "Sanabria et al. (2018) encuentran que los eventos extremos de El Niño de 1982/1983 y 1997/1998 tienen una proyección dominante sobre el modo Ep, con fuerte carga en el norte, y que todos los eventos fuertes se asocian con anomalías positivas de lluvia en el norte de Perú. Solo se leyó el resumen."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://doi.org/10.1002/joc.5292"
+locator = "Sanabria, Bourrel, Dewitte, Frappart, Rau, Solis, Labat (2018), Rainfall along the coast of Peru during strong El Niño events, International Journal of Climatology 38(4): 1737–1747, abstract as returned by Crossref for the DOI; the full text was not reachable"
+quote = "It is shown that the extreme 1982/1983 and 1997/1998 El Niño events have a dominant projection on the Ep mode that has a strong loading in the northern region"
+
+[[claim.source]]
+ref = "https://doi.org/10.1002/joc.5292"
+locator = "same abstract, sentence 6"
+quote = "while all events are associated with positive rainfall anomalies in the northern part of Peru which is accounted for by the Ep mode, the evolution of rainfall anomalies along the Cp mode exhibits a significant dispersion."
+
+[[claim]]
+id = "lavado-espinoza-2014-abstract"
+claim_es = "Lavado y Espinoza (2014) confirman que la parte norte de la vertiente del Pacífico presenta un aumento de las lluvias durante El Niño fuerte, mientras que la región sur andina de esa vertiente presenta disminución. Solo se leyó el resumen; ubica la disminución en la región andina, no en la costa."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://doi.org/10.1590/S0102-77862014000200003"
+locator = "Lavado Casimiro & Espinoza Villar (2014), Impactos de El Niño y La Niña en las lluvias del Perú (1965-2007), Revista Brasileira de Meteorologia 29(2), abstract as returned by Crossref for the DOI, sentence 3; the full text was not reachable"
+quote = "Nuestro análisis confirma que la parte norte de la VP presenta un aumento de las lluvias durante ENF, mientras que la región sur andina de la VP presenta disminución (aumento) de lluvias durante ENF (LNF)."
+
+[[claim]]
+id = "rau-2017-abstract"
+claim_es = "Rau et al. (2017) describen una regionalización de la lluvia en la vertiente del Pacífico y la costa de Perú en la que el ENOS se manifiesta como mayor lluvia en las regiones de aguas abajo del norte durante El Niño extremo y menor lluvia en las regiones de aguas arriba durante El Niño del Pacífico central. Solo se leyó el resumen."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://doi.org/10.1002/joc.4693"
+locator = "Rau, Bourrel, Labat, Melo, Dewitte, Frappart, Lavado, Felipe (2017), Regionalization of rainfall over the Peruvian Pacific slope and coast, International Journal of Climatology 37(1): 143–158, abstract as returned by Crossref for the DOI, sentence 5"
+quote = "increased rainfall over downstream regions in northern Peru during extreme El Niño events and decreased rainfall over upstream regions along the Pacific slope during central Pacific El Niño events"
+
+[[claim]]
+id = "senamhi-2015-south-basins-1983-1998"
+claim_es = "El análisis SPI-3 de SENAMHI (2015) de las tres regiones hidrográficas más al sur de la vertiente del Pacífico (Pacífico 1, 2 y 3, cuencas completas, también andinas) muestra déficit de lluvia en marzo de 1983 sobre el 61 %, 87 % y 54 % de la superficie de cada región, y ningún déficit en marzo de 1998, cuando el territorio estuvo normal (Pacífico 1: 88 %) o con excesos (Pacífico 3: 100 %). Los porcentajes son de superficie, no de lluvia."
+status = "held"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://sigrid.cenepred.gob.pe/sigridv3/documento/1903/descargar"
+locator = "SENAMHI, Distribución espacial de la precipitación en el Perú durante Eventos Niño 1982-83 y 1997-98 (2015), PDF p. 7 (printed p. 4), section 5.1.1 Región Pacífico 1, item b"
+quote = "Según el SPI-3 evaluado en marzo de 1983, que acumula las lluvias del trimestre EFM, se tiene que el 61% de la superficie de esta región estuvo afectada por déficit pluviométrico; el 24% tuvo un comportamiento normal y el 16% fue afectada por excesos."
+
+[[claim.source]]
+ref = "https://sigrid.cenepred.gob.pe/sigridv3/documento/1903/descargar"
+locator = "same document, PDF p. 8, section 5.1.1 Región Pacífico 1, item d"
+quote = "Según el SPI-3 evaluado en marzo de 1998, que acumula las lluvias del trimestre EFM, no existe afectación por sequía; el 88% del territorio tuvo un comportamiento normal y el 12% fue afectada por excesos."
+
+[[claim.source]]
+ref = "https://sigrid.cenepred.gob.pe/sigridv3/documento/1903/descargar"
+locator = "same document, PDF p. 8, section 5.1.2 Región Pacífico 2, item b"
+quote = "Según el SPI-3 evaluado en marzo de 1983, que acumula las lluvias del trimestre EFM, se tiene que el 87% de la superficie de esta región estuvo afectada por déficit pluviométrico; el 12% tuvo un comportamiento normal y no existe afectación por excesos."
+
+[[claim.source]]
+ref = "https://sigrid.cenepred.gob.pe/sigridv3/documento/1903/descargar"
+locator = "same document, PDF p. 9, section 5.1.3 Región Pacífico 3, item b"
+quote = "Según el SPI-3 evaluado en marzo de 1983, que acumula las lluvias del trimestre EFM, se tiene que el 54% de la superficie de esta región estuvo afectada por déficit pluviométrico; el 44% tuvo un comportamiento normal y el 3% fue afectada por excesos."
+
+[[claim.source]]
+ref = "https://sigrid.cenepred.gob.pe/sigridv3/documento/1903/descargar"
+locator = "same document, PDF p. 9, section 5.1.3 Región Pacífico 3, item d"
+quote = "Según el SPI-3 evaluado en marzo de 1998, que acumula las lluvias del trimestre EFM, no existe afectación por sequía; no existe un comportamiento normal y el 100% fue afectada por excesos."
+
+[[claim.source]]
+ref = "https://sigrid.cenepred.gob.pe/sigridv3/documento/1903/descargar"
+locator = "same document, PDF p. 7, section 5.1.1, opening sentence naming the basins of Región Pacífico 1"
+quote = "A esta región pertenecen las cuencas Tambo, Moquegua, Locumba, Sama, Caplina y Hospicio."
+
+[[claim]]
+id = "senamhi-pisco-coverage-from-1981"
+claim_es = "SENAMHI describe PISCO v2.2 como un producto grillado de acumulados mensuales de precipitación a 0,1° (unos 10 km), con cobertura temporal desde enero de 1981 y cobertura espacial del territorio peruano. No son series de estaciones."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://cdn.www.gob.pe/uploads/document/file/10162024/8270210-69_informe-tecnico-cenepred_epx-2026-0006823_ppv_acn_jcr_lsh_ywef_rev-f-f.pdf"
+locator = "SENAMHI, Informe Técnico N° 69-2026/SENAMHI-DMA-SPC (June 2026), PDF p. 3 of 21, section 3.1"
+quote = "PISCO v2.2 (Gutiérrez et al., 2022) provee acumulados mensuales de precipitación con resolución espacial de 0.1° (~10 km) en proyección geográfica WGS84 (EPSG:4326), con cobertura temporal desde enero de 1981 a la actualidad y cobertura espacial para el territorio peruano."
+
+[[claim]]
+id = "chirps-pentad-6-days"
+claim_es = "En CHIRPS cada mes tiene seis pentadas: las cinco primeras tienen cinco días y la sexta, de entre 3 y 6 días, cierra el mes. CHC añade que los productos diarios rnl y sat suman el mismo total pentadal de CHIRPS3."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://earlywarning.usgs.gov/fews/product/190/"
+locator = "FEWS NET, CHIRPS Pentadal Rainfall, Documentation, entry \"pentadal\""
+quote = "The first 5 pentads of each month have 5 days. The last pentad, or 6th pentad, of each month can have as few as 3 days (for example, Feb with 28 days in non-leap years) and as many as 6 days (Jan, Mar, May, Jul, Aug, Oct, Dec, with 31 days)."
+
+[[claim.source]]
+ref = "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/readme.txt"
+locator = "CHC, Information about CHIRPS Daily Precipitation, section \"Daily disaggregation\", item i"
+quote = "rnl and sat sum to the same CHIRPS3 pentadal precipitation total"
+
+[[claim]]
+id = "chirps-preliminary-provisional"
+claim_es = "FEWS NET considera provisionales los datos preliminares de CHIRPS hasta que se incorporan todas las estaciones, unos 20 días después del fin del mes; el producto final se publica una vez al mes."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://earlywarning.usgs.gov/fews/product/190/"
+locator = "FEWS NET, CHIRPS Pentadal Rainfall, Disclaimer at the top of the page"
+quote = "Due to the limited number of station inputs, the preliminary (prelim) CHIRPS data are considered provisional until that time when the full complement of station inputs can be incorporated (approximately 20 days after the end of the month)."
+
+[[claim]]
+id = "chirps-license"
+claim_es = "CHIRPS3 es de dominio público, registrado con Creative Commons, y se licencia bajo Creative Commons Atribución 4.0 Internacional."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://chc.ucsb.edu/data/chirps3"
+locator = "CHC, CHIRPS: Rainfall Estimates from Rain Gauge and Satellite Observations, section \"Data Citation\""
+quote = "CHIRPS3 is in the public domain, as registered with Creative Commons, and is licensed under a Creative Commons Attribution 4.0 International License."
+
+[[claim]]
+id = "chirps-daily-grid-not-finer"
+claim_es = "La malla de 0,05° de los productos diarios de CHIRPS3 no indica que los datos de ERA5 o IMERG usados para la desagregación temporal contengan información a esa resolución."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/readme.txt"
+locator = "CHC, Information about CHIRPS Daily Precipitation, section \"Spatial resolution\", paragraph 1, last sentence"
+quote = "The 0.05° grid spacing of the daily products therefore should not be interpreted as indicating that the ERA5 or IMERG data used for temporal disaggregation contain information at 0.05° resolution."
+
+[[claim]]
+id = "chirps-department-mean-of-touched-cells"
+claim_es = "El valor de CHIRPS por departamento es el promedio simple de las celdas de 0,05° que toca el límite departamental: cada celda tocada pesa igual, sin importar qué parte de ella queda dentro. No es un promedio ponderado por área."
+status = "verified"
+date_checked = "2026-10-10"
+
+[[claim.source]]
+ref = "https://github.com/AIPlayGrounds-org/wawapacha/blob/1d35d96d9617f9d90d16f1a3d91d52168389b795/pipeline/src/wawapacha_pipeline/sources/chirps.py"
+locator = "pipeline/src/wawapacha_pipeline/sources/chirps.py at commit 1d35d96, function aggregate, geometry_mask call"
+quote = "all_touched=True,"
+
+[[claim.source]]
+ref = "https://github.com/AIPlayGrounds-org/wawapacha/blob/1d35d96d9617f9d90d16f1a3d91d52168389b795/pipeline/src/wawapacha_pipeline/sources/chirps.py"
+locator = "same file and commit, function aggregate, result assignment"
+quote = "float(np.mean(selected)) if selected.size else None"
