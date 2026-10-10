@@ -19,7 +19,9 @@ instead of repeating them.
 9. [`seo.md`](seo.md): page metadata, sitemap, robots file and their check.
 10. [`performance.md`](performance.md): the per-route size budget and its check.
 11. [`concepts.md`](concepts.md): the climate terms the data uses.
-12. [`story.md`](story.md): the reading path from the central-Pacific signal to
+12. [`claims.md`](claims.md): the claim registry, its fields, quote rules and
+    checks.
+13. [`story.md`](story.md): the reading path from the central-Pacific signal to
     the coast, state, observations, expectations and past events.
 
 To change code, start with [`CONTRIBUTING.md`](../.github/CONTRIBUTING.md).
