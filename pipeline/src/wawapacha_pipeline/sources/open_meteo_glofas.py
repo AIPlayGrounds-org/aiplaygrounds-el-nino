@@ -1,4 +1,4 @@
-"""Open-Meteo Flood API — GloFAS discharge for 11 Peruvian basin points."""
+"""Open-Meteo Flood API — GloFAS discharge for 12 Peruvian basin points."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from pathlib import Path
 from wawapacha_pipeline import registry
 from wawapacha_pipeline.contract import ValidationError, publish
 
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 ID = "open-meteo-glofas"
 SOURCE = registry.get(ID)
 URL = os.environ.get("OPEN_METEO_GLOFAS_URL", SOURCE["access"]["url"])
@@ -34,80 +34,87 @@ DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 POINTS = (
     {
         "name": "Piura",
-        "lat": -5.19,
-        "lon": -80.63,
+        "lat": -5.175,
+        "lon": -80.675,
         "grid_lat": -5.174999,
-        "grid_lon": -80.62499,
+        "grid_lon": -80.674995,
     },
     {
         "name": "Tumbes",
-        "lat": -3.57,
-        "lon": -80.45,
-        "grid_lat": -3.574997,
+        "lat": -3.625,
+        "lon": -80.475,
+        "grid_lat": -3.6249962,
         "grid_lon": -80.47499,
     },
     {
         "name": "Chira",
-        "lat": -4.90,
-        "lon": -80.70,
-        "grid_lat": -4.924999,
+        "lat": -4.875,
+        "lon": -80.725,
+        "grid_lat": -4.874996,
         "grid_lon": -80.72499,
     },
     {
         "name": "Rimac",
-        "lat": -11.99,
-        "lon": -76.84,
+        "lat": -11.975,
+        "lon": -76.825,
         "grid_lat": -11.974998,
         "grid_lon": -76.82499,
     },
     {
         "name": "Santa",
-        "lat": -8.99,
-        "lon": -78.61,
+        "lat": -8.975,
+        "lon": -78.675,
         "grid_lat": -8.974998,
-        "grid_lon": -78.62499,
+        "grid_lon": -78.674995,
     },
     {
         "name": "Chillon",
-        "lat": -11.83,
-        "lon": -77.03,
+        "lat": -11.825,
+        "lon": -77.075,
         "grid_lat": -11.824997,
-        "grid_lon": -77.024994,
+        "grid_lon": -77.07499,
     },
     {
         "name": "Canete",
-        "lat": -12.90,
-        "lon": -76.30,
-        "grid_lat": -12.924999,
-        "grid_lon": -76.32499,
+        "lat": -12.975,
+        "lon": -76.225,
+        "grid_lat": -12.974998,
+        "grid_lon": -76.22499,
     },
     {
         "name": "Ica",
-        "lat": -14.07,
-        "lon": -75.73,
+        "lat": -14.075,
+        "lon": -75.775,
         "grid_lat": -14.074997,
-        "grid_lon": -75.72499,
+        "grid_lon": -75.774994,
     },
     {
         "name": "Pisco",
-        "lat": -13.71,
-        "lon": -76.20,
-        "grid_lat": -13.724998,
-        "grid_lon": -76.174995,
+        "lat": -13.675,
+        "lon": -76.225,
+        "grid_lat": -13.674999,
+        "grid_lon": -76.22499,
     },
     {
         "name": "Majes-Colca",
-        "lat": -16.23,
-        "lon": -72.47,
+        "lat": -16.225,
+        "lon": -72.525,
         "grid_lat": -16.224998,
-        "grid_lon": -72.47499,
+        "grid_lon": -72.524994,
     },
     {
         "name": "Mantaro",
-        "lat": -12.07,
-        "lon": -75.20,
+        "lat": -12.075,
+        "lon": -75.275,
         "grid_lat": -12.074997,
-        "grid_lon": -75.174995,
+        "grid_lon": -75.274994,
+    },
+    {
+        "name": "Jequetepeque",
+        "lat": -7.325,
+        "lon": -79.475,
+        "grid_lat": -7.324997,
+        "grid_lon": -79.47499,
     },
 )
 

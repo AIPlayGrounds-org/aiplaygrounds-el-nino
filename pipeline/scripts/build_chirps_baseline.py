@@ -50,12 +50,16 @@ def build_row(
             executor.submit(chirps.fetch, final_url(year, month, number), 120): year
             for year in years
         }
+        weights = None
         for job in as_completed(jobs):
             year = jobs[job]
             period = date(year, month, (number - 1) * 5 + 1)
-            values = chirps.aggregate(job.result(), boundaries)
+            raw = job.result()
+            if weights is None:
+                weights = chirps.overlap_weights(raw, boundaries)
+            aggregated_values = chirps.aggregate(raw, boundaries, weights)
             print(f"read {key} {period}", flush=True)
-            for code, value in values.items():
+            for code, value in aggregated_values.items():
                 if value is not None:
                     totals[code] += value
                     counts[code] += 1
@@ -84,9 +88,9 @@ def main() -> None:
         "base_period": "1991-2020",
         "product": "CHIRPS v3 final pentads",
         "method": (
-            "Arithmetic mean of 1991–2020 CHC v3 final pentad GeoTIFFs after "
-            "the WGS84 departamento mask mean; February P6 is split into "
-            "common and leap years."
+            "Exact overlap mean of 1991–2020 CHC v3 final pentad GeoTIFFs, "
+            "weighted by overlap area and cos(latitude) in WGS84; February P6 "
+            "is split into common and leap years."
         ),
         "data_url": "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/pentads/latam/tifs/",
         "boundary_source": "data/limites-inei-ign.json",
