@@ -185,7 +185,7 @@
       "spatial_resolution": "0,05° (unos 5 km)",
       "temporal_resolution": "Diaria",
       "provider_url": "https://open-meteo.com/en/docs/flood-api",
-      "data_url": "https://flood-api.open-meteo.com/v1/flood?latitude=-5.19,-3.57,-4.90,-11.99,-8.99,-11.83,-12.90,-14.07,-13.71,-16.23,-12.07&longitude=-80.63,-80.45,-80.70,-76.84,-78.61,-77.03,-76.30,-75.73,-76.20,-72.47,-75.20&daily=river_discharge,river_discharge_mean,river_discharge_median,river_discharge_max,river_discharge_min,river_discharge_p25,river_discharge_p75&past_days=7&forecast_days=210&timezone=GMT",
+      "data_url": "https://flood-api.open-meteo.com/v1/flood?latitude=-5.175,-3.625,-4.875,-11.975,-8.975,-11.825,-12.975,-14.075,-13.675,-16.225,-12.075,-7.325&longitude=-80.675,-80.475,-80.725,-76.825,-78.675,-77.075,-76.225,-75.775,-76.225,-72.525,-75.275,-79.475&daily=river_discharge,river_discharge_mean,river_discharge_median,river_discharge_max,river_discharge_min,river_discharge_p25,river_discharge_p75&past_days=7&forecast_days=210&timezone=GMT",
       "site_pages": [
         "/rios"
       ],

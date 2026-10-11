@@ -42,7 +42,7 @@ const verifiedClaims = {
   'era5-latency-and-limitations':
     'Open-Meteo actualiza ERA5 a diario y con un retraso de varios días.',
   'glofas-river-discharge-forecast':
-    'El producto GloFAS de caudal simulado ofrece una serie desde 1984 y un pronóstico de hasta siete meses.',
+    'El producto GloFAS de caudal simulado documenta disponibilidad desde 1984 y un pronóstico de hasta siete meses.',
   'glofas-river-point-limits':
     'El caudal de GloFAS se calcula con una malla de 5 km: para unas coordenadas la API devuelve el caudal del río más grande en un área de 5 km, y puede no elegir el río más cercano.',
   'glofas-ensemble-percentiles':
@@ -177,8 +177,6 @@ const verifiedClaims = {
     'CHIRPS3 es de dominio público, registrado con Creative Commons, y se licencia bajo Creative Commons Atribución 4.0 Internacional.',
   'chirps-daily-grid-not-finer':
     'La malla de 0,05° de los productos diarios de CHIRPS3 no indica que los datos de ERA5 o IMERG usados para la desagregación temporal contengan información a esa resolución.',
-  'chirps-department-mean-of-touched-cells':
-    'El valor de CHIRPS por departamento es el promedio simple de las celdas de 0,05° que toca el límite departamental: cada celda tocada pesa igual, sin importar qué parte de ella queda dentro. No es un promedio ponderado por área.',
 } as const
 
 export type ClaimId = keyof typeof verifiedClaims

@@ -300,7 +300,7 @@ quote = "Daily with 5 days delay"
 
 [[claim]]
 id = "glofas-river-discharge-forecast"
-claim_es = "El producto GloFAS de caudal simulado ofrece una serie desde 1984 y un pronóstico de hasta siete meses."
+claim_es = "El producto GloFAS de caudal simulado documenta disponibilidad desde 1984 y un pronóstico de hasta siete meses."
 status = "verified"
 date_checked = "2026-10-09"
 
@@ -1608,19 +1608,3 @@ date_checked = "2026-10-10"
 ref = "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/readme.txt"
 locator = "CHC, Information about CHIRPS Daily Precipitation, section \"Spatial resolution\", paragraph 1, last sentence"
 quote = "The 0.05° grid spacing of the daily products therefore should not be interpreted as indicating that the ERA5 or IMERG data used for temporal disaggregation contain information at 0.05° resolution."
-
-[[claim]]
-id = "chirps-department-mean-of-touched-cells"
-claim_es = "El valor de CHIRPS por departamento es el promedio simple de las celdas de 0,05° que toca el límite departamental: cada celda tocada pesa igual, sin importar qué parte de ella queda dentro. No es un promedio ponderado por área."
-status = "verified"
-date_checked = "2026-10-10"
-
-[[claim.source]]
-ref = "https://github.com/AIPlayGrounds-org/wawapacha/blob/1d35d96d9617f9d90d16f1a3d91d52168389b795/pipeline/src/wawapacha_pipeline/sources/chirps.py"
-locator = "pipeline/src/wawapacha_pipeline/sources/chirps.py at commit 1d35d96, function aggregate, geometry_mask call"
-quote = "all_touched=True,"
-
-[[claim.source]]
-ref = "https://github.com/AIPlayGrounds-org/wawapacha/blob/1d35d96d9617f9d90d16f1a3d91d52168389b795/pipeline/src/wawapacha_pipeline/sources/chirps.py"
-locator = "same file and commit, function aggregate, result assignment"
-quote = "float(np.mean(selected)) if selected.size else None"
