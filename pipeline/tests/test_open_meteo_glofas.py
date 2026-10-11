@@ -26,13 +26,13 @@ def as_text(payload: object) -> str:
 def test_reads_the_point_list_and_expands_daily_arrays():
     records = glofas.parse(SAMPLE, date(2026, 9, 26))
 
-    assert len(records) == 33
+    assert len(records) == 36
     assert records[0] == {
         "point": "Piura",
-        "lat": -5.19,
-        "lon": -80.63,
+        "lat": -5.175,
+        "lon": -80.675,
         "grid_lat": -5.174999,
-        "grid_lon": -80.62499,
+        "grid_lon": -80.674995,
         "start": "2026-09-25",
         "end": "2026-09-25",
         "data_type": "estimated",
@@ -45,12 +45,12 @@ def test_reads_the_point_list_and_expands_daily_arrays():
         "river_discharge_p75": 0.06,
     }
     assert records[2]["data_type"] == "forecast"
-    assert records[-1]["point"] == "Mantaro"
-    assert records[-1]["grid_lon"] == -75.174995
+    assert records[-1]["point"] == "Jequetepeque"
+    assert records[-1]["grid_lon"] == -79.47499
 
 
 def test_rejects_a_partial_single_object_response():
-    with pytest.raises(ValidationError, match="11 puntos"):
+    with pytest.raises(ValidationError, match="12 puntos"):
         glofas.parse(as_text(SAMPLE_PAYLOAD[0]), date(2026, 9, 26))
 
 
@@ -76,7 +76,7 @@ def test_preserves_zero_and_null_values():
 @pytest.mark.parametrize(
     ("change", "message"),
     [
-        (lambda payload: payload.pop(), "11 puntos"),
+        (lambda payload: payload.pop(), "12 puntos"),
         (lambda payload: payload[0].pop("daily"), "'daily'"),
         (
             lambda payload: payload[0].__setitem__("latitude", -5.50),
@@ -117,7 +117,7 @@ def test_rejects_each_structural_or_value_rule(change, message):
 
 
 def test_rejects_a_scalar_root():
-    with pytest.raises(ValidationError, match="11 puntos"):
+    with pytest.raises(ValidationError, match="12 puntos"):
         glofas.parse('"not a point"', date(2026, 9, 26))
 
 
@@ -205,11 +205,11 @@ def test_cli_publishes_the_fixture(tmp_path):
     result = run_cli(SAMPLE_PATH, tmp_path)
 
     assert result.returncode == 0, result.stderr
-    assert result.stdout.startswith("Published open-meteo-glofas: 33 records in ")
+    assert result.stdout.startswith("Published open-meteo-glofas: 36 records in ")
     published = json.loads(
         (tmp_path / "open-meteo-glofas.json").read_text(encoding="utf-8")
     )
-    assert len(published["records"]) == 33
+    assert len(published["records"]) == 36
     assert_matches_registry(published)
 
 
@@ -222,5 +222,5 @@ def test_cli_keeps_the_previous_json_when_validation_fails(tmp_path):
     result = run_cli(broken, tmp_path)
 
     assert result.returncode == 1
-    assert "11 puntos" in result.stderr
+    assert "12 puntos" in result.stderr
     assert previous.read_text(encoding="utf-8") == '{"version": "previous"}'
