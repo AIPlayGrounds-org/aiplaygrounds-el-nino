@@ -266,7 +266,7 @@ export const messages = {
     sectionLabel: 'Territorio',
     title: 'Lluvia por departamento',
     lead: claim('chirps-rainfall-estimates'),
-    leadDetails: claim('chirps-pentad-latency'),
+    leadDetails: `${claim('chirps-pentad-latency')} ${claim('chirps-preliminary-provisional')}`,
     metricGroup: 'Métrica del mapa',
     precipitation: 'Precipitación',
     anomaly: 'Anomalía',

@@ -37,7 +37,7 @@ def _():
     mo.md(r"""
     ## Paso 1 · Descargar
 
-    La petición consulta los 11 puntos peruanos registrados y solicita el caudal, la
+    La petición consulta los 12 puntos peruanos registrados y solicita el caudal, la
     media, mediana, máximo, mínimo y percentiles 25/75 del conjunto GloFAS.
     """)
     return
@@ -63,7 +63,7 @@ def _():
     mo.md(r"""
     ## Paso 2 · Validar y expandir
 
-    `source.parse()` comprueba HTTP/JSON en la descarga, las 11 coordenadas conocidas,
+    `source.parse()` comprueba HTTP/JSON en la descarga, las 12 coordenadas conocidas,
     las unidades exactas `m³/s`, arrays alineados, fechas ISO consecutivas, valores
     finitos no negativos y `null` como único valor faltante. Después convierte cada
     posición de las arrays en un registro diario. Las fechas hasta la ingestión UTC son

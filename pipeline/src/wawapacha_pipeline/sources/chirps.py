@@ -11,20 +11,20 @@ import re
 import urllib.error
 import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 import numpy as np
 import rasterio
-from rasterio.features import geometry_mask
 from rasterio.io import MemoryFile
-from shapely.geometry import shape
+from shapely.geometry import box, shape
 
 from wawapacha_pipeline import registry
 from wawapacha_pipeline.contract import REPO_ROOT, ValidationError, publish
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 ID = "chirps"
 SOURCE = registry.get(ID)
 INDEX_URL = os.environ.get("CHIRPS_INDEX_URL", SOURCE["access"]["url"])
@@ -46,6 +46,10 @@ EXPECTED_DEPARTMENTS = 25
 EXPECTED_DEPARTMENT_CODES = frozenset(f"PE{index:02d}" for index in range(1, 26))
 USER_AGENT = "WawaPacha/0.1"
 FILE_PATTERN = re.compile(r"^chirps-v3\.0\.(\d{4})\.(\d{2})\.([1-6])\.tif$")
+
+
+class _MissingResource(Exception):
+    """A requested preliminary pentad does not exist in the live archive."""
 
 
 @dataclass(frozen=True, order=True)
@@ -85,23 +89,24 @@ EXPECTED_BASELINE_KEYS = frozenset(
 
 
 def _request(url: str, timeout: int = 60, retries: int = 3) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    # Close each archive request to avoid stalled persistent connections in parallel downloads.
+    request = urllib.request.Request(
+        url, headers={"User-Agent": USER_AGENT, "Connection": "close"}
+    )
     last_error: Exception | None = None
     for _ in range(retries):
         try:
             with urllib.request.urlopen(request, timeout=timeout) as response:
-                status = getattr(response, "status", None) or 200
-                if status != 200:
-                    raise ValidationError(f"Unexpected HTTP status: {status}.")
                 return response.read()
-        except ValidationError:
-            raise
-        except (
-            urllib.error.HTTPError,
-            urllib.error.URLError,
-            TimeoutError,
-            OSError,
-        ) as error:
+        except urllib.error.HTTPError as error:
+            if error.code == 404:
+                raise _MissingResource(url) from error
+            if error.code == 429:
+                raise ValidationError(
+                    f"HTTP status 429 for {url}; quota exhausted."
+                ) from error
+            last_error = error
+        except (urllib.error.URLError, TimeoutError, OSError) as error:
             last_error = error
     raise ValidationError(
         f"Could not download {url} after {retries} attempts: {last_error}"
@@ -110,7 +115,18 @@ def _request(url: str, timeout: int = 60, retries: int = 3) -> bytes:
 
 def fetch(url: str = INDEX_URL, timeout: int = 60, retries: int = 3) -> bytes:
     """Download an index or a GeoTIFF and require an HTTP success response."""
-    return _request(url, timeout=timeout, retries=retries)
+    try:
+        return _request(url, timeout=timeout, retries=retries)
+    except _MissingResource as error:
+        raise ValidationError(f"HTTP status 404 for {url}.") from error
+
+
+def fetch_optional(url: str, timeout: int = 60, retries: int = 3) -> bytes | None:
+    """Download a preliminary pentad, returning None when the archive omits it."""
+    try:
+        return _request(url, timeout=timeout, retries=retries)
+    except _MissingResource:
+        return None
 
 
 def discover(index: str | bytes, base_url: str = INDEX_URL) -> list[Pentad]:
@@ -198,8 +214,68 @@ def load_boundaries(path: Path = BOUNDARIES_PATH) -> list[dict]:
     return normalized
 
 
-def aggregate(raw: bytes, boundaries: list[dict]) -> dict[str, float | None]:
-    """Mask valid raster cells by each department and return the cell mean."""
+def _overlap_weights(
+    source: rasterio.DatasetReader, boundary: dict
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return overlapping cell indices and their longitude-latitude weights."""
+    boundary_shape = shape(boundary["geometry"])
+    left, bottom, right, top = source.bounds
+    x_size, y_size = source.res
+    minx, miny, maxx, maxy = boundary_shape.bounds
+    first_column = max(0, math.floor((minx - left) / x_size))
+    last_column = min(source.width, math.ceil((maxx - left) / x_size))
+    first_row = max(0, math.floor((top - maxy) / y_size))
+    last_row = min(source.height, math.ceil((top - miny) / y_size))
+
+    rows: list[int] = []
+    columns: list[int] = []
+    weights: list[float] = []
+    for row in range(first_row, last_row):
+        north = top - row * y_size
+        south = north - y_size
+        cell_latitude = math.radians((north + south) / 2)
+        latitude_weight = math.cos(cell_latitude)
+        for column in range(first_column, last_column):
+            west = left + column * x_size
+            east = west + x_size
+            overlap = box(west, south, east, north).intersection(boundary_shape)
+            if overlap.is_empty or overlap.area <= 0:
+                continue
+            rows.append(row)
+            columns.append(column)
+            weights.append(overlap.area * latitude_weight)
+
+    return (
+        np.asarray(rows, dtype=np.intp),
+        np.asarray(columns, dtype=np.intp),
+        np.asarray(weights, dtype=float),
+    )
+
+
+def overlap_weights(
+    raw: bytes, boundaries: list[dict]
+) -> dict[str, tuple[np.ndarray, np.ndarray, np.ndarray]]:
+    """Compute the overlap weights once for a raster and its boundaries."""
+    with MemoryFile(raw) as memory:
+        try:
+            with memory.open() as source:
+                _validate_raster(source)
+                return {
+                    boundary["code"]: _overlap_weights(source, boundary)
+                    for boundary in boundaries
+                }
+        except rasterio.errors.RasterioIOError as error:
+            raise ValidationError(
+                f"The CHIRPS download is not a readable GeoTIFF: {error}"
+            ) from error
+
+
+def aggregate(
+    raw: bytes,
+    boundaries: list[dict],
+    weights: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray]],
+) -> dict[str, float | None]:
+    """Return the exact overlap and latitude-weighted department means."""
     with MemoryFile(raw) as memory:
         try:
             with memory.open() as source:
@@ -215,16 +291,15 @@ def aggregate(raw: bytes, boundaries: list[dict]) -> dict[str, float | None]:
                     )
                 result = {}
                 for boundary in boundaries:
-                    mask = geometry_mask(
-                        [boundary["geometry"]],
-                        out_shape=data.shape,
-                        transform=source.transform,
-                        invert=True,
-                        all_touched=True,
-                    )
-                    selected = data[valid & mask]
+                    rows, columns, boundary_weights = weights[boundary["code"]]
+                    selected = data[rows, columns]
+                    selected_valid = valid[rows, columns]
+                    selected = selected[selected_valid]
+                    boundary_weights = boundary_weights[selected_valid]
                     result[boundary["code"]] = (
-                        float(np.mean(selected)) if selected.size else None
+                        float(np.average(selected, weights=boundary_weights))
+                        if selected.size
+                        else None
                     )
                 return result
         except rasterio.errors.RasterioIOError as error:
@@ -310,9 +385,17 @@ def parse(
         raise ValidationError(
             f"Expected 25 department boundaries, found {len(boundaries)}."
         )
+    expected_shape = _raster_shape(files[0][1])
+    weights = overlap_weights(files[0][1], boundaries)
     records = []
     for pentad, raw in files:
-        values = aggregate(raw, boundaries)
+        actual_shape = _raster_shape(raw)
+        if actual_shape != expected_shape:
+            raise ValidationError(
+                f"CHIRPS rasters must share the first raster shape {expected_shape}; "
+                f"{pentad.url} has {actual_shape}."
+            )
+        values = aggregate(raw, boundaries, weights)
         for boundary in boundaries:
             code = boundary["code"]
             value = values[code]
@@ -331,6 +414,19 @@ def parse(
                 }
             )
     return records
+
+
+def _raster_shape(raw: bytes) -> tuple[int, int]:
+    """Validate a raster and return its (height, width)."""
+    with MemoryFile(raw) as memory:
+        try:
+            with memory.open() as source:
+                _validate_raster(source)
+                return source.height, source.width
+        except rasterio.errors.RasterioIOError as error:
+            raise ValidationError(
+                f"The CHIRPS download is not a readable GeoTIFF: {error}"
+            ) from error
 
 
 def build(records: list[dict], ingestion_time: datetime) -> dict:
@@ -360,7 +456,26 @@ def run(ingestion_time: datetime | None = None) -> tuple[int, Path]:
     selected = select_window(pentads)
     boundaries = load_boundaries()
     baseline = load_baseline()
-    files = [(pentad, fetch(pentad.url)) for pentad in selected]
+    files = []
+    missing = []
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        jobs = {
+            executor.submit(fetch_optional, pentad.url): pentad for pentad in selected
+        }
+        for job in as_completed(jobs):
+            pentad = jobs[job]
+            raw = job.result()
+            if raw is None:
+                missing.append(pentad)
+                continue
+            files.append((pentad, raw))
+    files.sort(key=lambda item: item[0])
+    missing.sort()
+    for pentad in missing:
+        print(
+            f"Skipped missing CHIRPS pentad {pentad.year}-{pentad.month:02d}."
+            f"{pentad.number} (HTTP 404)."
+        )
     records = parse(files, boundaries, baseline)
     dataset = build(records, ingestion_time or datetime.now(UTC))
     return len(records), publish(dataset)

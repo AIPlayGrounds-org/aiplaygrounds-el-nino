@@ -43,9 +43,9 @@ def _():
     ## Read, mask and validate
 
     Rasterio reads the single band. The code converts `-9999` to missing, rejects
-    negative rainfall or values over 5,000 mm per pentad, and averages the cells
-    touched by each department polygon. This tiny raster only illustrates the step;
-    the real run downloads CHC GeoTIFFs.
+    negative rainfall or values over 5,000 mm per pentad, and computes exact
+    polygon-cell overlap means weighted by overlap area and cos(latitude). This tiny
+    raster only illustrates the step; the real run downloads CHC GeoTIFFs.
     """)
     return
 
@@ -62,7 +62,8 @@ def _():
         "code": "PE01",
         "geometry": {"type": "Polygon", "coordinates": [[[0, 1], [0.25, 1], [0.25, 0.75], [0, 0.75], [0, 1]]]},
     }
-    masked = source.aggregate(tiny_geotiff, [boundary])
+    weights = source.overlap_weights(tiny_geotiff, [boundary])
+    masked = source.aggregate(tiny_geotiff, [boundary], weights)
     mo.tree({"Rasterio": "GeoTIFF EPSG:4326, 0.05°", "department_mean_mm": masked})
     return
 
